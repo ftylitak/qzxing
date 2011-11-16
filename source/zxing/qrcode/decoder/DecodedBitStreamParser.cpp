@@ -82,7 +82,7 @@ void DecodedBitStreamParser::append(std::string &result,
   size_t nTo = maxOut;
 
   while (nFrom > 0) {
-    size_t oneway = iconv(cd, &fromPtr, &nFrom, &toPtr, &nTo);
+    size_t oneway = iconv(cd, (char**)&fromPtr, &nFrom, &toPtr, &nTo);
     if (oneway == (size_t)(-1)) {
       iconv_close(cd);
       delete[] bufOut;

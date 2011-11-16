@@ -209,8 +209,14 @@ namespace oned {
           if (toNarrowWidePattern(counters, countersLen) == ASTERISK_ENCODING) {
             // Look for whitespace before start pattern, >= 50% of width of
             // start pattern.
-            long double longPatternOffset =
-              fmaxl(0, patternStart - (i - patternStart) / 2);
+            long double longPatternOffset = 0;
+#ifndef NOFMAXL
+            longPatternOffset = fmaxl(0, patternStart - (i - patternStart) / 2);
+#else
+            longPatternOffset = fmax(0, patternStart - (i - patternStart) / 2);
+#endif
+
+
             if (row->isRange(longPatternOffset, patternStart, false)) {
               int* resultValue = new int[2];
               resultValue[0] = patternStart;
