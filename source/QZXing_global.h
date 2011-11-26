@@ -9,8 +9,4 @@
 #  define QZXINGSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#if defined(MSVC2008)
-    kyguig
-#endif
-
 #endif // QZXING_GLOBAL_H

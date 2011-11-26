@@ -109,4 +109,9 @@ Ref<ResultPointCallback> DecodeHints::getResultPointCallback() const {
     return callback;
 }
 
+DecodeHintType DecodeHints::getCurrentHint()
+{
+    return hints;
+}
+
 } /* namespace */

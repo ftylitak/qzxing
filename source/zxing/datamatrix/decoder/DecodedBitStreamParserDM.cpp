@@ -19,7 +19,7 @@
  */
 
 #include <zxing/FormatException.h>
-#include <zxing/datamatrix/decoder/DecodedBitStreamParser.h>
+#include <zxing/datamatrix/decoder/DecodedBitStreamParserDM.h>
 #include <iostream>
 #include <zxing/common/DecoderResult.h>
 

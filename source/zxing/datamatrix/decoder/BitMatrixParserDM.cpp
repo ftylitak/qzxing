@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include <zxing/datamatrix/decoder/BitMatrixParser.h>
+#include <zxing/datamatrix/decoder/BitMatrixParserDM.h>
 #include <zxing/common/IllegalArgumentException.h>
 
 #include <iostream>

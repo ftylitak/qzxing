@@ -21,7 +21,7 @@
 
 #include <zxing/ResultPoint.h>
 #include <zxing/common/GridSampler.h>
-#include <zxing/datamatrix/detector/Detector.h>
+#include <zxing/datamatrix/detector/DetectorDM.h>
 #include <cmath>
 #include <sstream>
 #include <cstdlib>

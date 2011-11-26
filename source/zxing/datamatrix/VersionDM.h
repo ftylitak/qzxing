@@ -1,5 +1,5 @@
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __VERSION_DM_H__
+#define __VERSION_DM_H__
 
 /*
  *  Version.h
@@ -84,4 +84,4 @@ private:
 }
 }
 
-#endif // __VERSION_H__
+#endif // __VERSION_DM_H__

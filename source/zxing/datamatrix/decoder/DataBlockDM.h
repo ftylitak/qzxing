@@ -24,7 +24,7 @@
 #include <vector>
 #include <zxing/common/Counted.h>
 #include <zxing/common/Array.h>
-#include <zxing/datamatrix/Version.h>
+#include <zxing/datamatrix/VersionDM.h>
 
 namespace zxing {
 namespace datamatrix {

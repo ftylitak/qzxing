@@ -18,11 +18,11 @@
  * limitations under the License.
  */
 
-#include <zxing/datamatrix/decoder/Decoder.h>
-#include <zxing/datamatrix/decoder/BitMatrixParser.h>
-#include <zxing/datamatrix/decoder/DataBlock.h>
-#include <zxing/datamatrix/decoder/DecodedBitStreamParser.h>
-#include <zxing/datamatrix/Version.h>
+#include <zxing/datamatrix/decoder/DecoderDM.h>
+#include <zxing/datamatrix/decoder/BitMatrixParserDM.h>
+#include <zxing/datamatrix/decoder/DataBlockDM.h>
+#include <zxing/datamatrix/decoder/DecodedBitStreamParserDM.h>
+#include <zxing/datamatrix/VersionDM.h>
 #include <zxing/ReaderException.h>
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 

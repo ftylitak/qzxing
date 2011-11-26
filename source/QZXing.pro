@@ -33,6 +33,7 @@ HEADERS += zxing/BarcodeFormat.h \
     zxing/ResultPoint.h \
     zxing/ResultPointCallback.h \
     zxing/FormatException.h \
+    zxing/NotFoundException.h \
     zxing/common/StringUtils.h \
     zxing/common/CharacterSetECI.h \
     zxing/common/ECI.h \
@@ -57,6 +58,8 @@ HEADERS += zxing/BarcodeFormat.h \
     zxing/common/reedsolomon/GF256Poly.h \
     zxing/common/reedsolomon/ReedSolomonDecoder.h \
     zxing/common/reedsolomon/ReedSolomonException.h \
+    zxing/common/detector/MonochromeRectangleDetector.h \
+    zxing/common/detector/WhiteRectangleDetector.h \
     zxing/oned/Code128Reader.h \
     zxing/oned/Code39Reader.h \
     zxing/oned/EAN13Reader.h \
@@ -86,6 +89,16 @@ HEADERS += zxing/BarcodeFormat.h \
     zxing/qrcode/detector/FinderPatternFinder.h \
     zxing/qrcode/detector/FinderPatternInfo.h \
     zxing/qrcode/detector/QREdgeDetector.h \
+    zxing/datamatrix/VersionDM.h \
+    zxing/datamatrix/DataMatrixReader.h \
+    zxing/datamatrix/decoder/BitMatrixParserDM.h \
+    zxing/datamatrix/decoder/DataBlockDM.h \
+    zxing/datamatrix/decoder/DecodedBitStreamParserDM.h \
+    zxing/datamatrix/decoder/DecoderDM.h \
+    zxing/datamatrix/detector/CornerPoint.h \
+    zxing/datamatrix/detector/DetectorDM.h \
+    zxing/datamatrix/detector/DetectorException.h \
+    zxing/datamatrix/detector/MonochromeRectangleDetectorDM.h \
     QZXing_global.h \
     CameraImageWrapper.h \
     qzxing.h
@@ -103,6 +116,7 @@ SOURCES += zxing/BarcodeFormat.cpp \
     zxing/ResultPoint.cpp \
     zxing/ResultPointCallback.cpp \
     zxing/FormatException.cpp \
+    zxing/NotFoundException.cpp \
     zxing/common/StringUtils.cpp \
     zxing/common/CharacterSetECI.cpp \
     zxing/common/ECI.cpp \
@@ -126,6 +140,8 @@ SOURCES += zxing/BarcodeFormat.cpp \
     zxing/common/reedsolomon/GF256Poly.cpp \
     zxing/common/reedsolomon/ReedSolomonDecoder.cpp \
     zxing/common/reedsolomon/ReedSolomonException.cpp \
+    zxing/common/detector/MonochromeRectangleDetector.cpp \
+    zxing/common/detector/WhiteRectangleDetector.cpp \
     zxing/oned/Code128Reader.cpp \
     zxing/oned/Code39Reader.cpp \
     zxing/oned/EAN13Reader.cpp \
@@ -155,23 +171,33 @@ SOURCES += zxing/BarcodeFormat.cpp \
     zxing/qrcode/detector/FinderPatternFinder.cpp \
     zxing/qrcode/detector/FinderPatternInfo.cpp \
     zxing/qrcode/detector/QREdgeDetector.cpp \
+    zxing/datamatrix/VersionDM.cpp \
+    zxing/datamatrix/DataMatrixReader.cpp \
+    zxing/datamatrix/decoder/BitMatrixParserDM.cpp \
+    zxing/datamatrix/decoder/DataBlockDM.cpp\
+    zxing/datamatrix/decoder/DecodedBitStreamParserDM.cpp \
+    zxing/datamatrix/decoder/DecoderDM.cpp \
+    zxing/datamatrix/detector/CornerPoint.cpp \
+    zxing/datamatrix/detector/DetectorDM.cpp \
+    zxing/datamatrix/detector/DetectorException.cpp \
+    zxing/datamatrix/detector/MonochromeRectangleDetectorDM.cpp \
     CameraImageWrapper.cpp \
     qzxing.cpp
 
 symbian {
-    MMP_RULES += EXPORTUNFROZEN
+    #MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE618743C
     TARGET.EPOCALLOWDLLDATA = 1
     addFiles.sources = QZXing.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
-    TARGET.CAPABILITY = All -TCB -AllFiles -DRM
-    #TARGET.CAPABILITY += NetworkServices \
-    #    ReadUserData \
-    #    WriteUserData \
-    #    LocalServices \
-    #    UserEnvironment \
-    #    Location
+    #TARGET.CAPABILITY = All -TCB -AllFiles -DRM
+    TARGET.CAPABILITY += NetworkServices \
+        ReadUserData \
+        WriteUserData \
+        LocalServices \
+        UserEnvironment \
+        Location
 }
 
 unix:!symbian {

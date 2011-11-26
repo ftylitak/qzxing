@@ -67,9 +67,9 @@ namespace zxing {
     if (hints.containsFormat(BarcodeFormat_QR_CODE)) {
       readers_.push_back(Ref<Reader>(new zxing::qrcode::QRCodeReader()));
     }
-//    if (hints.containsFormat(BarcodeFormat_DATA_MATRIX)) {
-//      readers_.push_back(Ref<Reader>(new zxing::datamatrix::DataMatrixReader()));
-//    }
+    if (hints.containsFormat(BarcodeFormat_DATA_MATRIX)) {
+      readers_.push_back(Ref<Reader>(new zxing::datamatrix::DataMatrixReader()));
+    }
     //TODO: add PDF417 here once PDF417 reader is implemented
     if (addOneDReader && tryHarder) {
       readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));

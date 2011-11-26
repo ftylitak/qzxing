@@ -63,6 +63,7 @@ class DecodeHints {
   void setResultPointCallback(Ref<ResultPointCallback> const&);
   Ref<ResultPointCallback> getResultPointCallback() const;
 
+  DecodeHintType getCurrentHint();
 };
 
 }

@@ -43,12 +43,6 @@ symbian{
         " "
     DEPLOYMENT += customrules
 }
-else{
-    DEFINES += NO_ICONV
-}
-
-
-DEFINES += ZXING_ICONV_CONST
 
 ICON = QQrDecoder.svg
 

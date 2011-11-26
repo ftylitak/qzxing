@@ -36,8 +36,6 @@
 #include "ui_QQrDecoder.h"
 #include <qzxing.h>
 
-#include "CameraImageWrapper.h"
-
 class QQrDecoder : public QMainWindow
 {
     Q_OBJECT

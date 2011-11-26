@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include <zxing/datamatrix/decoder/DataBlock.h>
+#include <zxing/datamatrix/decoder/DataBlockDM.h>
 #include <zxing/common/IllegalArgumentException.h>
 
 namespace zxing {

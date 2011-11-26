@@ -19,7 +19,7 @@
  */
 
 #include <zxing/ReaderException.h>
-#include <zxing/datamatrix/detector/MonochromeRectangleDetector.h>
+#include <zxing/datamatrix/detector/MonochromeRectangleDetectorDM.h>
 #include <sstream>
 
 namespace zxing {

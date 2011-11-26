@@ -19,7 +19,7 @@
  */
 
 #include <zxing/datamatrix/DataMatrixReader.h>
-#include <zxing/datamatrix/detector/Detector.h>
+#include <zxing/datamatrix/detector/DetectorDM.h>
 #include <iostream>
 
 namespace zxing {
