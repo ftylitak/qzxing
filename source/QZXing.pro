@@ -6,10 +6,9 @@
 
 QT       += core gui
 
-VERSION = 1.0
+VERSION = 1.1
 
-lessThan(QT_VERSION, 4.7):
-else:QT += declarative
+greaterThan(QT_VERSION, 4.7): QT += declarative
 
 TARGET = QZXing
 TEMPLATE = lib
@@ -185,7 +184,6 @@ SOURCES += zxing/BarcodeFormat.cpp \
     qzxing.cpp
 
 symbian {
-    #MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE618743C
     TARGET.EPOCALLOWDLLDATA = 1
     addFiles.sources = QZXing.dll

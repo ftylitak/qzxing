@@ -1,7 +1,8 @@
 TEMPLATE = app
 TARGET = QQrDecoder
 QT += core \
-    gui
+    gui \
+    declarative
 
 VERSION = 1.2.1
 

@@ -9,18 +9,18 @@
 
 using namespace zxing;
 
-QZXing::QZXing(QObject *parent) : QObject(parent), supportedFormats(511)
+QZXing::QZXing(QObject *parent) : QObject(parent)
 {
     decoder = new MultiFormatReader();
-//    setDecoder(DecoderFormat_QR_CODE |
-//               DecoderFormat_DATA_MATRIX |
-//               DecoderFormat_UPC_E |
-//               DecoderFormat_UPC_A |
-//               DecoderFormat_EAN_8 |
-//               DecoderFormat_EAN_13 |
-//               DecoderFormat_CODE_128 |
-//               DecoderFormat_CODE_39 |
-//               DecoderFormat_ITF);
+    setDecoder(DecoderFormat_QR_CODE |
+               DecoderFormat_DATA_MATRIX |
+               DecoderFormat_UPC_E |
+               DecoderFormat_UPC_A |
+               DecoderFormat_EAN_8 |
+               DecoderFormat_EAN_13 |
+               DecoderFormat_CODE_128 |
+               DecoderFormat_CODE_39 |
+               DecoderFormat_ITF);
 }
 
 void QZXing::setDecoder(DecoderFormatType hint)
@@ -28,31 +28,31 @@ void QZXing::setDecoder(DecoderFormatType hint)
     DecodeHints newHints;
 
     if(hint & DecoderFormat_QR_CODE)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_QR_CODE);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_QR_CODE);
 
     if(hint & DecoderFormat_DATA_MATRIX)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_DATA_MATRIX);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_DATA_MATRIX);
 
     if(hint & DecoderFormat_UPC_E)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_UPC_E);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_UPC_E);
 
     if(hint & DecoderFormat_UPC_A)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_UPC_A);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_UPC_A);
 
     if(hint & DecoderFormat_EAN_8)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_EAN_8);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_EAN_8);
 
     if(hint & DecoderFormat_EAN_13)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_EAN_13);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_EAN_13);
 
     if(hint & DecoderFormat_CODE_128)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_CODE_128);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_CODE_128);
 
     if(hint & DecoderFormat_CODE_39)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_CODE_39);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_CODE_39);
 
     if(hint & DecoderFormat_ITF)
-        newHints.addFormat((BarcodeFormat)DecoderFormat_ITF);
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_ITF);
 
     supportedFormats = newHints.getCurrentHint();
 }
@@ -71,7 +71,7 @@ QString QZXing::decodeImage(QImage image)
 
         Ref<BinaryBitmap> ref(bb);
 
-        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints(supportedFormats));
+        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)supportedFormats));
 
         QString string = QString(res->getText()->getText().c_str());
         emit tagFound(string);
