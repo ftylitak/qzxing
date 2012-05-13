@@ -54,6 +54,9 @@ void QZXing::setDecoder(DecoderFormatType hint)
     if(hint & DecoderFormat_ITF)
         newHints.addFormat((BarcodeFormat)BarcodeFormat_ITF);
 
+    if(hint & DecoderFormat_Aztec)
+        newHints.addFormat((BarcodeFormat)BarcodeFormat_AZTEC);
+
     supportedFormats = newHints.getCurrentHint();
 }
 

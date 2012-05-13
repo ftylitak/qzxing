@@ -32,7 +32,8 @@ public:
                     DecoderFormat_EAN_13 = 32,
                     DecoderFormat_CODE_128 = 64,
                     DecoderFormat_CODE_39 = 128,
-                    DecoderFormat_ITF = 256
+                    DecoderFormat_ITF = 256,
+                    DecoderFormat_Aztec = 512
             } ;
     typedef unsigned int DecoderFormatType;
 
