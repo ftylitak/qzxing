@@ -17,6 +17,7 @@
 
 #include "UPCEReader.h"
 #include <zxing/ReaderException.h>
+#include <qglobal.h>
 
 namespace zxing {
   namespace oned {
@@ -86,7 +87,11 @@ namespace zxing {
       for (int numSys = 0; numSys <= 1; numSys++) {
         for (int d = 0; d < 10; d++) {
           if (lgPatternFound == NUMSYS_AND_CHECK_DIGIT_PATTERNS[numSys][d]) {
-            resultString.insert((char*)0, 1, (char) ('0' + numSys));
+#if defined(Q_OS_SYMBIAN)
+            resultString.insert((char*)0, 1, (char) ((int)'0' + numSys));
+#else
+            resultString.insert(/*(char*)*/0, 1, (char) ((int)'0' + numSys));
+#endif
             resultString.append(1, (char) ('0' + d));
             return true;
           }

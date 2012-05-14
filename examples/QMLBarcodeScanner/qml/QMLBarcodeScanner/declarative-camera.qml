@@ -40,7 +40,7 @@
 
 import Qt 4.7
 import QtMultimediaKit 1.1
-import QZXing 1.0
+import QZXing 1.2
 
 Rectangle {
     id : cameraUI
@@ -60,8 +60,14 @@ Rectangle {
         exposureCompensation: stillControls.exposureCompensation
 
         onImageCaptured : {
-            decoder.decodeImage(preview);
+            //decoder.decodeImage(preview);
+            imageToDecode.source = preview
+            decoder.decodeImageQML(imageToDecode);
         }
+    }
+
+    Image{
+        id: imageToDecode
     }
 
     CaptureControls {

@@ -30,6 +30,8 @@
 #include <zxing/common/reedsolomon/GenericGF.h>
 #include <zxing/common/IllegalArgumentException.h>
 
+#include <qglobal.h>
+
 using zxing::aztec::Decoder;
 using zxing::DecoderResult;
 using zxing::String;
@@ -49,7 +51,13 @@ namespace {
     char* ds = d;
     size_t dl = sizeof(d);
     iconv_t ic = iconv_open("UTF-8", "ISO-8859-1");
-    iconv(ic, (const char**)&ss, &sl, &ds, &dl);
+
+
+#if defined(Q_OS_SYMBIAN)
+    iconv(ic, (const char**)&ss, &sl, &ds, &dl); // for Symbian and Mingw
+#else
+    iconv(ic, (char**)&ss, &sl, &ds, &dl); // for Harmattan
+#endif
     iconv_close(ic);
     d[sizeof(d)-dl] = 0;
     result.append(d);
@@ -281,7 +289,7 @@ Ref<String> Decoder::getEncodedData(Ref<zxing::BitArray> correctedBits) {
             
 }
         
-Ref<BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits) {
+Ref<zxing::BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits) {
   //return rawbits;
   // std::printf("decoding stuff:%d datablocks in %d layers\n", ddata_->getNBDatablocks(), ddata_->getNBLayers());
             
@@ -333,10 +341,10 @@ Ref<BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits) {
     // std::printf("trying reed solomon, numECCodewords:%d\n", numECCodewords);
     ReedSolomonDecoder rsDecoder(gf);
     rsDecoder.decode(dataWords, numECCodewords);
-  } catch (ReedSolomonException rse) {
+  } catch (ReedSolomonException& rse) {
     // std::printf("got reed solomon exception:%s, throwing formatexception\n", rse.what());
     throw FormatException("rs decoding failed");
-  } catch (IllegalArgumentException iae) {
+  } catch (IllegalArgumentException& iae) {
     // std::printf("illegal argument exception: %s", iae.what());
   }
             

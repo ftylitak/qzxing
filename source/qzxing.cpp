@@ -6,6 +6,7 @@
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
 #include "CameraImageWrapper.h"
+#include "imagehandler.h"
 
 using namespace zxing;
 
@@ -20,7 +21,9 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
                DecoderFormat_EAN_13 |
                DecoderFormat_CODE_128 |
                DecoderFormat_CODE_39 |
-               DecoderFormat_ITF);
+               DecoderFormat_ITF |
+               DecoderFormat_Aztec);
+    imageHandler = new ImageHandler();
 }
 
 void QZXing::setDecoder(DecoderFormatType hint)
@@ -87,3 +90,25 @@ QString QZXing::decodeImage(QImage image)
        return "";
     }
 }
+
+QString QZXing::decodeImageQML(QObject *item)
+{
+    return decodeSubImageQML(item);
+}
+
+QString QZXing::decodeSubImageQML(QObject* item,
+                                  const double offsetX, const double offsetY,
+                                  const double width, const double height)
+{
+    if(item  == NULL)
+    {
+        emit decodingFinished(false);
+        return "";
+    }
+
+    QImage img = ((ImageHandler*)imageHandler)->extractQImage(item, offsetX, offsetY, width, height);
+
+    return decodeImage(img);
+}
+
+

@@ -41,7 +41,10 @@ QQrDecoder::QQrDecoder(QWidget *parent): QMainWindow(parent), decoder(this)
     ui.setupUi(this);
     connect(ui.centralwidget, SIGNAL(imageCaptured(QImage)), this, SLOT(decodeImage(QImage)));
     connect(&decoder, SIGNAL(tagFound(QString)), this, SLOT(reportTagFound(QString)));
-    decoder.setDecoder( QZXing::DecoderFormat_DATA_MATRIX);//DecoderFormat_QR_CODE | DecoderFormat_EAN_13 );
+	
+	//by default all decoders available are enabled
+    //decoder.setDecoder( QZXing::DecoderFormat_DATA_MATRIX);
+    //decoder.setDecoder( QZXing::DecoderFormat_Aztec );
 }
 
 QQrDecoder::~QQrDecoder()

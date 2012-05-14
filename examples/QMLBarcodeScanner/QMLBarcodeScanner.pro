@@ -42,8 +42,10 @@ symbian{
 }
 
 win32{
-    LIBS += -LC:/QtSDKProjects/QMLBarcodeScanner/Qt_4.7.4_Desktop_Mingw \
+    LIBS += \
            -lQZXing
+
+#-LC:/QtSDKProjects/QMLBarcodeScanner/Qt_4.7.4_Desktop_Mingw \
 }
 
 # Please do not modify the following two lines. Required for deployment.

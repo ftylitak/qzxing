@@ -23,6 +23,7 @@ INCLUDEPATH  += ./
 
 HEADERS += QZXing_global.h \
     CameraImageWrapper.h \
+    imagehandler.h \
     qzxing.h \
     zxing/ResultPointCallback.h \
     zxing/ResultPoint.h \
@@ -115,6 +116,7 @@ HEADERS += QZXing_global.h \
 
 SOURCES += CameraImageWrapper.cpp \
     qzxing.cpp \
+    imagehandler.cpp \
     zxing/ResultPointCallback.cpp \
     zxing/ResultPoint.cpp \
     zxing/Result.cpp \
@@ -209,13 +211,13 @@ symbian {
     addFiles.sources = QZXing.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
-    #TARGET.CAPABILITY = All -TCB -AllFiles -DRM
-    TARGET.CAPABILITY += NetworkServices \
-        ReadUserData \
-        WriteUserData \
-        LocalServices \
-        UserEnvironment \
-        Location
+    TARGET.CAPABILITY = All -TCB -AllFiles -DRM
+#    TARGET.CAPABILITY += NetworkServices \
+#        ReadUserData \
+#        WriteUserData \
+#        LocalServices \
+#        UserEnvironment \
+#        Location
 }
 
 unix:!symbian {
@@ -234,18 +236,18 @@ win32{
 }
 
 OTHER_FILES += \
+    qtc_packaging/debian_fremantle/rules \
+    qtc_packaging/debian_fremantle/README \
+    qtc_packaging/debian_fremantle/copyright \
+    qtc_packaging/debian_fremantle/control \
+    qtc_packaging/debian_fremantle/compat \
+    qtc_packaging/debian_fremantle/changelog \
     qtc_packaging/debian_harmattan/rules \
     qtc_packaging/debian_harmattan/README \
     qtc_packaging/debian_harmattan/manifest.aegis \
     qtc_packaging/debian_harmattan/copyright \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
-    qtc_packaging/debian_harmattan/changelog \
-    qtc_packaging/debian_fremantle/rules \
-    qtc_packaging/debian_fremantle/README \
-    qtc_packaging/debian_fremantle/copyright \
-    qtc_packaging/debian_fremantle/control \
-    qtc_packaging/debian_fremantle/compat \
-    qtc_packaging/debian_fremantle/changelog
+    qtc_packaging/debian_harmattan/changelog
 
 
