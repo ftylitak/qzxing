@@ -47,7 +47,7 @@ FocusScope {
 
     property alias whiteBalance : wbModesButton.value
     property alias flashMode : flashModesButton.value
-    property alias exposureCompensation : exposureCompensationButton.value
+    //property alias exposureCompensation : exposureCompensationButton.value
 
     property int buttonsPanelWidth: buttonPaneShadow.width
 
@@ -84,7 +84,7 @@ FocusScope {
                 }
 
                 CameraButton {
-                    text: "Capture"
+                    text: "Decode"
                     onClicked: camera.captureImage()
                 }
 
@@ -147,9 +147,9 @@ FocusScope {
                     }
                 }
 
-                ExposureCompensationButton {
-                    id : exposureCompensationButton
-                }
+//                ExposureCompensationButton {
+//                    id : exposureCompensationButton
+//                }
 
                 CameraButton {
                     text: "View"

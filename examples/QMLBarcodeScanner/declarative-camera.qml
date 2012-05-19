@@ -57,10 +57,9 @@ Rectangle {
 
         flashMode: stillControls.flashMode
         whiteBalanceMode: stillControls.whiteBalance
-        exposureCompensation: stillControls.exposureCompensation
+//        exposureCompensation: stillControls.exposureCompensation
 
         onImageCaptured : {
-            //decoder.decodeImage(preview);
             imageToDecode.source = preview
             decoder.decodeImageQML(imageToDecode);
         }
@@ -68,6 +67,7 @@ Rectangle {
 
     Image{
         id: imageToDecode
+        visible: false
     }
 
     CaptureControls {
@@ -76,75 +76,15 @@ Rectangle {
         camera: camera
     }
 
+    MessageDialog{
+        id:dialog
+    }
+
     QZXing{
         id: decoder
         onTagFound: {
-            messageBox.setText(tag)
-            messageBox.state = "visible"
+            dialog.text = tag
+            dialog.open();
         }
-
-        function enableQrCodeAndEAN()
-        {
-            setDecoder(DecoderFormat_QR_CODE | DecoderFormat_EAN_13);
-        }
-    }
-
-    Rectangle{
-        id: messageBox
-        anchors.left: cameraUI.left
-        anchors.leftMargin: 10
-        anchors.right: cameraUI.right
-        anchors.rightMargin: 10
-        y: cameraUI.height / 4
-        height: cameraUI.height/2
-
-        state: "hidden"
-
-        function setText(str)
-        {
-            textArea.text = str;
-        }
-
-        Text{
-            id: textArea
-            anchors.centerIn: parent
-        }
-
-        Rectangle{
-            border.width: 2
-            width: tagLabel.width
-            height: tagLabel.height
-            anchors.bottom: messageBox.bottom
-            anchors.bottomMargin: 5
-            anchors.right: messageBox.right
-            anchors.rightMargin: 5
-
-            Text{
-                id: tagLabel
-                text: "close"
-            }
-            MouseArea{
-                anchors.fill: parent
-                onClicked: messageBox.state = "hidden"
-            }
-        }
-
-        states:[
-            State{
-                name: "visible"
-                PropertyChanges {
-                    target: messageBox
-                    opacity: 1
-                }
-            },
-            State{
-                name: "hidden"
-                PropertyChanges {
-                    target: messageBox
-                    opacity: 0
-                }
-            }
-        ]
-        Behavior on opacity{NumberAnimation{duration:100}}
     }
 }
