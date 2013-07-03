@@ -23,11 +23,14 @@
 #include <zxing/Exception.h>
 
 namespace zxing {
-class IllegalArgumentException : public zxing::Exception {
+
+class IllegalArgumentException : public Exception {
 public:
+  IllegalArgumentException();
   IllegalArgumentException(const char *msg);
   ~IllegalArgumentException() throw();
 };
+
 }
 
 #endif // __ILLEGAL_ARGUMENT_EXCEPTION_H__

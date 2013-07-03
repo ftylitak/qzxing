@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
  *  BitSource.cpp
  *  zxing
@@ -19,15 +20,16 @@
  */
 
 #include <zxing/common/BitSource.h>
+#include <sstream>
 #include <zxing/common/IllegalArgumentException.h>
 
 namespace zxing {
 
 int BitSource::readBits(int numBits) {
-  if (numBits < 0 || numBits > 32) {
-    throw IllegalArgumentException("cannot read <1 or >32 bits");
-  } else if (numBits > available()) {
-    throw IllegalArgumentException("reading more bits than are available");
+  if (numBits < 0 || numBits > 32 || numBits > available()) {
+    std::ostringstream oss;
+    oss << numBits;
+    throw IllegalArgumentException(oss.str().c_str());
   }
 
   int result = 0;
@@ -69,6 +71,6 @@ int BitSource::readBits(int numBits) {
 }
 
 int BitSource::available() {
-  return 8 * (bytes_.size() - byteOffset_) - bitOffset_;
+  return 8 * (bytes_->size() - byteOffset_) - bitOffset_;
 }
 }

@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 #ifndef __EAN_8_READER_H__
 #define __EAN_8_READER_H__
 
@@ -24,18 +25,23 @@
 #include <zxing/Result.h>
 
 namespace zxing {
-  namespace oned {
-    class EAN8Reader : public UPCEANReader {
+namespace oned {
 
-    public:
-      EAN8Reader();
+class EAN8Reader : public UPCEANReader {
+ private:
+  std::vector<int> decodeMiddleCounters;
 
-      int decodeMiddle(Ref<BitArray> row, int startGuardBegin, int startGuardEnd,
-          std::string& resultString);
+ public:
+  EAN8Reader();
 
-      BarcodeFormat getBarcodeFormat();
-    };
-  }
+  int decodeMiddle(Ref<BitArray> row,
+                   Range const& startRange,
+                   std::string& resultString);
+
+  BarcodeFormat getBarcodeFormat();
+};
+
+}
 }
 
 #endif

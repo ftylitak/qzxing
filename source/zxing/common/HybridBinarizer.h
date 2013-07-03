@@ -32,7 +32,6 @@ namespace zxing {
 	 private:
     Ref<BitMatrix> matrix_;
 	  Ref<BitArray> cached_row_;
-	  int cached_row_num_;
 
 	public:
 		HybridBinarizer(Ref<LuminanceSource> source);
@@ -43,24 +42,24 @@ namespace zxing {
   private:
     // We'll be using one-D arrays because C++ can't dynamically allocate 2D
     // arrays
-    int* calculateBlackPoints(unsigned char* luminances,
-                              int subWidth,
-                              int subHeight,
-                              int width,
-                              int height);
-    void calculateThresholdForBlock(unsigned char* luminances,
+    ArrayRef<int> calculateBlackPoints(ArrayRef<char> luminances,
+                                       int subWidth,
+                                       int subHeight,
+                                       int width,
+                                       int height);
+    void calculateThresholdForBlock(ArrayRef<char> luminances,
                                     int subWidth,
                                     int subHeight,
                                     int width,
                                     int height,
-                                    int blackPoints[],
+                                    ArrayRef<int> blackPoints,
                                     Ref<BitMatrix> const& matrix);
-    void threshold8x8Block(unsigned char* luminances,
-                           int xoffset,
-                           int yoffset,
-                           int threshold,
-                           int stride,
-                           Ref<BitMatrix> const& matrix);
+    void thresholdBlock(ArrayRef<char>luminances,
+                        int xoffset,
+                        int yoffset,
+                        int threshold,
+                        int stride,
+                        Ref<BitMatrix> const& matrix);
 	};
 
 }

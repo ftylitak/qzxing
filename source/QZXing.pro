@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-VERSION = 1.2
+VERSION = 2.2
 
 greaterThan(QT_VERSION, 4.7): QT += declarative
 
@@ -57,7 +57,6 @@ HEADERS += QZXing_global.h \
     zxing/common/GreyscaleRotatedLuminanceSource.h \
     zxing/common/GreyscaleLuminanceSource.h \
     zxing/common/GlobalHistogramBinarizer.h \
-    zxing/common/EdgeDetector.h \
     zxing/common/DetectorResult.h \
     zxing/common/DecoderResult.h \
     zxing/common/Counted.h \
@@ -66,6 +65,8 @@ HEADERS += QZXing_global.h \
     zxing/common/BitMatrix.h \
     zxing/common/BitArray.h \
     zxing/common/Array.h \
+    zxing/common/detector/MathUtils.h \
+    zxing/common/detector/JavaMath.h \
     zxing/common/detector/WhiteRectangleDetector.h \
     zxing/common/detector/MonochromeRectangleDetector.h \
     zxing/common/reedsolomon/ReedSolomonException.h \
@@ -78,7 +79,6 @@ HEADERS += QZXing_global.h \
     zxing/datamatrix/decoder/DecodedBitStreamParser.h \
     zxing/datamatrix/decoder/DataBlock.h \
     zxing/datamatrix/decoder/BitMatrixParser.h \
-    zxing/datamatrix/detector/MonochromeRectangleDetector.h \
     zxing/datamatrix/detector/DetectorException.h \
     zxing/datamatrix/detector/Detector.h \
     zxing/datamatrix/detector/CornerPoint.h \
@@ -94,6 +94,8 @@ HEADERS += QZXing_global.h \
     zxing/oned/EAN8Reader.h \
     zxing/oned/Code128Reader.h \
     zxing/oned/Code39Reader.h \
+    zxing/oned/CodaBarReader.h \
+    zxing/oned/Code93Reader.h \
     zxing/qrcode/Version.h \
     zxing/qrcode/QRCodeReader.h \
     zxing/qrcode/FormatInformation.h \
@@ -116,7 +118,16 @@ HEADERS += QZXing_global.h \
     zxing/multi/ByQuadrantReader.h \
     zxing/multi/qrcode/QRCodeMultiReader.h \
     zxing/multi/qrcode/detector/MultiFinderPatternFinder.h \
-    zxing/multi/qrcode/detector/MultiDetector.h
+    zxing/multi/qrcode/detector/MultiDetector.h \
+    zxing/pdf417/decoder/ec/ErrorCorrection.h \
+    zxing/pdf417/decoder/ec/ModulusGF.h \
+    zxing/pdf417/decoder/ec/ModulusPoly.h \
+    zxing/pdf417/decoder/BitMatrixParser.h \
+    zxing/pdf417/decoder/DecodedBitStreamParser.h \
+    zxing/pdf417/decoder/Decoder.h \
+    zxing/pdf417/detector/Detector.h \
+    zxing/pdf417/detector/LinesSampler.h \
+    zxing/pdf417/PDF417Reader.h
 
 SOURCES += CameraImageWrapper.cpp \
     qzxing.cpp \
@@ -147,15 +158,13 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/common/GreyscaleRotatedLuminanceSource.cpp \
     zxing/common/GreyscaleLuminanceSource.cpp \
     zxing/common/GlobalHistogramBinarizer.cpp \
-    zxing/common/EdgeDetector.cpp \
     zxing/common/DetectorResult.cpp \
     zxing/common/DecoderResult.cpp \
-    zxing/common/Counted.cpp \
     zxing/common/CharacterSetECI.cpp \
     zxing/common/BitSource.cpp \
     zxing/common/BitMatrix.cpp \
     zxing/common/BitArray.cpp \
-    zxing/common/Array.cpp \
+    zxing/common/BitArrayIO.cpp \
     zxing/common/detector/WhiteRectangleDetector.cpp \
     zxing/common/detector/MonochromeRectangleDetector.cpp \
     zxing/common/reedsolomon/ReedSolomonException.cpp \
@@ -175,6 +184,8 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/oned/EAN8Reader.cpp \
     zxing/oned/Code128Reader.cpp \
     zxing/oned/Code39Reader.cpp \
+    zxing/oned/CodaBarReader.cpp \
+    zxing/oned/Code93Reader.cpp \
     zxing/qrcode/QRCodeReader.cpp \
     zxing/qrcode/detector/QREdgeDetector.cpp \
     zxing/multi/MultipleBarcodeReader.cpp \
@@ -193,7 +204,6 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/datamatrix/detector/DataMatrixCornerPoint.cpp \
     zxing/datamatrix/detector/DataMatrixDetector.cpp \
     zxing/datamatrix/detector/DataMatrixDetectorException.cpp \
-    zxing/datamatrix/detector/DataMatrixMonochromeRectangleDetector.cpp \
     zxing/qrcode/decoder/QRBitMatrixParser.cpp \
     zxing/qrcode/decoder/QRDataBlock.cpp \
     zxing/qrcode/decoder/QRDataMask.cpp \
@@ -208,7 +218,17 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/qrcode/detector/QRFinderPatternInfo.cpp \
     zxing/qrcode/QRVersion.cpp \
     zxing/qrcode/QRFormatInformation.cpp \
-    zxing/qrcode/QRErrorCorrectionLevel.cpp
+    zxing/qrcode/QRErrorCorrectionLevel.cpp \
+    zxing/pdf417/decoder/ec/ErrorCorrection.cpp \
+    zxing/pdf417/decoder/ec/ModulusGF.cpp \
+    zxing/pdf417/decoder/ec/ModulusPoly.cpp \
+    zxing/pdf417/decoder/ec/ModulusPoly.cpp \
+    zxing/pdf417/decoder/PDF417BitMatrixParser.cpp \
+    zxing/pdf417/decoder/PDF417DecodedBitStreamParser.cpp \
+    zxing/pdf417/decoder/PDF417Decoder.cpp \
+    zxing/pdf417/detector/PDF417Detector.cpp \
+    zxing/pdf417/detector/LinesSampler.cpp \
+    zxing/pdf417/PDF417Reader.cpp
 
 symbian {
     TARGET.UID3 = 0xE618743C
@@ -216,13 +236,13 @@ symbian {
     addFiles.sources = QZXing.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
-    TARGET.CAPABILITY = All -TCB -AllFiles -DRM
-#    TARGET.CAPABILITY += NetworkServices \
-#        ReadUserData \
-#        WriteUserData \
-#        LocalServices \
-#        UserEnvironment \
-#        Location
+#    TARGET.CAPABILITY = All -TCB -AllFiles -DRM
+    TARGET.CAPABILITY += NetworkServices \
+        ReadUserData \
+        WriteUserData \
+        LocalServices \
+        UserEnvironment \
+        Location
 }
 
 unix:!symbian {

@@ -22,39 +22,27 @@
 #include <zxing/Result.h>
 
 namespace zxing {
-	namespace oned {
-		class Code128Reader : public OneDReader {
+namespace oned {
+
+class Code128Reader : public OneDReader {
+private:
+  static const int MAX_AVG_VARIANCE;
+  static const int MAX_INDIVIDUAL_VARIANCE;
+
+  static std::vector<int> findStartPattern(Ref<BitArray> row);
+  static int decodeCode(Ref<BitArray> row,
+                        std::vector<int>& counters,
+                        int rowOffset);
 			
-		private:
-      enum {MAX_AVG_VARIANCE = (unsigned int) (PATTERN_MATCH_RESULT_SCALE_FACTOR * 250/1000)};
-      enum {MAX_INDIVIDUAL_VARIANCE = (int) (PATTERN_MATCH_RESULT_SCALE_FACTOR * 700/1000)};
-			static const int CODE_SHIFT = 98;
-			
-			static const int CODE_CODE_C = 99;
-			static const int CODE_CODE_B = 100;
-			static const int CODE_CODE_A = 101;
-			
-			static const int CODE_FNC_1 = 102;
-			static const int CODE_FNC_2 = 97;
-			static const int CODE_FNC_3 = 96;
-			static const int CODE_FNC_4_A = 101;
-			static const int CODE_FNC_4_B = 100;
-			
-			static const int CODE_START_A = 103;
-			static const int CODE_START_B = 104;
-			static const int CODE_START_C = 105;
-			static const int CODE_STOP = 106;
-			
-			static int* findStartPattern(Ref<BitArray> row);
-			static int decodeCode(Ref<BitArray> row, int counters[], int countersCount, int rowOffset);
-			
-			void append(char* s, char c);
-		public:
-			Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
-			Code128Reader();
-			~Code128Reader();
-		};
-	}
+public:
+  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  Code128Reader();
+  ~Code128Reader();
+
+  BarcodeFormat getBarcodeFormat();
+};
+
+}
 }
 
 #endif

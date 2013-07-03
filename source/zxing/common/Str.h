@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 #ifndef __STR_H__
 #define __STR_H__
 
@@ -26,13 +27,23 @@
 
 namespace zxing {
 
+class String;
+std::ostream& operator << (std::ostream& out, String const& s);
+
 class String : public Counted {
 private:
   std::string text_;
 public:
-  String(const std::string &text);
-  const std::string &getText() const;
-  friend std::ostream &operator<<(std::ostream &out, const String &s);
+  explicit String(const std::string &text);
+  explicit String(int);
+  char charAt(int) const;
+  Ref<String> substring(int) const;
+  const std::string& getText() const;
+  int size() const;
+  void append(std::string const& tail);
+  void append(char c);
+  int length() const;
+  friend std::ostream& zxing::operator << (std::ostream& out, String const& s);
 };
 
 }

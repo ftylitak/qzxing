@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 #ifndef __MULTI_FORMAT_UPC_EAN_READER_H__
 #define __MULTI_FORMAT_UPC_EAN_READER_H__
 /*
@@ -22,17 +23,19 @@
 #include <zxing/oned/OneDReader.h>
 
 namespace zxing {
-  namespace oned {
-    class MultiFormatUPCEANReader : public OneDReader {
+namespace oned {
 
-    private:
-      std::vector<Ref<OneDReader> > readers;
-    public:
-      MultiFormatUPCEANReader(DecodeHints hints);
+class UPCEANReader;
 
-      Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
-    };
-  }
+class MultiFormatUPCEANReader : public OneDReader {
+private:
+    std::vector< Ref<UPCEANReader> > readers;
+public:
+    MultiFormatUPCEANReader(DecodeHints hints);
+    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+};
+
+}
 }
 
 #endif

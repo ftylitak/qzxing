@@ -21,25 +21,34 @@
 
 #include <zxing/aztec/AztecDetectorResult.h>
 
-namespace zxing {
-    namespace aztec {
-        AztecDetectorResult::AztecDetectorResult(Ref<BitMatrix> bits, std::vector<Ref<ResultPoint> > points, bool compact, int nbDatablocks, int nbLayers)
-        : DetectorResult(bits, points),
-        compact_(compact),
-        nbDatablocks_(nbDatablocks),
-        nbLayers_(nbLayers) {
-        }
-        
-        bool AztecDetectorResult::isCompact() {
-            return compact_;
-        }
-        
-        int AztecDetectorResult::getNBDatablocks() {
-            return nbDatablocks_;
-        }
-        
-        int AztecDetectorResult::getNBLayers() {
-            return nbLayers_;
-        }
+using zxing::aztec::AztecDetectorResult;
+
+// VC++
+using zxing::Ref;
+using zxing::ArrayRef;
+using zxing::BitMatrix;
+using zxing::ResultPoint;
+
+
+AztecDetectorResult::AztecDetectorResult(Ref<BitMatrix> bits,
+                                         ArrayRef< Ref<ResultPoint> > points,
+                                         bool compact,
+                                         int nbDatablocks,
+                                         int nbLayers)
+  : DetectorResult(bits, points),
+    compact_(compact),
+    nbDatablocks_(nbDatablocks),
+    nbLayers_(nbLayers) {
     }
+        
+bool AztecDetectorResult::isCompact() {
+  return compact_;
+}
+        
+int AztecDetectorResult::getNBDatablocks() {
+  return nbDatablocks_;
+}
+        
+int AztecDetectorResult::getNBLayers() {
+  return nbLayers_;
 }

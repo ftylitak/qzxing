@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 #ifndef __GREYSCALE_ROTATED_LUMINANCE_SOURCE__
 #define __GREYSCALE_ROTATED_LUMINANCE_SOURCE__
 /*
@@ -26,35 +27,20 @@ namespace zxing {
 
 class GreyscaleRotatedLuminanceSource : public LuminanceSource {
  private:
-  unsigned char* greyData_;
-  int dataWidth_;
-  int dataHeight_;
-  int left_;
-  int top_;
-  int width_;
-  int height_;
+  typedef LuminanceSource Super;
+  ArrayRef<char> greyData_;
+  const int dataWidth_;
+  const int left_;
+  const int top_;
 
 public:
-  GreyscaleRotatedLuminanceSource(unsigned char* greyData, int dataWidth, int dataHeight,
+  GreyscaleRotatedLuminanceSource(ArrayRef<char> greyData, int dataWidth, int dataHeight,
       int left, int top, int width, int height);
 
-  unsigned char* getRow(int y, unsigned char* row);
-  unsigned char* getMatrix();
-
-  bool isRotateSupported() const {
-    return false;
-  }
-
-  int getWidth() const {
-    return width_;
-  }
-
-  int getHeight() const {
-    return height_;
-  }
-
+  ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
+  ArrayRef<char> getMatrix() const;
 };
 
-} /* namespace */
+}
 
 #endif

@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
  *  DecodedBitStreamParser.cpp
  *  zxing
@@ -50,11 +51,11 @@ const char DecodedBitStreamParser::TEXT_SHIFT3_SET_CHARS[] = {
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', (char) 127
 };
 
-Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<unsigned char> bytes) {
+Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<char> bytes) {
   Ref<BitSource> bits(new BitSource(bytes));
   ostringstream result;
   ostringstream resultTrailer;
-  vector<unsigned char> byteSegments;
+  vector<char> byteSegments;
   int mode = ASCII_ENCODE;
   do {
     if (mode == ASCII_ENCODE) {
@@ -86,7 +87,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<unsigned char> bytes)
   if (resultTrailer.str().size() > 0) {
     result << resultTrailer.str();
   }
-  ArrayRef<unsigned char> rawBytes(bytes);
+  ArrayRef<char> rawBytes(bytes);
   Ref<String> text(new String(result.str()));
   return Ref<DecoderResult>(new DecoderResult(rawBytes, text));
 }
@@ -141,9 +142,7 @@ int DecodedBitStreamParser::decodeAsciiSegment(Ref<BitSource> bits, ostringstrea
       // Ignore this symbol for now
     } else if (oneByte >= 242) { // Not to be used in ASCII encodation
       // ... but work around encoders that end with 254, latch back to ASCII
-      if (oneByte == 254 && bits->available() == 0) {
-        // Ignore
-      } else {
+      if (oneByte != 254 || bits->available() != 0) {
         throw FormatException("Not to be used in ASCII encodation");
       }
     }
@@ -157,7 +156,7 @@ void DecodedBitStreamParser::decodeC40Segment(Ref<BitSource> bits, ostringstream
   // TODO(bbrown): The Upper Shift with C40 doesn't work in the 4 value scenario all the time
   bool upperShift = false;
 
-  int* cValues = new int[3];
+  int cValues[3];
   int shift = 0;
   do {
     // If there is only one byte left then it will be encoded as ASCII
@@ -234,7 +233,7 @@ void DecodedBitStreamParser::decodeTextSegment(Ref<BitSource> bits, ostringstrea
   // TODO(bbrown): The Upper Shift with Text doesn't work in the 4 value scenario all the time
   bool upperShift = false;
 
-  int* cValues = new int[3];
+  int cValues[3];
   int shift = 0;
   do {
     // If there is only one byte left then it will be encoded as ASCII
@@ -310,7 +309,7 @@ void DecodedBitStreamParser::decodeAnsiX12Segment(Ref<BitSource> bits, ostringst
   // Three ANSI X12 values are encoded in a 16-bit value as
   // (1600 * C1) + (40 * C2) + C3 + 1
 
-  int* cValues = new int[3];
+  int cValues[3];
   do {
     // If there is only one byte left then it will be encoded as ASCII
     if (bits->available() == 8) {
@@ -344,7 +343,7 @@ void DecodedBitStreamParser::decodeAnsiX12Segment(Ref<BitSource> bits, ostringst
   } while (bits->available() > 0);
 }
 
-void DecodedBitStreamParser::parseTwoBytes(int firstByte, int secondByte, int*& result) {
+void DecodedBitStreamParser::parseTwoBytes(int firstByte, int secondByte, int* result) {
   int fullBitValue = (firstByte << 8) + secondByte - 1;
   int temp = fullBitValue / 1600;
   result[0] = temp;
@@ -355,7 +354,6 @@ void DecodedBitStreamParser::parseTwoBytes(int firstByte, int secondByte, int*& 
 }
   
 void DecodedBitStreamParser::decodeEdifactSegment(Ref<BitSource> bits, ostringstream & result) {
-  bool unlatch = false;
   do {
     // If there is only two or less bytes left then it will be encoded as ASCII
     if (bits->available() <= 16) {
@@ -366,23 +364,24 @@ void DecodedBitStreamParser::decodeEdifactSegment(Ref<BitSource> bits, ostringst
       int edifactValue = bits->readBits(6);
 
       // Check for the unlatch character
-      if (edifactValue == 0x2B67) {  // 011111
-        unlatch = true;
-        // If we encounter the unlatch code then continue reading because the Codeword triple
-        // is padded with 0's
+      if (edifactValue == 0x1f) {  // 011111
+        // Read rest of byte, which should be 0, and stop
+        int bitsLeft = 8 - bits->getBitOffset();
+        if (bitsLeft != 8) {
+          bits->readBits(bitsLeft);
+        }
+        return;
       }
 
-      if (!unlatch) {
-        if ((edifactValue & 0x20) == 0) {  // no 1 in the leading (6th) bit
-          edifactValue |= 0x40;  // Add a leading 01 to the 6 bit binary value
-        }
-        result << (char)(edifactValue);
+      if ((edifactValue & 0x20) == 0) {  // no 1 in the leading (6th) bit
+        edifactValue |= 0x40;  // Add a leading 01 to the 6 bit binary value
       }
+      result << (char)(edifactValue);
     }
-  } while (!unlatch && bits->available() > 0);
+  } while (bits->available() > 0);
 }
   
-void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringstream& result, vector<unsigned char> byteSegments) {
+void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringstream& result, vector<char> byteSegments) {
   // Figure out how long the Base 256 Segment is.
   int codewordPosition = 1 + bits->getByteOffset(); // position is 1-indexed
   int d1 = unrandomize255State(bits->readBits(8), codewordPosition++);
@@ -400,7 +399,7 @@ void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringst
     throw FormatException("NegativeArraySizeException");
   }
 
-  unsigned char* bytes = new unsigned char[count];
+  char* bytes = new char[count];
   for (int i = 0; i < count; i++) {
     // Have seen this particular error in the wild, such as at
     // http://www.bcgen.com/demo/IDAutomationStreamingDataMatrix.aspx?MODE=3&D=Fred&PFMT=3&PT=F&X=0.3&O=0&LM=0.2

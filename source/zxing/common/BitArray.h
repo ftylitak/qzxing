@@ -18,52 +18,63 @@
  * limitations under the License.
  */
 
+#include <zxing/ZXing.h>
 #include <zxing/common/Counted.h>
 #include <zxing/common/IllegalArgumentException.h>
+#include <zxing/common/Array.h>
 #include <vector>
 #include <limits>
+#include <iostream>
 
 namespace zxing {
 
-#define ZX_LOG_DIGITS(digits) \
-    ((digits == 8) ? 3 : \
-     ((digits == 16) ? 4 : \
-      ((digits == 32) ? 5 : \
-       ((digits == 64) ? 6 : \
-        ((digits == 128) ? 7 : \
-         (-1))))))
-
 class BitArray : public Counted {
+public:
+  static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
+
 private:
-  size_t size_;
-  std::vector<unsigned int> bits_;
-  static const unsigned int bitsPerWord_ =
-    std::numeric_limits<unsigned int>::digits;
-  static const unsigned int logBits_ = ZX_LOG_DIGITS(bitsPerWord_);
-  static const unsigned int bitsMask_ = (1 << logBits_) - 1;
-  static size_t wordsForBits(size_t bits);
-  explicit BitArray();
+  int size;
+  ArrayRef<int> bits;
+  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
+  static const int bitsMask = (1 << logBits) - 1;
 
 public:
-  BitArray(size_t size);
+  BitArray(int size);
   ~BitArray();
-  size_t getSize();
+  int getSize() const;
 
-  bool get(size_t i) {
-    return (bits_[i >> logBits_] & (1 << (i & bitsMask_))) != 0;
+  bool get(int i) const {
+    return (bits[i >> logBits] & (1 << (i & bitsMask))) != 0;
   }
 
-  void set(size_t i) {
-    bits_[i >> logBits_] |= 1 << (i & bitsMask_);
+  void set(int i) {
+    bits[i >> logBits] |= 1 << (i & bitsMask);
   }
 
-  void setBulk(size_t i, unsigned int newBits);
+  int getNextSet(int from);
+  int getNextUnset(int from);
+
+  void setBulk(int i, int newBits);
   void setRange(int start, int end);
   void clear();
-  bool isRange(size_t start, size_t end, bool value);
-  std::vector<unsigned int>& getBitArray();
+  bool isRange(int start, int end, bool value);
+  std::vector<int>& getBitArray();
+  
   void reverse();
+
+  class Reverse {
+   private:
+    Ref<BitArray> array;
+   public:
+    Reverse(Ref<BitArray> array);
+    ~Reverse();
+  };
+
+private:
+  static int makeArraySize(int size);
 };
+
+std::ostream& operator << (std::ostream&, BitArray const&);
 
 }
 

@@ -1,9 +1,6 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
- *  Array.cpp
- *  zxing
- *
- *  Created by Christian Brunschen on 07/05/2008.
- *  Copyright 2008 Google UK. All rights reserved.
+ *  Copyright 2010 ZXing authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,5 +15,17 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Array.h>
+#include <zxing/common/BitArray.h>
 
+using zxing::BitArray;
+using std::ostream;
+
+ostream& zxing::operator << (ostream& os, BitArray const& ba) {
+  for (int i = 0, size = ba.getSize(); i < size; i++) {
+    if ((i & 0x07) == 0) {
+      os << ' ';
+    }
+    os << (ba.get(i) ? 'X' : '.');
+  }
+  return os;
+}

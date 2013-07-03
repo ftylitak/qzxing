@@ -23,13 +23,7 @@
 
 #include <vector>
 
-#ifdef DEBUG_COUNTING
-#include <iostream>
-#include <typeinfo>
-#endif
-
 #include <zxing/common/Counted.h>
-
 
 namespace zxing {
 
@@ -37,13 +31,17 @@ template<typename T> class Array : public Counted {
 protected:
 public:
   std::vector<T> values_;
-  Array(size_t n) :
+  Array() {}
+  Array(int n) :
       Counted(), values_(n, T()) {
   }
-  Array(T *ts, size_t n) :
+  Array(T const* ts, int n) :
       Counted(), values_(ts, ts+n) {
   }
-  Array(T v, size_t n) :
+  Array(T const* ts, T const* te) :
+      Counted(), values_(ts, te) {
+  }
+  Array(T v, int n) :
       Counted(), values_(n, v) {
   }
   Array(std::vector<T> &v) :
@@ -58,35 +56,26 @@ public:
   virtual ~Array() {
   }
   Array<T>& operator=(const Array<T> &other) {
-#ifdef DEBUG_COUNTING
-    cout << "assigning values from Array " << &other << " to this Array " << this << ", ";
-#endif
     values_ = other.values_;
-#ifdef DEBUG_COUNTING
-    cout << "new size = " << values_.size() << "\n";
-#endif
     return *this;
   }
   Array<T>& operator=(const std::vector<T> &array) {
-#ifdef DEBUG_COUNTING
-    cout << "assigning values from Array " << &array << " to this Array " << this << ", ";
-#endif
     values_ = array;
-#ifdef DEBUG_COUNTING
-    cout << "new size = " << values_.size() << "\n";
-#endif
     return *this;
   }
-  T operator[](size_t i) const {
+  T const& operator[](int i) const {
     return values_[i];
   }
-  T& operator[](size_t i) {
+  T& operator[](int i) {
     return values_[i];
   }
-  size_t size() const {
+  int size() const {
     return values_.size();
   }
-  std::vector<T> values() const {
+  bool empty() const {
+    return values_.size() == 0;
+  }
+  std::vector<T> const& values() const {
     return values_;
   }
   std::vector<T>& values() {
@@ -100,81 +89,46 @@ public:
   Array<T> *array_;
   ArrayRef() :
       array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating empty ArrayRef " << this << "\n";
-#endif
   }
-  ArrayRef(size_t n) :
+  explicit ArrayRef(int n) :
       array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << "with size " << n << "\n";
-#endif
     reset(new Array<T> (n));
   }
-  ArrayRef(T *ts, size_t n) :
+  ArrayRef(T *ts, int n) :
       array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << "with " << n << " elements at " << (void *)ts << "\n";
-#endif
     reset(new Array<T> (ts, n));
   }
   ArrayRef(Array<T> *a) :
       array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << " from pointer:\n";
-#endif
     reset(a);
-  }
-  ArrayRef(const Array<T> &a) :
-      array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << " from reference to Array " << (void *)&a << ":\n";
-#endif
-    reset(const_cast<Array<T> *>(&a));
   }
   ArrayRef(const ArrayRef &other) :
       Counted(), array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << " from ArrayRef " << &other << ":\n";
-#endif
     reset(other.array_);
   }
 
   template<class Y>
   ArrayRef(const ArrayRef<Y> &other) :
       array_(0) {
-#ifdef DEBUG_COUNTING
-    cout << "instantiating ArrayRef " << this << " from ArrayRef " << &other << ":\n";
-#endif
     reset(static_cast<const Array<T> *>(other.array_));
   }
 
   ~ArrayRef() {
-#ifdef DEBUG_COUNTING
-    cout << "destroying ArrayRef " << this << " with " << (array_ ? typeid(*array_).name() : "NULL") << " "
-         << array_ << "\n";
-#endif
     if (array_) {
       array_->release();
     }
     array_ = 0;
   }
 
-  T operator[](size_t i) const {
+  T const& operator[](int i) const {
     return (*array_)[i];
   }
-  T& operator[](size_t i) {
+
+  T& operator[](int i) {
     return (*array_)[i];
-  }
-  size_t size() const {
-    return array_->size();
   }
 
   void reset(Array<T> *a) {
-#ifdef DEBUG_COUNTING
-    cout << "resetting ArrayRef " << this << " from " << (array_ ? typeid(*array_).name() : "NULL") << " "
-         << array_ << " to " << (a ? typeid(*a).name() : "NULL") << " " << a << "\n";
-#endif
     if (a) {
       a->retain();
     }
@@ -195,11 +149,19 @@ public:
     return *this;
   }
 
-  Array<T>& operator*() {
+  Array<T>& operator*() const {
     return *array_;
   }
-  Array<T>* operator->() {
+
+  Array<T>* operator->() const {
     return array_;
+  }
+
+  operator bool () const {
+    return array_ != 0;
+  }
+  bool operator ! () const {
+    return array_ == 0;
   }
 };
 

@@ -1,10 +1,8 @@
-#ifndef __EDGEDETECTOR_H__
-#define __EDGEDETECTOR_H__
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
+#ifndef __ZXING_COMMON_DETECTOR_MATH_H__
+#define __ZXING_COMMON_DETECTOR_MATH_H__
 /*
- *  EdgeDetector.h
- *  zxing
- *
- *  Copyright 2010 ZXing authors All rights reserved.
+ *  Copyright 2012 ZXing authors All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +17,27 @@
  * limitations under the License.
  */
 
-
-
-#include <vector>
-#include <zxing/common/BitMatrix.h>
-#include <zxing/common/Point.h>
+#include <cmath>
 
 namespace zxing {
-namespace EdgeDetector {
+namespace common {
+namespace detector {
 
-void findEdgePoints(std::vector<Point>& points, const BitMatrix& image, Point start, Point end, bool invert, int skip, float deviation);
-Line findLine(const BitMatrix& image, Line estimate, bool invert, int deviation, float threshold, int skip);
+class Math {
+ private:
+  Math();
+  ~Math();
+ public:
 
-Point intersection(Line a, Line b);
+  // Java standard Math.round
+  static inline int round(float a) {
+    return (int)std::floor(a +0.5f);
+  }
+
+};
 
 }
 }
-#endif /* EDGEDETECTOR_H_ */
+}
+
+#endif

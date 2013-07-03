@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
  *  WhiteRectangleDetector.cpp
  *  y_wmk
@@ -20,15 +21,20 @@
 
 #include <zxing/NotFoundException.h>
 #include <zxing/common/detector/WhiteRectangleDetector.h>
-#include <math.h>
+#include <zxing/common/detector/MathUtils.h>
 #include <sstream>
 
-namespace zxing {
-using namespace std;
+using std::vector;
+using zxing::Ref;
+using zxing::ResultPoint;
+using zxing::WhiteRectangleDetector;
+using zxing::common::detector::MathUtils;
+
+// VC++
+using zxing::BitMatrix;
 
 int WhiteRectangleDetector::INIT_SIZE = 30;
 int WhiteRectangleDetector::CORR = 1;
-
 
 WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image) : image_(image) {
   width_ = image->getWidth();
@@ -222,34 +228,23 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
   }
 }
 
-/**
- * Ends up being a bit faster than Math.round(). This merely rounds its
- * argument to the nearest int, where x.5 rounds up.
- */
-int WhiteRectangleDetector::round(float d) {
-  return (int) (d + 0.5f);
-}
-
-Ref<ResultPoint> WhiteRectangleDetector::getBlackPointOnSegment(float aX, float aY, float bX, float bY) {
-  int dist = distanceL2(aX, aY, bX, bY);
+Ref<ResultPoint>
+WhiteRectangleDetector::getBlackPointOnSegment(int aX_, int aY_, int bX_, int bY_) {
+  float aX = float(aX_), aY = float(aY_), bX = float(bX_), bY = float(bY_);
+  int dist = MathUtils::round(MathUtils::distance(aX, aY, bX, bY));
   float xStep = (bX - aX) / dist;
   float yStep = (bY - aY) / dist;
+
   for (int i = 0; i < dist; i++) {
-    int x = round(aX + i * xStep);
-    int y = round(aY + i * yStep);
+    int x = MathUtils::round(aX + i * xStep);
+    int y = MathUtils::round(aY + i * yStep);
     if (image_->get(x, y)) {
-      Ref<ResultPoint> point(new ResultPoint(x, y));
+      Ref<ResultPoint> point(new ResultPoint(float(x), float(y)));
       return point;
     }
   }
   Ref<ResultPoint> point(NULL);
   return point;
-}
-
-int WhiteRectangleDetector::distanceL2(float aX, float aY, float bX, float bY) {
-  float xDiff = aX - bX;
-  float yDiff = aY - bY;
-  return round((float)sqrt(xDiff * xDiff + yDiff * yDiff));
 }
 
 /**
@@ -285,7 +280,7 @@ vector<Ref<ResultPoint> > WhiteRectangleDetector::centerEdges(Ref<ResultPoint> y
   float tj = t->getY();
 
   std::vector<Ref<ResultPoint> > corners(4);
-  if (yi < (float)width_/2) {
+  if (yi < (float)width_/2.0f) {
     Ref<ResultPoint> pointA(new ResultPoint(ti - CORR, tj + CORR));
     Ref<ResultPoint> pointB(new ResultPoint(zi + CORR, zj + CORR));
     Ref<ResultPoint> pointC(new ResultPoint(xi - CORR, xj - CORR));
@@ -332,5 +327,4 @@ bool WhiteRectangleDetector::containsBlackPoint(int a, int b, int fixed, bool ho
   }
 
   return false;
-}
 }
