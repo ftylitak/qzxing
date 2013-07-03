@@ -1,11 +1,10 @@
-#ifndef __FORMAT_EXCEPTION_H__
-#define __FORMAT_EXCEPTION_H__
-
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
- *  FormatException.h
+ *  ResultIO.cpp
  *  zxing
  *
- *  Copyright 2010 ZXing authors All rights reserved.
+ *  Created by Christian Brunschen on 13/05/2008.
+ *  Copyright 2008 ZXing authors All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +19,16 @@
  * limitations under the License.
  */
 
-#include <zxing/ReaderException.h>
+#include <zxing/Result.h>
 
-namespace zxing {
+using zxing::Result;
+using std::ostream;
 
-class FormatException : public ReaderException {
-public:
-  FormatException();
-  FormatException(const char *msg);
-  ~FormatException() throw();
-
-  static FormatException const& getFormatInstance();
-};
-
+ostream& zxing::operator<<(ostream &out, Result& result) {
+  if (result.text_ != 0) {
+    out << result.text_->getText();
+  } else {
+    out << "[" << result.rawBytes_->size() << " bytes]";
+  }
+  return out;
 }
-#endif // __FORMAT_EXCEPTION_H__

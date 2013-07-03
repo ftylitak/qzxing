@@ -1,3 +1,4 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
  *  ResultPoint.cpp
  *  zxing
@@ -19,13 +20,17 @@
  */
 
 #include <zxing/ResultPoint.h>
-#include <math.h>
+#include <zxing/common/detector/MathUtils.h>
+
+using zxing::common::detector::MathUtils;
 
 namespace zxing {
 
 ResultPoint::ResultPoint() : posX_(0), posY_(0) {}
 
 ResultPoint::ResultPoint(float x, float y) : posX_(x), posY_(y) {}
+
+ResultPoint::ResultPoint(int x, int y) : posX_(float(x)), posY_(float(y)) {}
   
 ResultPoint::~ResultPoint() {}
 
@@ -82,8 +87,11 @@ void ResultPoint::orderBestPatterns(std::vector<Ref<ResultPoint> > &patterns) {
     patterns[2] = pointC;
 }
 
-float ResultPoint::distance(Ref<ResultPoint> point1, Ref<ResultPoint> point2) {
-  return distance(point1->getX(), point1->getY(), point2->getX(), point2->getY());
+  float ResultPoint::distance(Ref<ResultPoint> pattern1, Ref<ResultPoint> pattern2) {
+  return MathUtils::distance(pattern1->posX_,
+                             pattern1->posY_,
+                             pattern2->posX_,
+                             pattern2->posY_);
 }
 
 float ResultPoint::distance(float x1, float x2, float y1, float y2) {

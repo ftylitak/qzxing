@@ -25,6 +25,10 @@ HEADERS += QZXing_global.h \
     CameraImageWrapper.h \
     imagehandler.h \
     qzxing.h \
+    zxing/ZXing.h \
+    zxing/IllegalStateException.h \
+    zxing/InvertedLuminanceSource.h \
+    zxing/ChecksumException.h \
     zxing/ResultPointCallback.h \
     zxing/ResultPoint.h \
     zxing/Result.h \
@@ -117,12 +121,13 @@ HEADERS += QZXing_global.h \
 SOURCES += CameraImageWrapper.cpp \
     qzxing.cpp \
     imagehandler.cpp \
+    zxing/ResultIO.cpp \
+    zxing/InvertedLuminanceSource.cpp \
+    zxing/ChecksumException.cpp \
     zxing/ResultPointCallback.cpp \
     zxing/ResultPoint.cpp \
     zxing/Result.cpp \
-    zxing/ReaderException.cpp \
     zxing/Reader.cpp \
-    zxing/NotFoundException.cpp \
     zxing/MultiFormatReader.cpp \
     zxing/LuminanceSource.cpp \
     zxing/FormatException.cpp \

@@ -1,14 +1,13 @@
-#ifndef __FORMAT_EXCEPTION_H__
-#define __FORMAT_EXCEPTION_H__
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
+
+#ifndef __ILLEGAL_STATE_EXCEPTION_H__
+#define __ILLEGAL_STATE_EXCEPTION_H__
 
 /*
- *  FormatException.h
- *  zxing
- *
- *  Copyright 2010 ZXing authors All rights reserved.
+ * Copyright 20011 ZXing authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may illegal use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -24,14 +23,13 @@
 
 namespace zxing {
 
-class FormatException : public ReaderException {
+class IllegalStateException : public ReaderException {
 public:
-  FormatException();
-  FormatException(const char *msg);
-  ~FormatException() throw();
-
-  static FormatException const& getFormatInstance();
+  IllegalStateException() throw() {}
+  IllegalStateException(const char *msg) throw() : ReaderException(msg) {}
+  ~IllegalStateException() throw() {}
 };
 
 }
-#endif // __FORMAT_EXCEPTION_H__
+
+#endif // __ILLEGAL_STATE_EXCEPTION_H__

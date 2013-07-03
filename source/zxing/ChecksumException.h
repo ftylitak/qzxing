@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __NOT_FOUND_EXCEPTION_H__
+#ifndef __CHECKSUM_EXCEPTION_H__
 #define __NOT_FOUND_EXCEPTION_H__
 
 /*
@@ -22,12 +22,13 @@
 #include <zxing/ReaderException.h>
 
 namespace zxing {
-
-  class NotFoundException : public ReaderException {
+  class ChecksumException : public ReaderException {
+    typedef ReaderException Base;
   public:
-    NotFoundException(const char *msg);
-    ~NotFoundException() throw();
+    ChecksumException() throw();
+    ChecksumException(const char *msg) throw();
+    ~ChecksumException() throw();
   };
-
 }
-#endif // __NOT_FOUND_EXCEPTION_H__
+
+#endif // __CHECKSUM_EXCEPTION_H__
