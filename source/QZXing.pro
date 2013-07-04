@@ -106,7 +106,6 @@ HEADERS += QZXing_global.h \
     zxing/qrcode/decoder/DataMask.h \
     zxing/qrcode/decoder/DataBlock.h \
     zxing/qrcode/decoder/BitMatrixParser.h \
-    zxing/qrcode/detector/QREdgeDetector.h \
     zxing/qrcode/detector/FinderPatternInfo.h \
     zxing/qrcode/detector/FinderPatternFinder.h \
     zxing/qrcode/detector/FinderPattern.h \
@@ -187,7 +186,6 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/oned/CodaBarReader.cpp \
     zxing/oned/Code93Reader.cpp \
     zxing/qrcode/QRCodeReader.cpp \
-    zxing/qrcode/detector/QREdgeDetector.cpp \
     zxing/multi/MultipleBarcodeReader.cpp \
     zxing/multi/GenericMultipleBarcodeReader.cpp \
     zxing/multi/ByQuadrantReader.cpp \

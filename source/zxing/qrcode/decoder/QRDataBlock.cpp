@@ -26,7 +26,7 @@ namespace qrcode {
 
 using namespace std;
 
-DataBlock::DataBlock(int numDataCodewords, ArrayRef<unsigned char> codewords) :
+DataBlock::DataBlock(int numDataCodewords, ArrayRef<char> codewords) :
     numDataCodewords_(numDataCodewords), codewords_(codewords) {
 }
 
@@ -34,12 +34,12 @@ int DataBlock::getNumDataCodewords() {
   return numDataCodewords_;
 }
 
-ArrayRef<unsigned char> DataBlock::getCodewords() {
+ArrayRef<char> DataBlock::getCodewords() {
   return codewords_;
 }
 
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<unsigned char> rawCodewords, Version *version,
+std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<char> rawCodewords, Version *version,
     ErrorCorrectionLevel &ecLevel) {
 
 
@@ -63,7 +63,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<unsigned char> ra
     for (int i = 0; i < ecBlock->getCount(); i++) {
       int numDataCodewords = ecBlock->getDataCodewords();
       int numBlockCodewords = ecBlocks.getECCodewords() + numDataCodewords;
-      ArrayRef<unsigned char> buffer(numBlockCodewords);
+      ArrayRef<char> buffer(numBlockCodewords);
       Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
     }
@@ -71,10 +71,10 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<unsigned char> ra
 
   // All blocks have the same amount of data, except that the last n
   // (where n may be 0) have 1 more byte. Figure out where these start.
-  int shorterBlocksTotalCodewords = result[0]->codewords_.size();
+  int shorterBlocksTotalCodewords = result[0]->codewords_->size();
   int longerBlocksStartAt = result.size() - 1;
   while (longerBlocksStartAt >= 0) {
-    int numCodewords = result[longerBlocksStartAt]->codewords_.size();
+    int numCodewords = result[longerBlocksStartAt]->codewords_->size();
     if (numCodewords == shorterBlocksTotalCodewords) {
       break;
     }
@@ -99,7 +99,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<unsigned char> ra
     result[j]->codewords_[shorterBlocksNumDataCodewords] = rawCodewords[rawCodewordsOffset++];
   }
   // Now add in error correction blocks
-  int max = result[0]->codewords_.size();
+  int max = result[0]->codewords_->size();
   for (int i = shorterBlocksNumDataCodewords; i < max; i++) {
     for (int j = 0; j < numResultBlocks; j++) {
       int iOffset = j < longerBlocksStartAt ? i : i + 1;
@@ -107,7 +107,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<unsigned char> ra
     }
   }
 
-  if ((size_t)rawCodewordsOffset != rawCodewords.size()) {
+  if (rawCodewordsOffset != rawCodewords->size()) {
     throw IllegalArgumentException("rawCodewordsOffset != rawCodewords.length");
   }
 
