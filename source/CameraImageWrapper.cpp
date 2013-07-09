@@ -3,16 +3,16 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-CameraImageWrapper::CameraImageWrapper() : LuminanceSource(), isSmoothTransformationEnabled(false)
+CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), isSmoothTransformationEnabled(false)
 {
 }
 
-CameraImageWrapper::CameraImageWrapper(QImage& image) : LuminanceSource() , isSmoothTransformationEnabled(false)
+CameraImageWrapper::CameraImageWrapper(QImage& image) : LuminanceSource(image.width(), image.height()) , isSmoothTransformationEnabled(false)
 {
     setImage(image);
 }
 
-CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : LuminanceSource() , isSmoothTransformationEnabled(false)
+CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : LuminanceSource(otherInstance.getWidth(), otherInstance.getHeight()) , isSmoothTransformationEnabled(false)
 {
     image = otherInstance.getOriginalImage().copy();
 }
