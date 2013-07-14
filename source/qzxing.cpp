@@ -1,7 +1,7 @@
 #include "qzxing.h"
 
 #include <zxing/common/GlobalHistogramBinarizer.h>
-#include <zxing/Binarizer.h>
+//#include <zxing/Binarizer.h>
 #include <zxing/BinaryBitmap.h>
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
@@ -28,39 +28,60 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
 
 void QZXing::setDecoder(DecoderFormatType hint)
 {
-    DecodeHints newHints;
-
-    if(hint & DecoderFormat_QR_CODE)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_QR_CODE);
-
-    if(hint & DecoderFormat_DATA_MATRIX)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_DATA_MATRIX);
-
-    if(hint & DecoderFormat_UPC_E)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_UPC_E);
-
-    if(hint & DecoderFormat_UPC_A)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_UPC_A);
-
-    if(hint & DecoderFormat_EAN_8)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_EAN_8);
-
-    if(hint & DecoderFormat_EAN_13)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_EAN_13);
-
-    if(hint & DecoderFormat_CODE_128)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_CODE_128);
-
-    if(hint & DecoderFormat_CODE_39)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_CODE_39);
-
-    if(hint & DecoderFormat_ITF)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_ITF);
+    unsigned int newHints = 0;
 
     if(hint & DecoderFormat_Aztec)
-        newHints.addFormat((BarcodeFormat)BarcodeFormat_AZTEC);
+        newHints |= BarcodeFormat::AZTEC;
 
-    supportedFormats = newHints.getCurrentHint();
+    if(hint & DecoderFormat_CODABAR)
+        newHints |= BarcodeFormat::CODABAR;
+
+    if(hint & DecoderFormat_CODE_39)
+        newHints |= BarcodeFormat::CODE_39;
+
+    if(hint & DecoderFormat_CODE_93)
+        newHints |= BarcodeFormat::CODE_93;
+
+    if(hint & DecoderFormat_CODE_128)
+        newHints |= BarcodeFormat::CODE_128;
+
+    if(hint & DecoderFormat_DATA_MATRIX)
+        newHints |= BarcodeFormat::DATA_MATRIX;
+
+    if(hint & DecoderFormat_EAN_8)
+        newHints |= BarcodeFormat::EAN_8;
+
+    if(hint & DecoderFormat_EAN_13)
+        newHints |= BarcodeFormat::EAN_13;
+
+    if(hint & DecoderFormat_ITF)
+        newHints |= BarcodeFormat::ITF;
+
+    if(hint & DecoderFormat_MAXICODE)
+        newHints |= BarcodeFormat::MAXICODE;
+
+    if(hint & DecoderFormat_PDF_417)
+        newHints |= BarcodeFormat::ITF;
+
+    if(hint & DecoderFormat_QR_CODE)
+        newHints |= BarcodeFormat::QR_CODE;
+
+    if(hint & DecoderFormat_RSS_14)
+        newHints |= BarcodeFormat::RSS_14;
+
+    if(hint & DecoderFormat_RSS_EXPANDED)
+        newHints |= BarcodeFormat::RSS_EXPANDED;
+
+    if(hint & DecoderFormat_UPC_A)
+        newHints |= BarcodeFormat::UPC_A;
+
+    if(hint & DecoderFormat_UPC_E)
+        newHints |= BarcodeFormat::UPC_E;
+
+    if(hint & DecoderFormat_UPC_EAN_EXTENSION)
+        newHints |= BarcodeFormat::UPC_EAN_EXTENSION;
+
+    supportedFormats = newHints;
 }
 
 QString QZXing::decodeImage(QImage image)

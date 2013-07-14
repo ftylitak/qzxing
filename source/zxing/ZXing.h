@@ -41,6 +41,9 @@ typedef bool boolean;
 
 #include <float.h>
 
+// It is needed to undef the isnan, because the Mingw contains the C99 macro
+#undef isnan
+
 namespace zxing {
 inline bool isnan(float v) {return _isnan(v) != 0;}
 inline bool isnan(double v) {return _isnan(v) != 0;}
