@@ -1,7 +1,7 @@
 #include "qzxing.h"
 
 #include <zxing/common/GlobalHistogramBinarizer.h>
-//#include <zxing/Binarizer.h>
+#include <zxing/Binarizer.h>
 #include <zxing/BinaryBitmap.h>
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>

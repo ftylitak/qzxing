@@ -3,7 +3,7 @@
 
 #include <QImage>
 #include <QString>
-#include <zxing/LuminanceSource.h>
+#include <zxing/zxing/LuminanceSource.h>
 
 using namespace zxing;
 
@@ -32,8 +32,11 @@ public:
 
 
     // Callers take ownership of the returned memory and must call delete [] on it themselves.
-    unsigned char* getRow(int y, unsigned char* row);
-    unsigned char* getMatrix();
+    //unsigned char* getRow(int y, unsigned char* row);
+    //unsigned char* getMatrix();
+
+    ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
+    ArrayRef<char> getMatrix() const;
 
     void setSmoothTransformation(bool enable);
   

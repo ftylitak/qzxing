@@ -104,15 +104,48 @@ QImage CameraImageWrapper::getOriginalImage()
 }
 
 
-unsigned char* CameraImageWrapper::getRow(int y, unsigned char* row)
+//unsigned char* CameraImageWrapper::getRow(int y, unsigned char* row)
+//{
+//    int width = getWidth();
+
+//    if (row == NULL)
+//    {
+//        row = new unsigned char[width];
+//        pRow = row;
+//    }
+
+//    for (int x = 0; x < width; x++)
+//        row[x] = getPixel(x,y);
+
+//    return row;
+//}
+
+//unsigned char* CameraImageWrapper::getMatrix()
+//{
+//    int width = getWidth();
+//    int height =  getHeight();
+//    unsigned char* matrix = new unsigned char[width*height];
+//    unsigned char* m = matrix;
+
+//    for(int y=0; y<height; y++)
+//    {
+//        unsigned char* tmpRow;
+//        memcpy(m, tmpRow = getRow(y, NULL), width);
+//        m += width * sizeof(unsigned char);
+
+//        delete tmpRow;
+//    }
+
+//    pMatrix = matrix;
+//    return matrix;
+//}
+
+ArrayRef<char> CameraImageWrapper::getRow(int y, ArrayRef<char> row) const
 {
     int width = getWidth();
 
-    if (row == NULL)
-    {
-        row = new unsigned char[width];
-        pRow = row;
-    }
+    if (row->size() != width)
+        row.reset(ArrayRef<char>(width));
 
     for (int x = 0; x < width; x++)
         row[x] = getPixel(x,y);
@@ -120,24 +153,25 @@ unsigned char* CameraImageWrapper::getRow(int y, unsigned char* row)
     return row;
 }
 
-unsigned char* CameraImageWrapper::getMatrix()
+ArrayRef<char> CameraImageWrapper::getMatrix() const
 {
     int width = getWidth();
     int height =  getHeight();
-    unsigned char* matrix = new unsigned char[width*height];
-    unsigned char* m = matrix;
+    char* matrix = new char[width*height];
+    char* m = matrix;
 
     for(int y=0; y<height; y++)
     {
-        unsigned char* tmpRow;
-        memcpy(m, tmpRow = getRow(y, NULL), width);
+        ArrayRef<char> tmpRow;
+        tmpRow = getRow(y, ArrayRef<char>(width));
+        memcpy(m, tmpRow->values().data(), width);
         m += width * sizeof(unsigned char);
 
-        delete tmpRow;
+        //delete tmpRow;
     }
 
-    pMatrix = matrix;
-    return matrix;
+    //pMatrix = matrix;
+    return ArrayRef<char>(matrix, width*height);
 }
 
 void CameraImageWrapper::setSmoothTransformation(bool enable)
