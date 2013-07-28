@@ -57,6 +57,8 @@ public:
 
     QZXing(QObject *parent = NULL);
 
+    QZXing(DecoderFormat decodeHints, QObject *parent = NULL);
+
 #if QT_VERSION >= 0x040700
     static void registerQMLTypes()
     {

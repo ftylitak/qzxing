@@ -27,60 +27,68 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
     imageHandler = new ImageHandler();
 }
 
+QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
+{
+    decoder = new MultiFormatReader();
+    imageHandler = new ImageHandler();
+
+    setDecoder(decodeHints);
+}
+
 void QZXing::setDecoder(const uint &hint)
 {
     unsigned int newHints = 0;
 
     if(hint & DecoderFormat_Aztec)
-        newHints |= BarcodeFormat::AZTEC;
+        newHints |= DecodeHints::AZTEC_HINT;
 
     if(hint & DecoderFormat_CODABAR)
-        newHints |= BarcodeFormat::CODABAR;
+        newHints |= DecodeHints::CODABAR_HINT;
 
     if(hint & DecoderFormat_CODE_39)
-        newHints |= BarcodeFormat::CODE_39;
+        newHints |= DecodeHints::CODE_39_HINT;
 
     if(hint & DecoderFormat_CODE_93)
-        newHints |= BarcodeFormat::CODE_93;
+        newHints |= DecodeHints::CODE_93_HINT;
 
     if(hint & DecoderFormat_CODE_128)
-        newHints |= BarcodeFormat::CODE_128;
+        newHints |= DecodeHints::CODE_128_HINT;
 
     if(hint & DecoderFormat_DATA_MATRIX)
-        newHints |= BarcodeFormat::DATA_MATRIX;
+        newHints |= DecodeHints::DATA_MATRIX_HINT;
 
     if(hint & DecoderFormat_EAN_8)
-        newHints |= BarcodeFormat::EAN_8;
+        newHints |= DecodeHints::EAN_8_HINT;
 
     if(hint & DecoderFormat_EAN_13)
-        newHints |= BarcodeFormat::EAN_13;
+        newHints |= DecodeHints::EAN_13_HINT;
 
     if(hint & DecoderFormat_ITF)
-        newHints |= BarcodeFormat::ITF;
+        newHints |= DecodeHints::ITF_HINT;
 
     if(hint & DecoderFormat_MAXICODE)
-        newHints |= BarcodeFormat::MAXICODE;
+        newHints |= DecodeHints::MAXICODE_HINT;
 
     if(hint & DecoderFormat_PDF_417)
-        newHints |= BarcodeFormat::ITF;
+        newHints |= DecodeHints::PDF_417_HINT;
 
     if(hint & DecoderFormat_QR_CODE)
-        newHints |= BarcodeFormat::QR_CODE;
+        newHints |= DecodeHints::QR_CODE_HINT;
 
     if(hint & DecoderFormat_RSS_14)
-        newHints |= BarcodeFormat::RSS_14;
+        newHints |= DecodeHints::RSS_14_HINT;
 
     if(hint & DecoderFormat_RSS_EXPANDED)
-        newHints |= BarcodeFormat::RSS_EXPANDED;
+        newHints |= DecodeHints::RSS_EXPANDED_HINT;
 
     if(hint & DecoderFormat_UPC_A)
-        newHints |= BarcodeFormat::UPC_A;
+        newHints |= DecodeHints::UPC_A_HINT;
 
     if(hint & DecoderFormat_UPC_E)
-        newHints |= BarcodeFormat::UPC_E;
+        newHints |= DecodeHints::UPC_E_HINT;
 
     if(hint & DecoderFormat_UPC_EAN_EXTENSION)
-        newHints |= BarcodeFormat::UPC_EAN_EXTENSION;
+        newHints |= DecodeHints::UPC_EAN_EXTENSION_HINT;
 
     enabledDecoders = newHints;
 
