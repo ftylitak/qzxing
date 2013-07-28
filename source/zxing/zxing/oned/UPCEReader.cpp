@@ -91,7 +91,7 @@ bool UPCEReader::determineNumSysAndCheckDigit(std::string& resultString, int lgP
   for (int numSys = 0; numSys <= 1; numSys++) {
     for (int d = 0; d < 10; d++) {
       if (lgPatternFound == NUMSYS_AND_CHECK_DIGIT_PATTERNS[numSys][d]) {
-        resultString.insert(0, 1, (char) ('0' + numSys));
+        resultString.insert((size_t)0, (size_t)1, (char) ('0' + numSys));
         resultString.append(1, (char) ('0' + d));
         return true;
       }

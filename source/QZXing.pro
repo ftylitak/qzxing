@@ -1,8 +1,4 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2011-11-13T18:12:28
-#
-#-------------------------------------------------
+
 
 QT       += core gui
 
@@ -135,7 +131,6 @@ HEADERS += QZXing_global.h \
     zxing/bigint/BigIntegerLibrary.hh \
     zxing/bigint/BigIntegerAlgorithms.hh \
     zxing/bigint/BigInteger.hh \
-    zxing/win32/zxing/stdint.h \
     zxing/win32/zxing/iconv.h
 
 SOURCES += CameraImageWrapper.cpp \
@@ -269,8 +264,16 @@ unix:!symbian {
     INSTALLS += target
 }
 
-win32{
-    DEFINES += NO_ICONV
+win32-msvc*{
+
+    INCLUDEPATH += zxing/win32/zxing \
+                zxing/win32/zxing/stdint
+    HEADERS += zxing/win32/zxing/stdint/stdint.h
+}
+
+win32-g++{
+    INCLUDEPATH += zxing/win32/zxing
+#    DEFINES += NO_ICONV
 }
 
 OTHER_FILES += \

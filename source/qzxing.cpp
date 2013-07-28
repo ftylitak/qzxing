@@ -7,13 +7,14 @@
 #include <zxing/DecodeHints.h>
 #include "CameraImageWrapper.h"
 #include "imagehandler.h"
+#include <QTime>
 
 using namespace zxing;
 
 QZXing::QZXing(QObject *parent) : QObject(parent)
 {
     decoder = new MultiFormatReader();
-    setDecoder(DecoderFormat_QR_CODE |
+    /*setDecoder(DecoderFormat_QR_CODE |
                DecoderFormat_DATA_MATRIX |
                DecoderFormat_UPC_E |
                DecoderFormat_UPC_A |
@@ -22,11 +23,11 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
                DecoderFormat_CODE_128 |
                DecoderFormat_CODE_39 |
                DecoderFormat_ITF |
-               DecoderFormat_Aztec);
+               DecoderFormat_Aztec);*/
     imageHandler = new ImageHandler();
 }
 
-void QZXing::setDecoder(DecoderFormatType hint)
+void QZXing::setDecoder(const uint &hint)
 {
     unsigned int newHints = 0;
 
@@ -81,13 +82,24 @@ void QZXing::setDecoder(DecoderFormatType hint)
     if(hint & DecoderFormat_UPC_EAN_EXTENSION)
         newHints |= BarcodeFormat::UPC_EAN_EXTENSION;
 
-    supportedFormats = newHints;
+    enabledDecoders = newHints;
+
+    emit enabledFormatsChanged();
 }
 
 QString QZXing::decodeImage(QImage image)
 {
+    QTime t;
+    t.start();
     Ref<Result> res;
     emit decodingStarted();
+
+	if(image.isNull())
+	{
+		emit decodingFinished(false);
+		processingTime = -1;
+		return "";
+	}
 
     try{
         Ref<LuminanceSource> imageRef(new CameraImageWrapper(image));
@@ -98,9 +110,10 @@ QString QZXing::decodeImage(QImage image)
 
         Ref<BinaryBitmap> ref(bb);
 
-        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)supportedFormats));
+        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
 
         QString string = QString(res->getText()->getText().c_str());
+        processingTime = t.elapsed();
         emit tagFound(string);
         emit decodingFinished(true);
         return string;
@@ -108,8 +121,17 @@ QString QZXing::decodeImage(QImage image)
     catch(zxing::Exception& e)
     {
        emit decodingFinished(false);
+       processingTime = -1;
        return "";
     }
+}
+
+QString QZXing::decodeImageFromFile(QString imageFilePath)
+{
+	//used to have a check if this image exists
+	//but was removed because if the image file path doesn't point to a valid image
+	// then the QImage::isNull will return true and the decoding will fail eitherway.
+	return decodeImage(QImage(imageFilePath));
 }
 
 QString QZXing::decodeImageQML(QObject *item)
@@ -131,5 +153,17 @@ QString QZXing::decodeSubImageQML(QObject* item,
 
     return decodeImage(img);
 }
+
+int QZXing::getProcessTimeOfLastDecoding()
+{
+    return processingTime;
+}
+
+uint QZXing::getEnabledFormats() const
+{
+    return enabledDecoders;
+}
+
+
 
 

@@ -23,6 +23,7 @@
 #include <zxing/common/CharacterSetECI.h>
 #include <zxing/FormatException.h>
 #include <zxing/common/StringUtils.h>
+#include <qglobal.h>
 #include <iostream>
 #ifndef NO_ICONV
 #include <iconv.h>
@@ -82,7 +83,11 @@ void DecodedBitStreamParser::append(std::string &result,
   size_t nTo = maxOut;
 
   while (nFrom > 0) {
-    size_t oneway = iconv(cd, &fromPtr, &nFrom, &toPtr, &nTo);
+#ifdef Q_OS_SYMBIAN
+      size_t oneway = iconv(cd, &fromPtr, &nFrom, &toPtr, &nTo);
+#else
+      size_t oneway = iconv(cd, (char**)&fromPtr, &nFrom, &toPtr, &nTo);
+#endif
     if (oneway == (size_t)(-1)) {
       iconv_close(cd);
       delete[] bufOut;

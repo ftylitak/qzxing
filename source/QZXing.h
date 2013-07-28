@@ -18,12 +18,19 @@
   *
   * Regarding DecoderFormat, by default all of those are enabled (except DataMatrix will is still not supported)
   */
-class QZXINGSHARED_EXPORT QZXing : public QObject{
+class
+#ifndef DISABLE_LIBRARY_FEATURES
+        QZXINGSHARED_EXPORT
+#endif
+        QZXing : public QObject{
+
     Q_OBJECT
     Q_ENUMS(DecoderFormat)
+    Q_PROPERTY(int processingTime READ getProcessTimeOfLastDecoding)
+    Q_PROPERTY(uint enabledDecoders READ getEnabledFormats WRITE setDecoder NOTIFY enabledFormatsChanged)
+
 public:
     /*
-
      *
      */
     enum DecoderFormat {
@@ -48,20 +55,12 @@ public:
     } ;
     typedef unsigned int DecoderFormatType;
 
-public:
     QZXing(QObject *parent = NULL);
-
-    /**
-      * Set the enabled decoders.
-      * As argument it is possible to pass conjuction of decoders by using logic OR.
-      * e.x. setDecoder ( DecoderFormat_QR_CODE | DecoderFormat_EAN_13 | DecoderFormat_CODE_39 )
-      */
-    void setDecoder(DecoderFormatType hint);
 
 #if QT_VERSION >= 0x040700
     static void registerQMLTypes()
     {
-        qmlRegisterType<QZXing>("QZXing", 1, 2, "QZXing");
+        qmlRegisterType<QZXing>("QZXing", 2, 2, "QZXing");
     }
 #endif
 
@@ -71,6 +70,12 @@ public slots:
       *
       */
     QString decodeImage(QImage image);
+
+    /**
+      * The decoding function. Will try to decode the given image based on the enabled decoders.
+      * The input image is read from a local image file.
+      */
+    QString decodeImageFromFile(QString imageFilePath);
 
     /**
       * The decoding function accessible from QML
@@ -85,15 +90,32 @@ public slots:
                               const double offsetX = 0 , const double offsetY = 0,
                               const double width = 0, const double height = 0);
 
+    /**
+      * Get the prossecing time in millisecond of the last decode operation.
+      * Added mainly as a statistic measure.
+      * Decoding operation fails, the processing time equals to -1.
+      */
+    int getProcessTimeOfLastDecoding();
+
+    uint getEnabledFormats() const;
+    /**
+      * Set the enabled decoders.
+      * As argument it is possible to pass conjuction of decoders by using logic OR.
+      * e.x. setDecoder ( DecoderFormat_QR_CODE | DecoderFormat_EAN_13 | DecoderFormat_CODE_39 )
+      */
+    void setDecoder(const uint& hint);
+
 signals:
     void decodingStarted();
     void decodingFinished(bool succeeded);
     void tagFound(QString tag);
+    void enabledFormatsChanged();
 
 private:
     void* decoder;
-    DecoderFormatType supportedFormats;
+    DecoderFormatType enabledDecoders;
     QObject* imageHandler;
+    int processingTime;
 };
 
 #endif // QZXING_H

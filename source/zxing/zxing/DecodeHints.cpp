@@ -29,7 +29,9 @@ using zxing::DecodeHints;
 // VC++
 using zxing::BarcodeFormat;
 
+#ifndef _MSC_VER
 const DecodeHintType DecodeHints::CHARACTER_SET;
+#endif
 
 const DecodeHints DecodeHints::PRODUCT_HINT(
   UPC_A_HINT |
