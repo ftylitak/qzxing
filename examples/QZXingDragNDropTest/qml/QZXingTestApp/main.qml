@@ -14,6 +14,7 @@ Rectangle {
         anchors.top: parent.top
         height: parent.height-200
 
+
         DropArea{
             anchors.fill: parent
             onFileDroped: decoder.decodeImageFromFile(url)
@@ -81,9 +82,12 @@ Rectangle {
                 anchors.bottom: label.top
 
                 Flow{
+                    id: flow
                     anchors.fill: parent
                     spacing: 10
                     anchors.margins: 5
+
+                    property int hintSum: 0
 
                     move: Transition {
                         NumberAnimation {
@@ -92,24 +96,30 @@ Rectangle {
                         }
                     }
 
-                    ToggleButton{ text: "Aztec" }
-                    ToggleButton{ text: "Codabar" }
-                    ToggleButton{ text: "Code_39" }
-                    ToggleButton{ text: "Code_93" }
-                    ToggleButton{ text: "Code_128" }
-                    ToggleButton{ text: "Data Matrix" }
-                    ToggleButton{ text: "EAN_8" }
-                    ToggleButton{ text: "EAN_13" }
-                    ToggleButton{ text: "ITF" }
-                    ToggleButton{ text: "Maxicode" }
-                    ToggleButton{ text: "PDF_417" }
-                    ToggleButton{ text: "Qr Code" }
-                    ToggleButton{ text: "RSS 14" }
-                    ToggleButton{ text: "RSS expanded" }
-                    ToggleButton{ text: "UPC A" }
-                    ToggleButton{ text: "UPC E" }
-                    ToggleButton{ text: "UPC EAN extension" }
+                    ToggleButton{ text: "Aztec"; decoderHint: QZXing.DecoderFormat_Aztec}
+                    ToggleButton{ text: "Codabar"; decoderHint: QZXing.DecoderFormat_CODABAR }
+                    ToggleButton{ text: "Code_39"; decoderHint: QZXing.DecoderFormat_CODE_39 }
+                    ToggleButton{ text: "Code_93"; decoderHint: QZXing.DecoderFormat_CODE_93 }
+                    ToggleButton{ text: "Code_128"; decoderHint: QZXing.DecoderFormat_CODE_128 }
+                    ToggleButton{ text: "Data Matrix"; decoderHint: QZXing.DecoderFormat_DATA_MATRIX }
+                    ToggleButton{ text: "EAN_8"; decoderHint: QZXing.DecoderFormat_EAN_8 }
+                    ToggleButton{ text: "EAN_13"; decoderHint: QZXing.DecoderFormat_EAN_13 }
+                    ToggleButton{ text: "ITF"; decoderHint: QZXing.DecoderFormat_ITF }
+                    ToggleButton{ text: "Maxicode"; decoderHint: QZXing.DecoderFormat_MAXICODE }
+                    ToggleButton{ text: "PDF_417"; decoderHint: QZXing.DecoderFormat_PDF_417 }
+                    ToggleButton{ text: "Qr Code"; decoderHint: QZXing.DecoderFormat_QR_CODE }
+                    ToggleButton{ text: "RSS 14"; decoderHint: QZXing.DecoderFormat_RSS_14 }
+                    ToggleButton{ text: "RSS expanded"; decoderHint: QZXing.DecoderFormat_RSS_EXPANDED }
+                    ToggleButton{ text: "UPC A"; decoderHint: QZXing.DecoderFormat_UPC_A }
+                    ToggleButton{ text: "UPC E"; decoderHint: QZXing.DecoderFormat_UPC_E }
+                    ToggleButton{ text: "UPC EAN extension"; decoderHint: QZXing.DecoderFormat_UPC_EAN_EXTENSION }
 
+                    function updateDecoderHints(hint)
+                    {
+                        //XOR operator to toggle the specific decoder
+                        hintSum = hintSum ^ hint;
+                        decoder.enabledDecoders = hintSum
+                    }
                 }
             }
 
@@ -132,7 +142,7 @@ Rectangle {
 
     QZXing{
         id: decoder
-        enabledDecoders: QZXing.DecoderFormat_QR_CODE
+        //enabledDecoders: QZXing.DecoderFormat_QR_CODE
 
         onTagFound: {
             log.add("Tag found: " +tag+ ", milliseconds: " + processingTime)

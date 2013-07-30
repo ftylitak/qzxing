@@ -123,7 +123,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/bigint/BigIntegerUtils.hh \
     $$PWD/zxing/bigint/BigIntegerLibrary.hh \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.hh \
-    $$PWD/zxing/bigint/BigInteger.hh
+    $$PWD/zxing/bigint/BigInteger.hh \
+    qzxing/qzxingworker_p.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
@@ -227,7 +228,8 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigUnsigned.cc \
     $$PWD/zxing/bigint/BigIntegerUtils.cc \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
-    $$PWD/zxing/bigint/BigInteger.cc
+    $$PWD/zxing/bigint/BigInteger.cc \
+    qzxing/qzxingworker_p.cpp
 
 symbian {
     TARGET.UID3 = 0xE618743C

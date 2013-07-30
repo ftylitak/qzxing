@@ -12,6 +12,8 @@ Rectangle {
     border.width: 1
     radius: 5
 
+    property int decoderHint;
+
     Text{
         id: label
         color: "white"
@@ -35,4 +37,6 @@ Rectangle {
             PropertyChanges {target: rect; color:"darkgray"}
         }
     ]
+
+    onIsPressedChanged: parent.updateDecoderHints(decoderHint)
 }

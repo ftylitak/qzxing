@@ -9,6 +9,9 @@
 #include "imagehandler.h"
 #include <QTime>
 
+#include "qzxingworker_p.h"
+#include <QThread>
+
 using namespace zxing;
 
 QZXing::QZXing(QObject *parent) : QObject(parent)
@@ -95,53 +98,85 @@ void QZXing::setDecoder(const uint &hint)
     emit enabledFormatsChanged();
 }
 
+void QZXing::setIsThreaded(bool enabledThreads)
+{
+    isThreaded = enabledThreads;
+}
+
 QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    QTime t;
-    t.start();
-    Ref<Result> res;
-    emit decodingStarted();
+    isThreaded = true;
 
-    if(image.isNull())
+    if(isThreaded)
     {
-        emit decodingFinished(false);
-        processingTime = -1;
+        QThread *thread = new QThread;
+
+        QZXingWorker_p* worker = new QZXingWorker_p();
+        connect(worker, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
+        connect(worker, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
+        connect(worker, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
+        worker->setData(&processingTime, image, maxWidth, maxHeight, smoothTransformation, decoder, enabledDecoders);
+        worker->moveToThread(thread);
+
+        thread->start();
+
+        QMetaObject::invokeMethod(worker, "decode", Qt::QueuedConnection);
+
         return "";
     }
-
-    try{
-        CameraImageWrapper* ciw;
-
-        if(maxWidth > 0 || maxHeight > 0)
-        {
-            ciw = new CameraImageWrapper();
-            ciw->setSmoothTransformation(smoothTransformation);
-            ciw->setImage(image, maxWidth, maxHeight);
-        }
-        else
-            ciw = new CameraImageWrapper(image);
-
-        Ref<LuminanceSource> imageRef(ciw);
-        GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
-
-        Ref<Binarizer> bz (binz);
-        BinaryBitmap* bb = new BinaryBitmap(bz);
-
-        Ref<BinaryBitmap> ref(bb);
-
-        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
-
-        QString string = QString(res->getText()->getText().c_str());
-        processingTime = t.elapsed();
-        emit tagFound(string);
-        emit decodingFinished(true);
-        return string;
-    }
-    catch(zxing::Exception& e)
+    else
     {
-       emit decodingFinished(false);
-       processingTime = -1;
-       return "";
+        QTime t;
+        t.start();
+        Ref<Result> res;
+        emit decodingStarted();
+
+        if(image.isNull())
+        {
+            emit decodingFinished(false);
+            processingTime = -1;
+            return "";
+        }
+
+        try{
+            CameraImageWrapper* ciw;
+
+            if(maxWidth > 0 || maxHeight > 0)
+            {
+                ciw = new CameraImageWrapper();
+                ciw->setSmoothTransformation(smoothTransformation);
+                ciw->setImage(image, maxWidth, maxHeight);
+            }
+            else
+                ciw = new CameraImageWrapper(image);
+
+            Ref<LuminanceSource> imageRef(ciw);
+            GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
+
+            Ref<Binarizer> bz (binz);
+            BinaryBitmap* bb = new BinaryBitmap(bz);
+
+            Ref<BinaryBitmap> ref(bb);
+
+            res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
+
+            QString string = QString(res->getText()->getText().c_str());
+            processingTime = t.elapsed();
+            emit tagFound(string);
+            emit decodingFinished(true);
+
+            delete ciw;
+            delete binz;
+            delete bb;
+
+            return string;
+        }
+        catch(zxing::Exception& e)
+        {
+           emit decodingFinished(false);
+           processingTime = -1;
+           return "";
+        }
     }
 }
 
