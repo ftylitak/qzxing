@@ -95,22 +95,33 @@ void QZXing::setDecoder(const uint &hint)
     emit enabledFormatsChanged();
 }
 
-QString QZXing::decodeImage(QImage image)
+QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     QTime t;
     t.start();
     Ref<Result> res;
     emit decodingStarted();
 
-	if(image.isNull())
-	{
-		emit decodingFinished(false);
-		processingTime = -1;
-		return "";
-	}
+    if(image.isNull())
+    {
+        emit decodingFinished(false);
+        processingTime = -1;
+        return "";
+    }
 
     try{
-        Ref<LuminanceSource> imageRef(new CameraImageWrapper(image));
+        CameraImageWrapper* ciw;
+
+        if(maxWidth > 0 || maxHeight > 0)
+        {
+            ciw = new CameraImageWrapper();
+            ciw->setSmoothTransformation(smoothTransformation);
+            ciw->setImage(image, maxWidth, maxHeight);
+        }
+        else
+            ciw = new CameraImageWrapper(image);
+
+        Ref<LuminanceSource> imageRef(ciw);
         GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
 
         Ref<Binarizer> bz (binz);
@@ -134,12 +145,12 @@ QString QZXing::decodeImage(QImage image)
     }
 }
 
-QString QZXing::decodeImageFromFile(QString imageFilePath)
+QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
 	//used to have a check if this image exists
 	//but was removed because if the image file path doesn't point to a valid image
 	// then the QImage::isNull will return true and the decoding will fail eitherway.
-	return decodeImage(QImage(imageFilePath));
+    return decodeImage(QImage(imageFilePath), maxWidth, maxHeight, smoothTransformation);
 }
 
 QString QZXing::decodeImageQML(QObject *item)

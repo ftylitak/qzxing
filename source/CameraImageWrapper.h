@@ -24,8 +24,8 @@ public:
     /**
       * Set the source of the image. If it fails,  returns false.
       */
-    bool setImage(QString fileName);
-    bool setImage(QImage newImage);
+    bool setImage(QString fileName, int maxWidth=-1, int maxHeight=-1);
+    bool setImage(QImage newImage, int maxWidth=-1, int maxHeight=-1);
 
     QImage grayScaleImage(QImage::Format f);
     QImage getOriginalImage();
@@ -39,6 +39,9 @@ public:
     ArrayRef<char> getMatrix() const;
 
     void setSmoothTransformation(bool enable);
+
+private:
+    void scale(int maxWidth, int maxHeight);
   
 private:
     QImage image;

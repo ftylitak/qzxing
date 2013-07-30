@@ -69,15 +69,20 @@ public:
 public slots:
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
+      * If the image width is larger than maxWidth or image height is larger
+      * than maxHeight then the image will be scaled down. Either way, in case of scaling, the aspect
+      * ratio of the image will be kept.
       *
+      * The smoothTransformation flag determines whether the transformation will be smooth or fast.
+      * Smooth transformation provides better results but fast transformation is...faster.
       */
-    QString decodeImage(QImage image);
+    QString decodeImage(QImage image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
 
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
       * The input image is read from a local image file.
       */
-    QString decodeImageFromFile(QString imageFilePath);
+    QString decodeImageFromFile(QString imageFilePath, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
 
     /**
       * The decoding function accessible from QML
@@ -99,6 +104,10 @@ public slots:
       */
     int getProcessTimeOfLastDecoding();
 
+    /**
+      * Get the decoders that are enabled at the moment.
+      * Returns a uint which is a bitwise OR of DecoderFormat enumeration values.
+      */
     uint getEnabledFormats() const;
     /**
       * Set the enabled decoders.
@@ -118,6 +127,11 @@ private:
     DecoderFormatType enabledDecoders;
     QObject* imageHandler;
     int processingTime;
+
+    /**
+      * If true, the decoding operation will take place at a different thread.
+      */
+    bool isThreaded;
 };
 
 #endif // QZXING_H
