@@ -115,6 +115,10 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
         connect(worker, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
         connect(worker, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
         connect(worker, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
+        connect(worker, SIGNAL(quitThread()), thread, SLOT(quit()));
+        //connect(thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        //connect(thread, SIGNAL(finished()), SLOT(deleteLater()));
+
         worker->setData(&processingTime, image, maxWidth, maxHeight, smoothTransformation, decoder, enabledDecoders);
         worker->moveToThread(thread);
 
@@ -151,12 +155,12 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
                 ciw = new CameraImageWrapper(image);
 
             Ref<LuminanceSource> imageRef(ciw);
-            GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
+            GlobalHistogramBinarizer binz(imageRef);
 
-            Ref<Binarizer> bz (binz);
-            BinaryBitmap* bb = new BinaryBitmap(bz);
+            Ref<Binarizer> bz (&binz);
+            BinaryBitmap bb(bz);
 
-            Ref<BinaryBitmap> ref(bb);
+            Ref<BinaryBitmap> ref(&bb);
 
             res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
 
@@ -166,8 +170,6 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
             emit decodingFinished(true);
 
             delete ciw;
-            delete binz;
-            delete bb;
 
             return string;
         }

@@ -10,15 +10,18 @@
 #include <QTime>
 #include <qzxing.h>
 
+#include <QDebug>
+
 using namespace zxing;
 
 QZXingWorker_p::QZXingWorker_p(QObject *parent) :
-    QObject(parent)
+    QObject(parent), maxWidth(-1), maxHeight(-1), smoothTransformation(false)
 {
 }
 
 QString QZXingWorker_p::decode()
 {
+    qDebug() << "Entered threaded decoding";
     QTime t;
     t.start();
     Ref<Result> res;
@@ -27,47 +30,47 @@ QString QZXingWorker_p::decode()
     if(image.isNull())
     {
         emit decodingFinished(false);
-        *processingTime = -1;
+
+        //*processingTime = -1;
+
+        qDebug() << "Exited threaded decoding, error";
+
+        emit quitThread();
         return "";
     }
 
     try{
-        CameraImageWrapper* ciw;
+        CameraImageWrapper ciw;
 
-        if(maxWidth > 0 || maxHeight > 0)
-        {
-            ciw = new CameraImageWrapper();
-            ciw->setSmoothTransformation(smoothTransformation);
-            ciw->setImage(image, maxWidth, maxHeight);
-        }
-        else
-            ciw = new CameraImageWrapper(image);
+        ciw.setSmoothTransformation(smoothTransformation);
+        ciw.setImage(image, maxWidth, maxHeight);
 
-        Ref<LuminanceSource> imageRef(ciw);
-        GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
+        Ref<LuminanceSource> imageRef(&ciw);
+        GlobalHistogramBinarizer binz(imageRef);
 
-        Ref<Binarizer> bz (binz);
-        BinaryBitmap* bb = new BinaryBitmap(bz);
+        Ref<Binarizer> bz (&binz);
+        BinaryBitmap bb(bz);
 
-        Ref<BinaryBitmap> ref(bb);
+        Ref<BinaryBitmap> ref(&bb);
 
         res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
 
         QString string = QString(res->getText()->getText().c_str());
-        *processingTime = t.elapsed();
+       // *processingTime = t.elapsed();
         emit tagFound(string);
         emit decodingFinished(true);
 
-        delete ciw;
-        delete binz;
-        delete bb;
-
+        qDebug() << "Exited threaded decoding";
+        emit quitThread();
         return string;
     }
     catch(zxing::Exception& e)
     {
        emit decodingFinished(false);
-       *processingTime = -1;
+      // *processingTime = -1;
+
+        qDebug() << "Exited threaded decoding, error";
+        emit quitThread();
        return "";
     }
 }

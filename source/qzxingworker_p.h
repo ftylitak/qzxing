@@ -14,6 +14,8 @@ signals:
     void decodingStarted();
     void decodingFinished(bool succeeded);
     void tagFound(QString tag);
+
+    void quitThread();
     
 public slots:
     void setData(int* processingTime, QImage image, int maxWidth, int maxHeight, bool smoothTransformation,

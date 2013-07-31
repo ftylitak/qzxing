@@ -9,8 +9,6 @@ DEFINES += QZXING_LIBRARY \
 INCLUDEPATH  += $$PWD \
 			$$PWD/zxing
 
-
-HEADERS += $$PWD/QZXing_global.h \
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \

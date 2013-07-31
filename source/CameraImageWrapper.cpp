@@ -2,6 +2,7 @@
 #include <QColor>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QDebug>
 
 CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), isSmoothTransformationEnabled(false)
 {
@@ -63,6 +64,9 @@ bool CameraImageWrapper::setImage(QString fileName, int maxWidth, int maxHeight)
 
     scale(maxWidth, maxHeight);
 
+    width = image.width();
+    height = image.height();
+
     return true;
 }
 
@@ -74,6 +78,9 @@ bool CameraImageWrapper::setImage(QImage newImage, int maxWidth, int maxHeight)
     image = newImage.copy();
 
     scale(maxWidth, maxHeight);
+
+    width = image.width();
+    height = image.height();
 
     return true;
 }
@@ -143,10 +150,13 @@ void CameraImageWrapper::setSmoothTransformation(bool enable)
 
 void CameraImageWrapper::scale(int maxWidth, int maxHeight)
 {
-    if((maxWidth != 1 || maxHeight != 1) && (image.width() > maxWidth || image.height() > maxHeight))
+    if((maxWidth != -1 || maxHeight != -1) && (image.width() > maxWidth || image.height() > maxHeight))
+    {
+        qDebug() << "Scaling image to: width " << maxWidth << ", " << ", maxHeight: " << maxHeight;
         image = image.scaled(
                     maxWidth != -1 ? maxWidth : image.width(),
                     maxHeight != -1 ? maxHeight : image.height(),
                     Qt::KeepAspectRatio,
                     isSmoothTransformationEnabled ? Qt::SmoothTransformation : Qt::FastTransformation);
+    }
 }
