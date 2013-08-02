@@ -116,19 +116,6 @@ public slots:
       */
     void setDecoder(const uint& hint);
 
-    /**
-      * If set to true, the decoding takes place in a different thread.
-      * Note that if threading is used, the decodeImage function returns
-      * an empty string. To acquire the data the user needs to connect to the signal
-      * tagFound.
-      *
-      * This option was created for convinience in case the decoding functions are used
-      * at a low-power device with big images.
-      *
-      * (PS. not sure if it gives any advantage, it will be investigated further in the future)
-      */
-    void setIsThreaded(bool enabledThreads);
-
 signals:
     void decodingStarted();
     void decodingFinished(bool succeeded);
@@ -137,8 +124,6 @@ signals:
 
 private:
     void* decoder;
-    void* worker;
-    void* thread;
     DecoderFormatType enabledDecoders;
     QObject* imageHandler;
     int processingTime;

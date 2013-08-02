@@ -136,7 +136,9 @@ Ref<String> UPCEReader::convertUPCEtoUPCA(Ref<String> const& upce_) {
     result.append(1, lastChar);
     break;
   }
-  result.append(1, upce[7]);
+  //result.append(1, upce[7]);
+  char c = (char)(*(upce.data()+7));//upce[upce.size()];
+  result.append(1, c);
   return Ref<String>(new String(result));
 }
 

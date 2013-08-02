@@ -9,6 +9,8 @@ DEFINES += QZXING_LIBRARY \
 INCLUDEPATH  += $$PWD \
 			$$PWD/zxing
 
+
+HEADERS += $$PWD/QZXing_global.h \
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \
@@ -121,8 +123,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/bigint/BigIntegerUtils.hh \
     $$PWD/zxing/bigint/BigIntegerLibrary.hh \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.hh \
-    $$PWD/zxing/bigint/BigInteger.hh \
-    qzxing/qzxingworker_p.h
+    $$PWD/zxing/bigint/BigInteger.hh
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
@@ -226,8 +227,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigUnsigned.cc \
     $$PWD/zxing/bigint/BigIntegerUtils.cc \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
-    $$PWD/zxing/bigint/BigInteger.cc \
-    qzxing/qzxingworker_p.cpp
+    $$PWD/zxing/bigint/BigInteger.cc
 
 symbian {
     TARGET.UID3 = 0xE618743C

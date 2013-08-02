@@ -9,9 +9,6 @@
 #include "imagehandler.h"
 #include <QTime>
 
-#include "qzxingworker_p.h"
-#include <QThread>
-
 using namespace zxing;
 
 QZXing::QZXing(QObject *parent) : QObject(parent)
@@ -28,16 +25,6 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
                DecoderFormat_ITF |
                DecoderFormat_Aztec);*/
     imageHandler = new ImageHandler();
-
-    QZXingWorker_p* worker_p = new QZXingWorker_p();
-    connect(worker_p, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
-    connect(worker_p, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
-    connect(worker_p, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
-
-    thread = new QThread;
-    worker_p->moveToThread(static_cast<QThread*>(thread));
-
-    worker = worker_p;
 }
 
 QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
@@ -108,97 +95,61 @@ void QZXing::setDecoder(const uint &hint)
     emit enabledFormatsChanged();
 }
 
-void QZXing::setIsThreaded(bool enabledThreads)
-{
-    isThreaded = enabledThreads;
-}
-
 QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
+    QTime t;
+    t.start();
+    Ref<Result> res;
+    emit decodingStarted();
 
-    qDebug() << "decoding";
-    isThreaded = false;
-
-    if(isThreaded)
+    if(image.isNull())
     {
-//        QZXingWorker_p* worker = new QZXingWorker_p();
-//        connect(worker, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
-//        connect(worker, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
-//        connect(worker, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
-        //connect(worker, SIGNAL(quitThread()), thread, SLOT(quit()));
-        //connect(thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
-        //connect(thread, SIGNAL(finished()), SLOT(deleteLater()));
-
-        QZXingWorker_p* worker_p = static_cast<QZXingWorker_p*>(worker);
-        worker_p->setData(&processingTime, image, maxWidth, maxHeight, smoothTransformation, decoder, enabledDecoders);
-        static_cast<QThread*>(thread)->start();
-
-        QMetaObject::invokeMethod(worker_p, "decode", Qt::QueuedConnection);
-
+        emit decodingFinished(false);
+        processingTime = -1;
         return "";
     }
-    else
+
+    try{
+        CameraImageWrapper* ciw;
+
+        if(maxWidth > 0 || maxHeight > 0)
+        {
+            ciw = new CameraImageWrapper();
+            ciw->setSmoothTransformation(smoothTransformation);
+            ciw->setImage(image, maxWidth, maxHeight);
+        }
+        else
+            ciw = new CameraImageWrapper(image);
+
+        Ref<LuminanceSource> imageRef(ciw);
+        GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
+
+        Ref<Binarizer> bz (binz);
+        BinaryBitmap* bb = new BinaryBitmap(bz);
+
+        Ref<BinaryBitmap> ref(bb);
+
+        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
+
+        QString string = QString(res->getText()->getText().c_str());
+        processingTime = t.elapsed();
+        emit tagFound(string);
+        emit decodingFinished(true);
+        return string;
+    }
+    catch(zxing::Exception& e)
     {
-        QTime t;
-        t.start();
-        Ref<Result> res;
-        emit decodingStarted();
-
-        if(image.isNull())
-        {
-            emit decodingFinished(false);
-            processingTime = -1;
-            return "";
-        }
-
-        CameraImageWrapper* ciw = NULL;
-
-        try{
-            if(maxWidth > 0 || maxHeight > 0)
-            {
-                ciw = new CameraImageWrapper();
-                ciw->setSmoothTransformation(smoothTransformation);
-                ciw->setImage(image, maxWidth, maxHeight);
-            }
-            else
-                ciw = new CameraImageWrapper(image);
-
-            Ref<LuminanceSource> imageRef(ciw);
-            GlobalHistogramBinarizer binz(imageRef);
-
-            Ref<Binarizer> bz (&binz);
-            BinaryBitmap bb(bz);
-
-            Ref<BinaryBitmap> ref(&bb);
-
-            res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
-
-            QString string = QString(res->getText()->getText().c_str());
-            processingTime = t.elapsed();
-            emit tagFound(string);
-            emit decodingFinished(true);
-
-            delete ciw;
-
-            return string;
-        }
-        catch(zxing::Exception& e)
-        {
-            if(!ciw)
-                delete ciw;
-
-            emit decodingFinished(false);
-            processingTime = -1;
-            return "";
-        }
+       emit decodingFinished(false);
+       processingTime = -1;
+       return "";
     }
 }
 
 QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    //used to have a check if this image exists
-    //but was removed because if the image file path doesn't point to a valid image
-    // then the QImage::isNull will return true and the decoding will fail eitherway.
+	//used to have a check if this image exists
+	//but was removed because if the image file path doesn't point to a valid image
+	// then the QImage::isNull will return true and the decoding will fail eitherway.
     return decodeImage(QImage(imageFilePath), maxWidth, maxHeight, smoothTransformation);
 }
 

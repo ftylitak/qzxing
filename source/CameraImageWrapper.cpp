@@ -2,10 +2,8 @@
 #include <QColor>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QDebug>
 
-#include <vector>
-std::vector<unsigned char*> allocatedObjects;
+#include <vld.h>
 
 CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), isSmoothTransformationEnabled(false)
 {
@@ -23,13 +21,6 @@ CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : Lumi
 
 CameraImageWrapper::~CameraImageWrapper()
 {
-    for(int i=0; i<allocatedObjects.size(); i++)
-    {
-        qDebug() << "Deallocating...";
-        delete allocatedObjects[i];
-    }
-
-    allocatedObjects.clear();
 }
 
 int CameraImageWrapper::getWidth() const
@@ -62,9 +53,6 @@ unsigned char* CameraImageWrapper::copyMatrix() const
         }
     }
 
-    qDebug() << "Adding pointer";
-    allocatedObjects.push_back(newMatrix);
-
     return newMatrix;
 }
 
@@ -75,10 +63,10 @@ bool CameraImageWrapper::setImage(QString fileName, int maxWidth, int maxHeight)
     if(!isLoaded)
         return false;
 
-    scale(maxWidth, maxHeight);
-
     width = image.width();
     height = image.height();
+
+    scale(maxWidth, maxHeight);
 
     return true;
 }
@@ -90,10 +78,10 @@ bool CameraImageWrapper::setImage(QImage newImage, int maxWidth, int maxHeight)
 
     image = newImage.copy();
 
-    scale(maxWidth, maxHeight);
-
     width = image.width();
     height = image.height();
+
+    scale(maxWidth, maxHeight);
 
     return true;
 }
@@ -138,10 +126,6 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
     char* matrix = new char[width*height];
     char* m = matrix;
 
-    qDebug() << "getting matrix";
-
-    allocatedObjects.push_back((unsigned char*)matrix);
-
     for(int y=0; y<height; y++)
     {
         ArrayRef<char> tmpRow;
@@ -157,7 +141,13 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
     }
 
     //pMatrix = matrix;
-    return ArrayRef<char>(matrix, width*height);
+	ArrayRef<char> arr = ArrayRef<char>(matrix, width*height);
+
+	if(matrix)
+		delete matrix;
+
+
+    return arr;
 }
 
 void CameraImageWrapper::setSmoothTransformation(bool enable)
@@ -167,13 +157,10 @@ void CameraImageWrapper::setSmoothTransformation(bool enable)
 
 void CameraImageWrapper::scale(int maxWidth, int maxHeight)
 {
-    if((maxWidth != -1 || maxHeight != -1) && (image.width() > maxWidth || image.height() > maxHeight))
-    {
-        qDebug() << "Scaling image to: width " << maxWidth << ", " << ", maxHeight: " << maxHeight;
+    if((maxWidth != 1 || maxHeight != 1) && (image.width() > maxWidth || image.height() > maxHeight))
         image = image.scaled(
                     maxWidth != -1 ? maxWidth : image.width(),
                     maxHeight != -1 ? maxHeight : image.height(),
                     Qt::KeepAspectRatio,
                     isSmoothTransformationEnabled ? Qt::SmoothTransformation : Qt::FastTransformation);
-    }
 }
