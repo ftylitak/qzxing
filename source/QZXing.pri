@@ -250,7 +250,7 @@ unix:!symbian {
     }
 
     DEFINES += NOFMAXL
-    INSTALLS += target
+    INSTALLS q+= target
 }
 
 win32-msvc*{
