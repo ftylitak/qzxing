@@ -28,6 +28,16 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
                DecoderFormat_ITF |
                DecoderFormat_Aztec);*/
     imageHandler = new ImageHandler();
+
+    QZXingWorker_p* worker_p = new QZXingWorker_p();
+    connect(worker_p, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
+    connect(worker_p, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
+    connect(worker_p, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
+
+    thread = new QThread;
+    worker_p->moveToThread(static_cast<QThread*>(thread));
+
+    worker = worker_p;
 }
 
 QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
@@ -105,26 +115,25 @@ void QZXing::setIsThreaded(bool enabledThreads)
 
 QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    isThreaded = true;
+
+    qDebug() << "decoding";
+    isThreaded = false;
 
     if(isThreaded)
     {
-        QThread *thread = new QThread;
-
-        QZXingWorker_p* worker = new QZXingWorker_p();
-        connect(worker, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
-        connect(worker, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
-        connect(worker, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
-        connect(worker, SIGNAL(quitThread()), thread, SLOT(quit()));
+//        QZXingWorker_p* worker = new QZXingWorker_p();
+//        connect(worker, SIGNAL(decodingFinished(bool)), this, SIGNAL(decodingFinished(bool)));
+//        connect(worker, SIGNAL(decodingStarted()), this, SIGNAL(decodingStarted()));
+//        connect(worker, SIGNAL(tagFound(QString)), this, SIGNAL(tagFound(QString)));
+        //connect(worker, SIGNAL(quitThread()), thread, SLOT(quit()));
         //connect(thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
         //connect(thread, SIGNAL(finished()), SLOT(deleteLater()));
 
-        worker->setData(&processingTime, image, maxWidth, maxHeight, smoothTransformation, decoder, enabledDecoders);
-        worker->moveToThread(thread);
+        QZXingWorker_p* worker_p = static_cast<QZXingWorker_p*>(worker);
+        worker_p->setData(&processingTime, image, maxWidth, maxHeight, smoothTransformation, decoder, enabledDecoders);
+        static_cast<QThread*>(thread)->start();
 
-        thread->start();
-
-        QMetaObject::invokeMethod(worker, "decode", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(worker_p, "decode", Qt::QueuedConnection);
 
         return "";
     }
@@ -142,9 +151,9 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
             return "";
         }
 
-        try{
-            CameraImageWrapper* ciw;
+        CameraImageWrapper* ciw = NULL;
 
+        try{
             if(maxWidth > 0 || maxHeight > 0)
             {
                 ciw = new CameraImageWrapper();
@@ -175,18 +184,21 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
         }
         catch(zxing::Exception& e)
         {
-           emit decodingFinished(false);
-           processingTime = -1;
-           return "";
+            if(!ciw)
+                delete ciw;
+
+            emit decodingFinished(false);
+            processingTime = -1;
+            return "";
         }
     }
 }
 
 QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-	//used to have a check if this image exists
-	//but was removed because if the image file path doesn't point to a valid image
-	// then the QImage::isNull will return true and the decoding will fail eitherway.
+    //used to have a check if this image exists
+    //but was removed because if the image file path doesn't point to a valid image
+    // then the QImage::isNull will return true and the decoding will fail eitherway.
     return decodeImage(QImage(imageFilePath), maxWidth, maxHeight, smoothTransformation);
 }
 

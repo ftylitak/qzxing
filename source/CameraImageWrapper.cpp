@@ -4,6 +4,9 @@
 #include <QDesktopWidget>
 #include <QDebug>
 
+#include <vector>
+std::vector<unsigned char*> allocatedObjects;
+
 CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), isSmoothTransformationEnabled(false)
 {
 }
@@ -20,6 +23,13 @@ CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : Lumi
 
 CameraImageWrapper::~CameraImageWrapper()
 {
+    for(int i=0; i<allocatedObjects.size(); i++)
+    {
+        qDebug() << "Deallocating...";
+        delete allocatedObjects[i];
+    }
+
+    allocatedObjects.clear();
 }
 
 int CameraImageWrapper::getWidth() const
@@ -51,6 +61,9 @@ unsigned char* CameraImageWrapper::copyMatrix() const
             newMatrix[cnt++] = getPixel(i,j);
         }
     }
+
+    qDebug() << "Adding pointer";
+    allocatedObjects.push_back(newMatrix);
 
     return newMatrix;
 }
@@ -124,6 +137,10 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
     int height =  getHeight();
     char* matrix = new char[width*height];
     char* m = matrix;
+
+    qDebug() << "getting matrix";
+
+    allocatedObjects.push_back((unsigned char*)matrix);
 
     for(int y=0; y<height; y++)
     {

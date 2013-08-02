@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QString>
 #include <zxing/zxing/LuminanceSource.h>
+#include <vector>
 
 using namespace zxing;
 

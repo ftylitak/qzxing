@@ -31,7 +31,7 @@ QString QZXingWorker_p::decode()
     {
         emit decodingFinished(false);
 
-        //*processingTime = -1;
+        *processingTime = -1;
 
         qDebug() << "Exited threaded decoding, error";
 
@@ -56,7 +56,7 @@ QString QZXingWorker_p::decode()
         res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
 
         QString string = QString(res->getText()->getText().c_str());
-       // *processingTime = t.elapsed();
+        *processingTime = t.elapsed();
         emit tagFound(string);
         emit decodingFinished(true);
 
@@ -67,7 +67,7 @@ QString QZXingWorker_p::decode()
     catch(zxing::Exception& e)
     {
        emit decodingFinished(false);
-      // *processingTime = -1;
+       *processingTime = -1;
 
         qDebug() << "Exited threaded decoding, error";
         emit quitThread();

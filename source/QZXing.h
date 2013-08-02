@@ -137,6 +137,8 @@ signals:
 
 private:
     void* decoder;
+    void* worker;
+    void* thread;
     DecoderFormatType enabledDecoders;
     QObject* imageHandler;
     int processingTime;
