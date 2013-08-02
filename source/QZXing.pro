@@ -130,8 +130,7 @@ HEADERS += QZXing_global.h \
     zxing/bigint/BigIntegerUtils.hh \
     zxing/bigint/BigIntegerLibrary.hh \
     zxing/bigint/BigIntegerAlgorithms.hh \
-    zxing/bigint/BigInteger.hh \
-    zxing/win32/zxing/iconv.h
+    zxing/bigint/BigInteger.hh 
 
 SOURCES += CameraImageWrapper.cpp \
     qzxing.cpp \
@@ -235,8 +234,7 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/bigint/BigUnsigned.cc \
     zxing/bigint/BigIntegerUtils.cc \
     zxing/bigint/BigIntegerAlgorithms.cc \
-    zxing/bigint/BigInteger.cc \
-    zxing/win32/zxing/win_iconv.c
+    zxing/bigint/BigInteger.cc 
 
 symbian {
     TARGET.UID3 = 0xE618743C
@@ -268,12 +266,15 @@ win32-msvc*{
 
     INCLUDEPATH += zxing/win32/zxing \
                 zxing/win32/zxing/stdint
-    HEADERS += zxing/win32/zxing/stdint/stdint.h
+    HEADERS += zxing/win32/zxing/stdint/stdint.h \
+				zxing/win32/zxing/iconv.h
+	SOURCES += zxing/win32/zxing/win_iconv.c
 }
 
 win32-g++{
-    INCLUDEPATH += zxing/win32/zxing
-#    DEFINES += NO_ICONV
+    INCLUDEPATH += $$PWD/zxing/win32/zxing
+    HEADERS += $$PWD/zxing/win32/zxing/iconv.h
+    SOURCES += $$PWD/zxing/win32/zxing/win_iconv.c
 }
 
 OTHER_FILES += \
@@ -289,6 +290,19 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/copyright \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
-    qtc_packaging/debian_harmattan/changelog
+    qtc_packaging/debian_harmattan/changelog \
+    qtc_packaging/debian_harmattan/rules \
+    qtc_packaging/debian_harmattan/README \
+    qtc_packaging/debian_harmattan/manifest.aegis \
+    qtc_packaging/debian_harmattan/copyright \
+    qtc_packaging/debian_harmattan/control \
+    qtc_packaging/debian_harmattan/compat \
+    qtc_packaging/debian_harmattan/changelog \
+    qtc_packaging/debian_fremantle/rules \
+    qtc_packaging/debian_fremantle/README \
+    qtc_packaging/debian_fremantle/copyright \
+    qtc_packaging/debian_fremantle/control \
+    qtc_packaging/debian_fremantle/compat \
+    qtc_packaging/debian_fremantle/changelog
 
 
