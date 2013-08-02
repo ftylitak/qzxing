@@ -4,15 +4,13 @@ QT += core \
     gui \
     declarative
 
-VERSION = 2.0.0
+VERSION = 1.3.0
 
 CONFIG += mobility
 MOBILITY = multimedia #\
     #systeminfo
 
 RESOURCES +=  resources.qrc
-
-include(../../source/QZXing.pri)
 
 HEADERS += QQrDecoder.h \
     QCameraControllerWidget.h \
@@ -40,11 +38,11 @@ symbian{
         LocalServices \
         UserEnvironment
 
-#    customrules.pkg_prerules  = \
-#        ";QZXing" \
-#        "@\"$$(EPOCROOT)Epoc32/InstallToDevice/QZXing_selfsigned.sis\",(0xE618743C)"\
-#        " "
-#    DEPLOYMENT += customrules
+    customrules.pkg_prerules  = \
+        ";QZXing" \
+        "@\"$$(EPOCROOT)Epoc32/InstallToDevice/QZXing_selfsigned.sis\",(0xE618743C)"\
+        " "
+    DEPLOYMENT += customrules
 }
 
 ICON = QQrDecoder.svg

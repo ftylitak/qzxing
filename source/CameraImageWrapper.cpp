@@ -3,8 +3,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-#include <vld.h>
-
 CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), isSmoothTransformationEnabled(false)
 {
 }

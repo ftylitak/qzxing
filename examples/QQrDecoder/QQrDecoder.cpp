@@ -35,8 +35,9 @@
 #include <QPoint>
 #include <QPixmap>
 #include <QMessageBox>
+#include <QDebug>
 
-QQrDecoder::QQrDecoder(QWidget *parent): QMainWindow(parent), decoder(this)
+QQrDecoder::QQrDecoder(QWidget *parent): QMainWindow(parent), decoder(QZXing::DecoderFormat_QR_CODE)
 {
     ui.setupUi(this);
     connect(ui.centralwidget, SIGNAL(imageCaptured(QImage)), this, SLOT(decodeImage(QImage)));
@@ -53,7 +54,11 @@ QQrDecoder::~QQrDecoder()
 
 void QQrDecoder::decodeImage(QImage originalImage)
 {
-    decoder.decodeImage(originalImage);
+    qDebug() << "Start of decoding";
+    decoder.decodeImage(originalImage,640, 640, false);
+    qDebug() << "End of decoding";
+
+    ui.retranslateUi(this);
 }
 
 void QQrDecoder::reportTagFound(QString tag)

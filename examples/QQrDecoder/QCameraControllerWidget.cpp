@@ -280,7 +280,7 @@ void QCameraControllerWidget::captureImage()
 
 void QCameraControllerWidget::onImageCaptured(int id, const QImage &preview)
 {
-    m_stillImageCapture->cancelCapture();
+ //   m_stillImageCapture->cancelCapture();
 //    showViewFinder = false;
     m_focusing = false;
     pictureCaptured = true;
@@ -372,9 +372,9 @@ void QCameraControllerWidget::paintEvent(QPaintEvent *event)
         if (!m_focusMessage.isEmpty())
             painter.drawText(r, Qt::AlignCenter, m_focusMessage);
 
-    } else {
+    }/* else {
         painter.fillRect(event->rect(), palette().background());
-    }
+    }*/
 }
 
 void QCameraControllerWidget::redirectImageSignalFromVideoFinder(QImage image)
