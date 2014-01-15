@@ -4,8 +4,7 @@
 #include <QMimeData>
 #include <QDebug>
 
-DropArea::DropArea(QDeclarativeItem *parent)
-        : QDeclarativeItem(parent),
+DropArea::DropArea(QDeclarativeItem *parent) : QDeclarativeItem(parent),
     m_accepting(true)
 {
     setAcceptDrops(m_accepting);
@@ -24,21 +23,23 @@ void DropArea::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 
 void DropArea::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+    qDebug("File!");
     QList<QUrl> list = event->mimeData()->urls();
     for(int i=0; i<list.size(); i++)
-	{
-		QString path = list.at(i).path();
+    {
+        QString path = list.at(i).path();
         emit fileDroped(path.right(path.size()-1));
-	}
+    }
     unsetCursor();
 }
 
 void DropArea::setAcceptingDrops(bool accepting)
 {
     if (accepting == m_accepting)
-                return;
+        return;
 
     m_accepting = accepting;
+
     setAcceptDrops(m_accepting);
     emit acceptingDropsChanged();
 }

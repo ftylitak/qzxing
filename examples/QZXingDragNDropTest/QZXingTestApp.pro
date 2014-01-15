@@ -3,6 +3,8 @@ folder_01.source = qml/QZXingTestApp
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
+QT  += widgets
+
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
 
@@ -34,8 +36,10 @@ SOURCES += main.cpp \
     droparea.cpp
 
 # Please do not modify the following two lines. Required for deployment.
-include(qzxing/QZXing.pri)
+include(../../source/QZXing.pri)
+
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
+include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
 HEADERS += \

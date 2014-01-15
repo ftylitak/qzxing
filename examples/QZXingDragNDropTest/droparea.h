@@ -1,6 +1,7 @@
 #ifndef DROPAREA_H
 #define DROPAREA_H
 
+#include <qglobal.h>
 #include <QDeclarativeItem>
 
 /**

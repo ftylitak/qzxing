@@ -1,20 +1,21 @@
 QT       += core gui
 
 greaterThan(QT_VERSION, 4.7): QT += declarative
+greaterThan(QT_VERSION, 5.0): QT += quick
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
         DISABLE_LIBRARY_FEATURES
 		 
 INCLUDEPATH  += $$PWD \
-			$$PWD/zxing
+                $$PWD/zxing
 
 
 HEADERS += $$PWD/QZXing_global.h \
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \
-    $$PWD/qzxing.h \
+    $$PWD/QZXing.h \
     $$PWD/zxing/zxing/ZXing.h \
     $$PWD/zxing/zxing/IllegalStateException.h \
     $$PWD/zxing/zxing/InvertedLuminanceSource.h \
@@ -250,7 +251,7 @@ unix:!symbian {
     }
 
     DEFINES += NOFMAXL
-    INSTALLS q+= target
+    INSTALLS += target
 }
 
 win32-msvc*{

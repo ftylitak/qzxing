@@ -1,7 +1,5 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
-import QtQuick 1.1
-import DropArea 1.0
-import QZXing 2.2
+import QtQuick 2.0
+import QZXing 2.3
 
 Rectangle {
     width: 360
@@ -16,8 +14,16 @@ Rectangle {
 
 
         DropArea{
+
             anchors.fill: parent
-            onFileDroped: decoder.decodeImageFromFile(url)
+            onDropped: {
+                console.log(drop.urls[0])
+
+                var path = drop.urls[0];
+                path = path.replace("file://","");
+
+                decoder.decodeImageFromFile(path)
+            }
         }
 
         Text{

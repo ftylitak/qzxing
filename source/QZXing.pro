@@ -2,7 +2,7 @@
 
 QT       += core gui
 
-VERSION = 2.2
+VERSION = 2.3
 
 greaterThan(QT_VERSION, 4.7): QT += declarative
 
@@ -21,7 +21,7 @@ INCLUDEPATH  += ./ \
 HEADERS += QZXing_global.h \
     CameraImageWrapper.h \
     imagehandler.h \
-    qzxing.h \
+    QZXing.h \
     zxing/zxing/ZXing.h \
     zxing/zxing/IllegalStateException.h \
     zxing/zxing/InvertedLuminanceSource.h \
