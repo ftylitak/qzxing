@@ -100,7 +100,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &
   int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
   float centerJ = centerFromEnd(stateCount, j);
   float centerI = crossCheckVertical(i, (int)centerJ, 2 * stateCount[1], stateCountTotal);
-  if (!zxing::isnan_z(centerI)) {
+  if (!isnan(centerI)) {
     float estimatedModuleSize = (float)(stateCount[0] + stateCount[1] + stateCount[2]) / 3.0f;
     int max = possibleCenters_->size();
     for (int index = 0; index < max; index++) {

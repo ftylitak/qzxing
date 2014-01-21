@@ -110,7 +110,7 @@ public:
   template<class Y>
   ArrayRef(const ArrayRef<Y> &other) :
       array_(0) {
-      reset(static_cast<const Array<T> *>(other.array_));
+    reset(static_cast<const Array<T> *>(other.array_));
   }
 
   ~ArrayRef() {

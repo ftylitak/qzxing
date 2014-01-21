@@ -238,10 +238,10 @@ bool FinderPatternFinder::handlePossibleCenter(int* stateCount, size_t i, size_t
   int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
   float centerJ = centerFromEnd(stateCount, j);
   float centerI = crossCheckVertical(i, (size_t)centerJ, stateCount[2], stateCountTotal);
-  if (!zxing::isnan_z(centerI)) {
+  if (!isnan(centerI)) {
     // Re-cross check
     centerJ = crossCheckHorizontal((size_t)centerJ, (size_t)centerI, stateCount[2], stateCountTotal);
-	if (!zxing::isnan_z(centerJ)) {
+    if (!isnan(centerJ)) {
       float estimatedModuleSize = (float)stateCountTotal / 7.0f;
       bool found = false;
       size_t max = possibleCenters_.size();

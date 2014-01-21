@@ -40,34 +40,20 @@ typedef bool boolean;
 #if defined(_WIN32) || defined(_WIN64)
 
 #include <float.h>
-#include <cmath>
-
-// It is needed to undef the isnan, because the Mingw contains the C99 macro
-#undef isnan
 
 namespace zxing {
-inline bool isnan_z(float v) {return _isnan(v) != 0;}
-inline bool isnan_z(double v) {return _isnan(v) != 0;}
+inline bool isnan(float v) {return _isnan(v) != 0;}
+inline bool isnan(double v) {return _isnan(v) != 0;}
 inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
 }
 
 #else
 
-#include <math.h>
-
-using namespace std;
+#include <cmath>
 
 namespace zxing {
-inline bool isnan_z(float v) {
-    return /*std::*/isnan(v);
-}
-inline bool isnan_z(double v) {
-    return /*std::*/isnan(v);
-}
-
-//#undef isfinite
-//#undef signbit
-
+inline bool isnan(float v) {return std::isnan(v);}
+inline bool isnan(double v) {return std::isnan(v);}
 inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
 }
 

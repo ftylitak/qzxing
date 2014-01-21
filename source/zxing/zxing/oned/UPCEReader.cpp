@@ -91,7 +91,7 @@ bool UPCEReader::determineNumSysAndCheckDigit(std::string& resultString, int lgP
   for (int numSys = 0; numSys <= 1; numSys++) {
     for (int d = 0; d < 10; d++) {
       if (lgPatternFound == NUMSYS_AND_CHECK_DIGIT_PATTERNS[numSys][d]) {
-        resultString.insert((size_t)0, (size_t)1, (char) ('0' + numSys));
+        resultString.insert(0, 1, (char) ('0' + numSys));
         resultString.append(1, (char) ('0' + d));
         return true;
       }
@@ -136,9 +136,7 @@ Ref<String> UPCEReader::convertUPCEtoUPCA(Ref<String> const& upce_) {
     result.append(1, lastChar);
     break;
   }
-  //result.append(1, upce[7]);
-  char c = (char)(*(upce.data()+7));//upce[upce.size()];
-  result.append(1, c);
+  result.append(1, upce[7]);
   return Ref<String>(new String(result));
 }
 

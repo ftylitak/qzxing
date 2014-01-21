@@ -1,10 +1,9 @@
-
-
 QT       += core gui
 
 VERSION = 2.3
 
 greaterThan(QT_VERSION, 4.7): QT += declarative
+greaterThan(QT_VERSION, 5.0): QT += quick
 
 TARGET = QZXing
 TEMPLATE = lib
@@ -16,7 +15,6 @@ DEFINES += QZXING_LIBRARY \
 
 INCLUDEPATH  += ./ \
     zxing
-
 
 HEADERS += QZXing_global.h \
     CameraImageWrapper.h \
@@ -189,7 +187,6 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/zxing/oned/Code39Reader.cpp \
     zxing/zxing/oned/CodaBarReader.cpp \
     zxing/zxing/oned/Code93Reader.cpp \
-    zxing/zxing/qrcode/QRCodeReader.cpp \
     zxing/zxing/multi/MultipleBarcodeReader.cpp \
     zxing/zxing/multi/GenericMultipleBarcodeReader.cpp \
     zxing/zxing/multi/ByQuadrantReader.cpp \
@@ -206,6 +203,7 @@ SOURCES += CameraImageWrapper.cpp \
     zxing/zxing/datamatrix/detector/DataMatrixCornerPoint.cpp \
     zxing/zxing/datamatrix/detector/DataMatrixDetector.cpp \
     zxing/zxing/datamatrix/detector/DataMatrixDetectorException.cpp \
+    zxing/zxing/qrcode/QRCodeReader.cpp \
     zxing/zxing/qrcode/decoder/QRBitMatrixParser.cpp \
     zxing/zxing/qrcode/decoder/QRDataBlock.cpp \
     zxing/zxing/qrcode/decoder/QRDataMask.cpp \
@@ -264,9 +262,8 @@ unix:!symbian {
 
 win32-msvc*{
 
-    INCLUDEPATH += zxing/win32/zxing \
-                zxing/win32/zxing/stdint
-    HEADERS += zxing/win32/zxing/stdint/stdint.h \
+    INCLUDEPATH += zxing/win32/zxing
+    HEADERS += zxing/win32/zxing/stdint.h \
 				zxing/win32/zxing/iconv.h
 	SOURCES += zxing/win32/zxing/win_iconv.c
 }

@@ -113,11 +113,7 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
         CameraImageWrapper* ciw;
 
         if(maxWidth > 0 || maxHeight > 0)
-        {
-            ciw = new CameraImageWrapper();
-            ciw->setSmoothTransformation(smoothTransformation);
-            ciw->setImage(image, maxWidth, maxHeight);
-        }
+            ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
         else
             ciw = new CameraImageWrapper(image);
 

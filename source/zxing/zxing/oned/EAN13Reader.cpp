@@ -73,7 +73,7 @@ void EAN13Reader::determineFirstDigit(std::string& resultString, int lgPatternFo
   // std::cerr << "K " << resultString << " " << lgPatternFound << " " <<FIRST_DIGIT_ENCODINGS << std::endl;
   for (int d = 0; d < 10; d++) {
     if (lgPatternFound == FIRST_DIGIT_ENCODINGS[d]) {
-      resultString.insert((size_t)0, (size_t)1, (char) ('0' + d));
+      resultString.insert(0, 1, (char) ('0' + d));
       return;
     }
   }

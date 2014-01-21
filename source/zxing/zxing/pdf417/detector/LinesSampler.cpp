@@ -20,7 +20,6 @@
 #include <zxing/pdf417/decoder/BitMatrixParser.h>
 #include <zxing/NotFoundException.h>
 #include <zxing/common/Point.h>
-#include <cmath>
 
 using std::map;
 using std::vector;
@@ -36,12 +35,10 @@ using zxing::Point;
 // VC++
 using zxing::Line;
 
-#ifndef _MSC_VER
 const int LinesSampler::MODULES_IN_SYMBOL;
 const int LinesSampler::BARS_IN_SYMBOL;
 const int LinesSampler::POSSIBLE_SYMBOLS;
 const int LinesSampler::BARCODE_START_OFFSET;
-#endif
 
 namespace {
 
@@ -411,7 +408,11 @@ void LinesSampler::linesMatrixToCodewords(vector<vector<int> >& clusterNumbers,
       for (int j = 0; j < POSSIBLE_SYMBOLS; j++) {
         float error = 0.0f;
         for (int k = 0; k < BARS_IN_SYMBOL; k++) {
-          error += pow(RATIOS_TABLE[j * BARS_IN_SYMBOL + k] - cwRatios[i][k], 2);
+          float diff = RATIOS_TABLE[j * BARS_IN_SYMBOL + k] - cwRatios[i][k];
+          error += diff * diff;
+          if (error >= bestMatchError) {
+            break;
+          }
         }
         if (error < bestMatchError) {
           bestMatchError = error;

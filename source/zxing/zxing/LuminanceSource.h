@@ -27,9 +27,9 @@
 namespace zxing {
 
 class LuminanceSource : public Counted {
- protected:
-  int width;
-  int height;
+ private:
+  const int width;
+  const int height;
 
  public:
   LuminanceSource(int width, int height);
