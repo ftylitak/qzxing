@@ -11,12 +11,20 @@
 #ifndef QTQUICK2APPLICATIONVIEWER_H
 #define QTQUICK2APPLICATIONVIEWER_H
 
-#include <QtQuick/QQuickView>
+#include <qglobal.h>
+#include <QObject>
 
-class QtQuick2ApplicationViewer : public QQuickView
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+#include <QtQuick/QQuickView>
+#endif
+
+class QtQuick2ApplicationViewer
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+                : public QQuickView
+#endif
 {
     Q_OBJECT
-
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
 public:
     explicit QtQuick2ApplicationViewer(QWindow *parent = 0);
     virtual ~QtQuick2ApplicationViewer();
@@ -28,6 +36,7 @@ public:
 
 private:
     class QtQuick2ApplicationViewerPrivate *d;
+#endif
 };
 
 #endif // QTQUICK2APPLICATIONVIEWER_H

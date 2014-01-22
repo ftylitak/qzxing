@@ -12,7 +12,9 @@ Makefile
 *.user
 *.mmp
 *.pkg
-QZXing-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK__Debug/
-QZXing-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK__Release/
-build-QZXingTestApp-Desktop_Qt_5_2_0_GCC_64bit-Debug
-build-QZXing-Desktop_Qt_5_2_0_GCC_64bit-Debug
+QZXing-build-*
+build-*
+*.Debug
+*.Release
+debug/
+*.pdb

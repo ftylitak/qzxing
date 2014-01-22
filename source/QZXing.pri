@@ -257,7 +257,8 @@ unix:!symbian {
 win32-msvc*{
 
     INCLUDEPATH += $$PWD/zxing/win32/zxing
-    HEADERS += $$PWD/zxing/win32/zxing/stdint.h \
+	            $$PWD/zxing/win32/zxing/msvc
+    HEADERS += $$PWD/zxing/win32/zxing/msvc/stdint.h \
                 $$PWD/zxing/win32/zxing/iconv.h
 
     SOURCES += $$PWD/zxing/win32/zxing/win_iconv.c

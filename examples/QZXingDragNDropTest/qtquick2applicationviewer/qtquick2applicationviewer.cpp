@@ -8,6 +8,10 @@
   may offer an updated version of it.
 */
 
+#include <qglobal.h>
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+
 #include "qtquick2applicationviewer.h"
 
 #include <QtCore/QCoreApplication>
@@ -85,3 +89,4 @@ void QtQuick2ApplicationViewer::showExpanded()
     show();
 #endif
 }
+#endif // version checking

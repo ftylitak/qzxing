@@ -20,6 +20,8 @@
 #include <zxing/pdf417/decoder/BitMatrixParser.h>
 #include <zxing/NotFoundException.h>
 #include <zxing/common/Point.h>
+#include <cmath>
+#include <qglobal.h>
 
 using std::map;
 using std::vector;
@@ -35,10 +37,13 @@ using zxing::Point;
 // VC++
 using zxing::Line;
 
+//favoritas37-22-01-14-change
+#ifndef Q_CC_MSVC
 const int LinesSampler::MODULES_IN_SYMBOL;
 const int LinesSampler::BARS_IN_SYMBOL;
 const int LinesSampler::POSSIBLE_SYMBOLS;
 const int LinesSampler::BARCODE_START_OFFSET;
+#endif //Q_CC_MSVC
 
 namespace {
 

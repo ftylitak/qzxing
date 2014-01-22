@@ -39,8 +39,10 @@ SOURCES += main.cpp \
 include(../../source/QZXing.pri)
 
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
-include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
+#include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
 HEADERS += \
     droparea.h
+
+OTHER_FILES +=
