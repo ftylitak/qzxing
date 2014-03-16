@@ -5,8 +5,10 @@
 #include <QObject>
 #include <QImage>
 
-#if QT_VERSION >= 0x040700
+#if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
 #include <QtDeclarative>
+#elif QT_VERSION >= 0x050000
+#include <QtQml/qqml.h>
 #endif
 
 /**
@@ -62,7 +64,7 @@ public:
 #if QT_VERSION >= 0x040700
     static void registerQMLTypes()
     {
-        qmlRegisterType<QZXing>("QZXing", 2, 2, "QZXing");
+        qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
     }
 #endif
 

@@ -31,6 +31,8 @@
 #include <zxing/common/IllegalArgumentException.h>
 #include <zxing/common/DecoderResult.h>
 
+#include <qglobal.h>
+
 using zxing::aztec::Decoder;
 using zxing::DecoderResult;
 using zxing::String;
@@ -51,7 +53,11 @@ namespace {
     char* ds = d;
     size_t dl = sizeof(d);
     iconv_t ic = iconv_open("UTF-8", "ISO-8859-1");
-    iconv(ic, &ss, &sl, &ds, &dl);
+#if defined(Q_OS_SYMBIAN)
+    iconv(ic, (const char**)&ss, &sl, &ds, &dl);
+#else
+    iconv(ic, (char**)&ss, &sl, &ds, &dl);
+#endif
     iconv_close(ic);
     d[sizeof(d)-dl] = 0;
     result.append(d);
