@@ -135,17 +135,17 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
     }
     catch(zxing::Exception& e)
     {
-       emit decodingFinished(false);
-       processingTime = -1;
-       return "";
+        emit decodingFinished(false);
+        processingTime = -1;
+        return "";
     }
 }
 
 QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-	//used to have a check if this image exists
-	//but was removed because if the image file path doesn't point to a valid image
-	// then the QImage::isNull will return true and the decoding will fail eitherway.
+    //used to have a check if this image exists
+    //but was removed because if the image file path doesn't point to a valid image
+    // then the QImage::isNull will return true and the decoding will fail eitherway.
     return decodeImage(QImage(imageFilePath), maxWidth, maxHeight, smoothTransformation);
 }
 
@@ -166,6 +166,29 @@ QString QZXing::decodeSubImageQML(QObject* item,
 
     QImage img = ((ImageHandler*)imageHandler)->extractQImage(item, offsetX, offsetY, width, height);
 
+    return decodeImage(img);
+}
+
+QString QZXing::decodeImageQML(const QUrl &imageUrl)
+{
+    return decodeSubImageQML(imageUrl);
+}
+QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
+                                  const double offsetX, const double offsetY,
+                                  const double width, const double height)
+{
+    QString imagePath = imageUrl.path();
+    imagePath = imagePath.trimmed();
+    QFile file(imagePath);
+    if (!file.exists()) {
+        qDebug() << "[decodeSubImageQML()] The file" << file.fileName() << "does not exist.";
+        emit decodingFinished(false);
+        return "";
+    }
+    QImage img(imageUrl.path());
+    if(!(offsetX == 0 && offsetY == 0 && width == 0 && height == 0)) {
+        img = img.copy(offsetX, offsetY, width, height);
+    }
     return decodeImage(img);
 }
 

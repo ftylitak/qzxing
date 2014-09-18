@@ -87,18 +87,35 @@ public slots:
     QString decodeImageFromFile(QString imageFilePath, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
 
     /**
-      * The decoding function accessible from QML
-      */
+     * The decoding function accessible from QML. (Suggested for Qt 4.x)
+     */
     QString decodeImageQML(QObject *item);
 
     /**
-      * The decoding function accessible from QML. Able to set the decoding
-      * of a portion of the image.
-      */
+     * The decoding function accessible from QML. Able to set the decoding
+     * of a portion of the image. (Suggested for Qt 4.x)
+     */
     QString decodeSubImageQML(QObject* item,
                               const double offsetX = 0 , const double offsetY = 0,
                               const double width = 0, const double height = 0);
 
+    /**
+     * The decoding function accessible from QML. (Suggested for Qt 5.x)
+     * Can be used to decode image from the Camera element preview by providing
+     * the following string: image://camera/preview_1
+     */
+    QString decodeImageQML(const QUrl &imageUrl);
+
+    /**
+     * The decoding function accessible from QML. Able to set the decoding
+     * of a portion of the image.
+     * Can be used to decode image from the Camera element preview by providing
+     * the following string: image://camera/preview_1
+     * (Suggested for Qt 5.x)
+     */
+    QString decodeSubImageQML(const QUrl &imageUrl,
+                              const double offsetX = 0, const double offsetY = 0,
+                              const double width = 0, const double height = 0);
     /**
       * Get the prossecing time in millisecond of the last decode operation.
       * Added mainly as a statistic measure.
