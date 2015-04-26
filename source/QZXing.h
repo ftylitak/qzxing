@@ -78,7 +78,7 @@ public slots:
       * The smoothTransformation flag determines whether the transformation will be smooth or fast.
       * Smooth transformation provides better results but fast transformation is...faster.
       */
-    QString decodeImage(QImage image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
+    QString decodeImage(QImage &image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
 
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.

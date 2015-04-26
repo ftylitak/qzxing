@@ -95,7 +95,7 @@ void QZXing::setDecoder(const uint &hint)
     emit enabledFormatsChanged();
 }
 
-QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoothTransformation)
+QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     QTime t;
     t.start();
@@ -104,14 +104,15 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
 
     if(image.isNull())
     {
+        qDebug() << "Image Null";
         emit decodingFinished(false);
         processingTime = -1;
         return "";
     }
 
-    try{
-        CameraImageWrapper* ciw;
+    CameraImageWrapper* ciw;
 
+    try{
         if(maxWidth > 0 || maxHeight > 0)
             ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
         else
@@ -129,13 +130,18 @@ QString QZXing::decodeImage(QImage image, int maxWidth, int maxHeight, bool smoo
 
         QString string = QString(res->getText()->getText().c_str());
         processingTime = t.elapsed();
+        qDebug() << "Deconding succeeded: " << string;
+        delete ciw;
         emit tagFound(string);
         emit decodingFinished(true);
         return string;
     }
-    catch(zxing::Exception& e)
+    catch(zxing::Exception& /*e*/)
     {
+        qDebug() << "Deconding failed";
         emit decodingFinished(false);
+        if (ciw)
+            delete ciw;
         processingTime = -1;
         return "";
     }
@@ -146,7 +152,8 @@ QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int max
     //used to have a check if this image exists
     //but was removed because if the image file path doesn't point to a valid image
     // then the QImage::isNull will return true and the decoding will fail eitherway.
-    return decodeImage(QImage(imageFilePath), maxWidth, maxHeight, smoothTransformation);
+    QImage tmpImage = QImage(imageFilePath);
+    return decodeImage(tmpImage, maxWidth, maxHeight, smoothTransformation);
 }
 
 QString QZXing::decodeImageQML(QObject *item)
