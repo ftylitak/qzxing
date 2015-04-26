@@ -10,8 +10,6 @@ DEFINES += QZXING_LIBRARY \
 INCLUDEPATH  += $$PWD \
                 $$PWD/zxing
 
-
-HEADERS += $$PWD/QZXing_global.h \
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \
@@ -124,7 +122,13 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/bigint/BigIntegerUtils.hh \
     $$PWD/zxing/bigint/BigIntegerLibrary.hh \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.hh \
-    $$PWD/zxing/bigint/BigInteger.hh
+    $$PWD/zxing/bigint/BigInteger.hh \
+    $$PWD/zxing/zxing/qrcode/encoder/BlockPair.h \
+    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.h \
+    $$PWD/zxing/zxing/qrcode/encoder/Encoder.h \
+    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.h \
+    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
+    $$PWD/zxing/zxing/qrcode/encoder/QRCode.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
@@ -228,7 +232,12 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigUnsigned.cc \
     $$PWD/zxing/bigint/BigIntegerUtils.cc \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
-    $$PWD/zxing/bigint/BigInteger.cc
+    $$PWD/zxing/bigint/BigInteger.cc \
+    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.cpp \
+    $$PWD/zxing/zxing/qrcode/encoder/Encoder.cpp \
+    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
+    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
+    $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp
 
 symbian {
     TARGET.UID3 = 0xE618743C
