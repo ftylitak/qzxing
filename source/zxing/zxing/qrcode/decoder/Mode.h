@@ -37,6 +37,8 @@ private:
   Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, char const* name);
 
 public:
+  Mode(const Mode& mode);
+
   static Mode TERMINATOR;
   static Mode NUMERIC;
   static Mode ALPHANUMERIC;
