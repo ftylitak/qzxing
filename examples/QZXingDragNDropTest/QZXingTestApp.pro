@@ -38,8 +38,12 @@ SOURCES += main.cpp \
 # Please do not modify the following two lines. Required for deployment.
 include(../../source/QZXing.pri)
 
-include(qmlapplicationviewer/qmlapplicationviewer.pri)
-#include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
+if(lessThan(QT_VERSION, 5.0)): {
+    include(qmlapplicationviewer/qmlapplicationviewer.pri)
+} else {
+    include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
+}
+
 qtcAddDeployment()
 
 HEADERS += \
