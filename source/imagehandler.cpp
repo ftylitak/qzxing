@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDebug>
-#include <private/qquickimage_p.h>
 
 ImageHandler::ImageHandler(QObject *parent) :
     QObject(parent)
@@ -17,22 +16,7 @@ QImage ImageHandler::extractQImage(QObject *imageObj,
 {
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
-    if (!item && (imageObj->metaObject()->className() == "QQuickImage")) {
-      QQuickImage *quickimage = static_cast<QQuickImage*>(imageObj);
-
-      if (!quickImage) {
-        qDebug() << "quickimage is NULL";
-        return QImage();
-      }
-
-      QImage img(quickimage->image());
-      if(offsetX == 0 && offsetY == 0 && width == 0 && height == 0)
-          return img;
-      else
-      {
-          return img.copy(offsetX, offsetY, width, height);
-      }
-    } else if (!item) {
+    if (!item ) {
         qDebug() << "Item is NULL";
         return QImage();
     }
