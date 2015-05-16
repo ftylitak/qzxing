@@ -69,36 +69,6 @@ unsigned char* CameraImageWrapper::copyMatrix() const
     return newMatrix;
 }
 
-//bool CameraImageWrapper::setImage(QString fileName, int maxWidth, int maxHeight)
-//{
-//    bool isLoaded = image.load(fileName);
-
-//    if(!isLoaded)
-//        return false;
-
-//    width = image.width();
-//    height = image.height();
-
-//    scale(maxWidth, maxHeight);
-
-//    return true;
-//}
-
-//bool CameraImageWrapper::setImage(QImage newImage, int maxWidth, int maxHeight)
-//{
-//    if(newImage.isNull())
-//        return false;
-
-//    image = newImage.copy();
-
-//    width = image.width();
-//    height = image.height();
-
-//    scale(maxWidth, maxHeight);
-
-//    return true;
-//}
-
 QImage CameraImageWrapper::grayScaleImage(QImage::Format f)
 {
     QImage tmp(image.width(), image.height(), f);
@@ -149,37 +119,13 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
 		memcpy(m, &tmpRow->values()[0], width);
 #endif
         m += width * sizeof(unsigned char);
-
-        //delete tmpRow;
     }
 
-    //pMatrix = matrix;
 	ArrayRef<char> arr = ArrayRef<char>(matrix, width*height);
 
-	if(matrix)
-		delete matrix;
-
+    if (matrix) {
+        delete matrix;
+    }
 
     return arr;
 }
-
-//void CameraImageWrapper::scale(int maxWidth, int maxHeight)
-//{
-//    image = scale_s(image, maxWidth, maxHeight, isSmoothTransformationEnabled);
-//}
-
-//QImage CameraImageWrapper::scale_s(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
-//{
-//    QImage transformedImage;
-
-//    if((maxWidth != 1 || maxHeight != 1) && (image.width() > maxWidth || image.height() > maxHeight))
-//        transformedImage = image.scaled(
-//                    maxWidth != -1 ? maxWidth : image.width(),
-//                    maxHeight != -1 ? maxHeight : image.height(),
-//                    Qt::KeepAspectRatio,
-//                    smoothTransformation ? Qt::SmoothTransformation : Qt::FastTransformation);
-//    else
-//        transformedImage = image;
-
-//    return transformedImage;
-//}

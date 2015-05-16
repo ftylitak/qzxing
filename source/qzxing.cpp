@@ -27,6 +27,15 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
     imageHandler = new ImageHandler();
 }
 
+QZXing::~QZXing()
+{
+    if (imageHandler)
+        delete imageHandler;
+
+    if (decoder)
+        delete decoder;
+}
+
 QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
 {
     decoder = new MultiFormatReader();
@@ -131,7 +140,6 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
         QString string = QString(res->getText()->getText().c_str());
         processingTime = t.elapsed();
         qDebug() << "Deconding succeeded: " << string;
-        delete ciw;
         emit tagFound(string);
         emit decodingFinished(true);
         return string;
@@ -140,8 +148,6 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
     {
         qDebug() << "Deconding failed";
         emit decodingFinished(false);
-        if (ciw)
-            delete ciw;
         processingTime = -1;
         return "";
     }

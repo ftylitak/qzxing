@@ -58,6 +58,7 @@ public:
     typedef unsigned int DecoderFormatType;
 
     QZXing(QObject *parent = NULL);
+    ~QZXing();
 
     QZXing(DecoderFormat decodeHints, QObject *parent = NULL);
 
