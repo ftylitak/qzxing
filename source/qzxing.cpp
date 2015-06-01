@@ -135,7 +135,7 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
 
         Ref<BinaryBitmap> ref(bb);
 
-        res = ((MultiFormatReader*)decoder)->decode(ref, DecodeHints((int)enabledDecoders));
+        res = decoder->decode(ref, DecodeHints((int)enabledDecoders));
 
         QString string = QString(res->getText()->getText().c_str());
         processingTime = t.elapsed();
@@ -177,7 +177,7 @@ QString QZXing::decodeSubImageQML(QObject* item,
         return "";
     }
 
-    QImage img = ((ImageHandler*)imageHandler)->extractQImage(item, offsetX, offsetY, width, height);
+    QImage img = imageHandler->extractQImage(item, offsetX, offsetY, width, height);
 
     return decodeImage(img);
 }

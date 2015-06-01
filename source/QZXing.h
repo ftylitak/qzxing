@@ -11,6 +11,12 @@
 #include <QtQml/qqml.h>
 #endif
 
+// forward declaration
+namespace zxing {
+class MultiFormatReader;
+}
+class ImageHandler;
+
 /**
   * A class containing a very very small subset of the ZXing library.
   * Created for ease of use.
@@ -143,9 +149,9 @@ signals:
     void enabledFormatsChanged();
 
 private:
-    void* decoder;
+    zxing::MultiFormatReader* decoder;
     DecoderFormatType enabledDecoders;
-    QObject* imageHandler;
+    ImageHandler* imageHandler;
     int processingTime;
 
     /**
