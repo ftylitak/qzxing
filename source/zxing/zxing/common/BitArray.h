@@ -25,53 +25,65 @@
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <vector>
 
 namespace zxing {
 
 class BitArray : public Counted {
 public:
-  static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
+    static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
 private:
-  int size;
-  ArrayRef<int> bits;
-  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
-  static const int bitsMask = (1 << logBits) - 1;
+    int size;
+    ArrayRef<int> bits;
+    static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
+    static const int bitsMask = (1 << logBits) - 1;
 
 public:
-  BitArray(int size);
-  ~BitArray();
-  int getSize() const;
+    BitArray();
+    BitArray(int size);
+    ~BitArray();
+    int getSize() const;
 
-  bool get(int i) const {
-    return (bits[i >> logBits] & (1 << (i & bitsMask))) != 0;
-  }
+    bool get(int i) const {
+        return (bits[i >> logBits] & (1 << (i & bitsMask))) != 0;
+    }
 
-  void set(int i) {
-    bits[i >> logBits] |= 1 << (i & bitsMask);
-  }
+    void set(int i) {
+        bits[i >> logBits] |= 1 << (i & bitsMask);
+    }
 
-  int getNextSet(int from);
-  int getNextUnset(int from);
+    int getNextSet(int from);
+    int getNextUnset(int from);
 
-  void setBulk(int i, int newBits);
-  void setRange(int start, int end);
-  void clear();
-  bool isRange(int start, int end, bool value);
-  std::vector<int>& getBitArray();
-  
-  void reverse();
+    void setBulk(int i, int newBits);
+    void setRange(int start, int end);
+    void clear();
+    bool isRange(int start, int end, bool value);
+    std::vector<int>& getBitArray();
 
-  class Reverse {
-   private:
-    Ref<BitArray> array;
-   public:
-    Reverse(Ref<BitArray> array);
-    ~Reverse();
-  };
+    void appendBit(bool bit);
+    void appendBits(int value, int numBits);
+    void ensureCapacity(int size);
+
+    void xor_(const BitArray& other);
+
+    static ArrayRef<int> makeArray(int size) {
+        return ArrayRef<int>((size + 31) / 32);
+      }
+
+    void reverse();
+
+    class Reverse {
+    private:
+        Ref<BitArray> array;
+    public:
+        Reverse(Ref<BitArray> array);
+        ~Reverse();
+    };
 
 private:
-  static int makeArraySize(int size);
+    static int makeArraySize(int size);
 };
 
 std::ostream& operator << (std::ostream&, BitArray const&);

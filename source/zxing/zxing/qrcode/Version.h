@@ -68,7 +68,7 @@ public:
   static std::vector<Ref<Version> > VERSIONS;
 
   ~Version();
-  int getVersionNumber();
+  int getVersionNumber() const;
   std::vector<int> &getAlignmentPatternCenters();
   int getTotalCodewords();
   int getDimensionForVersion();

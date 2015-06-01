@@ -128,7 +128,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/qrcode/encoder/Encoder.h \
     $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.h \
     $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
-    $$PWD/zxing/zxing/qrcode/encoder/QRCode.h
+    $$PWD/zxing/zxing/qrcode/encoder/QRCode.h \
+    $$PWD/zxing/zxing/WriterException.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \

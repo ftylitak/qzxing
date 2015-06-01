@@ -11,22 +11,22 @@ ByteMatrix::ByteMatrix(size_t width, size_t height) :
         bytes_[i].resize(width);
 }
 
-size_t ByteMatrix::getHeight()
+size_t ByteMatrix::getHeight() const
 {
     return height_;
 }
 
-size_t ByteMatrix::getWidth()
+size_t ByteMatrix::getWidth() const
 {
     return width_;
 }
 
-char ByteMatrix::get(size_t x, size_t y)
+char ByteMatrix::get(size_t x, size_t y) const
 {
     return bytes_[y][x];
 }
 
-std::vector< std::vector<char> > ByteMatrix::getArray()
+std::vector< std::vector<char> > ByteMatrix::getArray() const
 {
     return bytes_;
 }
@@ -55,7 +55,7 @@ void ByteMatrix::clear(const char value)
     }
 }
 
-const std::string ByteMatrix::toString()
+const std::string ByteMatrix::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
     for (size_t y = 0; y < height_; ++y) {

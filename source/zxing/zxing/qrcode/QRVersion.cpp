@@ -75,7 +75,7 @@ int Version::N_VERSION_DECODE_INFOS = 34;
 vector<Ref<Version> > Version::VERSIONS;
 static int N_VERSIONS = Version::buildVersions();
 
-int Version::getVersionNumber() {
+int Version::getVersionNumber() const {
   return versionNumber_;
 }
 
