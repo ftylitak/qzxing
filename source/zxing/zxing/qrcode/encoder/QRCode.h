@@ -24,17 +24,18 @@ private:
 public:
 
   QRCode();
+  ~QRCode();
   const Mode* getMode() const;
   const ErrorCorrectionLevel* getECLevel() const;
   const Version* getVersion() const;
   const int getMaskPattern() const;
   const ByteMatrix* getMatrix() const;
   const std::string toString();
-  void setMode(const Mode& value);
-  void setECLevel(const ErrorCorrectionLevel& value);
-  void setVersion(const Version& version);
+  void setMode(Mode* value);
+  void setECLevel(ErrorCorrectionLevel* value);
+  void setVersion(Version* version);
   void setMaskPattern(int value);
-  void setMatrix(const ByteMatrix& value);
+  void setMatrix(ByteMatrix* value);
 
   static bool isValidMaskPattern(int maskPattern)
   {
