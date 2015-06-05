@@ -12,27 +12,33 @@ QRCode::QRCode() :
     maskPattern_(-1),
     matrix_ptr_(NULL) {}
 
-const Mode *QRCode::getMode() const {
+const Mode *QRCode::getMode() const
+{
   return mode_ptr_;
 }
 
-const ErrorCorrectionLevel *QRCode::getECLevel() const {
+const ErrorCorrectionLevel *QRCode::getECLevel() const
+{
   return ecLevel_ptr_;
 }
 
-const Version *QRCode::getVersion() const {
+const Version *QRCode::getVersion() const
+{
   return version_ptr_;
 }
 
-const int QRCode::getMaskPattern() const {
+const int QRCode::getMaskPattern() const
+{
   return maskPattern_;
 }
 
-const ByteMatrix *QRCode::getMatrix() const{
+const ByteMatrix *QRCode::getMatrix() const
+{
   return matrix_ptr_;
 }
 
-const std::string QRCode::toString() {
+const std::string QRCode::toString()
+{
   std::stringstream result;
   result << "<<\n";
   result << " mode: {unimpl}";
@@ -53,7 +59,8 @@ const std::string QRCode::toString() {
   return result.str();
 }
 
-void QRCode::setMode(const Mode& value) {
+void QRCode::setMode(const Mode& value)
+{
   mode_ptr_ = new Mode(value);
 }
 
@@ -62,19 +69,23 @@ void QRCode::setMode(const Mode& value) {
  * Also make destructors for all
  */
 
-void QRCode::setECLevel(const ErrorCorrectionLevel& value) {
+void QRCode::setECLevel(const ErrorCorrectionLevel& value)
+{
   //ecLevel_ptr_ = value;
 }
 
-void QRCode::setVersion(const Version& version) {
+void QRCode::setVersion(const Version& version)
+{
   //version_ptr_ = version;
 }
 
-void QRCode::setMaskPattern(int value) {
+void QRCode::setMaskPattern(int value)
+{
   //maskPattern_ptr_ = value;
 }
 
-void QRCode::setMatrix(const ByteMatrix &value) {
+void QRCode::setMatrix(const ByteMatrix &value)
+{
   //matrix_ptr_ = value;
 }
 

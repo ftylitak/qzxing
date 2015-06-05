@@ -110,7 +110,8 @@ void MatrixUtil::buildMatrix(const BitArray& dataBits,
     embedDataBits(dataBits, maskPattern, matrix);
 }
 
-void MatrixUtil::embedBasicPatterns(const Version& version, ByteMatrix& matrix) {
+void MatrixUtil::embedBasicPatterns(const Version& version, ByteMatrix& matrix)
+{
     // Let's get started with embedding big squares at corners.
     embedPositionDetectionPatternsAndSeparators(matrix);
     // Then, embed the dark dot at the left bottom corner.

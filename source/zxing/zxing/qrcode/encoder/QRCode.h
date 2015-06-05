@@ -36,7 +36,8 @@ public:
   void setMaskPattern(int value);
   void setMatrix(const ByteMatrix& value);
 
-  static bool isValidMaskPattern(int maskPattern) {
+  static bool isValidMaskPattern(int maskPattern)
+  {
     return maskPattern >= 0 && maskPattern < NUM_MASK_PATTERNS;
   }
 
