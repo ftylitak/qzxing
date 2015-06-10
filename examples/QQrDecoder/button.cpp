@@ -46,7 +46,6 @@
 Button::Button(QWidget *parent, Qt::WindowFlags f) :
     QLabel(parent, f)
 {
-    m_downPixmap = 0;
     m_disabled = false;
     m_toggled = false;
     m_toggle_enabled = false;

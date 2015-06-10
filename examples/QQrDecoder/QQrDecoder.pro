@@ -1,14 +1,8 @@
 TEMPLATE = app
 TARGET = QQrDecoder
-QT += core \
-    gui \
-    declarative
+QT += core gui multimedia widgets
 
 VERSION = 2.0.0
-
-CONFIG += mobility
-MOBILITY = multimedia #\
-    #systeminfo
 
 RESOURCES +=  resources.qrc
 
