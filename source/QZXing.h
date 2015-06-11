@@ -152,6 +152,8 @@ signals:
     void decodingFinished(bool succeeded);
     void tagFound(QString tag);
     void enabledFormatsChanged();
+    void tagFoundAdvanced(QString tag, QString format, QString charSet);
+    void error(QString msg);
 
 private:
     zxing::MultiFormatReader *decoder;
