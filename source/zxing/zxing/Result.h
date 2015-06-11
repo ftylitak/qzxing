@@ -35,18 +35,21 @@ private:
   ArrayRef<char> rawBytes_;
   ArrayRef< Ref<ResultPoint> > resultPoints_;
   BarcodeFormat format_;
+  //NOTE: My
+  std::string charSet_;
 
 public:
   Result(Ref<String> text,
          ArrayRef<char> rawBytes,
          ArrayRef< Ref<ResultPoint> > resultPoints,
-         BarcodeFormat format);
+         BarcodeFormat format, std::string charSet = "");
   ~Result();
   Ref<String> getText();
   ArrayRef<char> getRawBytes();
   ArrayRef< Ref<ResultPoint> > const& getResultPoints() const;
   ArrayRef< Ref<ResultPoint> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
+  std::string getCharSet() const;
 
   friend std::ostream& operator<<(std::ostream &out, Result& result);
 };

@@ -47,7 +47,7 @@ private:
   static void decodeHanziSegment(Ref<BitSource> bits, std::string &result, int count);
   static void decodeKanjiSegment(Ref<BitSource> bits, std::string &result, int count);
   static void decodeByteSegment(Ref<BitSource> bits, std::string &result, int count);
-  static void decodeByteSegment(Ref<BitSource> bits_,
+  static std::string decodeByteSegment(Ref<BitSource> bits_,
                                 std::string& result,
                                 int count,
                                 zxing::common::CharacterSetECI* currentCharacterSetECI,

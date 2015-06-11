@@ -44,6 +44,73 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
     setDecoder(decodeHints);
 }
 
+QString QZXing::decoderFormatToString(int fmt)
+{
+    switch (fmt) {
+      case 1:
+          return "AZTEC";
+
+      case 2:
+          return "CODABAR";
+
+      case 3:
+          return "CODE_39";
+
+      case 4:
+          return "CODE_93";
+
+      case 5:
+          return "CODE_128";
+
+      case 6:
+          return "DATA_MATRIX";
+
+      case 7:
+          return "EAN_8";
+
+      case 8:
+          return "EAN_13";
+
+      case 9:
+          return "ITF";
+
+      case 10:
+          return "MAXICODE";
+
+      case 11:
+          return "PDF_417";
+
+      case 12:
+          return "QR_CODE";
+
+      case 13:
+          return "RSS_14";
+
+      case 14:
+          return "RSS_EXPANDED";
+
+      case 15:
+          return "UPC_A";
+
+      case 16:
+          return "UPC_E";
+
+      case 17:
+          return "UPC_EAN_EXTENSION";
+    } // switch
+    return QString();
+}
+
+QString QZXing::foundedFormat() const
+{
+    return foundedFmt;
+}
+
+QString QZXing::charSet() const
+{
+    return charSet_;
+}
+
 void QZXing::setDecoder(const uint &hint)
 {
     unsigned int newHints = 0;
@@ -113,50 +180,59 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
 
     if(image.isNull())
     {
-        qDebug() << "Image Null";
+        qDebug() << "Image is Null";
         emit decodingFinished(false);
-        processingTime = -1;
+        processingTime = t.elapsed();
         return "";
     }
 
-    CameraImageWrapper* ciw;
-
-    try{
-        if(maxWidth > 0 || maxHeight > 0)
+    CameraImageWrapper *ciw = NULL;
+    try {
+        if ((maxWidth > 0) || (maxHeight > 0))
             ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
         else
             ciw = new CameraImageWrapper(image);
 
         Ref<LuminanceSource> imageRef(ciw);
-        GlobalHistogramBinarizer* binz = new GlobalHistogramBinarizer(imageRef);
+        GlobalHistogramBinarizer *binz = new GlobalHistogramBinarizer(imageRef);
 
-        Ref<Binarizer> bz (binz);
-        BinaryBitmap* bb = new BinaryBitmap(bz);
+        Ref<Binarizer> bz(binz);
+        BinaryBitmap *bb = new BinaryBitmap(bz);
 
         Ref<BinaryBitmap> ref(bb);
 
         res = decoder->decode(ref, DecodeHints((int)enabledDecoders));
 
         QString string = QString(res->getText()->getText().c_str());
+        if (!string.isEmpty() && (string.length() > 0)) {
+            int fmt = res->getBarcodeFormat().value;
+            foundedFmt = decoderFormatToString(fmt);
+            charSet_ = QString::fromStdString(res->getCharSet());
+            if (!charSet_.isEmpty()) {
+                QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
+                if (codec)
+                    string = codec->toUnicode(res->getText()->getText().c_str());
+            }
+            emit tagFound(string);
+            emit tagFoundAdvanced(string, foundedFmt, charSet_);
+        }
         processingTime = t.elapsed();
-        qDebug() << "Deconding succeeded: " << string;
-        emit tagFound(string);
         emit decodingFinished(true);
         return string;
     }
-    catch(zxing::Exception& /*e*/)
+    catch(zxing::Exception &e)
     {
-        qDebug() << "Deconding failed";
+        emit error(QString(e.what()));
         emit decodingFinished(false);
-        processingTime = -1;
+        processingTime = t.elapsed();
         return "";
     }
 }
 
 QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    //used to have a check if this image exists
-    //but was removed because if the image file path doesn't point to a valid image
+    // used to have a check if this image exists
+    // but was removed because if the image file path doesn't point to a valid image
     // then the QImage::isNull will return true and the decoding will fail eitherway.
     QImage tmpImage = QImage(imageFilePath);
     return decodeImage(tmpImage, maxWidth, maxHeight, smoothTransformation);
@@ -167,12 +243,13 @@ QString QZXing::decodeImageQML(QObject *item)
     return decodeSubImageQML(item);
 }
 
-QString QZXing::decodeSubImageQML(QObject* item,
+QString QZXing::decodeSubImageQML(QObject *item,
                                   const double offsetX, const double offsetY,
                                   const double width, const double height)
 {
     if(item  == NULL)
     {
+        processingTime = 0;
         emit decodingFinished(false);
         return "";
     }
@@ -186,6 +263,7 @@ QString QZXing::decodeImageQML(const QUrl &imageUrl)
 {
     return decodeSubImageQML(imageUrl);
 }
+
 QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
                                   const double offsetX, const double offsetY,
                                   const double width, const double height)
@@ -214,7 +292,3 @@ uint QZXing::getEnabledFormats() const
 {
     return enabledDecoders;
 }
-
-
-
-

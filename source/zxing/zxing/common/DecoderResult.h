@@ -33,17 +33,21 @@ private:
   Ref<String> text_;
   ArrayRef< ArrayRef<char> > byteSegments_;
   std::string ecLevel_;
+  std::string charSet_;
 
 public:
   DecoderResult(ArrayRef<char> rawBytes,
                 Ref<String> text,
                 ArrayRef< ArrayRef<char> >& byteSegments,
-                std::string const& ecLevel);
+                std::string const& ecLevel,
+                std::string charSet = "");
 
   DecoderResult(ArrayRef<char> rawBytes, Ref<String> text);
 
   ArrayRef<char> getRawBytes();
   Ref<String> getText();
+  // NOTE: my
+  std::string charSet();
 };
 
 }

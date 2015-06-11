@@ -16,7 +16,7 @@ QImage ImageHandler::extractQImage(QObject *imageObj,
 {
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
-    if (!item ) {
+    if (!item) {
         qDebug() << "Item is NULL";
         return QImage();
     }
