@@ -1,7 +1,7 @@
 QT       += core gui
 
-greaterThan(QT_VERSION, 4.7): QT += declarative
-greaterThan(QT_VERSION, 5.0): QT += quick
+greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
+greaterThan(QT_MAJOR_VERSION, 4): QT += quick
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
@@ -282,4 +282,8 @@ win32-g++{
     HEADERS += $$PWD/zxing/win32/zxing/iconv.h
 
     SOURCES += $$PWD/zxing/win32/zxing/win_iconv.c
+}
+
+!win32{
+    DEFINES += NO_ICONV
 }

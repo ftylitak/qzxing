@@ -180,7 +180,6 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
 
     if(image.isNull())
     {
-        qDebug() << "Image is Null";
         emit decodingFinished(false);
         processingTime = t.elapsed();
         return "";
