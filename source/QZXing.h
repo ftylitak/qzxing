@@ -91,7 +91,7 @@ public slots:
       * The decoding function. Will try to decode the given image based on the enabled decoders.
       * The input image is read from a local image file.
       */
-    QString decodeImageFromFile(QString imageFilePath, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
+    QString decodeImageFromFile(const QString& imageFilePath, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
 
     /**
      * The decoding function accessible from QML. (Suggested for Qt 4.x)

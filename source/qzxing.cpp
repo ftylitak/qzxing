@@ -8,6 +8,7 @@
 #include "CameraImageWrapper.h"
 #include "imagehandler.h"
 #include <QTime>
+#include <QUrl>
 
 using namespace zxing;
 
@@ -153,12 +154,13 @@ QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smo
     }
 }
 
-QString QZXing::decodeImageFromFile(QString imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
+QString QZXing::decodeImageFromFile(const QString& imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     //used to have a check if this image exists
     //but was removed because if the image file path doesn't point to a valid image
     // then the QImage::isNull will return true and the decoding will fail eitherway.
-    QImage tmpImage = QImage(imageFilePath);
+    QUrl imageUrl(imageFilePath);
+    QImage tmpImage = QImage(imageUrl.toLocalFile());
     return decodeImage(tmpImage, maxWidth, maxHeight, smoothTransformation);
 }
 
