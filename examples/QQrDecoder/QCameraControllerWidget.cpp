@@ -41,7 +41,9 @@
 #include "QCameraControllerWidget.h"
 //#include <QDebug>
 #include <QCameraFlashControl>
-
+#include <QHBoxLayout>
+#include <QMessageBox>
+#include <QStandardPaths>
 
 /*****************************************************************************
 * QCameraControllerWidget
@@ -125,11 +127,17 @@ QCameraControllerWidget::QCameraControllerWidget(QWidget *parent) :
 
     setLayout(hboxl);
 
+    QStringList list = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    if(list.isEmpty())
+        imagePath = qApp->applicationDirPath();
+    else
+        imagePath = list.at(0);
+
     fileWatcher = new QFileSystemWatcher();
-    fileWatcher->addPath(QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
+    fileWatcher->addPath(imagePath);
     connect(fileWatcher, SIGNAL( directoryChanged (const QString &)), this, SLOT(deleteImage(const QString &)));
 
-    imageFolder = QDir(QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
+    imageFolder = QDir(imagePath);
     QStringList filters;
     filters << "camera*";
     imageFolder.setNameFilters(filters);
@@ -280,6 +288,7 @@ void QCameraControllerWidget::captureImage()
 
 void QCameraControllerWidget::onImageCaptured(int id, const QImage &preview)
 {
+    Q_UNUSED(id);
  //   m_stillImageCapture->cancelCapture();
 //    showViewFinder = false;
     m_focusing = false;
@@ -291,6 +300,7 @@ void QCameraControllerWidget::onImageCaptured(int id, const QImage &preview)
 
 void QCameraControllerWidget::deleteImage(const QString & folderPath)
 {
+    Q_UNUSED(folderPath);
     //qdebug() << "Detected change to folder: " << folderPath;
     QStringList files = imageFolder.entryList(imageFolder.nameFilters());
 
@@ -300,8 +310,7 @@ void QCameraControllerWidget::deleteImage(const QString & folderPath)
         //qdebug() << "Checking file: " << image;
         if(image.startsWith("camera"))
         {
-            QString path(QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
-            QDir pathDir(path);
+            QDir pathDir(imagePath);
             pathDir.remove(image);
             //qdebug() << "file deleted: " << image;
 
@@ -354,6 +363,7 @@ void QCameraControllerWidget::updateVideo()
 
 void QCameraControllerWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     //QMainWindow::paintEvent(event);
 
     QPainter painter(this);

@@ -31,7 +31,7 @@
 #ifndef QQRDECODER_H
 #define QQRDECODER_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QPixmap>
 #include "ui_QQrDecoder.h"
 #include <qzxing.h>

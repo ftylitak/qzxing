@@ -28,9 +28,9 @@ class ImageHandler;
   */
 class
 #ifndef DISABLE_LIBRARY_FEATURES
-        QZXINGSHARED_EXPORT
+    QZXINGSHARED_EXPORT
 #endif
-        QZXing : public QObject{
+    QZXing : public QObject {
 
     Q_OBJECT
     Q_ENUMS(DecoderFormat)
@@ -75,6 +75,10 @@ public:
     }
 #endif
 
+    QString decoderFormatToString(int fmt);
+    QString foundedFormat() const;
+    QString charSet() const;
+
 public slots:
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
@@ -85,14 +89,13 @@ public slots:
       * The smoothTransformation flag determines whether the transformation will be smooth or fast.
       * Smooth transformation provides better results but fast transformation is...faster.
       */
-    QString decodeImage(QImage &image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
+    QString decodeImage(QImage &image, int maxWidth = -1, int maxHeight = -1, bool smoothTransformation = false);
 
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
       * The input image is read from a local image file.
       */
     QString decodeImageFromFile(const QString& imageFilePath, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation = false);
-
     /**
      * The decoding function accessible from QML. (Suggested for Qt 4.x)
      */
@@ -102,7 +105,7 @@ public slots:
      * The decoding function accessible from QML. Able to set the decoding
      * of a portion of the image. (Suggested for Qt 4.x)
      */
-    QString decodeSubImageQML(QObject* item,
+    QString decodeSubImageQML(QObject *item,
                               const double offsetX = 0 , const double offsetY = 0,
                               const double width = 0, const double height = 0);
 
@@ -123,6 +126,7 @@ public slots:
     QString decodeSubImageQML(const QUrl &imageUrl,
                               const double offsetX = 0, const double offsetY = 0,
                               const double width = 0, const double height = 0);
+
     /**
       * Get the prossecing time in millisecond of the last decode operation.
       * Added mainly as a statistic measure.
@@ -140,19 +144,23 @@ public slots:
       * As argument it is possible to pass conjuction of decoders by using logic OR.
       * e.x. setDecoder ( DecoderFormat_QR_CODE | DecoderFormat_EAN_13 | DecoderFormat_CODE_39 )
       */
-    void setDecoder(const uint& hint);
+    void setDecoder(const uint &hint);
 
 signals:
     void decodingStarted();
     void decodingFinished(bool succeeded);
     void tagFound(QString tag);
     void enabledFormatsChanged();
+    void tagFoundAdvanced(QString tag, QString format, QString charSet);
+    void error(QString msg);
 
 private:
-    zxing::MultiFormatReader* decoder;
+    zxing::MultiFormatReader *decoder;
     DecoderFormatType enabledDecoders;
-    ImageHandler* imageHandler;
+    ImageHandler *imageHandler;
     int processingTime;
+    QString foundedFmt;
+    QString charSet_;
 
     /**
       * If true, the decoding operation will take place at a different thread.

@@ -226,7 +226,7 @@ int MatrixUtil::findMSBSet(int value)
 {
     int numDigits = 0;
     while (value != 0) {
-        (size_t)value >> 1; // ??value >>>= 1;
+        value >>= 1;
         ++numDigits;
     }
     return numDigits;

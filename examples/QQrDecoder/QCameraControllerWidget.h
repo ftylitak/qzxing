@@ -58,7 +58,7 @@
 
 #include "myvideosurface.h"
 #include "button.h"
-
+#include <QStackedWidget>
 
 class QCameraControllerWidget: public QWidget, public VideoIF
 {
@@ -117,6 +117,7 @@ private:
     QCameraFocus*           cameraFocus;
     QFileSystemWatcher*      fileWatcher;
     QDir                    imageFolder;
+    QString                 imagePath;
 };
 
 #endif // QCAMERA_H
