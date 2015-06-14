@@ -130,7 +130,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
     $$PWD/zxing/zxing/qrcode/encoder/QRCode.h \
     $$PWD/zxing/zxing/WriterException.h \
-    $$PWD/zxing/zxing/EncodeHint.h
+    $$PWD/zxing/zxing/EncodeHint.h \
+    $$PWD/zxing/zxing/UnsupportedEncodingException.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
