@@ -2,6 +2,7 @@
 #define BLOCKPAIR_H
 
 #include <vector>
+#include <zxing/common/Array.h>
 
 using namespace std;
 
@@ -11,20 +12,18 @@ namespace qrcode {
 class BlockPair
 {
 private:
-    vector<char> data_;
-    vector<char> errorCorrection_;
+    ArrayRef<char> data_;
+    ArrayRef<char> errorCorrection_;
 
 public:
-    BlockPair(const vector<char> &data, const vector<char> &errorCorrection) :
+    BlockPair(ArrayRef<char> data, ArrayRef<char> errorCorrection) :
       data_(data), errorCorrection_(errorCorrection)  {}
 
-    vector<char> getDataBytes() {
-        return data_;
-    }
+    BlockPair(const BlockPair& other) : data_(other.data_), errorCorrection_(other.errorCorrection_) {}
 
-    vector<char> getErrorCorrectionBytes() {
-        return errorCorrection_;
-    }
+    ArrayRef<char> getDataBytes() { return data_; }
+
+    ArrayRef<char> getErrorCorrectionBytes() { return errorCorrection_; }
 };
 
 }
