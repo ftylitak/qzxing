@@ -131,7 +131,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/qrcode/encoder/QRCode.h \
     $$PWD/zxing/zxing/WriterException.h \
     $$PWD/zxing/zxing/EncodeHint.h \
-    $$PWD/zxing/zxing/UnsupportedEncodingException.h
+    $$PWD/zxing/zxing/UnsupportedEncodingException.h \
+    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
@@ -241,7 +242,8 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp \
-    $$PWD/zxing/zxing/EncodeHint.cpp
+    $$PWD/zxing/zxing/EncodeHint.cpp \
+    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
 
 symbian {
     TARGET.UID3 = 0xE618743C
