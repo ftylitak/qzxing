@@ -68,7 +68,7 @@ public:
 
     void xor_(const BitArray& other);
 
-    void toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes);
+    void toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes) const;
 
     static ArrayRef<int> makeArray(int size) {
         return ArrayRef<int>((size + 31) / 32);

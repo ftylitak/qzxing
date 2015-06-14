@@ -204,7 +204,7 @@ void BitArray::xor_(const BitArray& other)
     }
 }
 
-void BitArray::toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes)
+void BitArray::toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes) const
 {
     if(array.size() < (numBytes + offset))
         array.resize(numBytes + offset);
