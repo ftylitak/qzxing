@@ -31,6 +31,7 @@ private:
   int bits_;
   std::string name_;
   ErrorCorrectionLevel(int inOrdinal, int bits, char const* name);
+  ErrorCorrectionLevel(const ErrorCorrectionLevel& other);
   static ErrorCorrectionLevel *FOR_BITS[];
   static int N_LEVELS;
 public:
