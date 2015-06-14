@@ -15,8 +15,17 @@ private:
   static const int N3;
   static const int N4;
 
-  MaskUtil() {}
+  static bool isWhiteHorizontal(const std::vector<char>& rowArray, int from, int to);
 
+  static bool isWhiteVertical(const std::vector<std::vector<char> >& array, int col, int from, int to);
+
+  /**
+   * Helper function for applyMaskPenaltyRule1. We need this for doing this calculation in both
+   * vertical and horizontal orders respectively.
+   */
+  static int applyMaskPenaltyRule1Internal(const ByteMatrix& matrix, bool isHorizontal);
+
+public:
   /**
    * Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
    * give penalty to them. Example: 00000 or 11111.
@@ -37,12 +46,6 @@ private:
    */
   static int applyMaskPenaltyRule3(const ByteMatrix& matrix);
 
-private:
-  static bool isWhiteHorizontal(const std::vector<char>& rowArray, int from, int to);
-
-  static bool isWhiteVertical(const std::vector<std::vector<char> >& array, int col, int from, int to);
-
-public:
   /**
    * Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
    * penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance.
@@ -54,14 +57,6 @@ public:
    * pattern conditions.
    */
   static bool getDataMaskBit(int maskPattern, int x, int y);
-
-  /**
-   * Helper function for applyMaskPenaltyRule1. We need this for doing this calculation in both
-   * vertical and horizontal orders respectively.
-   */
-private:
-  static int applyMaskPenaltyRule1Internal(const ByteMatrix& matrix, bool isHorizontal);
-
 };
 
 }
