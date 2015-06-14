@@ -81,6 +81,9 @@ public:
   std::vector<T>& values() {
     return values_;
   }
+  void push_back(T value) {
+    values_.push_back(value);
+  }
 };
 
 template<typename T> class ArrayRef : public Counted {
