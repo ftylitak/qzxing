@@ -194,12 +194,29 @@ void BitArray::ensureCapacity(int size)
 
 void BitArray::xor_(const BitArray& other)
 {
-  if (bits->size() != other.bits->size()) {
-    throw IllegalArgumentException("Sizes don't match");
-  }
-  for (int i = 0; i < bits->size(); i++) {
-    // The last byte could be incomplete (i.e. not have 8 bits in
-    // it) but there is no problem since 0 XOR 0 == 0.
-    bits[i] ^= other.bits[i];
-  }
+    if (bits->size() != other.bits->size()) {
+        throw IllegalArgumentException("Sizes don't match");
+    }
+    for (int i = 0; i < bits->size(); i++) {
+        // The last byte could be incomplete (i.e. not have 8 bits in
+        // it) but there is no problem since 0 XOR 0 == 0.
+        bits[i] ^= other.bits[i];
+    }
+}
+
+void BitArray::toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes)
+{
+    if(array.size() < numBytes)
+        array.resize(numBytes);
+
+    for (int i = 0; i < numBytes; i++) {
+        int theByte = 0;
+        for (int j = 0; j < 8; j++) {
+            if (get(bitOffset)) {
+                theByte |= 1 << (7 - j);
+            }
+            bitOffset++;
+        }
+        array[offset + i] = (char) theByte;
+    }
 }
