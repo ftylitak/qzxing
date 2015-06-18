@@ -5,15 +5,15 @@
 #include <zxing/qrcode/Version.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include "ByteMatrix.h"
+#include <zxing/common/Counted.h>
 #include <string>
 
 namespace zxing {
 namespace qrcode {
 
-class QRCode
+class QRCode : public Counted
 {
 private:
-  static const int NUM_MASK_PATTERNS = 8;
 
   Ref<Mode> mode_ptr_;
   Ref<ErrorCorrectionLevel> ecLevel_ptr_;
@@ -22,13 +22,14 @@ private:
   Ref<ByteMatrix> matrix_ptr_;
 
 public:
+  static const int NUM_MASK_PATTERNS = 8;
 
   QRCode();
   ~QRCode();
   Ref<Mode> getMode() const;
   Ref<ErrorCorrectionLevel> getECLevel() const;
   Ref<Version> getVersion() const;
-  const int getMaskPattern() const;
+  int getMaskPattern() const;
   Ref<ByteMatrix> getMatrix() const;
   const std::string toString();
   void setMode(Ref<Mode> value);

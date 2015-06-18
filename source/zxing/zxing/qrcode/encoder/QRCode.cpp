@@ -42,7 +42,7 @@ Ref<Version> QRCode::getVersion() const
     return version_ptr_;
 }
 
-const int QRCode::getMaskPattern() const
+int QRCode::getMaskPattern() const
 {
     return maskPattern_;
 }
