@@ -64,6 +64,7 @@ public:
 
     void appendBit(bool bit);
     void appendBits(int value, int numBits);
+    void appendBitArray(const BitArray& other);
     void ensureCapacity(int size);
 
     void xor_(const BitArray& other);

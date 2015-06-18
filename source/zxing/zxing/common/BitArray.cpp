@@ -179,6 +179,15 @@ void BitArray::appendBits(int value, int numBits)
     }
 }
 
+void BitArray::appendBitArray(const BitArray& other)
+{
+    int otherSize = other.size;
+    ensureCapacity(size + otherSize);
+    for (int i = 0; i < otherSize; i++) {
+        appendBit(other.get(i));
+    }
+}
+
 void BitArray::ensureCapacity(int size)
 {
     if (size > bits->size() * 32)
