@@ -23,6 +23,9 @@
 #include "BlockPair.h"
 #include <QList>
 #include <math.h>
+#include <limits>
+#include "MatrixUtil.h"
+#include <string>
 
 namespace zxing {
 namespace qrcode {
@@ -38,7 +41,7 @@ const int Encoder::ALPHANUMERIC_TABLE[Encoder::ALPHANUMERIC_TABLE_SIZE] = {
     25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,  // 0x50-0x5f
 };
 
-const QString DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
+const QString Encoder::DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
 
 int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
 {
@@ -48,97 +51,98 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
             + MaskUtil::applyMaskPenaltyRule4(matrix);
 }
 
-QRCode* Encoder::encode(const QString& content, const ErrorCorrectionLevel *ecLevel)
+Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel)
 {
     return encode(content, ecLevel, NULL);
 }
 
-QRCode* Encoder::encode(const QString& content, const ErrorCorrectionLevel* ecLevel, const EncodeHint* hints)
+Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel, const EncodeHint* hints)
 {
-    //    // Determine what character encoding has been specified by the caller, if any
-    //    QString encoding = hints == NULL ? "" : hints->get_character_set();
-    //    if (encoding == "")
-    //        encoding = DEFAULT_BYTE_MODE_ENCODING;
+    // Determine what character encoding has been specified by the caller, if any
+    QString encoding = hints == NULL ? "" : QString(hints->getCharacterSet().c_str());
+    if (encoding == "")
+        encoding = DEFAULT_BYTE_MODE_ENCODING;
 
-    //    // Pick an encoding mode appropriate for the content. Note that this will not attempt to use
-    //    // multiple modes / segments even if that were more efficient. Twould be nice.
-    //    Mode* mode = chooseMode(content, encoding);
+    // Pick an encoding mode appropriate for the content. Note that this will not attempt to use
+    // multiple modes / segments even if that were more efficient. Twould be nice.
+    Mode* mode = chooseMode(content, encoding);
 
-    //    // This will store the header information, like mode and
-    //    // length, as well as "header" segments like an ECI segment.
-    //    BitArray headerBits;
+    // This will store the header information, like mode and
+    // length, as well as "header" segments like an ECI segment.
+    BitArray headerBits;
 
-    //    // Append ECI segment if applicable
-    //    if (mode == &Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
-    //        zxing::common::CharacterSetECI* eci = zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding);
-    //        if (eci != NULL) {
-    //            appendECI(*eci, headerBits);
-    //        }
-    //    }
+    // Append ECI segment if applicable
+    if (mode == &Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
+        zxing::common::CharacterSetECI* eci =
+                zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding.toStdString().c_str());
+        if (eci != NULL) {
+            appendECI(*eci, headerBits);
+        }
+    }
 
-    //    // (With ECI in place,) Write the mode marker
-    //    appendModeInfo(*mode, headerBits);
+    // (With ECI in place,) Write the mode marker
+    appendModeInfo(*mode, headerBits);
 
-    //    // Collect data within the main segment, separately, to count its size if needed. Don't add it to
-    //    // main payload yet.
-    //    BitArray dataBits;
-    //    appendBytes(content, *mode, dataBits, encoding);
+    // Collect data within the main segment, separately, to count its size if needed. Don't add it to
+    // main payload yet.
+    BitArray dataBits;
+    appendBytes(content, *mode, dataBits, encoding);
 
-    //    // Hard part: need to know version to know how many bits length takes. But need to know how many
-    //    // bits it takes to know version. First we take a guess at version by assuming version will be
-    //    // the minimum, 1:
+    // Hard part: need to know version to know how many bits length takes. But need to know how many
+    // bits it takes to know version. First we take a guess at version by assuming version will be
+    // the minimum, 1:
 
-    //    int provisionalBitsNeeded = headerBits.getSize()
-    //            + mode.getCharacterCountBits(Version.getVersionForNumber(1))
-    //            + dataBits.getSize();
-    //    Version provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
+    int provisionalBitsNeeded = headerBits.getSize()
+            + mode->getCharacterCountBits(Version::getVersionForNumber(1))
+            + dataBits.getSize();
+    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, *ecLevel);
 
-    //    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
+    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
 
-    //    int bitsNeeded = headerBits.getSize()
-    //            + mode.getCharacterCountBits(provisionalVersion)
-    //            + dataBits.getSize();
-    //    Version version = chooseVersion(bitsNeeded, ecLevel);
+    int bitsNeeded = headerBits.getSize()
+            + mode->getCharacterCountBits(provisionalVersion)
+            + dataBits.getSize();
+    Ref<Version> version = chooseVersion(bitsNeeded, *ecLevel);
 
-    //    BitArray headerAndDataBits = new BitArray();
-    //    headerAndDataBits.appendBitArray(headerBits);
-    //    // Find "length" of main segment and write it
-    //    int numLetters = mode == Mode.BYTE ? dataBits.getSizeInBytes() : content.length();
-    //    appendLengthInfo(numLetters, version, mode, headerAndDataBits);
-    //    // Put data together into the overall payload
-    //    headerAndDataBits.appendBitArray(dataBits);
+    BitArray headerAndDataBits;
+    headerAndDataBits.appendBitArray(headerBits);
+    // Find "length" of main segment and write it
+    int numLetters = (*mode == Mode::BYTE) ? dataBits.getSize() : content.length();
+    appendLengthInfo(numLetters, *version, *mode, headerAndDataBits);
+    // Put data together into the overall payload
+    headerAndDataBits.appendBitArray(dataBits);
 
-    //    Version.ECBlocks ecBlocks = version.getECBlocksForLevel(ecLevel);
-    //    int numDataBytes = version.getTotalCodewords() - ecBlocks.getTotalECCodewords();
+    zxing::qrcode::ECBlocks ecBlocks = version->getECBlocksForLevel(*ecLevel);
+    int numDataBytes = version->getTotalCodewords() - ecBlocks.getTotalECCodewords();
 
-    //    // Terminate the bits properly.
-    //    terminateBits(numDataBytes, headerAndDataBits);
+    // Terminate the bits properly.
+    terminateBits(numDataBytes, headerAndDataBits);
 
-    //    // Interleave data bits with error correction code.
-    //    BitArray finalBits = interleaveWithECBytes(headerAndDataBits,
-    //                                               version.getTotalCodewords(),
-    //                                               numDataBytes,
-    //                                               ecBlocks.getNumBlocks());
+    // Interleave data bits with error correction code.
+    Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
+                                                  version->getTotalCodewords(),
+                                                  numDataBytes,
+                                                  1));//ecBlocks->getNumBlocks());
 
-    //    QRCode qrCode = new QRCode();
+    Ref<QRCode> qrCode(new QRCode);
 
-    //    qrCode.setECLevel(ecLevel);
-    //    qrCode.setMode(mode);
-    //    qrCode.setVersion(version);
+    qrCode->setECLevel(ecLevel);
+    qrCode->setMode(Ref<Mode>(mode));
+    qrCode->setVersion(version);
 
-    //    //  Choose the mask pattern and set to "qrCode".
-    //    int dimension = version.getDimensionForVersion();
-    //    ByteMatrix matrix = new ByteMatrix(dimension, dimension);
-    //    int maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
-    //    qrCode.setMaskPattern(maskPattern);
+    //  Choose the mask pattern and set to "qrCode".
+    int dimension = version->getDimensionForVersion();
+    Ref<ByteMatrix> matrix(new ByteMatrix(dimension, dimension));
+    int maskPattern = chooseMaskPattern(finalBits, *ecLevel, version, matrix);
+    qrCode->setMaskPattern(maskPattern);
 
-    //    // Build the matrix and set it to "qrCode".
-    //    MatrixUtil.buildMatrix(finalBits, ecLevel, version, maskPattern, matrix);
-    //    qrCode.setMatrix(matrix);
+    // Build the matrix and set it to "qrCode".
+    MatrixUtil::buildMatrix(*finalBits, *ecLevel, *version, maskPattern, *matrix);
+    qrCode->setMatrix(matrix);
 
-    //    return qrCode;
+    return qrCode;
 
-    return NULL;
+    //return NULL;
 }
 
 /**
@@ -209,35 +213,36 @@ Mode* Encoder::chooseMode(const QString& content, const QString& encoding)
 //    return true;
 //}
 
-//  private static int chooseMaskPattern(BitArray bits,
-//                                       ErrorCorrectionLevel ecLevel,
-//                                       Version version,
-//                                       ByteMatrix matrix) throws WriterException {
+int Encoder::chooseMaskPattern(Ref<BitArray> bits,
+                               ErrorCorrectionLevel ecLevel,
+                               Ref<Version> version,
+                               Ref<ByteMatrix> matrix)
+{
 
-//    int minPenalty = Integer.MAX_VALUE;  // Lower penalty is better.
-//    int bestMaskPattern = -1;
-//    // We try all mask patterns to choose the best one.
-//    for (int maskPattern = 0; maskPattern < QRCode.NUM_MASK_PATTERNS; maskPattern++) {
-//      MatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix);
-//      int penalty = calculateMaskPenalty(matrix);
-//      if (penalty < minPenalty) {
-//        minPenalty = penalty;
-//        bestMaskPattern = maskPattern;
-//      }
-//    }
-//    return bestMaskPattern;
-//  }
+    int minPenalty = std::numeric_limits<int>::max();  // Lower penalty is better.
+    int bestMaskPattern = -1;
+    // We try all mask patterns to choose the best one.
+    for (int maskPattern = 0; maskPattern < QRCode::NUM_MASK_PATTERNS; maskPattern++) {
+        MatrixUtil::buildMatrix(*bits, ecLevel, *version, maskPattern, *matrix);
+        int penalty = calculateMaskPenalty(*matrix);
+        if (penalty < minPenalty) {
+            minPenalty = penalty;
+            bestMaskPattern = maskPattern;
+        }
+    }
+    return bestMaskPattern;
+}
 
-Version Encoder::chooseVersion(int numInputBits, ErrorCorrectionLevel &ecLevel)
+Ref<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel)
 {
     // In the following comments, we use numbers of Version 7-H.
     for (int versionNum = 1; versionNum <= 40; versionNum++) {
-        Version& version = *Version::getVersionForNumber(versionNum);
+        Ref<Version> version = Version::getVersionForNumber(versionNum);
         // numBytes = 196
-        int numBytes = version.getTotalCodewords();
+        int numBytes = version->getTotalCodewords();
         // getNumECBytes = 130
-        ECBlocks& ecBlocks = version.getECBlocksForLevel(ecLevel);
-        int numEcBytes = ecBlocks.getECCodewords();
+        ECBlocks& ecBlocks = version->getECBlocksForLevel(ecLevel);
+        int numEcBytes = ecBlocks.getTotalECCodewords();
         // getNumDataBytes = 196 - 130 = 66
         int numDataBytes = numBytes - numEcBytes;
         int totalInputBytes = (numInputBits + 7) / 8;
@@ -357,9 +362,8 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 {
 
     // "bits" must have "getNumDataBytes" bytes of data.
-    if (bits.getSize() != numDataBytes) {
+    if (bits.getSize() != numDataBytes)
         throw new WriterException("Number of bits and data bytes does not match");
-    }
 
     // Step 1.  Divide data bytes into blocks and generate error correction bytes for them. We'll
     // store the divided data bytes blocks and error correction bytes blocks into "blocks".
@@ -441,142 +445,152 @@ ArrayRef<char> Encoder::generateECBytes(const std::vector<char>& dataBytes, int 
     return ecBytes;
 }
 
-//  /**
-//   * Append mode info. On success, store the result in "bits".
-//   */
-//  static void appendModeInfo(Mode mode, BitArray bits) {
-//    bits.appendBits(mode.getBits(), 4);
-//  }
+/**
+   * Append mode info. On success, store the result in "bits".
+   */
+void Encoder::appendModeInfo(const Mode& mode, BitArray& bits)
+{
+    bits.appendBits(mode.getBits(), 4);
+}
 
 
-//  /**
-//   * Append length info. On success, store the result in "bits".
-//   */
-//  static void appendLengthInfo(int numLetters, Version version, Mode mode, BitArray bits) throws WriterException {
-//    int numBits = mode.getCharacterCountBits(version);
-//    if (numLetters >= (1 << numBits)) {
-//      throw new WriterException(numLetters + " is bigger than " + ((1 << numBits) - 1));
-//    }
-//    bits.appendBits(numLetters, numBits);
-//  }
 
-//  /**
-//   * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
-//   */
-//  static void appendBytes(String content,
-//                          Mode mode,
-//                          BitArray bits,
-//                          String encoding) throws WriterException {
-//    switch (mode) {
-//      case NUMERIC:
-//        appendNumericBytes(content, bits);
-//        break;
-//      case ALPHANUMERIC:
-//        appendAlphanumericBytes(content, bits);
-//        break;
-//      case BYTE:
-//        append8BitBytes(content, bits, encoding);
-//        break;
-//      case KANJI:
-//        appendKanjiBytes(content, bits);
-//        break;
-//      default:
-//        throw new WriterException("Invalid mode: " + mode);
-//    }
-//  }
+/**
+   * Append length info. On success, store the result in "bits".
+   */
+void Encoder::appendLengthInfo(int numLetters, const Version& version, const Mode& mode, BitArray& bits)
+{
+    int numBits = mode.getCharacterCountBits(&version);
+    if (numLetters >= (1 << numBits)) {
+        QString message = QString::number(numLetters);
+        message += " is bigger than ";
+        message += QString::number((1 << numBits) - 1);
 
-//  static void appendNumericBytes(CharSequence content, BitArray bits) {
-//    int length = content.length();
-//    int i = 0;
-//    while (i < length) {
-//      int num1 = content.charAt(i) - '0';
-//      if (i + 2 < length) {
-//        // Encode three numeric letters in ten bits.
-//        int num2 = content.charAt(i + 1) - '0';
-//        int num3 = content.charAt(i + 2) - '0';
-//        bits.appendBits(num1 * 100 + num2 * 10 + num3, 10);
-//        i += 3;
-//      } else if (i + 1 < length) {
-//        // Encode two numeric letters in seven bits.
-//        int num2 = content.charAt(i + 1) - '0';
-//        bits.appendBits(num1 * 10 + num2, 7);
-//        i += 2;
-//      } else {
-//        // Encode one numeric letter in four bits.
-//        bits.appendBits(num1, 4);
-//        i++;
-//      }
-//    }
-//  }
+        throw new WriterException(message.toStdString().c_str());
+    }
+    bits.appendBits(numLetters, numBits);
+}
 
-//  static void appendAlphanumericBytes(CharSequence content, BitArray bits) throws WriterException {
-//    int length = content.length();
-//    int i = 0;
-//    while (i < length) {
-//      int code1 = getAlphanumericCode(content.charAt(i));
-//      if (code1 == -1) {
-//        throw new WriterException();
-//      }
-//      if (i + 1 < length) {
-//        int code2 = getAlphanumericCode(content.charAt(i + 1));
-//        if (code2 == -1) {
-//          throw new WriterException();
-//        }
-//        // Encode two alphanumeric letters in 11 bits.
-//        bits.appendBits(code1 * 45 + code2, 11);
-//        i += 2;
-//      } else {
-//        // Encode one alphanumeric letter in six bits.
-//        bits.appendBits(code1, 6);
-//        i++;
-//      }
-//    }
-//  }
+/**
+   * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
+   */
+void Encoder::appendBytes(const QString& content,
+                          Mode& mode,
+                          BitArray& bits,
+                          const QString& encoding)
+{
+    if (mode == Mode::NUMERIC)
+        appendNumericBytes(content, bits);
+    else if (mode == Mode::ALPHANUMERIC)
+        appendAlphanumericBytes(content, bits);
+    else if (mode == Mode::BYTE)
+        append8BitBytes(content, bits, encoding);
+    else if (mode == Mode::KANJI)
+        appendKanjiBytes(content, bits);
+    else {
+        QString message("Invalid mode: ");
+        message += QString::fromStdString(mode.getName());
+        throw new WriterException(message.toStdString().c_str());
+    }
+}
 
-//  static void append8BitBytes(String content, BitArray bits, String encoding)
-//      throws WriterException {
-//    byte[] bytes;
-//    try {
-//      bytes = content.getBytes(encoding);
-//    } catch (UnsupportedEncodingException uee) {
-//      throw new WriterException(uee);
-//    }
-//    for (byte b : bytes) {
-//      bits.appendBits(b, 8);
-//    }
-//  }
+void Encoder::appendNumericBytes( const QString& content, BitArray& bits)
+{
+    int length = content.size();
+    int i = 0;
+    while (i < length) {
+        int num1 = content.at(i).toLatin1() - '0';
+        if (i + 2 < length) {
+            // Encode three numeric letters in ten bits.
+            int num2 = content.at(i + 1).toLatin1() - '0';
+            int num3 = content.at(i + 2).toLatin1() - '0';
+            bits.appendBits(num1 * 100 + num2 * 10 + num3, 10);
+            i += 3;
+        } else if (i + 1 < length) {
+            // Encode two numeric letters in seven bits.
+            int num2 = content.at(i + 1).toLatin1() - '0';
+            bits.appendBits(num1 * 10 + num2, 7);
+            i += 2;
+        } else {
+            // Encode one numeric letter in four bits.
+            bits.appendBits(num1, 4);
+            i++;
+        }
+    }
+}
 
-//  static void appendKanjiBytes(String content, BitArray bits) throws WriterException {
-//    byte[] bytes;
-//    try {
-//      bytes = content.getBytes("Shift_JIS");
-//    } catch (UnsupportedEncodingException uee) {
-//      throw new WriterException(uee);
-//    }
-//    int length = bytes.length;
-//    for (int i = 0; i < length; i += 2) {
-//      int byte1 = bytes[i] & 0xFF;
-//      int byte2 = bytes[i + 1] & 0xFF;
-//      int code = (byte1 << 8) | byte2;
-//      int subtracted = -1;
-//      if (code >= 0x8140 && code <= 0x9ffc) {
-//        subtracted = code - 0x8140;
-//      } else if (code >= 0xe040 && code <= 0xebbf) {
-//        subtracted = code - 0xc140;
-//      }
-//      if (subtracted == -1) {
-//        throw new WriterException("Invalid byte sequence");
-//      }
-//      int encoded = ((subtracted >> 8) * 0xc0) + (subtracted & 0xff);
-//      bits.appendBits(encoded, 13);
-//    }
-//  }
+void Encoder::appendAlphanumericBytes(const QString& content, BitArray& bits)
+{
+    int length = content.length();
+    int i = 0;
+    while (i < length) {
+        int code1 = getAlphanumericCode(content.at(i).toLatin1());
+        if (code1 == -1) {
+            throw new WriterException();
+        }
+        if (i + 1 < length) {
+            int code2 = getAlphanumericCode(content.at(i + 1).toLatin1());
+            if (code2 == -1) {
+                throw new WriterException();
+            }
+            // Encode two alphanumeric letters in 11 bits.
+            bits.appendBits(code1 * 45 + code2, 11);
+            i += 2;
+        } else {
+            // Encode one alphanumeric letter in six bits.
+            bits.appendBits(code1, 6);
+            i++;
+        }
+    }
+}
 
-//  private static void appendECI(CharacterSetECI eci, BitArray bits) {
-//    bits.appendBits(Mode.ECI.getBits(), 4);
-//    // This is correct for values up to 127, which is all we need now.
-//    bits.appendBits(eci.getValue(), 8);
-//  }
+void Encoder::append8BitBytes(const QString& content, BitArray& bits, const QString& /*encoding*/)
+{
+    // For now we will suppose that all the encoding has been handled by QString class.
+    //    byte[] bytes;
+    //    try {
+    //        bytes = content.getBytes(encoding);
+    //    } catch (UnsupportedEncodingException uee) {
+    //        throw new WriterException(uee);
+    //    }
+
+    for (int i=0; i<content.size(); ++i) {
+        bits.appendBits(content.at(i).toLatin1(), 8);
+    }
+}
+
+void Encoder::appendKanjiBytes(const QString& content, BitArray& bits)
+{
+    // For now we will suppose that all the encoding has been handled by QString class.
+    //    try {
+    //        bytes = content.getBytes("Shift_JIS");
+    //    } catch (UnsupportedEncodingException uee) {
+    //        throw new WriterException(uee);
+    //    }
+    int length = content.size();
+    for (int i = 0; i < length; i += 2) {
+        int byte1 = content.at(i).toLatin1() & 0xFF;
+        int byte2 = content.at(i + 1).toLatin1() & 0xFF;
+        int code = (byte1 << 8) | byte2;
+        int subtracted = -1;
+        if (code >= 0x8140 && code <= 0x9ffc) {
+            subtracted = code - 0x8140;
+        } else if (code >= 0xe040 && code <= 0xebbf) {
+            subtracted = code - 0xc140;
+        }
+        if (subtracted == -1) {
+            throw new WriterException("Invalid byte sequence");
+        }
+        int encoded = ((subtracted >> 8) * 0xc0) + (subtracted & 0xff);
+        bits.appendBits(encoded, 13);
+    }
+}
+
+void Encoder::appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bits) {
+    bits.appendBits(Mode::ECI.getBits(), 4);
+    // This is correct for values up to 127, which is all we need now.
+    bits.appendBits(eci.getValue(), 8);
+}
 
 }
 }

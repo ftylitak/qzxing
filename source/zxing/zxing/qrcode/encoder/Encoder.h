@@ -38,9 +38,9 @@ private:
    * with which clients can specify the encoding mode. For now, we don't need the functionality.
    */
 public:
-  static QRCode* encode(const QString& content, const ErrorCorrectionLevel* ecLevel);
+  static Ref<QRCode> encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel);
 
-  static QRCode* encode(const QString& content, const ErrorCorrectionLevel* ecLevel, const EncodeHint* hints);
+  static Ref<QRCode> encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel, const EncodeHint* hints);
 
   /**
    * @return the code point of the table used in alphanumeric mode or
@@ -59,12 +59,12 @@ private:
 
   //static bool isOnlyDoubleByteKanji(const QString& content);
 
-  static int chooseMaskPattern(BitArray bits,
+  static int chooseMaskPattern(Ref<BitArray> bits,
                                        ErrorCorrectionLevel ecLevel,
-                                       Version version,
-                                       ByteMatrix matrix);
+                                       Ref<Version> version,
+                                       Ref<ByteMatrix> matrix);
 
-  static Version chooseVersion(int numInputBits, ErrorCorrectionLevel &ecLevel) ;
+  static Ref<Version> chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel) ;
 
   /**
    * Terminate bits as described in 8.4.8 and 8.4.9 of JISX0510:2004 (p.24).
@@ -98,7 +98,7 @@ protected:
   /**
    * Append mode info. On success, store the result in "bits".
    */
-  static void appendModeInfo(const Mode& mode, BitArray& bits);
+  static void appendModeInfo(const Mode& mode, BitArray &bits);
 
 
   /**
@@ -110,13 +110,13 @@ protected:
    * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
    */
   static void appendBytes(const QString& content,
-                          const Mode& mode,
+                          Mode& mode,
                           BitArray& bits,
                           const QString& encoding);
 
-  static void appendNumericBytes( const std::vector<char>& content, BitArray& bits);
+  static void appendNumericBytes(const QString& content, BitArray& bits);
 
-  static void appendAlphanumericBytes(const std::vector<char>& content, BitArray& bits);
+  static void appendAlphanumericBytes(const QString& content, BitArray& bits);
 
   static void append8BitBytes(const QString& content, BitArray& bits, const QString& encoding);
 
