@@ -43,17 +43,23 @@ int ECB::getDataCodewords() {
   return dataCodewords_;
 }
 
-ECBlocks::ECBlocks(int ecCodewords, ECB *ecBlocks) :
-    ecCodewords_(ecCodewords), ecBlocks_(1, ecBlocks) {
+ECBlocks::ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks) :
+    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_(1, ecBlocks) {
 }
 
-ECBlocks::ECBlocks(int ecCodewords, ECB *ecBlocks1, ECB *ecBlocks2) :
-    ecCodewords_(ecCodewords), ecBlocks_(1, ecBlocks1) {
+ECBlocks::ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks1, ECB *ecBlocks2) :
+    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_(1, ecBlocks1) {
   ecBlocks_.push_back(ecBlocks2);
 }
 
-int ECBlocks::getECCodewords() {
-  return ecCodewords_;
+int ECBlocks::getECCodewordsPerBloc()
+{
+  return ecCodewordsPerBloc_;
+}
+
+int ECBlocks::getTotalECCodewords()
+{
+    return ecBlocks_.size();
 }
 
 std::vector<ECB*>& ECBlocks::getECBlocks() {
@@ -91,11 +97,11 @@ int Version::getDimensionForVersion() {
   return 17 + 4 * versionNumber_;
 }
 
-ECBlocks& Version::getECBlocksForLevel(ErrorCorrectionLevel &ecLevel) {
+ECBlocks& Version::getECBlocksForLevel(const ErrorCorrectionLevel &ecLevel) const {
   return *ecBlocks_[ecLevel.ordinal()];
 }
 
-Version *Version::getProvisionalVersionForDimension(int dimension) {
+Ref<Version> Version::getProvisionalVersionForDimension(int dimension) {
   if (dimension % 4 != 1) {
     throw FormatException();
   }
@@ -107,7 +113,7 @@ Version *Version::getProvisionalVersionForDimension(int dimension) {
   }
 }
 
-Version *Version::getVersionForNumber(int versionNumber) {
+Ref<Version> Version::getVersionForNumber(int versionNumber) {
   if (versionNumber < 1 || versionNumber > N_VERSIONS) {
     throw ReaderException("versionNumber must be between 1 and 40");
   }
@@ -124,7 +130,7 @@ Version::Version(int versionNumber, vector<int> *alignmentPatternCenters, ECBloc
   ecBlocks_[3] = ecBlocks4;
 
   int total = 0;
-  int ecCodewords = ecBlocks1->getECCodewords();
+  int ecCodewords = ecBlocks1->getECCodewordsPerBloc();
   vector<ECB*> &ecbArray = ecBlocks1->getECBlocks();
   for (size_t i = 0; i < ecbArray.size(); i++) {
     ECB *ecBlock = ecbArray[i];
@@ -140,7 +146,7 @@ Version::~Version() {
   }
 }
 
-Version *Version::decodeVersionInformation(unsigned int versionBits) {
+Ref<Version> Version::decodeVersionInformation(unsigned int versionBits) {
   int bestDifference = numeric_limits<int>::max();
   size_t bestVersion = 0;
   for (int i = 0; i < N_VERSION_DECODE_INFOS; i++) {
@@ -163,7 +169,7 @@ Version *Version::decodeVersionInformation(unsigned int versionBits) {
     return getVersionForNumber(bestVersion);
   }
   // If we didn't find a close enough match, fail
-  return 0;
+  return Ref<Version>(NULL);
 }
 
 Ref<BitMatrix> Version::buildFunctionPattern() {
