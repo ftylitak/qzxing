@@ -62,7 +62,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<char> rawCodeword
     ECB *ecBlock = ecBlockArray[j];
     for (int i = 0; i < ecBlock->getCount(); i++) {
       int numDataCodewords = ecBlock->getDataCodewords();
-      int numBlockCodewords = ecBlocks.getECCodewords() + numDataCodewords;
+      int numBlockCodewords = ecBlocks.getECCodewordsPerBloc() + numDataCodewords;
       ArrayRef<char> buffer(numBlockCodewords);
       Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
@@ -85,7 +85,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<char> rawCodeword
   }
   longerBlocksStartAt++;
 
-  int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.getECCodewords();
+  int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.getECCodewordsPerBloc();
   // The last elements of result may be 1 element longer;
   // first fill out as many elements as all of them have
   int rawCodewordsOffset = 0;
