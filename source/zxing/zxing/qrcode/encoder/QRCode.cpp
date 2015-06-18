@@ -27,17 +27,17 @@ QRCode::~QRCode()
         delete matrix_ptr_;
 }
 
-const Mode* QRCode::getMode() const
+Ref<Mode> QRCode::getMode() const
 {
     return mode_ptr_;
 }
 
-const ErrorCorrectionLevel* QRCode::getECLevel() const
+Ref<ErrorCorrectionLevel> QRCode::getECLevel() const
 {
     return ecLevel_ptr_;
 }
 
-const Version* QRCode::getVersion() const
+Ref<Version> QRCode::getVersion() const
 {
     return version_ptr_;
 }
@@ -47,7 +47,7 @@ const int QRCode::getMaskPattern() const
     return maskPattern_;
 }
 
-const ByteMatrix* QRCode::getMatrix() const
+Ref<ByteMatrix> QRCode::getMatrix() const
 {
     return matrix_ptr_;
 }
@@ -74,17 +74,17 @@ const std::string QRCode::toString()
     return result.str();
 }
 
-void QRCode::setMode(Mode *value)
+void QRCode::setMode(Ref<Mode> value)
 {
     mode_ptr_ = value;
 }
 
-void QRCode::setECLevel(ErrorCorrectionLevel* value)
+void QRCode::setECLevel(Ref<ErrorCorrectionLevel> value)
 {
     ecLevel_ptr_ = value;
 }
 
-void QRCode::setVersion(Version *version)
+void QRCode::setVersion(Ref<Version> version)
 {
     version_ptr_ = version;
 }
@@ -94,7 +94,7 @@ void QRCode::setMaskPattern(int value)
     maskPattern_ = value;
 }
 
-void QRCode::setMatrix(ByteMatrix *value)
+void QRCode::setMatrix(Ref<ByteMatrix> value)
 {
     matrix_ptr_ = value;
 }

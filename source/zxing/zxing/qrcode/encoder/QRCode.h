@@ -15,27 +15,27 @@ class QRCode
 private:
   static const int NUM_MASK_PATTERNS = 8;
 
-  Mode* mode_ptr_;
-  ErrorCorrectionLevel* ecLevel_ptr_;
-  Version* version_ptr_;
+  Ref<Mode> mode_ptr_;
+  Ref<ErrorCorrectionLevel> ecLevel_ptr_;
+  Ref<Version> version_ptr_;
   int maskPattern_;
-  ByteMatrix* matrix_ptr_;
+  Ref<ByteMatrix> matrix_ptr_;
 
 public:
 
   QRCode();
   ~QRCode();
-  const Mode* getMode() const;
-  const ErrorCorrectionLevel* getECLevel() const;
-  const Version* getVersion() const;
+  Ref<Mode> getMode() const;
+  Ref<ErrorCorrectionLevel> getECLevel() const;
+  Ref<Version> getVersion() const;
   const int getMaskPattern() const;
-  const ByteMatrix* getMatrix() const;
+  Ref<ByteMatrix> getMatrix() const;
   const std::string toString();
-  void setMode(Mode* value);
-  void setECLevel(ErrorCorrectionLevel* value);
-  void setVersion(Version* version);
+  void setMode(Ref<Mode> value);
+  void setECLevel(Ref<ErrorCorrectionLevel> value);
+  void setVersion(Ref<Version> version);
   void setMaskPattern(int value);
-  void setMatrix(ByteMatrix* value);
+  void setMatrix(Ref<ByteMatrix> value);
 
   static bool isValidMaskPattern(int maskPattern)
   {
