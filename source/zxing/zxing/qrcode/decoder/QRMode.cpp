@@ -54,6 +54,7 @@ Mode::Mode(const zxing::qrcode::Mode &mode)
     characterCountBitsForVersions0To9_ = mode.characterCountBitsForVersions0To9_;
     characterCountBitsForVersions10To26_ = mode.characterCountBitsForVersions10To26_;
     characterCountBitsForVersions27AndHigher_ = mode.characterCountBitsForVersions27AndHigher_;
+    bits_ = mode.bits_;
     name_ = mode.name_;
 }
 
@@ -87,7 +88,7 @@ Mode& Mode::forBits(int bits) {
     }
 }
 
-int Mode::getCharacterCountBits(Version *version)
+int Mode::getCharacterCountBits(const Version *version) const
 {
     int number = version->getVersionNumber();
     if (number <= 9) {

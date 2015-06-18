@@ -34,8 +34,8 @@ private:
   int characterCountBitsForVersions0To9_;
   int characterCountBitsForVersions10To26_;
   int characterCountBitsForVersions27AndHigher_;
-  std::string name_;
   int bits_;
+  std::string name_;
 
   Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, char const* name);
 
@@ -54,7 +54,7 @@ public:
   static Mode HANZI;
 
   static Mode& forBits(int bits);
-  int getCharacterCountBits(Version *version);
+  int getCharacterCountBits(const Version *version) const;
   int getBits() const { return bits_; }
 
   bool operator==(const Mode& other);
