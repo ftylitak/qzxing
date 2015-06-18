@@ -33,14 +33,6 @@ private:
         matrix.clear((byte) -1);
     }
 
-    // Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
-    // success, store the result in "matrix" and return true.
-    static void buildMatrix(const BitArray& dataBits,
-                            ErrorCorrectionLevel& ecLevel,
-                            Version& version,
-                            int maskPattern,
-                            ByteMatrix& matrix);
-
     // Embed basic patterns. On success, modify the matrix and return true.
     // The basic patterns are:
     // - Position detection patterns
@@ -134,6 +126,14 @@ private:
     // Embed position adjustment patterns if need be.
     static void maybeEmbedPositionAdjustmentPatterns(const Version& version, ByteMatrix& matrix);
 
+public:
+    // Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
+    // success, store the result in "matrix" and return true.
+    static void buildMatrix(const BitArray& dataBits,
+                            ErrorCorrectionLevel& ecLevel,
+                            Version& version,
+                            int maskPattern,
+                            ByteMatrix& matrix);
 };
 
 }
