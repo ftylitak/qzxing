@@ -30,7 +30,7 @@ private:
    *  Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
    * internally by chooseMode(). On success, store the result in "qrCode".
    *
-   * We recommend you to use QRCode.EC_LEVEL_L (the lowest level) for
+   * We recommend you to use QRCode::EC_LEVEL_L (the lowest level) for
    * "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
    * strong error correction for this purpose.
    *
@@ -38,9 +38,9 @@ private:
    * with which clients can specify the encoding mode. For now, we don't need the functionality.
    */
 public:
-  static Ref<QRCode> encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel);
+  static Ref<QRCode> encode(const QString& content, ErrorCorrectionLevel &ecLevel);
 
-  static Ref<QRCode> encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel, const EncodeHint* hints);
+  static Ref<QRCode> encode(const QString& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints);
 
   /**
    * @return the code point of the table used in alphanumeric mode or

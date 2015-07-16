@@ -1,21 +1,6 @@
 #include "Encoder.h"
 #include "MaskUtil.h"
 
-//import com.google.zxing.EncodeHintType;
-//import com.google.zxing.WriterException;
-//import com.google.zxing.common.BitArray;
-//import com.google.zxing.common.CharacterSetECI;
-//import com.google.zxing.common.reedsolomon.GenericGF;
-//import com.google.zxing.common.reedsolomon.ReedSolomonEncoder;
-//import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-//import com.google.zxing.qrcode.decoder.Mode;
-//import com.google.zxing.qrcode.decoder.Version;
-
-//import java.io.UnsupportedEncodingException;
-//import java.util.ArrayList;
-//import java.util.Collection;
-//import java.util.Map;
-
 #include <zxing/common/CharacterSetECI.h>
 #include <zxing/UnsupportedEncodingException.h>
 #include <zxing/WriterException.h>
@@ -51,12 +36,12 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
             + MaskUtil::applyMaskPenaltyRule4(matrix);
 }
 
-Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel)
+Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLevel)
 {
     return encode(content, ecLevel, NULL);
 }
 
-Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ecLevel, const EncodeHint* hints)
+Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
     QString encoding = hints == NULL ? "" : QString(hints->getCharacterSet().c_str());
@@ -95,14 +80,14 @@ Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ec
     int provisionalBitsNeeded = headerBits.getSize()
             + mode->getCharacterCountBits(Version::getVersionForNumber(1))
             + dataBits.getSize();
-    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, *ecLevel);
+    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
 
     // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
 
     int bitsNeeded = headerBits.getSize()
             + mode->getCharacterCountBits(provisionalVersion)
             + dataBits.getSize();
-    Ref<Version> version = chooseVersion(bitsNeeded, *ecLevel);
+    Ref<Version> version = chooseVersion(bitsNeeded, ecLevel);
 
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
@@ -112,7 +97,7 @@ Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ec
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
 
-    zxing::qrcode::ECBlocks ecBlocks = version->getECBlocksForLevel(*ecLevel);
+    zxing::qrcode::ECBlocks ecBlocks = version->getECBlocksForLevel(ecLevel);
     int numDataBytes = version->getTotalCodewords() - ecBlocks.getTotalECCodewords();
 
     // Terminate the bits properly.
@@ -126,18 +111,18 @@ Ref<QRCode> Encoder::encode(const QString& content, Ref<ErrorCorrectionLevel> ec
 
     Ref<QRCode> qrCode(new QRCode);
 
-    qrCode->setECLevel(ecLevel);
+    qrCode->setECLevel(Ref<ErrorCorrectionLevel>(&ecLevel));
     qrCode->setMode(Ref<Mode>(mode));
     qrCode->setVersion(version);
 
     //  Choose the mask pattern and set to "qrCode".
     int dimension = version->getDimensionForVersion();
     Ref<ByteMatrix> matrix(new ByteMatrix(dimension, dimension));
-    int maskPattern = chooseMaskPattern(finalBits, *ecLevel, version, matrix);
+    int maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
     qrCode->setMaskPattern(maskPattern);
 
     // Build the matrix and set it to "qrCode".
-    MatrixUtil::buildMatrix(*finalBits, *ecLevel, *version, maskPattern, *matrix);
+    MatrixUtil::buildMatrix(*finalBits, ecLevel, *version, maskPattern, *matrix);
     qrCode->setMatrix(matrix);
 
     return qrCode;

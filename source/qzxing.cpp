@@ -9,6 +9,8 @@
 #include "imagehandler.h"
 #include <QTime>
 #include <QUrl>
+#include <zxing/qrcode/encoder/Encoder.h>
+#include <zxing/qrcode/ErrorCorrectionLevel.h>
 
 using namespace zxing;
 
@@ -282,6 +284,18 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
         img = img.copy(offsetX, offsetY, width, height);
     }
     return decodeImage(img);
+}
+
+QImage QZXing::encodeData(const QString& data)
+{
+    Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data, qrcode::ErrorCorrectionLevel::L );
+    Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
+    const std::vector< std::vector <char> >& bytes = bytesRef->getArray();
+    QImage image;
+    for(int i=0; i<bytesRef->getWidth(); ++i)
+        for(int j=0; j<bytesRef->getHeight(); ++i)
+            image.setPixel(i,j,bytes[i][j]);
+    return image;
 }
 
 int QZXing::getProcessTimeOfLastDecoding()

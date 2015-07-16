@@ -95,7 +95,7 @@ const int MatrixUtil::TYPE_INFO_POLY = 0x537;
 const int MatrixUtil::TYPE_INFO_MASK_PATTERN = 0x5412;
 
 void MatrixUtil::buildMatrix(const BitArray& dataBits,
-                             ErrorCorrectionLevel& ecLevel,
+                             const ErrorCorrectionLevel& ecLevel,
                              Version& version,
                              int maskPattern,
                              ByteMatrix& matrix)

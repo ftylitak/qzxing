@@ -130,7 +130,7 @@ public:
     // Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
     // success, store the result in "matrix" and return true.
     static void buildMatrix(const BitArray& dataBits,
-                            ErrorCorrectionLevel& ecLevel,
+                            const ErrorCorrectionLevel &ecLevel,
                             Version& version,
                             int maskPattern,
                             ByteMatrix& matrix);

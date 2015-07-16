@@ -39,7 +39,7 @@ BitArray::~BitArray() {
 }
 
 int BitArray::getSize() const {
-    return size;
+    return bits->size();
 }
 
 void BitArray::setBulk(int i, int newBits) {
@@ -198,6 +198,7 @@ void BitArray::ensureCapacity(int size)
             newBits[i] = bits[i];
         }
         bits = newBits;
+
     }
 }
 
