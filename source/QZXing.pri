@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
 greaterThan(QT_MAJOR_VERSION, 4): QT += quick
@@ -238,7 +238,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
     $$PWD/zxing/bigint/BigInteger.cc \
     $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/Encoder.cpp \
+    $$PWD/zxing/zxing/qrcode/encoder/QREncoder.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp \
