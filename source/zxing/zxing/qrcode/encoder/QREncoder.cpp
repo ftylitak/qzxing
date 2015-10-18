@@ -92,7 +92,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
     // Find "length" of main segment and write it
-    int numLetters = (*mode == Mode::BYTE) ? dataBits.getSize() : content.length();
+    int numLetters = (*mode == Mode::BYTE) ? dataBits.getSizeInBytes() : content.length();
     appendLengthInfo(numLetters, *version, *mode, headerAndDataBits);
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
@@ -256,14 +256,15 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
     }
     // Append termination bits. See 8.4.8 of JISX0510:2004 (p.24) for details.
     // If the last byte isn't 8-bit aligned, we'll add padding bits.
-    int numBitsInLastByte = bits.getSize() & 0x07;
+    int numBitsInLastByte = bits.getSize() % 8;
     if (numBitsInLastByte > 0) {
         for (int i = numBitsInLastByte; i < 8; i++) {
             bits.appendBit(false);
         }
     }
     // If we have more space, we'll fill the space with padding patterns defined in 8.4.9 (p.24).
-    int numPaddingBytes = numDataBytes - bits.getSize();//bits.getSizeInBytes();
+    int bitSizeInBytes = bits.getSizeInBytes();
+    int numPaddingBytes = numDataBytes - bitSizeInBytes;
     for (int i = 0; i < numPaddingBytes; ++i) {
         bits.appendBits((i & 0x01) == 0 ? 0xEC : 0x11, 8);
     }
@@ -347,7 +348,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 {
 
     // "bits" must have "getNumDataBytes" bytes of data.
-    if (bits.getSize() != numDataBytes)
+    if (bits.getSizeInBytes() != numDataBytes)
         throw new WriterException("Number of bits and data bytes does not match");
 
     // Step 1.  Divide data bytes into blocks and generate error correction bytes for them. We'll
@@ -401,11 +402,11 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
             }
         }
     }
-    if (numTotalBytes != result->getSize()) {  // Should be same.
+    if (numTotalBytes != result->getSizeInBytes()) {  // Should be same.
         QString message("Interleaving error: ");
         message += QString::number(numTotalBytes);
         message += " and ";
-        message += QString(result->getSize());
+        message += QString(result->getSizeInBytes());
         message += " differ.";
         throw new WriterException(message.toStdString().c_str());
     }

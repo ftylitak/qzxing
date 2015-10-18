@@ -44,7 +44,11 @@ void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
     }
     Ref<GenericGFPoly> generator = buildGenerator(ecBytes);
     ArrayRef<int> infoCoefficients(dataBytes);
-    memcpy(infoCoefficients.operator ->(), toEncode.data(), dataBytes);
+    //memcpy(infoCoefficients.operator ->(), toEncode.data(), dataBytes);
+    //to-do optimize the following loop
+    for(int i=0; i< dataBytes; ++i)
+        infoCoefficients[i] = toEncode[i];
+
     Ref<GenericGFPoly> info(new GenericGFPoly(field_, infoCoefficients));
     info = info->multiplyByMonomial(ecBytes, 1);
     Ref<GenericGFPoly> remainder = info->divide(generator)[1];

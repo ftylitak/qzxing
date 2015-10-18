@@ -44,6 +44,7 @@ public:
     BitArray(int size);
     ~BitArray();
     int getSize() const;
+    int getSizeInBytes() const;
 
     bool get(int i) const {
         return (bits[i >> logBits] & (1 << (i & bitsMask))) != 0;

@@ -212,7 +212,7 @@ std::vector<Ref<GenericGFPoly> > GenericGFPoly::divide(Ref<GenericGFPoly> other)
   }
     
   std::vector<Ref<GenericGFPoly> > returnValue;
-  returnValue[0] = quotient;
-  returnValue[1] = remainder;
+  returnValue.push_back(quotient);
+  returnValue.push_back(remainder);
   return returnValue;
 }

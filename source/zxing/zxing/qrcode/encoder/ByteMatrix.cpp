@@ -8,7 +8,7 @@ ByteMatrix::ByteMatrix(size_t width, size_t height) :
     width_(width), height_(height)
 {
     bytes_.resize(height_);
-    for(size_t i=0; i<height; ++i)
+    for(size_t i=0; i<height; i++)
         bytes_[i].resize(width);
 }
 
