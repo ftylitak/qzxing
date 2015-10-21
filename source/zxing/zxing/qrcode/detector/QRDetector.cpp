@@ -30,6 +30,7 @@
 #include <zxing/common/detector/MathUtils.h>
 #include <sstream>
 #include <cstdlib>
+#include <algorithm>
 
 using std::ostringstream;
 using std::abs;

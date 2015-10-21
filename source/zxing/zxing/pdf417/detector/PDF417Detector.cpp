@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <algorithm>
 #include <limits>
 #include <zxing/pdf417/detector/Detector.h>
 #include <zxing/pdf417/detector/LinesSampler.h>

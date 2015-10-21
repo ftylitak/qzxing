@@ -35,7 +35,6 @@ private:
   ArrayRef<char> rawBytes_;
   ArrayRef< Ref<ResultPoint> > resultPoints_;
   BarcodeFormat format_;
-  //NOTE: My
   std::string charSet_;
 
 public:

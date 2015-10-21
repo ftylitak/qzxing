@@ -46,7 +46,6 @@ public:
 
   ArrayRef<char> getRawBytes();
   Ref<String> getText();
-  // NOTE: my
   std::string charSet();
 };
 

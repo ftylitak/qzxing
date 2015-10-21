@@ -26,6 +26,7 @@
 #include <math.h>
 #include <string.h>
 #include <sstream>
+#include <algorithm>
 
 using std::vector;
 using std::string;

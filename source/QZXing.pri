@@ -291,3 +291,6 @@ win32-g++{
 !win32{
     DEFINES += NO_ICONV
 }
+winrt {
+    DEFINES += NO_ICONV
+}
