@@ -41,6 +41,7 @@ private:
 
 public:
   Mode(const Mode& mode);
+  Mode();
 
   static Mode TERMINATOR;
   static Mode NUMERIC;

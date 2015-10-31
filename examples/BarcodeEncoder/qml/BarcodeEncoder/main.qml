@@ -30,6 +30,10 @@ Rectangle {
         anchors.right: parent.right
         anchors.margins: 10
         title: "Result barcode image"
+
+        Image{
+            id:resultImage
+        }
     }
 
     QZXing {

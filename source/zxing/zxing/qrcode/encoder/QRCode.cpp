@@ -6,7 +6,7 @@ namespace zxing {
 namespace qrcode {
 
 QRCode::QRCode() :
-    mode_ptr_(NULL),
+    mode_(),
     ecLevel_ptr_(NULL),
     version_ptr_(NULL),
     maskPattern_(-1),
@@ -14,22 +14,22 @@ QRCode::QRCode() :
 
 QRCode::~QRCode()
 {
-    if(mode_ptr_)
-        delete mode_ptr_;
+//    if(mode_ptr_)
+//        delete mode_ptr_;
 
-    if(ecLevel_ptr_)
-        delete ecLevel_ptr_;
+//    if(ecLevel_ptr_)
+//        delete ecLevel_ptr_;
 
-    if(version_ptr_)
-        delete version_ptr_;
+//    if(version_ptr_)
+//        delete version_ptr_;
 
-    if(matrix_ptr_)
-        delete matrix_ptr_;
+//    if(matrix_ptr_)
+//        delete matrix_ptr_;
 }
 
-Ref<Mode> QRCode::getMode() const
+Mode QRCode::getMode() const
 {
-    return mode_ptr_;
+    return mode_;
 }
 
 Ref<ErrorCorrectionLevel> QRCode::getECLevel() const
@@ -56,8 +56,8 @@ const std::string QRCode::toString()
 {
     std::stringstream result;
     result << "<<\n";
-    result << " mode: {unimpl}";
-    result << mode_ptr_;
+//    result << " mode: {unimpl}";
+//    result << mode_;
     result << "\n ecLevel: {unimpl}";
     //result << ecLevel_;
     result << "\n version: ";
@@ -74,9 +74,9 @@ const std::string QRCode::toString()
     return result.str();
 }
 
-void QRCode::setMode(Ref<Mode> value)
+void QRCode::setMode(const Mode& value)
 {
-    mode_ptr_ = value;
+    mode_ = value;
 }
 
 void QRCode::setECLevel(Ref<ErrorCorrectionLevel> value)

@@ -50,14 +50,14 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
 
     // Pick an encoding mode appropriate for the content. Note that this will not attempt to use
     // multiple modes / segments even if that were more efficient. Twould be nice.
-    Mode* mode = chooseMode(content, encoding);
+    Mode mode = chooseMode(content, encoding);
 
     // This will store the header information, like mode and
     // length, as well as "header" segments like an ECI segment.
     BitArray headerBits;
 
     // Append ECI segment if applicable
-    if (mode == &Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
+    if (mode == Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
         zxing::common::CharacterSetECI* eci =
                 zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding.toStdString().c_str());
         if (eci != NULL) {
@@ -66,34 +66,34 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     }
 
     // (With ECI in place,) Write the mode marker
-    appendModeInfo(*mode, headerBits);
+    appendModeInfo(mode, headerBits);
 
     // Collect data within the main segment, separately, to count its size if needed. Don't add it to
     // main payload yet.
     BitArray dataBits;
-    appendBytes(content, *mode, dataBits, encoding);
+    appendBytes(content, mode, dataBits, encoding);
 
     // Hard part: need to know version to know how many bits length takes. But need to know how many
     // bits it takes to know version. First we take a guess at version by assuming version will be
     // the minimum, 1:
 
     int provisionalBitsNeeded = headerBits.getSize()
-            + mode->getCharacterCountBits(Version::getVersionForNumber(1))
+            + mode.getCharacterCountBits(Version::getVersionForNumber(1))
             + dataBits.getSize();
     Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
 
     // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
 
     int bitsNeeded = headerBits.getSize()
-            + mode->getCharacterCountBits(provisionalVersion)
+            + mode.getCharacterCountBits(provisionalVersion)
             + dataBits.getSize();
     Ref<Version> version = chooseVersion(bitsNeeded, ecLevel);
 
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
     // Find "length" of main segment and write it
-    int numLetters = (*mode == Mode::BYTE) ? dataBits.getSizeInBytes() : content.length();
-    appendLengthInfo(numLetters, *version, *mode, headerAndDataBits);
+    int numLetters = (mode == Mode::BYTE) ? dataBits.getSizeInBytes() : content.length();
+    appendLengthInfo(numLetters, *version, mode, headerAndDataBits);
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
 
@@ -112,7 +112,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     Ref<QRCode> qrCode(new QRCode);
 
     qrCode->setECLevel(Ref<ErrorCorrectionLevel>(&ecLevel));
-    qrCode->setMode(Ref<Mode>(mode));
+    qrCode->setMode(mode);
     qrCode->setVersion(version);
 
     //  Choose the mask pattern and set to "qrCode".
@@ -142,7 +142,7 @@ int Encoder::getAlphanumericCode(int code)
     return -1;
 }
 
-Mode* Encoder::chooseMode(const QString& content)
+Mode Encoder::chooseMode(const QString& content)
 {
     return chooseMode(content, "");
 }
@@ -151,10 +151,10 @@ Mode* Encoder::chooseMode(const QString& content)
    * Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
    * if it is Shift_JIS, and the input is only double-byte Kanji, then we return {@link Mode#KANJI}.
    */
-Mode* Encoder::chooseMode(const QString& content, const QString& encoding)
+Mode Encoder::chooseMode(const QString& content, const QString& encoding)
 {
     if (encoding == "Shift_JIS")
-        return &(Mode::BYTE);
+        return Mode::BYTE;
 
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
@@ -165,16 +165,16 @@ Mode* Encoder::chooseMode(const QString& content, const QString& encoding)
         } else if (getAlphanumericCode(c) != -1) {
             hasAlphanumeric = true;
         } else {
-            return &Mode::BYTE;
+            return Mode::BYTE;
         }
     }
     if (hasAlphanumeric) {
-        return &Mode::ALPHANUMERIC;
+        return Mode::ALPHANUMERIC;
     }
     if (hasNumeric) {
-        return &Mode::NUMERIC;
+        return Mode::NUMERIC;
     }
-    return &Mode::BYTE;
+    return Mode::BYTE;
 }
 
 //bool Encoder::isOnlyDoubleByteKanji(const QString& content)

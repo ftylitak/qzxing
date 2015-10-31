@@ -42,3 +42,4 @@ void ImageHandler::save(QObject *imageObj, const QString &path,
     QImage img = extractQImage(imageObj, offsetX, offsetY, width, height);
     img.save(path);
 }
+

@@ -15,7 +15,7 @@ class QRCode : public Counted
 {
 private:
 
-  Ref<Mode> mode_ptr_;
+  Mode mode_;
   Ref<ErrorCorrectionLevel> ecLevel_ptr_;
   Ref<Version> version_ptr_;
   int maskPattern_;
@@ -26,13 +26,13 @@ public:
 
   QRCode();
   ~QRCode();
-  Ref<Mode> getMode() const;
+  Mode getMode() const;
   Ref<ErrorCorrectionLevel> getECLevel() const;
   Ref<Version> getVersion() const;
   int getMaskPattern() const;
   Ref<ByteMatrix> getMatrix() const;
   const std::string toString();
-  void setMode(Ref<Mode> value);
+  void setMode(const Mode &value);
   void setECLevel(Ref<ErrorCorrectionLevel> value);
   void setVersion(Ref<Version> version);
   void setMaskPattern(int value);

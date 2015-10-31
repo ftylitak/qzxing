@@ -48,14 +48,14 @@ public:
    */
   static int getAlphanumericCode(int code);
 
-  static Mode* chooseMode(const QString& content);
+  static Mode chooseMode(const QString& content);
 
   /**
    * Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
    * if it is Shift_JIS, and the input is only double-byte Kanji, then we return {@link Mode#KANJI}.
    */
 private:
-  static Mode* chooseMode(const QString& content, const QString& encoding);
+  static Mode chooseMode(const QString& content, const QString& encoding);
 
   //static bool isOnlyDoubleByteKanji(const QString& content);
 

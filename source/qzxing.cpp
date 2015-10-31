@@ -295,6 +295,9 @@ QImage QZXing::encodeData(const QString& data)
     for(int i=0; i<bytesRef->getWidth(); i++)
         for(int j=0; j<bytesRef->getHeight(); j++)
             image.setPixel(i,j,bytes[i][j] ? 0 : 255);
+
+    image.save("C:\\tmp.png");
+
     return image;
 }
 
