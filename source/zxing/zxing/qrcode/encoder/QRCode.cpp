@@ -14,17 +14,6 @@ QRCode::QRCode() :
 
 QRCode::~QRCode()
 {
-//    if(mode_ptr_)
-//        delete mode_ptr_;
-
-//    if(ecLevel_ptr_)
-//        delete ecLevel_ptr_;
-
-//    if(version_ptr_)
-//        delete version_ptr_;
-
-//    if(matrix_ptr_)
-//        delete matrix_ptr_;
 }
 
 Mode QRCode::getMode() const

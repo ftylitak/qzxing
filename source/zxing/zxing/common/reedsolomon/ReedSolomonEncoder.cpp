@@ -46,7 +46,7 @@ void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
     ArrayRef<int> infoCoefficients(dataBytes);
     //memcpy(infoCoefficients.operator ->(), toEncode.data(), dataBytes);
     //to-do optimize the following loop
-    for(int i=0; i< dataBytes; ++i)
+    for(int i=0; i< dataBytes; i++)
         infoCoefficients[i] = toEncode[i];
 
     Ref<GenericGFPoly> info(new GenericGFPoly(field_, infoCoefficients));

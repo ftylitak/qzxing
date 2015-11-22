@@ -49,8 +49,8 @@ void ByteMatrix::set(size_t x, size_t y, bool value)
 
 void ByteMatrix::clear(const char value)
 {
-    for (size_t y = 0; y < height_; ++y) {
-        for (size_t x = 0; x < width_; ++x) {
+    for (size_t y = 0; y < height_; y++) {
+        for (size_t x = 0; x < width_; x++) {
             bytes_[y][x] = value;
         }
     }
@@ -59,8 +59,8 @@ void ByteMatrix::clear(const char value)
 const std::string ByteMatrix::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
-    for (size_t y = 0; y < height_; ++y) {
-        for (size_t x = 0; x < width_; ++x) {
+    for (size_t y = 0; y < height_; y++) {
+        for (size_t x = 0; x < width_; x++) {
             switch (bytes_[y][x]) {
             case 0:
                 result << " 0";

@@ -107,7 +107,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
                                                   version->getTotalCodewords(),
                                                   numDataBytes,
-                                                  1));//ecBlocks->getNumBlocks());
+                                                  ecBlocks.getECBlocks().size()));
 
     Ref<QRCode> qrCode(new QRCode);
 
@@ -153,12 +153,15 @@ Mode Encoder::chooseMode(const QString& content)
    */
 Mode Encoder::chooseMode(const QString& content, const QString& encoding)
 {
-    if (encoding == "Shift_JIS")
+    if (encoding == "Shift_JIS") 
+	{
+        std::cout << "DEBUG: Shift_JIS detected...be aware!" << std::endl;
         return Mode::BYTE;
+	}
 
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
-    for (int i = 0; i < content.size(); ++i) {
+    for (int i = 0; i < content.size(); i++) {
         char c = content.at(i).toLatin1();
         if (c >= '0' && c <= '9') {
             hasNumeric = true;
@@ -256,7 +259,7 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
     }
     // Append termination bits. See 8.4.8 of JISX0510:2004 (p.24) for details.
     // If the last byte isn't 8-bit aligned, we'll add padding bits.
-    int numBitsInLastByte = bits.getSize() % 8;
+    int numBitsInLastByte = bits.getSize() & 7;//% 8;
     if (numBitsInLastByte > 0) {
         for (int i = numBitsInLastByte; i < 8; i++) {
             bits.appendBit(false);
@@ -265,7 +268,7 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
     // If we have more space, we'll fill the space with padding patterns defined in 8.4.9 (p.24).
     int bitSizeInBytes = bits.getSizeInBytes();
     int numPaddingBytes = numDataBytes - bitSizeInBytes;
-    for (int i = 0; i < numPaddingBytes; ++i) {
+    for (int i = 0; i < numPaddingBytes; i++) {
         bits.appendBits((i & 0x01) == 0 ? 0xEC : 0x11, 8);
     }
     if (bits.getSize() != capacity) {
@@ -358,9 +361,9 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     int maxNumEcBytes = 0;
 
     // Since, we know the number of reedsolmon blocks, we can initialize the vector with the number.
-    QList< BlockPair > blocks;
+    std::vector< BlockPair > blocks;
 
-    for (int i = 0; i < numRSBlocks; ++i) {
+    for (int i = 0; i < numRSBlocks; i++) {
         std::vector<int> numDataBytesInBlock;
         std::vector<int> numEcBytesInBlock;
         getNumDataBytesAndNumECBytesForBlockID(
@@ -385,8 +388,8 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     BitArray* result = new BitArray;
 
     // First, place data blocks.
-    for (int i = 0; i < maxNumDataBytes; ++i) {
-        for (QList< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); ++it) {
+    for (int i = 0; i < maxNumDataBytes; i++) {
+        for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
             ArrayRef<char> dataBytes = it->getDataBytes();
             if (i < dataBytes.array_->size()) {
                 result->appendBits(dataBytes[i], 8);  ///????? are we sure?
@@ -394,8 +397,8 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         }
     }
     // Then, place error correction blocks.
-    for (int i = 0; i < maxNumEcBytes; ++i) {
-        for (QList< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); ++it) {
+    for (int i = 0; i < maxNumEcBytes; i++) {
+        for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
             ArrayRef<char> ecBytes = it->getErrorCorrectionBytes();
             if (i < ecBytes.array_->size()) {
                 result->appendBits(ecBytes[i], 8);
@@ -418,8 +421,9 @@ ArrayRef<char> Encoder::generateECBytes(const std::vector<char>& dataBytes, int 
 {
     int numDataBytes = dataBytes.size();
     std::vector<int> toEncode;
+	toEncode.resize(numDataBytes + numEcBytesInBlock);
     for (int i = 0; i < numDataBytes; i++)
-        toEncode.push_back(dataBytes[i] & 0xFF);
+        toEncode[i] = dataBytes[i] & 0xFF;
 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
     encoder.encode(toEncode, numEcBytesInBlock);
@@ -540,7 +544,7 @@ void Encoder::append8BitBytes(const QString& content, BitArray& bits, const QStr
     //        throw new WriterException(uee);
     //    }
 
-    for (int i=0; i<content.size(); ++i) {
+    for (int i=0; i<content.size(); i++) {
         bits.appendBits(content.at(i).toLatin1(), 8);
     }
 }
