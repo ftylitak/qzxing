@@ -148,7 +148,7 @@ bool MaskUtil::getDataMaskBit(int maskPattern, int x, int y)
         intermediate = (y + x) % 3;
         break;
     case 4:
-        intermediate = (((unsigned int)y >> (unsigned int)1) + (x / 3)) & 0x1;
+        intermediate = ((y >> 1) + (x / 3)) & 0x1;
         break;
     case 5:
         temp = y * x;

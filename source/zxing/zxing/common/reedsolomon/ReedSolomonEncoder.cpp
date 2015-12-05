@@ -60,9 +60,12 @@ void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
 
     //original kept for future checks
     //System.arraycopy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.length);
-    toEncode.insert(toEncode.begin() + dataBytes + numZeroCoefficients,
-                    coefficients.array_->values().begin(),
-                    coefficients.array_->values().end());
+    
+	//toEncode.insert(toEncode.begin() + (dataBytes-1) + numZeroCoefficients,
+    //                coefficients.array_->values().begin(),
+    //                coefficients.array_->values().end());
+	for (size_t i = 0; i < coefficients.count(); i++)
+		toEncode[i] = coefficients[i];
 }
 
 }

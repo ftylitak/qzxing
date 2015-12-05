@@ -423,6 +423,7 @@ ArrayRef<char> Encoder::generateECBytes(const std::vector<char>& dataBytes, int 
     std::vector<int> toEncode;
 	toEncode.resize(numDataBytes + numEcBytesInBlock);
     for (int i = 0; i < numDataBytes; i++)
+		//toEncode[i] = dataBytes[i];
         toEncode[i] = dataBytes[i] & 0xFF;
 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
