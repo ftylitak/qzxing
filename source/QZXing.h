@@ -128,11 +128,6 @@ public slots:
                               const double width = 0, const double height = 0);
 
     /**
-     * The main encoding function. Currently supports only Qr code encoding
-     */
-    QImage encodeData(const QString& data);
-
-    /**
       * Get the prossecing time in millisecond of the last decode operation.
       * Added mainly as a statistic measure.
       * Decoding operation fails, the processing time equals to -1.

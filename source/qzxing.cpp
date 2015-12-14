@@ -287,29 +287,6 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
     return decodeImage(img);
 }
 
-QImage QZXing::encodeData(const QString& data)
-{
-    QImage image;
-    try {
-        Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data, qrcode::ErrorCorrectionLevel::L );
-        Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
-        const std::vector< std::vector <char> >& bytes = bytesRef->getArray();
-        QImage image(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
-        for(int i=0; i<bytesRef->getWidth(); i++)
-            for(int j=0; j<bytesRef->getHeight(); j++)
-                image.setPixel(i, j, bytes[i][j] ?
-                                 qRgb(0,0,0) :
-                                 qRgb(255,255,255));
-
-        image = image.scaled(240, 240);
-        bool success =  image.save("tmp.bmp","BMP");
-    } catch (std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
-
-    return image;
-}
-
 int QZXing::getProcessTimeOfLastDecoding()
 {
     return processingTime;
