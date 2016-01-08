@@ -6,7 +6,7 @@ VERSION = 2.0.0
 
 RESOURCES +=  resources.qrc
 
-include(../../source/QZXing.pri)
+include(../../src/QZXing.pri)
 
 HEADERS += QQrDecoder.h \
     QCameraControllerWidget.h \

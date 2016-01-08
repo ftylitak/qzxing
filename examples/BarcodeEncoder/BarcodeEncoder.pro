@@ -12,7 +12,7 @@ SOURCES += main.cpp
 # Installation path
 # target.path =
 
-include(../../source/QZXing.pri)
+include(../../src/QZXing.pri)
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
