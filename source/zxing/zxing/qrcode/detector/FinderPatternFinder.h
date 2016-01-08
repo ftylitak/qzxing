@@ -47,6 +47,7 @@ protected:
   bool hasSkipped_;
 
   Ref<ResultPointCallback> callback_;
+  mutable int crossCheckStateCount[5];
 
   /** stateCount must be int[5] */
   static float centerFromEnd(int* stateCount, int end);
@@ -64,6 +65,9 @@ protected:
 
   Ref<BitMatrix> getImage();
   std::vector<Ref<FinderPattern> >& getPossibleCenters();
+
+  bool crossCheckDiagonal(int startI, int centerJ, int maxCount, int originalStateCountTotal) const;
+  int *getCrossCheckStateCount() const;
 
 public:
   static float distance(Ref<ResultPoint> p1, Ref<ResultPoint> p2);
