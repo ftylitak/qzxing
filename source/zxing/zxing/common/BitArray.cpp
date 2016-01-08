@@ -44,7 +44,7 @@ int BitArray::getSize() const {
 
 int BitArray::getSizeInBytes() const
 {
-    return (size + 7)/8;\
+    return (size + 7)/8;
 }
 
 void BitArray::setBulk(int i, int newBits) {
