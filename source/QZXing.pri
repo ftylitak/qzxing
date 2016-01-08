@@ -123,16 +123,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/bigint/BigIntegerLibrary.hh \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.hh \
     $$PWD/zxing/bigint/BigInteger.hh \
-    $$PWD/zxing/zxing/qrcode/encoder/BlockPair.h \
-    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.h \
-    $$PWD/zxing/zxing/qrcode/encoder/Encoder.h \
-    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.h \
-    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
-    $$PWD/zxing/zxing/qrcode/encoder/QRCode.h \
-    $$PWD/zxing/zxing/WriterException.h \
-    $$PWD/zxing/zxing/EncodeHint.h \
-    $$PWD/zxing/zxing/UnsupportedEncodingException.h \
-    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h
+    $$PWD/zxing/zxing/WriterException.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
@@ -236,14 +227,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigUnsigned.cc \
     $$PWD/zxing/bigint/BigIntegerUtils.cc \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
-    $$PWD/zxing/bigint/BigInteger.cc \
-    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/QREncoder.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp \
-    $$PWD/zxing/zxing/EncodeHint.cpp \
-    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
+    $$PWD/zxing/bigint/BigInteger.cc
 
 symbian {
     TARGET.UID3 = 0xE618743C

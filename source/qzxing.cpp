@@ -9,7 +9,6 @@
 #include "imagehandler.h"
 #include <QTime>
 #include <QUrl>
-#include <zxing/qrcode/encoder/Encoder.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include <QColor>
 
