@@ -20,7 +20,7 @@ Rectangle {
                 console.log(drop.urls[0])
 
                 var path = drop.urls[0];
-                path = path.replace("file://","");
+               // path = path.replace("file://","");
 
                 decoder.decodeImageFromFile(path)
             }
