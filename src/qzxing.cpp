@@ -175,7 +175,7 @@ void QZXing::setDecoder(const uint &hint)
     emit enabledFormatsChanged();
 }
 
-QString QZXing::decodeImage(QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
+QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     QTime t;
     t.start();
