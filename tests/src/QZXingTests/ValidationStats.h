@@ -7,6 +7,8 @@
 class ValidationStats
 {
 private:
+    QString imagePath;
+    QString expectedOutput;
     bool operationSuccess;
     bool resultMatch;
     QString errorMessage;
@@ -23,6 +25,10 @@ public:
     void setResultMatch(bool value);
     void setErrorMessage(const QString &value);
     void setElaspedTime(const int64_t &value);
+    QString getExpectedOutput() const;
+    void setExpectedOutput(const QString &value);
+    QString getImagePath() const;
+    void setImagePath(const QString &value);
 };
 
 #endif // VALIDATIONSTATS_H

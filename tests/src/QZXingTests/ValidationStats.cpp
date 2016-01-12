@@ -40,8 +40,28 @@ void ValidationStats::setElaspedTime(const int64_t &value)
     elaspedTime = value;
 }
 
+QString ValidationStats::getExpectedOutput() const
+{
+    return expectedOutput;
+}
+
+void ValidationStats::setExpectedOutput(const QString &value)
+{
+    expectedOutput = value;
+}
+
+QString ValidationStats::getImagePath() const
+{
+    return imagePath;
+}
+
+void ValidationStats::setImagePath(const QString &value)
+{
+    imagePath = value;
+}
+
 ValidationStats::ValidationStats()
 {
-
+    
 }
 

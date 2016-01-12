@@ -17,6 +17,4 @@ HEADERS += \
     DecodeValidator.h \
     ValidationStats.h
 
-
-
 include(../../../src/QZXing.pri)

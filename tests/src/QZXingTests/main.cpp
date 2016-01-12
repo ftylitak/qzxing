@@ -1,9 +1,10 @@
 #include <QCoreApplication>
 
+#include "DecodeValidator.h"
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-
-    return a.exec();
+    DecodeValidator decodeValidator;
+    decodeValidator.executeTests();
 }
 
