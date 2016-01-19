@@ -5,6 +5,6 @@
 int main(int argc, char *argv[])
 {
     DecodeValidator decodeValidator;
-    decodeValidator.executeTests();
+    decodeValidator.executeTests("../../resources/");
 }
 

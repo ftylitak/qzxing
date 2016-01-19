@@ -60,7 +60,13 @@ void ValidationStats::setImagePath(const QString &value)
     imagePath = value;
 }
 
-ValidationStats::ValidationStats()
+ValidationStats::ValidationStats():
+ imagePath(""),
+ expectedOutput(""),
+ operationSuccess(false),
+ resultMatch(false),
+ errorMessage(""),
+ elaspedTime(0)
 {
     
 }
