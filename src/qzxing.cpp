@@ -51,55 +51,55 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 QString QZXing::decoderFormatToString(int fmt)
 {
     switch (fmt) {
-      case 1:
+      case DecoderFormat_Aztec:
           return "AZTEC";
 
-      case 2:
+      case DecoderFormat_CODABAR:
           return "CODABAR";
 
-      case 3:
+      case DecoderFormat_CODE_39:
           return "CODE_39";
 
-      case 4:
+      case DecoderFormat_CODE_93:
           return "CODE_93";
 
-      case 5:
+      case DecoderFormat_CODE_128:
           return "CODE_128";
 
-      case 6:
+      case DecoderFormat_DATA_MATRIX:
           return "DATA_MATRIX";
 
-      case 7:
+      case DecoderFormat_EAN_8:
           return "EAN_8";
 
-      case 8:
+      case DecoderFormat_EAN_13:
           return "EAN_13";
 
-      case 9:
+      case DecoderFormat_ITF:
           return "ITF";
 
-      case 10:
+      case DecoderFormat_MAXICODE:
           return "MAXICODE";
 
-      case 11:
+      case DecoderFormat_PDF_417:
           return "PDF_417";
 
-      case 12:
+      case DecoderFormat_QR_CODE:
           return "QR_CODE";
 
-      case 13:
+      case DecoderFormat_RSS_14:
           return "RSS_14";
 
-      case 14:
+      case DecoderFormat_RSS_EXPANDED:
           return "RSS_EXPANDED";
 
-      case 15:
+      case DecoderFormat_UPC_A:
           return "UPC_A";
 
-      case 16:
+      case DecoderFormat_UPC_E:
           return "UPC_E";
 
-      case 17:
+      case DecoderFormat_UPC_EAN_EXTENSION:
           return "UPC_EAN_EXTENSION";
     } // switch
     return QString();

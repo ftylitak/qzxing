@@ -75,7 +75,7 @@ public:
     }
 #endif
 
-    QString decoderFormatToString(int fmt);
+    static QString decoderFormatToString(int fmt);
     QString foundedFormat() const;
     QString charSet() const;
 
