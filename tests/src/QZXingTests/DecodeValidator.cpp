@@ -69,6 +69,42 @@ QZXing::DecoderFormat DecodeValidator::getDecoderForFolder(const QString &folder
         return QZXing::DecoderFormat_None;
 }
 
+void DecodeValidator::printResults()
+{
+    std::map<QZXing::DecoderFormat, std::vector<std::shared_ptr<ValidationStats>>>::iterator it;
+
+    for(it=testResults.begin(); it != testResults.end(); it++) {
+        QString decoderStr = QZXing::decoderFormatToString(it->first);
+        std::vector<std::shared_ptr<ValidationStats>> &resPerDecoder = it->second;
+
+        size_t successfulTestCount = 0;
+        size_t failedTestCount = 0;
+        size_t resultIncosistencyCount = 0;
+
+        QVector<QString> failedResultLogs;
+
+        for(size_t i=0; i<resPerDecoder.size(); i++) {
+            if(resPerDecoder[i]->getOperationSuccess())
+                successfulTestCount++;
+            else {
+                failedTestCount++;
+                failedResultLogs.push_back(QString("    failed file: ") + resPerDecoder[i]->getImagePath());
+            }
+
+            if(resPerDecoder[i]->getOperationSuccess() && !resPerDecoder[i]->getResultMatch())
+                resultIncosistencyCount++;
+        }
+
+        qDebug() << "Decoder: [" << decoderStr << "]"
+                 << ", successful: [" << successfulTestCount << "]"
+                 << ", failed: [" << failedTestCount << "]"
+                 << ", inconsistencies: [" << resultIncosistencyCount << "]";
+
+        for(size_t i=0; i<failedResultLogs.size(); i++)
+            qDebug() << failedResultLogs[i];
+    }
+}
+
 std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(QZXing::DecoderFormat enabledDecoder, const QString &imageToDecodePath, const QString &expectedOutputFilePath)
 {
     QImage tmpImage = QImage(imageToDecodePath);
@@ -124,6 +160,7 @@ void DecodeValidator::executeTests(const QString &folderPath)
         }
     }
 
+    printResults();
 }
 
 

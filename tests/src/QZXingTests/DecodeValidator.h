@@ -25,6 +25,8 @@ private:
 
     QZXing::DecoderFormat getDecoderForFolder(const QString &folderName);
 
+    void printResults();
+
 public:
     DecodeValidator();
 
