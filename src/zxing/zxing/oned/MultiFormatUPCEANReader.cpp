@@ -74,6 +74,11 @@ Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row)
       continue;
     }
 
+    //added this because reader->decodeRow returns null if row is null
+    //TODO: investigate why the execution reaches here with empty row.
+    if(result.empty())
+        continue;
+
     // Special case: a 12-digit code encoded in UPC-A is identical
     // to a "0" followed by those 12 digits encoded as EAN-13. Each
     // will recognize such a code, UPC-A as a 12-digit string and
