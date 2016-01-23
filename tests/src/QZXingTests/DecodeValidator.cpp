@@ -49,7 +49,7 @@ std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(Q
 
     stats_->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
     stats_->setOperationSuccess(result != "");
-    stats_->setResultMatch(result == expectedOutput);
+    stats_->setResultMatch(expectedOutput != "" && result == expectedOutput);
 
     return stats_;
 }
@@ -80,20 +80,18 @@ std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(Q
     stats_->setExpectedOutput(expectedOutput);
 
     qDebug() << "Operation success: " << stats_->getOperationSuccess()
-             << ", Result Match: " << stats_->getResultMatch()
-             << ", Path: " << stats_->getImagePath()
-                //<< ", Expected Output: " << stats_->getExpectedOutput()
-                ;
+             << "\t, Result Match: " << stats_->getResultMatch()
+             << "\t, Path: " << stats_->getImagePath();
+
+    if(!stats_->getOperationSuccess() && stats_->getResultMatch())
+        qDebug() << "\t[Warning]...";
+
     return stats_;
 }
 
 void DecodeValidator::decodeAllImagesInForderWithValidator(QZXing::DecoderFormat enabledDecoder, const QString &folderPath)
 {
-   // auto test =  std::vector<std::shared_ptr<ValidationStats>>();
-
     QDirIterator dirIt(folderPath, QDirIterator::NoIteratorFlags);
-
-  // testResults.insert(enabledDecoder, std::move(test));
 
     while (dirIt.hasNext()) {
         dirIt.next();
