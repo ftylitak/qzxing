@@ -20,14 +20,14 @@ public:
     bool getResultMatch() const;
     QString getErrorMessage() const;
     int64_t getElaspedTime() const;
+    QString getExpectedOutput() const;
+    QString getImagePath() const;
 
     void setOperationSuccess(bool value);
     void setResultMatch(bool value);
     void setErrorMessage(const QString &value);
     void setElaspedTime(const int64_t &value);
-    QString getExpectedOutput() const;
     void setExpectedOutput(const QString &value);
-    QString getImagePath() const;
     void setImagePath(const QString &value);
 };
 
