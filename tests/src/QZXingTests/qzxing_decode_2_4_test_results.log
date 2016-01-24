@@ -610,4 +610,3 @@ Decoder: [ "UPC_EAN_EXTENSION" ] , successful: [ 2 ] , failed: [ 0 ] , inconsist
  ##############################################
 
 Total: [ 1110 ] , successful: [ 541 ] , failed: [ 543 ] , inconsistencies: [ 26 ]
-Press <RETURN> to close this window...
