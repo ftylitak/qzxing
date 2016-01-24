@@ -51,7 +51,7 @@ std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(Q
 
     decoder.setDecoder(enabledDecoder);
 
-    QString result = decoder.decodeImage(imageToDecode, 999, 999, true);
+    QString result = decoder.decodeImage(imageToDecode);
 
     stats_->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
     stats_->setOperationSuccess(result != "");

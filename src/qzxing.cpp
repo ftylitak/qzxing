@@ -194,7 +194,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         if ((maxWidth > 0) || (maxHeight > 0))
             ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
         else
-            ciw = new CameraImageWrapper(image);
+            ciw = CameraImageWrapper::Factory(image, 999, 999, true);
 
         Ref<LuminanceSource> imageRef(ciw);
         GlobalHistogramBinarizer *binz = new GlobalHistogramBinarizer(imageRef);
