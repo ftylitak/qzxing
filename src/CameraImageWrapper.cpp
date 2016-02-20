@@ -103,10 +103,11 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
 {
     int width = getWidth();
     int height =  getHeight();
-    char* matrix = new char[width*height];
-    char* m = matrix;
 
     ArrayRef<char> tmpRow(0);
+    ArrayRef<char> arr(width*height);
+
+    char* m = &arr[0];
 
     for(int y=0; y<height; y++)
     {
@@ -117,12 +118,6 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
         memcpy(m, &tmpRow[0], width);
 #endif
         m += width * sizeof(unsigned char);
-    }
-
-    ArrayRef<char> arr = ArrayRef<char>(matrix, width*height);
-
-    if (matrix) {
-        delete matrix;
     }
 
     return arr;
