@@ -34,8 +34,6 @@ private:
     QImage* sharpen(const QImage *origin);
 
     QImage* image;
-    unsigned char* pRow;
-    unsigned char* pMatrix;
 };
 
 #endif //CAMERAIMAGE_H
