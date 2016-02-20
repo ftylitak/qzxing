@@ -23,7 +23,7 @@ public:
     unsigned char getPixel(int x, int y) const;
     unsigned char* copyMatrix() const;
     
-    QImage grayScaleImage(QImage::Format f);
+    QImage* grayScaleImage(const QImage *origin);
     QImage getOriginalImage();
 
     // Callers take ownership of the returned memory and must call delete [] on it themselves.
@@ -31,7 +31,9 @@ public:
     ArrayRef<char> getMatrix() const;
   
 private:
-    QImage image;
+    QImage* sharpen(const QImage *origin);
+
+    QImage* image;
     unsigned char* pRow;
     unsigned char* pMatrix;
 };
