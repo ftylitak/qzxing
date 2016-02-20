@@ -73,7 +73,9 @@ QImage* CameraImageWrapper::grayScaleImage(const QImage *origin)
     {
         for(int j=0; j<origin->height(); j++)
         {
-            int pix = qGray(origin->pixel(QPoint(i,j)));
+            QRgb pixel = origin->pixel(QPoint(i,j));
+            QRgb pix = (qRed(pixel) + qGreen(pixel) + qBlue(pixel)) / 3;
+                    //qGray(origin->pixel(QPoint(i,j)));
             tmp->setPixel(i,j, qRgb(pix ,pix,pix));
         }
     }
