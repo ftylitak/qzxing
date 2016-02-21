@@ -10,11 +10,14 @@ CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), image(NULL)
 CameraImageWrapper::CameraImageWrapper(const QImage &sourceImage) : LuminanceSource(sourceImage.width(), sourceImage.height())
 {
     image = grayScaleImage( &sourceImage );
+    delegate = Ref<GreyscaleLuminanceSource>(
+                new GreyscaleLuminanceSource(getMatrixP(),image->width(), image->height(),0, 0, image->width(), image->height()));
 }
 
 CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : LuminanceSource(otherInstance.getWidth(), otherInstance.getHeight())
 {
     image = new QImage(otherInstance.getOriginalImage());
+    delegate = otherInstance.getDelegate();
 }
 
 CameraImageWrapper::~CameraImageWrapper()
@@ -25,7 +28,7 @@ CameraImageWrapper::~CameraImageWrapper()
 
 CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    if((maxWidth != 1 || maxHeight != 1) && (sourceImage.width() > maxWidth || sourceImage.height() > maxHeight))
+    if((maxWidth != 1 && sourceImage.width() > maxWidth) || (maxHeight != 1 && sourceImage.height() > maxHeight))
     {
         QImage image;
         image = sourceImage.scaled(
@@ -37,33 +40,6 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
     }
     else
         return new CameraImageWrapper(sourceImage);
-}
-
-int CameraImageWrapper::getWidth() const
-{
-    return image->width();
-}
-
-int CameraImageWrapper::getHeight() const
-{
-    return image->height();
-}
-
-unsigned char CameraImageWrapper::getPixel(int x, int y) const
-{
-    return image->pixel(x,y);
-}
-
-unsigned char* CameraImageWrapper::copyMatrix() const
-{
-    unsigned char* newMatrix = (unsigned char*)malloc(image->width() * image->height() * sizeof(unsigned char));
-
-    int cnt = 0;
-    for(int i=0; i<image->width(); i++)
-        for(int j=0; j<image->height(); j++)
-            newMatrix[cnt++] = getPixel(i,j);
-
-    return newMatrix;
 }
 
 QImage* CameraImageWrapper::grayScaleImage(const QImage *origin)
@@ -90,18 +66,74 @@ QImage CameraImageWrapper::getOriginalImage()
 
 ArrayRef<char> CameraImageWrapper::getRow(int y, ArrayRef<char> row) const
 {
+    if(delegate)
+        return delegate->getRow(y, row);
+    else
+        return getRowP(y, row);
+}
+
+ArrayRef<char> CameraImageWrapper::getMatrix() const
+{
+    if(delegate)
+        return delegate->getMatrix();
+    else
+        return getMatrixP();
+}
+
+bool CameraImageWrapper::isCropSupported() const
+{
+    if(delegate)
+        return delegate->isCropSupported();
+    else
+        return LuminanceSource::isCropSupported();
+}
+
+Ref<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
+{
+    if(delegate)
+        return delegate->crop(left, top, width, height);
+    else
+        return LuminanceSource::crop(left, top, width, height);
+}
+
+bool CameraImageWrapper::isRotateSupported() const
+{
+    if(delegate)
+        return delegate->isRotateSupported();
+    else
+        return LuminanceSource::isRotateSupported();
+}
+
+Ref<LuminanceSource> CameraImageWrapper::invert() const
+{
+    if(delegate)
+        return delegate->invert();
+    else
+        return LuminanceSource::invert();
+}
+
+Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
+{
+    if(delegate)
+        return delegate->rotateCounterClockwise();
+    else
+        return LuminanceSource::rotateCounterClockwise();
+}
+
+ArrayRef<char> CameraImageWrapper::getRowP(int y, ArrayRef<char> row) const
+{
     int width = getWidth();
 
     if (row->size() != width)
         row.reset(ArrayRef<char>(width));
 
     for (int x = 0; x < width; x++)
-        row[x] = getPixel(x,y);
+        row[x] = image->pixel(x,y);
 
     return row;
 }
 
-ArrayRef<char> CameraImageWrapper::getMatrix() const
+ArrayRef<char> CameraImageWrapper::getMatrixP() const
 {
     int width = getWidth();
     int height =  getHeight();
@@ -113,7 +145,7 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
 
     for(int y=0; y<height; y++)
     {
-        tmpRow = getRow(y, tmpRow);
+        tmpRow = getRowP(y, tmpRow);
 #if __cplusplus > 199711L
         memcpy(m, tmpRow->values().data(), width);
 #else
@@ -124,6 +156,31 @@ ArrayRef<char> CameraImageWrapper::getMatrix() const
 
     return arr;
 }
+
+//bool CameraImageWrapper::isCropSupported() const
+//{
+//    return true;
+//}
+
+//Ref<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
+//{
+
+//}
+
+//bool CameraImageWrapper::isRotateSupported() const
+//{
+//    return true;
+//}
+
+//Ref<LuminanceSource> CameraImageWrapper::invert() const
+//{
+
+//}
+
+//Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
+//{
+
+//}
 
 QImage *CameraImageWrapper::sharpen(const QImage *origin)
 {

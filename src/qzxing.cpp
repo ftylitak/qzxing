@@ -51,56 +51,56 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 QString QZXing::decoderFormatToString(int fmt)
 {
     switch (fmt) {
-      case DecoderFormat_Aztec:
-          return "AZTEC";
+    case DecoderFormat_Aztec:
+        return "AZTEC";
 
-      case DecoderFormat_CODABAR:
-          return "CODABAR";
+    case DecoderFormat_CODABAR:
+        return "CODABAR";
 
-      case DecoderFormat_CODE_39:
-          return "CODE_39";
+    case DecoderFormat_CODE_39:
+        return "CODE_39";
 
-      case DecoderFormat_CODE_93:
-          return "CODE_93";
+    case DecoderFormat_CODE_93:
+        return "CODE_93";
 
-      case DecoderFormat_CODE_128:
-          return "CODE_128";
+    case DecoderFormat_CODE_128:
+        return "CODE_128";
 
-      case DecoderFormat_DATA_MATRIX:
-          return "DATA_MATRIX";
+    case DecoderFormat_DATA_MATRIX:
+        return "DATA_MATRIX";
 
-      case DecoderFormat_EAN_8:
-          return "EAN_8";
+    case DecoderFormat_EAN_8:
+        return "EAN_8";
 
-      case DecoderFormat_EAN_13:
-          return "EAN_13";
+    case DecoderFormat_EAN_13:
+        return "EAN_13";
 
-      case DecoderFormat_ITF:
-          return "ITF";
+    case DecoderFormat_ITF:
+        return "ITF";
 
-      case DecoderFormat_MAXICODE:
-          return "MAXICODE";
+    case DecoderFormat_MAXICODE:
+        return "MAXICODE";
 
-      case DecoderFormat_PDF_417:
-          return "PDF_417";
+    case DecoderFormat_PDF_417:
+        return "PDF_417";
 
-      case DecoderFormat_QR_CODE:
-          return "QR_CODE";
+    case DecoderFormat_QR_CODE:
+        return "QR_CODE";
 
-      case DecoderFormat_RSS_14:
-          return "RSS_14";
+    case DecoderFormat_RSS_14:
+        return "RSS_14";
 
-      case DecoderFormat_RSS_EXPANDED:
-          return "RSS_EXPANDED";
+    case DecoderFormat_RSS_EXPANDED:
+        return "RSS_EXPANDED";
 
-      case DecoderFormat_UPC_A:
-          return "UPC_A";
+    case DecoderFormat_UPC_A:
+        return "UPC_A";
 
-      case DecoderFormat_UPC_E:
-          return "UPC_E";
+    case DecoderFormat_UPC_E:
+        return "UPC_E";
 
-      case DecoderFormat_UPC_EAN_EXTENSION:
-          return "UPC_EAN_EXTENSION";
+    case DecoderFormat_UPC_EAN_EXTENSION:
+        return "UPC_EAN_EXTENSION";
     } // switch
     return QString();
 }
@@ -190,12 +190,13 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     }
 
     CameraImageWrapper *ciw = NULL;
-    try {
-        if ((maxWidth > 0) || (maxHeight > 0))
-            ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
-        else
-            ciw = CameraImageWrapper::Factory(image, 999, 999, true);
 
+    if ((maxWidth > 0) || (maxHeight > 0))
+        ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
+    else
+        ciw = CameraImageWrapper::Factory(image, 999, 999, true);
+
+    try {
         Ref<LuminanceSource> imageRef(ciw);
         GlobalHistogramBinarizer *binz = new GlobalHistogramBinarizer(imageRef);
 
@@ -204,7 +205,19 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
         Ref<BinaryBitmap> ref(bb);
 
-        res = decoder->decode(ref, DecodeHints((int)enabledDecoders));
+        DecodeHints hints((int)enabledDecoders);
+
+        bool hasSucceded = false;
+        try {
+            res = decoder->decode(ref, hints);
+            hasSucceded = true;
+        }catch(zxing::Exception &e){}
+
+        if(!hasSucceded)
+        {
+            hints.setTryHarder(true);
+            res = decoder->decode(ref, hints);
+        }
 
         QString string = QString(res->getText()->getText().c_str());
         if (!string.isEmpty() && (string.length() > 0)) {
@@ -298,8 +311,8 @@ QImage QZXing::encodeData(const QString& data)
         for(int i=0; i<bytesRef->getWidth(); i++)
             for(int j=0; j<bytesRef->getHeight(); j++)
                 image.setPixel(i, j, bytes[i][j] ?
-                                 qRgb(0,0,0) :
-                                 qRgb(255,255,255));
+                                   qRgb(0,0,0) :
+                                   qRgb(255,255,255));
 
         image = image.scaled(240, 240);
         bool success =  image.save("tmp.bmp","BMP");

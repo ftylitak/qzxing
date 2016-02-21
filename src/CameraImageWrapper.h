@@ -3,7 +3,7 @@
 
 #include <QImage>
 #include <QString>
-#include <zxing/zxing/LuminanceSource.h>
+#include <zxing/zxing/common/GreyscaleLuminanceSource.h>
 
 using namespace zxing;
 
@@ -17,23 +17,27 @@ public:
 
     static CameraImageWrapper* Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
     
-    int getWidth() const;
-    int getHeight() const;
-    
-    unsigned char getPixel(int x, int y) const;
-    unsigned char* copyMatrix() const;
-    
-    QImage* grayScaleImage(const QImage *origin);
     QImage getOriginalImage();
+    Ref<GreyscaleLuminanceSource> getDelegate() { return delegate; }
 
-    // Callers take ownership of the returned memory and must call delete [] on it themselves.
     ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
     ArrayRef<char> getMatrix() const;
+
+    bool isCropSupported() const;
+    Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
+    bool isRotateSupported() const;
+    Ref<LuminanceSource> invert() const;
+    Ref<LuminanceSource> rotateCounterClockwise() const;
   
 private:
+    ArrayRef<char> getRowP(int y, ArrayRef<char> row) const;
+    ArrayRef<char> getMatrixP() const;
+    QImage* grayScaleImage(const QImage *origin);
+
     QImage* sharpen(const QImage *origin);
 
     QImage* image;
+    Ref<GreyscaleLuminanceSource> delegate;
 };
 
 #endif //CAMERAIMAGE_H
