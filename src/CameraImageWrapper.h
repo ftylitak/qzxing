@@ -36,6 +36,8 @@ private:
 
     QImage* sharpen(const QImage *origin);
 
+    unsigned int gray(unsigned int r, unsigned int g, unsigned int b);
+
     QImage* image;
     Ref<GreyscaleLuminanceSource> delegate;
 };

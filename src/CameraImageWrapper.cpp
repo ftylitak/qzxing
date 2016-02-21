@@ -50,8 +50,8 @@ QImage* CameraImageWrapper::grayScaleImage(const QImage *origin)
         for(int j=0; j<origin->height(); j++)
         {
             QRgb pixel = origin->pixel(QPoint(i,j));
-            QRgb pix = (qRed(pixel) + qGreen(pixel) + qBlue(pixel)) / 3;
-                    //qGray(origin->pixel(QPoint(i,j)));
+            QRgb pix = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
+                    //gray(origin->pixel(QPoint(i,j)));
             tmp->setPixel(i,j, qRgb(pix ,pix,pix));
         }
     }
@@ -157,31 +157,6 @@ ArrayRef<char> CameraImageWrapper::getMatrixP() const
     return arr;
 }
 
-//bool CameraImageWrapper::isCropSupported() const
-//{
-//    return true;
-//}
-
-//Ref<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
-//{
-
-//}
-
-//bool CameraImageWrapper::isRotateSupported() const
-//{
-//    return true;
-//}
-
-//Ref<LuminanceSource> CameraImageWrapper::invert() const
-//{
-
-//}
-
-//Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
-//{
-
-//}
-
 QImage *CameraImageWrapper::sharpen(const QImage *origin)
 {
     QImage * newImage = new QImage(* origin);
@@ -219,4 +194,10 @@ QImage *CameraImageWrapper::sharpen(const QImage *origin)
         }
     }
     return newImage;
+}
+
+unsigned int CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
+{
+    //values based on http://entropymine.com/imageworsener/grayscale/
+    return (r*7+g*23+b*2)/32;
 }
