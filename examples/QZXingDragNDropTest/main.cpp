@@ -23,7 +23,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     qmlRegisterType<DropArea>("DropArea", 1, 0, "DropArea");
-    viewer.setMainQmlFile(QLatin1String("qml/QZXingTestApp/main_QtQuick1.qml"));
+    viewer.setMainQmlFile(QLatin1String("qml/QZXingDragNDropTest/main_QtQuick1.qml"));
 #else
     QGuiApplication* app = new QGuiApplication(argc, argv);
 
@@ -31,7 +31,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QtQuick2ApplicationViewer viewer;
     qmlRegisterType<DropArea>("DropArea", 1, 0, "DropArea");
-    viewer.setMainQmlFile(QStringLiteral("qml/QZXingTestApp/main_QtQuick2.qml"));
+    viewer.setMainQmlFile(QStringLiteral("qml/QZXingDragNDropTest/main_QtQuick2.qml"));
 #endif
     viewer.showExpanded();
 
