@@ -51,6 +51,8 @@ class LuminanceSource : public Counted {
   
   virtual Ref<LuminanceSource> rotateCounterClockwise() const;
 
+  virtual Ref<LuminanceSource> rotateCounterClockwise45() const;
+
   operator std::string () const;
 };
 

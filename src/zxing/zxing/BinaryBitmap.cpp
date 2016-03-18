@@ -22,49 +22,53 @@ using zxing::BitArray;
 using zxing::BitMatrix;
 using zxing::LuminanceSource;
 using zxing::BinaryBitmap;
-	
+
 // VC++
 using zxing::Binarizer;
 
 BinaryBitmap::BinaryBitmap(Ref<Binarizer> binarizer) : binarizer_(binarizer) {
 }
-	
+
 BinaryBitmap::~BinaryBitmap() {
 }
-	
+
 Ref<BitArray> BinaryBitmap::getBlackRow(int y, Ref<BitArray> row) {
-  return binarizer_->getBlackRow(y, row);
+    return binarizer_->getBlackRow(y, row);
 }
-	
+
 Ref<BitMatrix> BinaryBitmap::getBlackMatrix() {
-  return binarizer_->getBlackMatrix();
+    return binarizer_->getBlackMatrix();
 }
-	
+
 int BinaryBitmap::getWidth() const {
-  return getLuminanceSource()->getWidth();
+    return getLuminanceSource()->getWidth();
 }
-	
+
 int BinaryBitmap::getHeight() const {
-  return getLuminanceSource()->getHeight();
+    return getLuminanceSource()->getHeight();
 }
-	
+
 Ref<LuminanceSource> BinaryBitmap::getLuminanceSource() const {
-  return binarizer_->getLuminanceSource();
+    return binarizer_->getLuminanceSource();
 }
-	
 
 bool BinaryBitmap::isCropSupported() const {
-  return getLuminanceSource()->isCropSupported();
+    return getLuminanceSource()->isCropSupported();
 }
 
 Ref<BinaryBitmap> BinaryBitmap::crop(int left, int top, int width, int height) {
-  return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->crop(left, top, width, height))));
+    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->crop(left, top, width, height))));
 }
 
 bool BinaryBitmap::isRotateSupported() const {
-  return getLuminanceSource()->isRotateSupported();
+    return getLuminanceSource()->isRotateSupported();
 }
 
 Ref<BinaryBitmap> BinaryBitmap::rotateCounterClockwise() {
-  return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise())));
+    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise())));
+}
+
+Ref<zxing::BinaryBitmap> BinaryBitmap::rotateCounterClockwise45()
+{
+    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise45())));
 }

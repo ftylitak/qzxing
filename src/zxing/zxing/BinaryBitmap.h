@@ -45,10 +45,10 @@ namespace zxing {
 
 		bool isRotateSupported() const;
 		Ref<BinaryBitmap> rotateCounterClockwise();
+        Ref<BinaryBitmap> rotateCounterClockwise45();
 
 		bool isCropSupported() const;
 		Ref<BinaryBitmap> crop(int left, int top, int width, int height);
-
 	};
 	
 }

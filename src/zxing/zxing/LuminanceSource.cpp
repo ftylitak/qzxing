@@ -43,7 +43,12 @@ bool LuminanceSource::isRotateSupported() const {
 }
 
 Ref<LuminanceSource> LuminanceSource::rotateCounterClockwise() const {
-  throw IllegalArgumentException("This luminance source does not support rotation.");
+    throw IllegalArgumentException("This luminance source does not support rotation.");
+}
+
+Ref<zxing::LuminanceSource> LuminanceSource::rotateCounterClockwise45() const
+{
+    throw IllegalArgumentException("This luminance source does not support rotation 45.");
 }
 
 LuminanceSource::operator std::string() const {

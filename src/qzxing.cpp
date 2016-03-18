@@ -198,25 +198,21 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
     try {
         Ref<LuminanceSource> imageRef(ciw);
-        GlobalHistogramBinarizer *binz = new GlobalHistogramBinarizer(imageRef);
-
-        Ref<Binarizer> bz(binz);
-        BinaryBitmap *bb = new BinaryBitmap(bz);
-
-        Ref<BinaryBitmap> ref(bb);
+        Ref<GlobalHistogramBinarizer> binz( new GlobalHistogramBinarizer(imageRef) );
+        Ref<BinaryBitmap> bb( new BinaryBitmap(binz) );
 
         DecodeHints hints((int)enabledDecoders);
 
         bool hasSucceded = false;
         try {
-            res = decoder->decode(ref, hints);
+            res = decoder->decode(bb, hints);
             hasSucceded = true;
         }catch(zxing::Exception &e){}
 
         if(!hasSucceded)
         {
             hints.setTryHarder(true);
-            res = decoder->decode(ref, hints);
+            res = decoder->decode(bb, hints);
         }
 
         QString string = QString(res->getText()->getText().c_str());

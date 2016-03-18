@@ -107,9 +107,7 @@ bool FinderPatternFinder::foundPatternCross(int* stateCount) {
 float FinderPatternFinder::crossCheckVertical(size_t startI, size_t centerJ, int maxCount, int originalStateCountTotal) {
 
   int maxI = image_->getHeight();
-  int stateCount[5] = {0};
-//  for (int i = 0; i < 5; i++)
-//    stateCount[i] = 0;
+  int *stateCount = getCrossCheckStateCount();
 
 
   // Start counting up from center
@@ -175,9 +173,7 @@ float FinderPatternFinder::crossCheckHorizontal(size_t startJ, size_t centerI, i
     int originalStateCountTotal) {
 
   int maxJ = image_->getWidth();
-  int stateCount[5] = {0};
-//  for (int i = 0; i < 5; i++)
-//    stateCount[i] = 0;
+  int *stateCount = getCrossCheckStateCount();
 
   int j = startJ;
   while (j >= 0 && image_->get(j, centerI)) {
@@ -312,7 +308,7 @@ bool FinderPatternFinder::haveMultiplyConfirmedCenters() {
   // and that we need to keep looking. We detect this by asking if the estimated module sizes
   // vary too much. We arbitrarily say that when the total deviation from average exceeds
   // 5% of the total module size estimates, it's too much.
-  float average = totalModuleSize / max;
+  float average = totalModuleSize / (float)max;
   float totalDeviation = 0.0f;
   for (size_t i = 0; i < max; i++) {
     Ref<FinderPattern> pattern = possibleCenters_[i];
@@ -536,8 +532,17 @@ Ref<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const& hints) {
     }
   }
 
-  vector<Ref<FinderPattern> > patternInfo = selectBestPatterns();
-  patternInfo = orderBestPatterns(patternInfo);
+  vector< Ref <FinderPattern> > patternInfo = selectBestPatterns();
+  vector< Ref <ResultPoint> > patternInfoResPoints;
+
+  for(size_t i=0; i<patternInfo.size(); i++)
+      patternInfoResPoints.push_back(Ref<ResultPoint>(patternInfo[i]));
+
+  ResultPoint::orderBestPatterns(patternInfoResPoints);
+
+  patternInfo.clear();
+  for(size_t i=0; i<patternInfoResPoints.size(); i++)
+      patternInfo.push_back(Ref<FinderPattern>(static_cast<FinderPattern*>( &*patternInfoResPoints[i] )));
 
   Ref<FinderPatternInfo> result(new FinderPatternInfo(patternInfo));
   return result;
