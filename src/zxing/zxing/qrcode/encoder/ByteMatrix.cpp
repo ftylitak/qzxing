@@ -22,7 +22,7 @@ size_t ByteMatrix::getWidth() const
     return width_;
 }
 
-char ByteMatrix::get(size_t x, size_t y) const
+signed char ByteMatrix::get(size_t x, size_t y) const
 {
     return bytes_[y][x];
 }

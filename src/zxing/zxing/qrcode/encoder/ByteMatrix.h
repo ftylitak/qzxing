@@ -21,7 +21,7 @@ public:
 
   size_t getHeight() const;
   size_t getWidth() const;
-  char get(size_t x, size_t y) const;
+  signed char get(size_t x, size_t y) const;
 
   std::vector< std::vector<char> > getArray() const;
   void set(size_t x, size_t y, const char value);
