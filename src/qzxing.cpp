@@ -303,7 +303,7 @@ QImage QZXing::encodeData(const QString& data)
         Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data, qrcode::ErrorCorrectionLevel::L );
         Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
         const std::vector< std::vector <char> >& bytes = bytesRef->getArray();
-        QImage image(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
+        image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
         for(int i=0; i<bytesRef->getWidth(); i++)
             for(int j=0; j<bytesRef->getHeight(); j++)
                 image.setPixel(i, j, bytes[i][j] ?
@@ -311,7 +311,7 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
-        bool success =  image.save("tmp.bmp","BMP");
+        //bool success =  image.save("tmp.bmp","BMP");
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }

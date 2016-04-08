@@ -97,7 +97,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
 
-    zxing::qrcode::ECBlocks ecBlocks = version->getECBlocksForLevel(ecLevel);
+    zxing::qrcode::ECBlocks &ecBlocks = version->getECBlocksForLevel(ecLevel);
     int numDataBytes = version->getTotalCodewords() - ecBlocks.getTotalECCodewords();
 
     // Terminate the bits properly.
@@ -111,7 +111,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
 
     Ref<QRCode> qrCode(new QRCode);
 
-    qrCode->setECLevel(Ref<ErrorCorrectionLevel>(&ecLevel));
+    qrCode->setECLevel(Ref<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ecLevel)));
     qrCode->setMode(mode);
     qrCode->setVersion(version);
 
@@ -202,7 +202,7 @@ Mode Encoder::chooseMode(const QString& content, const QString& encoding)
 //}
 
 int Encoder::chooseMaskPattern(Ref<BitArray> bits,
-                               ErrorCorrectionLevel ecLevel,
+                               ErrorCorrectionLevel& ecLevel,
                                Ref<Version> version,
                                Ref<ByteMatrix> matrix)
 {

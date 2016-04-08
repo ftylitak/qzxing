@@ -60,7 +60,7 @@ private:
   //static bool isOnlyDoubleByteKanji(const QString& content);
 
   static int chooseMaskPattern(Ref<BitArray> bits,
-                                       ErrorCorrectionLevel ecLevel,
+                                       ErrorCorrectionLevel& ecLevel,
                                        Ref<Version> version,
                                        Ref<ByteMatrix> matrix);
 
