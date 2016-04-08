@@ -52,10 +52,16 @@ std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(Q
     decoder.setDecoder(enabledDecoder);
 
     QString result = decoder.decodeImage(imageToDecode);
+    result.replace("\r\n","\n");
 
     stats_->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
     stats_->setOperationSuccess(result != "");
     stats_->setResultMatch(expectedOutput != "" && result == expectedOutput);
+
+    if(!stats_->getResultMatch() && stats_->getOperationSuccess()) {
+        qDebug() << "Expected: " << expectedOutput;
+        qDebug() << "Decoded:  " << result;
+    }
 
     return stats_;
 }
