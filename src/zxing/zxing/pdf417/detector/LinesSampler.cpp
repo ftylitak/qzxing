@@ -66,7 +66,40 @@ class VoteResult {
     this->vote = vote;
   }
 };
-  
+
+// Moe 22.04.16 changed for the case that it's indecisive.
+// The better way is to check if one of the votes matches the "expected" length. 
+// That solves some of the problems with PDF-417 codes that I had when I tried, 
+// to decode codes from a spezific library.
+
+VoteResult getValueWithMaxVotes(map<int, int>& votes,int expectedLength) {
+  VoteResult result;
+  int maxVotes = 0;
+  int firstVote = 0, secondVote = 0;
+  for (map<int, int>::iterator i = votes.begin(); i != votes.end(); i++) {
+    if (i->second > maxVotes) {
+      maxVotes = i->second;
+      result.setVote(i->first);
+      firstVote = i->first;
+      result.setIndecisive(false);
+    } else if (i->second == maxVotes) {
+      if(expectedLength != 0)
+        secondVote = i->first;
+      result.setIndecisive(true);
+    }
+    if(expectedLength != 0 && result.isIndecisive()) {
+      firstVote++;
+      secondVote++;
+      if(secondVote == expectedLength)
+        result.setVote(secondVote);
+      else
+        result.setVote(firstVote);
+    }
+  }
+  return result;
+}
+
+#if 0
 VoteResult getValueWithMaxVotes(map<int, int>& votes) {
   VoteResult result;
   int maxVotes = 0;
@@ -81,7 +114,7 @@ VoteResult getValueWithMaxVotes(map<int, int>& votes) {
   }
   return result;
 }
-
+#endif
 }
 
 vector<float> LinesSampler::init_ratios_table() {
@@ -144,7 +177,7 @@ Ref<BitMatrix> LinesSampler::sample() {
     detectedCodeWords[i].resize(votes[i].size(), 0);
     for (int j = 0; j < (int)votes[i].size(); j++) {
       if (!votes[i][j].empty()) {
-        detectedCodeWords[i][j] = getValueWithMaxVotes(votes[i][j]).getVote();
+        detectedCodeWords[i][j] = getValueWithMaxVotes(votes[i][j],0).getVote();
       }
     }
   }
@@ -241,7 +274,8 @@ void LinesSampler::computeSymbolWidths(vector<float> &symbolWidths, const int sy
         // Make sure we really found a symbol by asserting a minimal size of 75% of the expected symbol width.
         // This might break highly distorted barcodes, but fixes an issue with barcodes where there is a
         // full black column from top to bottom within a symbol.
-        if (currentWidth > 0.75 * symbolWidth) {
+        if (currentWidth > 0.80 * symbolWidth) {
+          // Moe 22.04.16 for the codes I've tested 80 seems to be the better value(the old value was 75).
           // The actual symbol width might be slightly bigger than the expected symbol width,
           // but if we are more than half an expected symbol width bigger, we assume that
           // we missed one or more symbols and assume that they were the expected symbol width.
@@ -478,7 +512,7 @@ LinesSampler::distributeVotes(const int symbolsPerLine,
 
     // Ignore lines where no codeword could be read.
     if (!clusterNumberVotes.empty()) {
-      VoteResult voteResult = getValueWithMaxVotes(clusterNumberVotes);
+      VoteResult voteResult = getValueWithMaxVotes(clusterNumberVotes,0);
       bool lineClusterNumberIsIndecisive = voteResult.isIndecisive();
       int lineClusterNumber = voteResult.getVote();
 
@@ -663,7 +697,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
       int rowNumber = thirdCodewordDecodedRight / 30;
       rowNumberVotes[rowNumber] = rowNumberVotes[rowNumber] + 1;
     }
-    int rowNumber = getValueWithMaxVotes(rowNumberVotes).getVote();
+    int rowNumber = getValueWithMaxVotes(rowNumberVotes,0).getVote();
     if (lastRowNumber + 1 < rowNumber) {
       for (int j = lastRowNumber + 1; j < rowNumber; j++) {
         insertLinesAt.push_back(i);
@@ -678,7 +712,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
     detectedCodeWords.insert(detectedCodeWords.begin() + insertLinesAt[i] + i, vector<int>(symbolsPerLine, 0));
   }
 
-  int rowCount = getValueWithMaxVotes(rowCountVotes).getVote();
+  int rowCount = getValueWithMaxVotes(rowCountVotes,detectedCodeWords.size()).getVote();
   // int ecLevel = getValueWithMaxVotes(ecLevelVotes);
 
 #if PDF417_DIAG && OUTPUT_EC_LEVEL
