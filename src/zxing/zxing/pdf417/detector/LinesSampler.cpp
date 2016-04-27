@@ -87,10 +87,10 @@ VoteResult getValueWithMaxVotes(map<int, int>& votes,int expectedLength) {
         secondVote = i->first;
       result.setIndecisive(true);
     }
-    if(expectedLength != 0 && result.isIndecisive()) {
+    if(expectedLength != 0) {
       firstVote++;
       secondVote++;
-      if(secondVote == expectedLength)
+      if(secondVote == expectedLength && result.isIndecisive())
         result.setVote(secondVote);
       else
         result.setVote(firstVote);
