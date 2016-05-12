@@ -9,7 +9,11 @@ CameraImageWrapper::CameraImageWrapper() : LuminanceSource(0,0), image(NULL)
 
 CameraImageWrapper::CameraImageWrapper(const QImage &sourceImage) : LuminanceSource(sourceImage.width(), sourceImage.height())
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     image = grayScaleImage( &sourceImage );
+#else
+    image = new QImage(sourceImage);
+#endif
     delegate = Ref<GreyscaleLuminanceSource>(
                 new GreyscaleLuminanceSource(getMatrixP(),image->width(), image->height(),0, 0, image->width(), image->height()));
 }
@@ -42,6 +46,7 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
         return new CameraImageWrapper(sourceImage);
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
 QImage* CameraImageWrapper::grayScaleImage(const QImage *origin)
 {
     QImage *tmp = new QImage(origin->width(), origin->height(), QImage::Format_Grayscale8);
@@ -58,7 +63,7 @@ QImage* CameraImageWrapper::grayScaleImage(const QImage *origin)
 
     return tmp;
 }
-
+#endif
 QImage CameraImageWrapper::getOriginalImage()
 {
     return *image;
@@ -128,8 +133,14 @@ ArrayRef<char> CameraImageWrapper::getRowP(int y, ArrayRef<char> row) const
         row.reset(ArrayRef<char>(width));
 
     for (int x = 0; x < width; x++)
+    {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         row[x] = image->pixel(x,y);
-
+#else
+        QRgb pixel = image->pixel(x,y);
+        row[x] = qGray(pixel);
+#endif
+    }
     return row;
 }
 
