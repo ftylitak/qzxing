@@ -90,12 +90,12 @@ bool BitArray::isRange(int start, int end, bool value) {
     return true;
 }
 
-vector<int>& BitArray::getBitArray() {
+vector<unsigned char>& BitArray::getBitArray() {
     return bits->values();
 }
 
 void BitArray::reverse() {
-    ArrayRef<int> newBits(bits->size());
+    ArrayRef<unsigned char> newBits(bits->size());
     int size = this->size;
     for (int i = 0; i < size; i++) {
         if (get(size - i - 1)) {
@@ -197,7 +197,7 @@ void BitArray::ensureCapacity(int size)
 {
     if (size > bits->size() * 32)
     {
-        ArrayRef<int> newBits = makeArray(size);
+        ArrayRef<unsigned char> newBits = makeArray(size);
         //memcpy(bits, newBits->, bits->size());
         for (size_t i=0; i<bits->size(); ++i) {
             newBits[i] = bits[i];
@@ -219,7 +219,7 @@ void BitArray::xor_(const BitArray& other)
     }
 }
 
-void BitArray::toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes) const
+void BitArray::toBytes(int bitOffset, std::vector<unsigned char>& array, int offset, int numBytes) const
 {
     if(array.size() < (numBytes + offset))
         array.resize(numBytes + offset);
@@ -232,6 +232,6 @@ void BitArray::toBytes(int bitOffset, std::vector<char>& array, int offset, int 
             }
             bitOffset++;
         }
-        array[offset + i] = (char) theByte;
+        array[offset + i] = (unsigned char) theByte;
     }
 }
