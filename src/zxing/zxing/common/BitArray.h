@@ -35,7 +35,7 @@ public:
 
 private:
     int size;
-    ArrayRef<unsigned char> bits;
+    ArrayRef<int> bits;
     static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
     static const int bitsMask = (1 << logBits) - 1;
 
@@ -61,7 +61,7 @@ public:
     void setRange(int start, int end);
     void clear();
     bool isRange(int start, int end, bool value);
-    std::vector<unsigned char>& getBitArray();
+    std::vector<int>& getBitArray();
 
     void appendBit(bool bit);
     void appendBits(int value, int numBits);
@@ -70,10 +70,10 @@ public:
 
     void xor_(const BitArray& other);
 
-    void toBytes(int bitOffset, std::vector<unsigned char>& array, int offset, int numBytes) const;
+    void toBytes(int bitOffset, std::vector<char>& array, int offset, int numBytes) const;
 
-    static ArrayRef<unsigned char> makeArray(int size) {
-        return ArrayRef<unsigned char>((size + 31) / 32);
+    static ArrayRef<int> makeArray(int size) {
+        return ArrayRef<int>((size + 31) / 32);
       }
 
     void reverse();
