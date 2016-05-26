@@ -32,8 +32,9 @@ public:
 private:
     ArrayRef<char> getRowP(int y, ArrayRef<char> row) const;
     ArrayRef<char> getMatrixP() const;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     QImage* grayScaleImage(const QImage *origin);
-
+#endif
     unsigned int gray(unsigned int r, unsigned int g, unsigned int b);
 
     QImage* image;
