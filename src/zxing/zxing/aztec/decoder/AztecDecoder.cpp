@@ -171,9 +171,9 @@ Ref<DecoderResult> Decoder::decode(Ref<zxing::aztec::AztecDetectorResult> detect
   Ref<String> result = getEncodedData(aCorrectedBits);
             
   // std::printf("constructing array\n");
-  ArrayRef<char> arrayOut(aCorrectedBits->getSize());
+  ArrayRef<unsigned char> arrayOut(aCorrectedBits->getSize());
   for (int i = 0; i < aCorrectedBits->count(); i++) {
-    arrayOut[i] = (char)aCorrectedBits->get(i);
+    arrayOut[i] = (unsigned char)aCorrectedBits->get(i);
   }
             
   // std::printf("returning\n");

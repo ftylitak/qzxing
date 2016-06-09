@@ -29,22 +29,22 @@ namespace zxing {
 
 class DecoderResult : public Counted {
 private:
-  ArrayRef<char> rawBytes_;
+  ArrayRef<unsigned char> rawBytes_;
   Ref<String> text_;
-  ArrayRef< ArrayRef<char> > byteSegments_;
+  ArrayRef< ArrayRef<unsigned char> > byteSegments_;
   std::string ecLevel_;
   std::string charSet_;
 
 public:
-  DecoderResult(ArrayRef<char> rawBytes,
+  DecoderResult(ArrayRef<unsigned char> rawBytes,
                 Ref<String> text,
-                ArrayRef< ArrayRef<char> >& byteSegments,
+                ArrayRef< ArrayRef<unsigned char> >& byteSegments,
                 std::string const& ecLevel,
                 std::string charSet = "");
 
-  DecoderResult(ArrayRef<char> rawBytes, Ref<String> text);
+  DecoderResult(ArrayRef<unsigned char> rawBytes, Ref<String> text);
 
-  ArrayRef<char> getRawBytes();
+  ArrayRef<unsigned char> getRawBytes();
   Ref<String> getText();
   std::string charSet();
 };

@@ -84,7 +84,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (size_t i = 0; i < dataBlocks.size(); i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<char> resultBytes(totalBytes);
+  ArrayRef<unsigned char> resultBytes(totalBytes);
   int resultOffset = 0;
 
 
@@ -95,7 +95,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {
-      resultBytes[resultOffset++] = codewordBytes[i];
+      resultBytes[resultOffset++] = (unsigned char)codewordBytes[i];
     }
   }
 

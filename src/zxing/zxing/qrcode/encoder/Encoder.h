@@ -93,7 +93,7 @@ protected:
                                         int numDataBytes,
                                         int numRSBlocks);
 
-  static ArrayRef<char> generateECBytes(const std::vector<char>& dataBytes, int numEcBytesInBlock);
+  static ArrayRef<char> generateECBytes(const std::vector<unsigned char> &dataBytes, int numEcBytesInBlock);
 
   /**
    * Append mode info. On success, store the result in "bits".

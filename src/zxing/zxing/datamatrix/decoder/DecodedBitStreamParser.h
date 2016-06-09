@@ -95,7 +95,7 @@ private:
 
 public:
   DecodedBitStreamParser() { };
-  Ref<DecoderResult> decode(ArrayRef<char> bytes);
+  Ref<DecoderResult> decode(ArrayRef<unsigned char> bytes);
 };
 
 }

@@ -31,7 +31,7 @@
 #endif
 
 namespace zxing {
-typedef char byte;
+typedef unsigned char byte;
 typedef bool boolean;
 }
 

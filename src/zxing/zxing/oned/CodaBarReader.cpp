@@ -161,7 +161,7 @@ Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row) {
     Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
 
   return Ref<Result>(new Result(Ref<String>(new String(decodeRowResult)),
-                                ArrayRef<char>(),
+                                ArrayRef<unsigned char>(),
                                 resultPoints,
                                 BarcodeFormat::CODABAR));
 }

@@ -43,7 +43,7 @@ public:
 
   typedef std::map<DecodeHintType, std::string> Hashtable;
 
-  static std::string guessEncoding(char* bytes, int length, Hashtable const& hints);
+  static std::string guessEncoding(unsigned char *bytes, int length, Hashtable const& hints);
 };
 
 }

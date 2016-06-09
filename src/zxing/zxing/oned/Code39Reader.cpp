@@ -171,7 +171,7 @@ Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
     Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
   
   return Ref<Result>(
-    new Result(resultString, ArrayRef<char>(), resultPoints, BarcodeFormat::CODE_39)
+    new Result(resultString, ArrayRef<unsigned char>(), resultPoints, BarcodeFormat::CODE_39)
     );
 }
 

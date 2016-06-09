@@ -30,6 +30,8 @@
 using zxing::Ref;
 using zxing::DecoderResult;
 using zxing::datamatrix::Decoder;
+using zxing::datamatrix::DataBlock;
+using zxing::datamatrix::DecodedBitStreamParser;
 
 // VC++
 using zxing::ArrayRef;
@@ -74,7 +76,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<char> resultBytes(totalBytes);
+  ArrayRef<unsigned char> resultBytes(totalBytes);
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {

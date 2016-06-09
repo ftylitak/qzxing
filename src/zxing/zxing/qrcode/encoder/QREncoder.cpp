@@ -371,11 +371,11 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
                     numDataBytesInBlock, numEcBytesInBlock);
 
         int size = numDataBytesInBlock[0];
-        std::vector<char> dataBytes;
+        std::vector<unsigned char> dataBytes;
         dataBytes.resize(size);
         bits.toBytes(8*dataBytesOffset, dataBytes, 0, size);
         ArrayRef<char> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
-        blocks.push_back(BlockPair(ArrayRef<char>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
+        blocks.push_back(BlockPair(ArrayRef<unsigned char>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
 
         maxNumDataBytes = max(maxNumDataBytes, size);
         maxNumEcBytes = max(maxNumEcBytes, (int)ecBytes->size());
@@ -390,7 +390,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // First, place data blocks.
     for (int i = 0; i < maxNumDataBytes; i++) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<char> dataBytes = it->getDataBytes();
+            ArrayRef<unsigned char> dataBytes = it->getDataBytes();
             if (i < dataBytes.array_->size()) {
                 result->appendBits(dataBytes[i], 8);  ///????? are we sure?
             }
@@ -417,7 +417,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<char> Encoder::generateECBytes(const std::vector<char>& dataBytes, int numEcBytesInBlock)
+ArrayRef<char> Encoder::generateECBytes(const std::vector<unsigned char>& dataBytes, int numEcBytesInBlock)
 {
     int numDataBytes = dataBytes.size();
     std::vector<int> toEncode;

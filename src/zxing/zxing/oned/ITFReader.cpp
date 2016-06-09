@@ -117,7 +117,7 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row) {
       Ref<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
   resultPoints[1] =
       Ref<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
-  return Ref<Result>(new Result(resultString, ArrayRef<char>(), resultPoints, BarcodeFormat::ITF));
+  return Ref<Result>(new Result(resultString, ArrayRef<unsigned char>(), resultPoints, BarcodeFormat::ITF));
 }
 
 /**

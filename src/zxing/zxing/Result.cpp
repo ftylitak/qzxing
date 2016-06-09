@@ -31,7 +31,7 @@ using zxing::ResultPoint;
 using zxing::BarcodeFormat;
 
 Result::Result(Ref<String> text,
-               ArrayRef<char> rawBytes,
+               ArrayRef<unsigned char> rawBytes,
                ArrayRef< Ref<ResultPoint> > resultPoints,
                BarcodeFormat format, std::string charSet) :
   text_(text), rawBytes_(rawBytes), resultPoints_(resultPoints), format_(format), charSet_(charSet) {
@@ -44,7 +44,7 @@ Ref<String> Result::getText() {
   return text_;
 }
 
-ArrayRef<char> Result::getRawBytes() {
+ArrayRef<unsigned char> Result::getRawBytes() {
   return rawBytes_;
 }
 

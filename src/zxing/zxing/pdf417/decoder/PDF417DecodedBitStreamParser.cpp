@@ -113,7 +113,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<int> codewords)
       throw FormatException();
     }
   }
-  return Ref<DecoderResult>(new DecoderResult(ArrayRef<char>(), result));
+  return Ref<DecoderResult>(new DecoderResult(ArrayRef<unsigned char>(), result));
 }
 
 /**
