@@ -22,32 +22,32 @@ size_t ByteMatrix::getWidth() const
     return width_;
 }
 
-signed char ByteMatrix::get(size_t x, size_t y) const
+unsigned char ByteMatrix::get(size_t x, size_t y) const
 {
     return bytes_[y][x];
 }
 
-std::vector< std::vector<char> > ByteMatrix::getArray() const
+std::vector< std::vector<unsigned char> > ByteMatrix::getArray() const
 {
     return bytes_;
 }
 
-void ByteMatrix::set(size_t x, size_t y, const char value)
+void ByteMatrix::set(size_t x, size_t y, const unsigned char value)
 {
     bytes_[y][x] = value;
 }
 
 void ByteMatrix::set(size_t x, size_t y, size_t value)
 {
-    bytes_[y][x] = (char) value;
+    bytes_[y][x] = (unsigned char) value;
 }
 
 void ByteMatrix::set(size_t x, size_t y, bool value)
 {
-    bytes_[y][x] = (char) (value ? 1 : 0);
+    bytes_[y][x] = (unsigned char) (value ? 1 : 0);
 }
 
-void ByteMatrix::clear(const char value)
+void ByteMatrix::clear(const unsigned char value)
 {
     for (size_t y = 0; y < height_; y++) {
         for (size_t x = 0; x < width_; x++) {

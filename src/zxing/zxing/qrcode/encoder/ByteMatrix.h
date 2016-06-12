@@ -11,7 +11,7 @@ namespace qrcode {
 class ByteMatrix : public Counted
 {
 private:
-  std::vector< std::vector<char> > bytes_;
+  std::vector< std::vector<unsigned char> > bytes_;
   size_t width_;
   size_t height_;
 
@@ -21,13 +21,13 @@ public:
 
   size_t getHeight() const;
   size_t getWidth() const;
-  signed char get(size_t x, size_t y) const;
+  unsigned char get(size_t x, size_t y) const;
 
-  std::vector< std::vector<char> > getArray() const;
-  void set(size_t x, size_t y, const char value);
+  std::vector<std::vector<unsigned char> > getArray() const;
+  void set(size_t x, size_t y, const unsigned char value);
   void set(size_t x, size_t y, size_t value);
   void set(size_t x, size_t y, bool value);
-  void clear(const char value);
+  void clear(const unsigned char value);
   const std::string toString() const;
 
 };

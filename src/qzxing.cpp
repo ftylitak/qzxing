@@ -246,7 +246,7 @@ QString QZXing::decodeImageFromFile(const QString& imageFilePath, int maxWidth, 
     // used to have a check if this image exists
     // but was removed because if the image file path doesn't point to a valid image
     // then the QImage::isNull will return true and the decoding will fail eitherway.
-    QUrl imageUrl(imageFilePath);
+    QUrl imageUrl = QUrl::fromLocalFile(imageFilePath);
     QImage tmpImage = QImage(imageUrl.toLocalFile());
     return decodeImage(tmpImage, maxWidth, maxHeight, smoothTransformation);
 }
@@ -302,7 +302,7 @@ QImage QZXing::encodeData(const QString& data)
     try {
         Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data, qrcode::ErrorCorrectionLevel::L );
         Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
-        const std::vector< std::vector <char> >& bytes = bytesRef->getArray();
+        const std::vector< std::vector <unsigned char> >& bytes = bytesRef->getArray();
         image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
         for(int i=0; i<bytesRef->getWidth(); i++)
             for(int j=0; j<bytesRef->getHeight(); j++)
@@ -311,7 +311,7 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
-        //bool success =  image.save("tmp.bmp","BMP");
+//        bool success =  image.save("tmp.bmp","BMP");
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }
