@@ -475,7 +475,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
   float right = lastStart + lastPatternSize / 2.0f;
 
   int rawCodesSize = rawCodes.size();
-  ArrayRef<unsigned char> rawBytes (rawCodesSize);
+  ArrayRef<byte> rawBytes (rawCodesSize);
   for (int i = 0; i < rawCodesSize; i++) {
     rawBytes[i] = rawCodes[i];
   }

@@ -76,7 +76,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<unsigned char> resultBytes(totalBytes);
+  ArrayRef<byte> resultBytes(totalBytes);
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {

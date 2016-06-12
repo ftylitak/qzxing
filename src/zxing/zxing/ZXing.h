@@ -30,12 +30,8 @@
 #define ZXING_DEBUG 0
 #endif
 
-namespace zxing {
-typedef unsigned char byte;
-typedef bool boolean;
-}
-
 #include <limits>
+#include "common/Types.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 

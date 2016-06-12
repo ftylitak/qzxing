@@ -130,7 +130,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
   
   return Ref<Result>(new Result(
                        resultString,
-                       ArrayRef<unsigned char>(),
+                       ArrayRef<byte>(),
                        resultPoints,
                        BarcodeFormat::CODE_93));
 }

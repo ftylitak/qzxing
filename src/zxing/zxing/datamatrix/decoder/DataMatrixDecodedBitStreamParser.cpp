@@ -51,7 +51,7 @@ const char DecodedBitStreamParser::TEXT_SHIFT3_SET_CHARS[] = {
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', (char) 127
 };
 
-Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<unsigned char> bytes) {
+Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<byte> bytes) {
   Ref<BitSource> bits(new BitSource(bytes));
   ostringstream result;
   ostringstream resultTrailer;
@@ -87,7 +87,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<unsigned char> bytes)
   if (resultTrailer.str().size() > 0) {
     result << resultTrailer.str();
   }
-  ArrayRef<unsigned char> rawBytes(bytes);
+  ArrayRef<byte> rawBytes(bytes);
   Ref<String> text(new String(result.str()));
   return Ref<DecoderResult>(new DecoderResult(rawBytes, text));
 }

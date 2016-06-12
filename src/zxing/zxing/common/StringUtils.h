@@ -22,6 +22,7 @@
 #include <string>
 #include <map>
 #include <zxing/DecodeHints.h>
+#include <zxing/common/Types.h>
 
 namespace zxing {
 namespace common {
@@ -43,7 +44,7 @@ public:
 
   typedef std::map<DecodeHintType, std::string> Hashtable;
 
-  static std::string guessEncoding(unsigned char *bytes, int length, Hashtable const& hints);
+  static std::string guessEncoding(byte *bytes, int length, Hashtable const& hints);
 };
 
 }

@@ -23,6 +23,7 @@
 #include <zxing/common/Counted.h>
 #include <zxing/common/Array.h>
 #include <string.h>
+#include "common/Types.h"
 
 namespace zxing {
 

@@ -12,16 +12,16 @@ namespace qrcode {
 class BlockPair
 {
 private:
-    ArrayRef<unsigned char> data_;
+    ArrayRef<byte> data_;
     ArrayRef<char> errorCorrection_;
 
 public:
-    BlockPair(ArrayRef<unsigned char> data, ArrayRef<char> errorCorrection) :
+    BlockPair(ArrayRef<byte> data, ArrayRef<char> errorCorrection) :
       data_(data), errorCorrection_(errorCorrection)  {}
 
     BlockPair(const BlockPair& other) : data_(other.data_), errorCorrection_(other.errorCorrection_) {}
 
-    ArrayRef<unsigned char> getDataBytes() { return data_; }
+    ArrayRef<byte> getDataBytes() { return data_; }
 
     ArrayRef<char> getErrorCorrectionBytes() { return errorCorrection_; }
 };

@@ -24,27 +24,28 @@
 #include <zxing/common/Array.h>
 #include <string>
 #include <zxing/common/Str.h>
+#include <zxing/common/Types.h>
 
 namespace zxing {
 
 class DecoderResult : public Counted {
 private:
-  ArrayRef<unsigned char> rawBytes_;
+  ArrayRef<byte> rawBytes_;
   Ref<String> text_;
-  ArrayRef< ArrayRef<unsigned char> > byteSegments_;
+  ArrayRef< ArrayRef<byte> > byteSegments_;
   std::string ecLevel_;
   std::string charSet_;
 
 public:
-  DecoderResult(ArrayRef<unsigned char> rawBytes,
+  DecoderResult(ArrayRef<byte> rawBytes,
                 Ref<String> text,
-                ArrayRef< ArrayRef<unsigned char> >& byteSegments,
+                ArrayRef< ArrayRef<byte> >& byteSegments,
                 std::string const& ecLevel,
                 std::string charSet = "");
 
-  DecoderResult(ArrayRef<unsigned char> rawBytes, Ref<String> text);
+  DecoderResult(ArrayRef<byte> rawBytes, Ref<String> text);
 
-  ArrayRef<unsigned char> getRawBytes();
+  ArrayRef<byte> getRawBytes();
   Ref<String> getText();
   std::string charSet();
 };

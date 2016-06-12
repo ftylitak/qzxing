@@ -162,7 +162,7 @@ ArrayRef<char> CameraImageWrapper::getMatrixP() const
 #else
         memcpy(m, &tmpRow[0], width);
 #endif
-        m += width * sizeof(unsigned char);
+        m += width * sizeof(byte);
     }
 
     return arr;

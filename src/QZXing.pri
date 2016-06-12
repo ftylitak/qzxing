@@ -132,7 +132,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/WriterException.h \
     $$PWD/zxing/zxing/EncodeHint.h \
     $$PWD/zxing/zxing/UnsupportedEncodingException.h \
-    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h
+    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
+    $$PWD/zxing/zxing/common/Types.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/qzxing.cpp \
