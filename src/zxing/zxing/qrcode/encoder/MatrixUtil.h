@@ -98,7 +98,7 @@ private:
 
 private:
     // Check if "value" is empty.
-    static bool isEmpty(int value) { return value == -1; }
+    static bool isEmpty(int value) { return value == 255; }
 
     static void embedTimingPatterns(ByteMatrix& matrix);
 

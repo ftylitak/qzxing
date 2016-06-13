@@ -47,12 +47,16 @@ public:
     int getSizeInBytes() const;
 
     bool get(int i) const {
-        return (bits[i >> logBits] & (1 << (i & bitsMask))) != 0;
+        return (bits[i / 32] & (1 << (i & 0x1F))) != 0;
     }
 
     void set(int i) {
-        bits[i >> logBits] |= 1 << (i & bitsMask);
+        bits[i / 32] |= 1 << (i & 0x1F);
     }
+
+    void flip(int i) {
+        bits[i / 32] ^= 1 << (i & 0x1F);
+      }
 
     int getNextSet(int from);
     int getNextUnset(int from);

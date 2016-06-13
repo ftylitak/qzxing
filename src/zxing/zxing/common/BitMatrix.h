@@ -38,16 +38,16 @@ private:
   int rowSize;
   ArrayRef<int> bits;
 
-#define ZX_LOG_DIGITS(digits) \
-    ((digits == 8) ? 3 : \
-     ((digits == 16) ? 4 : \
-      ((digits == 32) ? 5 : \
-       ((digits == 64) ? 6 : \
-        ((digits == 128) ? 7 : \
-         (-1))))))
+//#define ZX_LOG_DIGITS(digits) \
+//    ((digits == 8) ? 3 : \
+//     ((digits == 16) ? 4 : \
+//      ((digits == 32) ? 5 : \
+//       ((digits == 64) ? 6 : \
+//        ((digits == 128) ? 7 : \
+//         (-1))))))
 
-  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
-  static const int bitsMask = (1 << logBits) - 1;
+//  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
+//  static const int bitsMask = (1 << logBits) - 1;
 
 public:
   BitMatrix(int dimension);
@@ -56,25 +56,29 @@ public:
   ~BitMatrix();
 
   bool get(int x, int y) const {
-    int offset = y * rowSize + (x >> logBits);
-    return ((((unsigned)bits[offset]) >> (x & bitsMask)) & 1) != 0;
+    int offset = y * rowSize + (x >> 5);
+    return ((((unsigned)bits[offset]) >> (x & 0x1f)) & 1) != 0;
   }
 
   void set(int x, int y) {
-    int offset = y * rowSize + (x >> logBits);
-    bits[offset] |= 1 << (x & bitsMask);
+    int offset = y * rowSize + (x >> 5);
+    bits[offset] |= 1 << (x & 0x1f);
   }
 
   void flip(int x, int y);
+  void rotate180();
+
   void clear();
   void setRegion(int left, int top, int width, int height);
   Ref<BitArray> getRow(int y, Ref<BitArray> row);
+  void setRow(int y, Ref<BitArray> row);
 
   int getWidth() const;
   int getHeight() const;
 
   ArrayRef<int> getTopLeftOnBit() const;
   ArrayRef<int> getBottomRightOnBit() const;
+  ArrayRef<int> getEnclosingRectangle() const;
 
   friend std::ostream& operator<<(std::ostream &out, const BitMatrix &bm);
   const char *description();
