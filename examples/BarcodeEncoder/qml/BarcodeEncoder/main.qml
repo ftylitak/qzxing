@@ -20,7 +20,10 @@ Rectangle {
         anchors.top: parent.top
         text: "decode"
         anchors.margins: 10
-        onClicked: qzxing.encodeData(inputField.text)
+        onClicked: {
+            qzxing.encodeData(inputField.text)
+            inputField.text = '';
+        }
     }
 
     GroupBox {
