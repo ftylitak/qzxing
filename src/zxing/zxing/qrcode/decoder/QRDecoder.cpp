@@ -29,13 +29,15 @@
 #include <zxing/ChecksumException.h>
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 
-using zxing::qrcode::Decoder;
 using zxing::DecoderResult;
 using zxing::Ref;
 
 // VC++
 using zxing::ArrayRef;
 using zxing::BitMatrix;
+
+namespace zxing {
+namespace qrcode {
 
 Decoder::Decoder() :
   rsDecoder_(GenericGF::QR_CODE_FIELD_256) {
@@ -105,3 +107,5 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
                                         DecodedBitStreamParser::Hashtable());
 }
 
+}
+}

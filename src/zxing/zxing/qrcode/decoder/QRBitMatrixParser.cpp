@@ -179,5 +179,32 @@ ArrayRef<char> BitMatrixParser::readCodewords() {
   return result;
 }
 
+void BitMatrixParser::remask() {
+    if (parsedFormatInfo_ == 0) {
+        return; // We have no format information, and have no data mask
+    }
+
+    DataMask &dataMask = DataMask::forReference((int)parsedFormatInfo_->getDataMask());
+    int dimension = bitMatrix_->getHeight();
+    dataMask.unmaskBitMatrix(*bitMatrix_, dimension);
+}
+
+void BitMatrixParser::setMirror(boolean mirror) {
+    parsedVersion_ = 0;
+    parsedFormatInfo_ = 0;
+    mirror_ = mirror;
+}
+
+void BitMatrixParser::mirror() {
+    for (int x = 0; x < bitMatrix_->getWidth(); x++) {
+        for (int y = x + 1; y < bitMatrix_->getHeight(); y++) {
+            if (bitMatrix_->get(x, y) != bitMatrix_->get(y, x)) {
+                bitMatrix_->flip(y, x);
+                bitMatrix_->flip(x, y);
+            }
+        }
+    }
+}
+
 }
 }
