@@ -25,10 +25,11 @@
 using zxing::Ref;
 using zxing::ArrayRef;
 using zxing::LuminanceSource;
-using zxing::GreyscaleLuminanceSource;
+
+namespace zxing {
 
 GreyscaleLuminanceSource::
-GreyscaleLuminanceSource(ArrayRef<char> greyData,
+GreyscaleLuminanceSource(ArrayRef<byte> greyData,
                          int dataWidth, int dataHeight,
                          int left, int top,
                          int width, int height) 
@@ -42,13 +43,13 @@ GreyscaleLuminanceSource(ArrayRef<char> greyData,
   }
 }
 
-ArrayRef<char> GreyscaleLuminanceSource::getRow(int y, ArrayRef<char> row) const {
+ArrayRef<byte> GreyscaleLuminanceSource::getRow(int y, ArrayRef<byte> row) const {
   if (y < 0 || y >= this->getHeight()) {
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   int width = getWidth();
   if (!row || row->size() < width) {
-    ArrayRef<char> temp (width);
+    ArrayRef<byte> temp (width);
     row = temp;
   }
   int offset = (y + top_) * dataWidth_ + left_;
@@ -56,9 +57,9 @@ ArrayRef<char> GreyscaleLuminanceSource::getRow(int y, ArrayRef<char> row) const
   return row;
 }
 
-ArrayRef<char> GreyscaleLuminanceSource::getMatrix() const {
+ArrayRef<byte> GreyscaleLuminanceSource::getMatrix() const {
   int size = getWidth() * getHeight();
-  ArrayRef<char> result (size);
+  ArrayRef<byte> result (size);
   if (left_ == 0 && top_ == 0 && dataWidth_ == getWidth() && dataHeight_ == getHeight()) {
     memcpy(&result[0], &greyData_[0], size);
   } else {
@@ -77,4 +78,6 @@ Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {
                                           dataWidth_, dataHeight_,
                                           top_, left_, getHeight(), getWidth()));
   return result;
+}
+
 }

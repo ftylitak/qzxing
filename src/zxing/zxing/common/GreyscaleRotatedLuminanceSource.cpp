@@ -23,13 +23,14 @@
 #include <zxing/common/IllegalArgumentException.h>
 
 using zxing::ArrayRef;
-using zxing::GreyscaleRotatedLuminanceSource;
+
+namespace zxing {
 
 // Note that dataWidth and dataHeight are not reversed, as we need to
 // be able to traverse the greyData correctly, which does not get
 // rotated.
 GreyscaleRotatedLuminanceSource::
-GreyscaleRotatedLuminanceSource(ArrayRef<char> greyData,
+GreyscaleRotatedLuminanceSource(ArrayRef<byte> greyData,
                                 int dataWidth, int dataHeight,
                                 int left, int top,
                                 int width, int height)
@@ -44,13 +45,13 @@ GreyscaleRotatedLuminanceSource(ArrayRef<char> greyData,
 }
 
 // The API asks for rows, but we're rotated, so we return columns.
-ArrayRef<char>
-GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<char> row) const {
+ArrayRef<byte>
+GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<byte> row) const {
   if (y < 0 || y >= getHeight()) {
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   if (!row || row->size() < getWidth()) {
-    row = ArrayRef<char>(getWidth());
+    row = ArrayRef<byte>(getWidth());
   }
   int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
   using namespace std;
@@ -67,10 +68,10 @@ GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<char> row) const {
   return row;
 }
 
-ArrayRef<char> GreyscaleRotatedLuminanceSource::getMatrix() const {
-  ArrayRef<char> result (getWidth() * getHeight());
+ArrayRef<byte> GreyscaleRotatedLuminanceSource::getMatrix() const {
+  ArrayRef<byte> result (getWidth() * getHeight());
   for (int y = 0; y < getHeight(); y++) {
-    char* row = &result[y * getWidth()];
+    byte* row = &result[y * getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
     for (int x = 0; x < getWidth(); x++) {
       row[x] = greyData_[offset];
@@ -78,4 +79,6 @@ ArrayRef<char> GreyscaleRotatedLuminanceSource::getMatrix() const {
     }
   }
   return result;
+}
+
 }

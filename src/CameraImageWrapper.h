@@ -20,8 +20,8 @@ public:
     QImage getOriginalImage();
     Ref<GreyscaleLuminanceSource> getDelegate() { return delegate; }
 
-    ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
-    ArrayRef<char> getMatrix() const;
+    ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
+    ArrayRef<byte> getMatrix() const;
 
     bool isCropSupported() const;
     Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
@@ -30,8 +30,8 @@ public:
     Ref<LuminanceSource> rotateCounterClockwise() const;
   
 private:
-    ArrayRef<char> getRowP(int y, ArrayRef<char> row) const;
-    ArrayRef<char> getMatrixP() const;
+    ArrayRef<byte> getRowP(int y, ArrayRef<byte> row) const;
+    ArrayRef<byte> getMatrixP() const;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     QImage* grayScaleImage(const QImage *origin);
 #endif

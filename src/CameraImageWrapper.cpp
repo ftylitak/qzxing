@@ -69,7 +69,7 @@ QImage CameraImageWrapper::getOriginalImage()
     return *image;
 }
 
-ArrayRef<char> CameraImageWrapper::getRow(int y, ArrayRef<char> row) const
+ArrayRef<byte> CameraImageWrapper::getRow(int y, ArrayRef<byte> row) const
 {
     if(delegate)
         return delegate->getRow(y, row);
@@ -77,7 +77,7 @@ ArrayRef<char> CameraImageWrapper::getRow(int y, ArrayRef<char> row) const
         return getRowP(y, row);
 }
 
-ArrayRef<char> CameraImageWrapper::getMatrix() const
+ArrayRef<byte> CameraImageWrapper::getMatrix() const
 {
     if(delegate)
         return delegate->getMatrix();
@@ -125,12 +125,12 @@ Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
         return LuminanceSource::rotateCounterClockwise();
 }
 
-ArrayRef<char> CameraImageWrapper::getRowP(int y, ArrayRef<char> row) const
+ArrayRef<byte> CameraImageWrapper::getRowP(int y, ArrayRef<byte> row) const
 {
     int width = getWidth();
 
     if (row->size() != width)
-        row.reset(ArrayRef<char>(width));
+        row.reset(ArrayRef<byte>(width));
 
     for (int x = 0; x < width; x++)
     {
@@ -144,15 +144,15 @@ ArrayRef<char> CameraImageWrapper::getRowP(int y, ArrayRef<char> row) const
     return row;
 }
 
-ArrayRef<char> CameraImageWrapper::getMatrixP() const
+ArrayRef<byte> CameraImageWrapper::getMatrixP() const
 {
     int width = getWidth();
     int height =  getHeight();
 
-    ArrayRef<char> tmpRow(0);
-    ArrayRef<char> arr(width*height);
+    ArrayRef<byte> tmpRow(0);
+    ArrayRef<byte> arr(width*height);
 
-    char* m = &arr[0];
+    byte* m = &arr[0];
 
     for(int y=0; y<height; y++)
     {

@@ -226,7 +226,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'd':
         // +A to +Z map to a to z
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (char) (next + 32);
+          decodedChar = (byte) (next + 32);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -234,7 +234,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'a':
         // $A to $Z map to control codes SH to SB
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (char) (next - 64);
+          decodedChar = (byte) (next - 64);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -242,9 +242,9 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'b':
         // %A to %E map to control codes ESC to US
         if (next >= 'A' && next <= 'E') {
-          decodedChar = (char) (next - 38);
+          decodedChar = (byte) (next - 38);
         } else if (next >= 'F' && next <= 'W') {
-          decodedChar = (char) (next - 11);
+          decodedChar = (byte) (next - 11);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -252,7 +252,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'c':
         // /A to /O map to ! to , and /Z maps to :
         if (next >= 'A' && next <= 'O') {
-          decodedChar = (char) (next - 32);
+          decodedChar = (byte) (next - 32);
         } else if (next == 'Z') {
           decodedChar = ':';
         } else {

@@ -13,17 +13,17 @@ class BlockPair
 {
 private:
     ArrayRef<byte> data_;
-    ArrayRef<char> errorCorrection_;
+    ArrayRef<byte> errorCorrection_;
 
 public:
-    BlockPair(ArrayRef<byte> data, ArrayRef<char> errorCorrection) :
+    BlockPair(ArrayRef<byte> data, ArrayRef<byte> errorCorrection) :
       data_(data), errorCorrection_(errorCorrection)  {}
 
     BlockPair(const BlockPair& other) : data_(other.data_), errorCorrection_(other.errorCorrection_) {}
 
     ArrayRef<byte> getDataBytes() { return data_; }
 
-    ArrayRef<char> getErrorCorrectionBytes() { return errorCorrection_; }
+    ArrayRef<byte> getErrorCorrectionBytes() { return errorCorrection_; }
 };
 
 }

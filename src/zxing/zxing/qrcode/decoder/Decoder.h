@@ -33,7 +33,7 @@ class Decoder {
 private:
   ReedSolomonDecoder rsDecoder_;
 
-  void correctErrors(ArrayRef<char> bytes, int numDataCodewords);
+  void correctErrors(ArrayRef<byte> bytes, int numDataCodewords);
 
 public:
   Decoder();

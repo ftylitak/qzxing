@@ -39,7 +39,7 @@ using zxing::BitMatrix;
 
 Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
-void Decoder::correctErrors(ArrayRef<char> codewordBytes, int numDataCodewords) {
+void Decoder::correctErrors(ArrayRef<byte> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
   ArrayRef<int> codewordInts(numCodewords);
   for (int i = 0; i < numCodewords; i++) {
@@ -55,7 +55,7 @@ void Decoder::correctErrors(ArrayRef<char> codewordBytes, int numDataCodewords) 
   // Copy back into array of bytes -- only need to worry about the bytes that were data
   // We don't care about errors in the error-correction codewords
   for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (char)codewordInts[i];
+    codewordBytes[i] = (byte)codewordInts[i];
   }
 }
 
@@ -65,7 +65,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   Version *version = parser.readVersion(bits);
 
   // Read codewords
-  ArrayRef<char> codewords(parser.readCodewords());
+  ArrayRef<byte> codewords(parser.readCodewords());
   // Separate into data blocks
   std::vector<Ref<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
 
@@ -81,7 +81,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
     Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<char> codewordBytes = dataBlock->getCodewords();
+    ArrayRef<byte> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {

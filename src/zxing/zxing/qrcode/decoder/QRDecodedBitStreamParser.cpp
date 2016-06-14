@@ -132,8 +132,8 @@ void DecodedBitStreamParser::decodeHanziSegment(Ref<BitSource> bits_,
             // In the 0xB0A1 to 0xFAFE range
             assembledTwoBytes += 0x0A6A1;
         }
-        buffer[offset] = (char) ((assembledTwoBytes >> 8) & 0xFF);
-        buffer[offset + 1] = (char) (assembledTwoBytes & 0xFF);
+        buffer[offset] = (byte) ((assembledTwoBytes >> 8) & 0xFF);
+        buffer[offset + 1] = (byte) (assembledTwoBytes & 0xFF);
         offset += 2;
         count--;
     }
@@ -167,8 +167,8 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
             // In the 0xE040 to 0xEBBF range
             assembledTwoBytes += 0x0C140;
         }
-        buffer[offset] = (char)(assembledTwoBytes >> 8);
-        buffer[offset + 1] = (char)assembledTwoBytes;
+        buffer[offset] = (byte)(assembledTwoBytes >> 8);
+        buffer[offset + 1] = (byte)assembledTwoBytes;
         offset += 2;
         count--;
     }
@@ -319,7 +319,7 @@ void DecodedBitStreamParser::decodeAlphanumericSegment(Ref<BitSource> bits_,
                     r << s[i++];
                 } else {
                     // In alpha mode, % should be converted to FNC1 separator 0x1D
-                    r << (char)0x1D;
+                    r << (byte)0x1D;
                 }
             }
         }

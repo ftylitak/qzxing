@@ -26,7 +26,7 @@ namespace qrcode {
 
 using namespace std;
 
-DataBlock::DataBlock(int numDataCodewords, ArrayRef<char> codewords) :
+DataBlock::DataBlock(int numDataCodewords, ArrayRef<byte> codewords) :
     numDataCodewords_(numDataCodewords), codewords_(codewords) {
 }
 
@@ -34,12 +34,12 @@ int DataBlock::getNumDataCodewords() {
   return numDataCodewords_;
 }
 
-ArrayRef<char> DataBlock::getCodewords() {
+ArrayRef<byte> DataBlock::getCodewords() {
   return codewords_;
 }
 
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<char> rawCodewords, Version *version,
+std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<byte> rawCodewords, Version *version,
     ErrorCorrectionLevel &ecLevel) {
 
 
@@ -63,7 +63,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<char> rawCodeword
     for (int i = 0; i < ecBlock->getCount(); i++) {
       int numDataCodewords = ecBlock->getDataCodewords();
       int numBlockCodewords = ecBlocks.getECCodewordsPerBloc() + numDataCodewords;
-      ArrayRef<char> buffer(numBlockCodewords);
+      ArrayRef<byte> buffer(numBlockCodewords);
       Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
     }

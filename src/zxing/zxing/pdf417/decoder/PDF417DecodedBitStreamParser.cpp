@@ -28,6 +28,9 @@ using zxing::Ref;
 using zxing::DecoderResult;
 using zxing::String;
 
+namespace zxing {
+namespace pdf417 {
+
 const int DecodedBitStreamParser::TEXT_COMPACTION_MODE_LATCH = 900;
 const int DecodedBitStreamParser::BYTE_COMPACTION_MODE_LATCH = 901;
 const int DecodedBitStreamParser::NUMERIC_COMPACTION_MODE_LATCH = 902;
@@ -214,7 +217,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
         // Alpha (uppercase alphabetic)
         if (subModeCh < 26) {
           // Upper case Alpha Character
-          ch = (char) ('A' + subModeCh);
+          ch = (byte) ('A' + subModeCh);
         } else {
           if (subModeCh == 26) {
             ch = ' ';
@@ -227,7 +230,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((char) byteCompactionData[i]);
+            result->append((byte) byteCompactionData[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -237,7 +240,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
       case LOWER:
         // Lower (lowercase alphabetic)
         if (subModeCh < 26) {
-          ch = (char) ('a' + subModeCh);
+          ch = (byte) ('a' + subModeCh);
         } else {
           if (subModeCh == 26) {
             ch = ' ';
@@ -252,7 +255,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((char) byteCompactionData[i]);
+            result->append((byte) byteCompactionData[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -277,7 +280,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((char) byteCompactionData[i]);
+            result->append((byte) byteCompactionData[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -292,7 +295,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
           if (subModeCh == PAL) {
             subMode = ALPHA;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((char) byteCompactionData[i]);
+            result->append((byte) byteCompactionData[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -303,7 +306,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
         // Restore sub-mode
         subMode = priorToShiftMode;
         if (subModeCh < 26) {
-          ch = (char) ('A' + subModeCh);
+          ch = (byte) ('A' + subModeCh);
         } else {
           if (subModeCh == 26) {
             ch = ' ';
@@ -329,7 +332,7 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
             // PS before Shift-to-Byte is used as a padding character,
             // see 5.4.2.4 of the specification
-            result->append((char) byteCompactionData[i]);
+            result->append((byte) byteCompactionData[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -363,7 +366,7 @@ int DecodedBitStreamParser::byteCompaction(int mode,
     // is not a multiple of 6
     int count = 0;
     int64_t value = 0;
-    ArrayRef<char> decodedData = new Array<char>(6);
+    ArrayRef<byte> decodedData = new Array<byte>(6);
     ArrayRef<int> byteCompactedCodewords = new Array<int>(6);
     bool end = false;
     int nextCode = codewords[codeIndex++];
@@ -391,10 +394,10 @@ int DecodedBitStreamParser::byteCompaction(int mode,
           // Convert to Base 256
           for (int j = 0; j < 6; ++j)
           {
-            decodedData[5 - j] = (char) (value%256);
+            decodedData[5 - j] = (byte) (value%256);
             value >>= 8;
           }
-          result->append(string(&(decodedData->values()[0]), decodedData->values().size()));
+          result->append(string((char*)&(decodedData->values()[0]), decodedData->values().size()));
           count = 0;
         }
       }
@@ -409,7 +412,7 @@ int DecodedBitStreamParser::byteCompaction(int mode,
     // as one byte per codeword, without compaction.
     for (int i = 0; i < count; i++)
     {
-      result->append((char)byteCompactedCodewords[i]);
+      result->append((byte)byteCompactedCodewords[i]);
     }
 
   } else if (mode == BYTE_COMPACTION_MODE_LATCH_6) {
@@ -439,12 +442,12 @@ int DecodedBitStreamParser::byteCompaction(int mode,
       if ((count % 5 == 0) && (count > 0)) {
         // Decode every 5 codewords
         // Convert to Base 256
-        ArrayRef<char> decodedData = new Array<char>(6);
+        ArrayRef<byte> decodedData = new Array<byte>(6);
         for (int j = 0; j < 6; ++j) {
-          decodedData[5 - j] = (char) (value & 0xFF);
+          decodedData[5 - j] = (byte) (value & 0xFF);
           value >>= 8;
         }
-        result->append(string(&decodedData[0],6));
+        result->append(string((char*)&decodedData[0],6));
         // 2012-11-27 hfn after recent java code/fix by srowen
         count = 0;
       }
@@ -560,4 +563,7 @@ Ref<String> DecodedBitStreamParser::decodeBase900toBase10(ArrayRef<int> codeword
   resultString2.assign(resultString.begin()+1,resultString.end());
   Ref<String> res (new String(resultString2));
   return res;
+}
+
+}
 }

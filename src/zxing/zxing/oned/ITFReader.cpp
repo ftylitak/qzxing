@@ -151,9 +151,9 @@ void ITFReader::decodeMiddle(Ref<BitArray> row,
     }
 
     int bestMatch = decodeDigit(counterBlack);
-    resultString.append(1, (char) ('0' + bestMatch));
+    resultString.append(1, (byte) ('0' + bestMatch));
     bestMatch = decodeDigit(counterWhite);
-    resultString.append(1, (char) ('0' + bestMatch));
+    resultString.append(1, (byte) ('0' + bestMatch));
 
     for (int i = 0, e = counterDigitPair.size(); i < e; i++) {
       payloadStart += counterDigitPair[i];

@@ -30,8 +30,8 @@ private:
 public:
   InvertedLuminanceSource(Ref<LuminanceSource> const&);
 
-  ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
-  ArrayRef<char> getMatrix() const;
+  ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
+  ArrayRef<byte> getMatrix() const;
 
   boolean isCropSupported() const;
   Ref<LuminanceSource> crop(int left, int top, int width, int height) const;

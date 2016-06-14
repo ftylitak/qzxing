@@ -22,7 +22,6 @@
 #include <zxing/NotFoundException.h>
 #include <zxing/common/Array.h>
 
-using zxing::GlobalHistogramBinarizer;
 using zxing::Binarizer;
 using zxing::ArrayRef;
 using zxing::Ref;
@@ -32,12 +31,12 @@ using zxing::BitMatrix;
 // VC++
 using zxing::LuminanceSource;
 
-namespace {
+namespace zxing {
+
 const int LUMINANCE_BITS = 5;
 const int LUMINANCE_SHIFT = 8 - LUMINANCE_BITS;
 const int LUMINANCE_BUCKETS = 1 << LUMINANCE_BITS;
-const ArrayRef<char> EMPTY (0);
-}
+const ArrayRef<byte> EMPTY (0);
 
 GlobalHistogramBinarizer::GlobalHistogramBinarizer(Ref<LuminanceSource> source) 
     : Binarizer(source), luminances(EMPTY), buckets(LUMINANCE_BUCKETS) {}
@@ -46,7 +45,7 @@ GlobalHistogramBinarizer::~GlobalHistogramBinarizer() {}
 
 void GlobalHistogramBinarizer::initArrays(int luminanceSize) {
     if (luminances->size() < luminanceSize) {
-        luminances = ArrayRef<char>(luminanceSize);
+        luminances = ArrayRef<byte>(luminanceSize);
     }
 //    for (int x = 0; x < LUMINANCE_BUCKETS; x++) {
 //        buckets[x] = 0;
@@ -65,7 +64,7 @@ Ref<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, Ref<BitArray> row) {
     }
 
     initArrays(width);
-    ArrayRef<char> localLuminances = source.getRow(y, luminances);
+    ArrayRef<byte> localLuminances = source.getRow(y, luminances);
     if (false) {
         std::cerr << "gbr " << y << " r ";
         for(int i=0, e=localLuminances->size(); i < e; ++i) {
@@ -109,7 +108,7 @@ Ref<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
     ArrayRef<int> localBuckets = buckets;
     for (int y = 1; y < 5; y++) {
         int row = height * y / 5;
-        ArrayRef<char> localLuminances = source.getRow(row, luminances);
+        ArrayRef<byte> localLuminances = source.getRow(row, luminances);
         int right = (width << 2) / 5;
         for (int x = width / 5; x < right; x++) {
             int pixel = localLuminances[x] & 0xff;
@@ -119,7 +118,7 @@ Ref<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
 
     int blackPoint = estimateBlackPoint(localBuckets);
 
-    ArrayRef<char> localLuminances = source.getMatrix();
+    ArrayRef<byte> localLuminances = source.getMatrix();
     for (int y = 0; y < height; y++) {
         int offset = y * width;
         for (int x = 0; x < width; x++) {
@@ -210,4 +209,6 @@ int GlobalHistogramBinarizer::estimateBlackPoint(ArrayRef<int> const& buckets) {
 
 Ref<Binarizer> GlobalHistogramBinarizer::createBinarizer(Ref<LuminanceSource> source) {
     return Ref<Binarizer> (new GlobalHistogramBinarizer(source));
+}
+
 }

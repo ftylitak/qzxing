@@ -40,8 +40,8 @@ class LuminanceSource : public Counted {
   int getHeight() const { return height; }
 
   // Callers take ownership of the returned memory and must call delete [] on it themselves.
-  virtual ArrayRef<char> getRow(int y, ArrayRef<char> row) const = 0;
-  virtual ArrayRef<char> getMatrix() const = 0;
+  virtual ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const = 0;
+  virtual ArrayRef<byte> getMatrix() const = 0;
 
   virtual bool isCropSupported() const;
   virtual Ref<LuminanceSource> crop(int left, int top, int width, int height) const;

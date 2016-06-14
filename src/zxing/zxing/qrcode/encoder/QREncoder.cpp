@@ -182,7 +182,7 @@ Mode Encoder::chooseMode(const QString& content, const QString& encoding)
 
 //bool Encoder::isOnlyDoubleByteKanji(const QString& content)
 //{
-//    std::vector<char> bytes;
+//    std::vector<byte> bytes;
 //    try {
 //        bytes = content.getBytes("Shift_JIS");
 //    } catch (UnsupportedEncodingException ignored) {
@@ -374,7 +374,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         std::vector<byte> dataBytes;
         dataBytes.resize(size);
         bits.toBytes(8*dataBytesOffset, dataBytes, 0, size);
-        ArrayRef<char> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
+        ArrayRef<byte> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
         blocks.push_back(BlockPair(ArrayRef<byte>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
 
         maxNumDataBytes = max(maxNumDataBytes, size);
@@ -399,7 +399,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // Then, place error correction blocks.
     for (int i = 0; i < maxNumEcBytes; i++) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<char> ecBytes = it->getErrorCorrectionBytes();
+            ArrayRef<byte> ecBytes = it->getErrorCorrectionBytes();
             if (i < ecBytes.array_->size()) {
                 result->appendBits(ecBytes[i], 8);
             }
@@ -417,7 +417,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<char> Encoder::generateECBytes(const std::vector<byte>& dataBytes, int numEcBytesInBlock)
+ArrayRef<byte> Encoder::generateECBytes(const std::vector<byte>& dataBytes, int numEcBytesInBlock)
 {
     int numDataBytes = dataBytes.size();
     std::vector<int> toEncode;
@@ -429,9 +429,9 @@ ArrayRef<char> Encoder::generateECBytes(const std::vector<byte>& dataBytes, int 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
     encoder.encode(toEncode, numEcBytesInBlock);
 
-    ArrayRef<char> ecBytes(numEcBytesInBlock);
+    ArrayRef<byte> ecBytes(numEcBytesInBlock);
     for (int i = 0; i < numEcBytesInBlock; i++) {
-        ecBytes[i] = (char) toEncode[numDataBytes + i];
+        ecBytes[i] = (byte) toEncode[numDataBytes + i];
     }
     return ecBytes;
 }
