@@ -212,7 +212,25 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         if(!hasSucceded)
         {
             hints.setTryHarder(true);
-            res = decoder->decode(bb, hints);
+
+            try {
+              res = decoder->decode(bb, hints);
+              hasSucceded = true;
+            } catch(zxing::Exception &e) {}
+
+            if (bb->isRotateSupported()) {
+                Ref<BinaryBitmap> bbTmp = bb;
+
+                for (int i=0; (i<3 && !hasSucceded); i++) {
+                    Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
+                    bbTmp = rotatedImage;
+
+                    try {
+                        res = decoder->decode(rotatedImage, hints);
+                        hasSucceded = true;
+                    } catch(zxing::Exception &e) {}
+                }
+            }
         }
 
         QString string = QString(res->getText()->getText().c_str());
@@ -246,7 +264,13 @@ QString QZXing::decodeImageFromFile(const QString& imageFilePath, int maxWidth, 
     // used to have a check if this image exists
     // but was removed because if the image file path doesn't point to a valid image
     // then the QImage::isNull will return true and the decoding will fail eitherway.
-    QUrl imageUrl = QUrl::fromLocalFile(imageFilePath);
+    const QString header = "file://";
+
+    QString filePath = imageFilePath;
+    if(imageFilePath.startsWith(header))
+        filePath = imageFilePath.right(imageFilePath.size() - header.size());
+
+    QUrl imageUrl = QUrl::fromLocalFile(filePath);
     QImage tmpImage = QImage(imageUrl.toLocalFile());
     return decodeImage(tmpImage, maxWidth, maxHeight, smoothTransformation);
 }
