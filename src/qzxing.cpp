@@ -350,7 +350,7 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
-        //        bool success =  image.save("tmp.bmp","BMP");
+        QZXingImageProvider::getInstance()->storeImage(image);
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }

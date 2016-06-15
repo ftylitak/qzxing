@@ -9,7 +9,11 @@
 #include <QtDeclarative>
 #elif QT_VERSION >= 0x050000
 #include <QtQml/qqml.h>
+#include <QQuickView>
+#include <QQmlEngine>
 #endif
+
+#include <qzxingimageprovider.h>
 
 // forward declaration
 namespace zxing {
@@ -27,10 +31,10 @@ class ImageHandler;
   * Regarding DecoderFormat, by default all of those are enabled (except DataMatrix will is still not supported)
   */
 class
-#ifndef DISABLE_LIBRARY_FEATURES
-    QZXINGSHARED_EXPORT
-#endif
-    QZXing : public QObject {
+        #ifndef DISABLE_LIBRARY_FEATURES
+        QZXINGSHARED_EXPORT
+        #endif
+        QZXing : public QObject {
 
     Q_OBJECT
     Q_ENUMS(DecoderFormat)
@@ -72,6 +76,14 @@ public:
     static void registerQMLTypes()
     {
         qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
+    }
+#endif
+
+#if  QT_VERSION >= 0x050000
+    static void registerQMLImageProvider(const QQuickView& view)
+    {
+        QQmlEngine *engine = view.engine();
+        engine->addImageProvider(QLatin1String("QZXing"), QZXingImageProvider::getInstance());
     }
 #endif
 
