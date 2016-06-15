@@ -50,10 +50,10 @@ public:
   FurthestFromAverageComparator(float averageModuleSize) :
     averageModuleSize_(averageModuleSize) {
   }
-  bool operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
+  int operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
     float dA = abs(a->getEstimatedModuleSize() - averageModuleSize_);
     float dB = abs(b->getEstimatedModuleSize() - averageModuleSize_);
-    return dA > dB;
+    return dA < dB ? -1 : dA == dB ? 0 : 1;
   }
 };
 
@@ -63,14 +63,14 @@ public:
   CenterComparator(float averageModuleSize) :
     averageModuleSize_(averageModuleSize) {
   }
-  bool operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
+  int operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
     // N.B.: we want the result in descending order ...
     if (a->getCount() != b->getCount()) {
-      return a->getCount() > b->getCount();
+      return b->getCount() - a->getCount();
     } else {
       float dA = abs(a->getEstimatedModuleSize() - averageModuleSize_);
       float dB = abs(b->getEstimatedModuleSize() - averageModuleSize_);
-      return dA < dB;
+      return dA < dB ? 1 : dA == dB ? 0 : -1;
     }
   }
 };
@@ -88,27 +88,29 @@ float FinderPatternFinder::centerFromEnd(int* stateCount, int end) {
 bool FinderPatternFinder::foundPatternCross(int* stateCount) {
   int totalModuleSize = 0;
   for (int i = 0; i < 5; i++) {
-    if (stateCount[i] == 0) {
+	int count = stateCount[i];  
+    if (count == 0) {
       return false;
     }
-    totalModuleSize += stateCount[i];
+    totalModuleSize += count;
   }
   if (totalModuleSize < 7) {
     return false;
   }
-  float moduleSize = (float)totalModuleSize / 7.0f;
-  float maxVariance = moduleSize / 2.0f;
+  int moduleSize = (totalModuleSize << 8) / 7;
+  int maxVariance = moduleSize / 2;
   // Allow less than 50% variance from 1-1-3-1-1 proportions
-  return abs(moduleSize - stateCount[0]) < maxVariance && abs(moduleSize - stateCount[1]) < maxVariance && abs(3.0f
-         * moduleSize - stateCount[2]) < 3.0f * maxVariance && abs(moduleSize - stateCount[3]) < maxVariance && abs(
-           moduleSize - stateCount[4]) < maxVariance;
+  return abs(moduleSize - (stateCount[0] << 8)) < maxVariance && 
+         abs(moduleSize - (stateCount[1] << 8)) < maxVariance && 
+         abs(3.0f * moduleSize - (stateCount[2] << 8)) < 3 * maxVariance &&
+		 abs(moduleSize - (stateCount[3] << 8)) < maxVariance && 
+		 abs(moduleSize - (stateCount[4] << 8)) < maxVariance;
 }
 
 float FinderPatternFinder::crossCheckVertical(size_t startI, size_t centerJ, int maxCount, int originalStateCountTotal) {
 
   int maxI = image_->getHeight();
   int *stateCount = getCrossCheckStateCount();
-
 
   // Start counting up from center
   int i = startI;
