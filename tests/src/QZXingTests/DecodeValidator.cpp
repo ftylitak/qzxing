@@ -13,6 +13,7 @@
 DecodeValidator::DecodeValidator() : decoder(), decoderCorrelationMap(), testResults()
 {
     initializeDecoderCorrelation();
+    decoder.setTryHarder(true);
 }
 
 void DecodeValidator::initializeDecoderCorrelation()

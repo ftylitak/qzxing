@@ -75,6 +75,8 @@ public:
     }
 #endif
 
+    void setTryHarder(bool tryHarder);
+    bool getTryHarder();
     static QString decoderFormatToString(int fmt);
     QString foundedFormat() const;
     QString charSet() const;
@@ -166,6 +168,7 @@ private:
     int processingTime;
     QString foundedFmt;
     QString charSet_;
+    bool tryHarder_;
 
     /**
       * If true, the decoding operation will take place at a different thread.

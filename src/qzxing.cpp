@@ -15,7 +15,7 @@
 
 using namespace zxing;
 
-QZXing::QZXing(QObject *parent) : QObject(parent)
+QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false)
 {
     decoder = new MultiFormatReader();
     /*setDecoder(DecoderFormat_QR_CODE |
@@ -46,6 +46,16 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
     imageHandler = new ImageHandler();
 
     setDecoder(decodeHints);
+}
+
+void QZXing::setTryHarder(bool tryHarder)
+{
+    tryHarder_ = tryHarder;
+}
+
+bool QZXing::getTryHarder()
+{
+    return tryHarder_;
 }
 
 QString QZXing::decoderFormatToString(int fmt)
@@ -196,6 +206,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     else
         ciw = CameraImageWrapper::Factory(image, 999, 999, true);
 
+    QString errorMessage = "Unknown";
     try {
         Ref<LuminanceSource> imageRef(ciw);
         Ref<GlobalHistogramBinarizer> binz( new GlobalHistogramBinarizer(imageRef) );
@@ -214,11 +225,11 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             hints.setTryHarder(true);
 
             try {
-              res = decoder->decode(bb, hints);
-              hasSucceded = true;
+                res = decoder->decode(bb, hints);
+                hasSucceded = true;
             } catch(zxing::Exception &e) {}
 
-            if (bb->isRotateSupported()) {
+            if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
 
                 for (int i=0; (i<3 && !hasSucceded); i++) {
@@ -233,30 +244,34 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             }
         }
 
-        QString string = QString(res->getText()->getText().c_str());
-        if (!string.isEmpty() && (string.length() > 0)) {
-            int fmt = res->getBarcodeFormat().value;
-            foundedFmt = decoderFormatToString(fmt);
-            charSet_ = QString::fromStdString(res->getCharSet());
-            if (!charSet_.isEmpty()) {
-                QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
-                if (codec)
-                    string = codec->toUnicode(res->getText()->getText().c_str());
+        if (hasSucceded) {
+            QString string = QString(res->getText()->getText().c_str());
+            if (!string.isEmpty() && (string.length() > 0)) {
+                int fmt = res->getBarcodeFormat().value;
+                foundedFmt = decoderFormatToString(fmt);
+                charSet_ = QString::fromStdString(res->getCharSet());
+                if (!charSet_.isEmpty()) {
+                    QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
+                    if (codec)
+                        string = codec->toUnicode(res->getText()->getText().c_str());
+                }
+                emit tagFound(string);
+                emit tagFoundAdvanced(string, foundedFmt, charSet_);
             }
-            emit tagFound(string);
-            emit tagFoundAdvanced(string, foundedFmt, charSet_);
+            processingTime = t.elapsed();
+            emit decodingFinished(true);
+            return string;
         }
-        processingTime = t.elapsed();
-        emit decodingFinished(true);
-        return string;
     }
     catch(zxing::Exception &e)
     {
-        emit error(QString(e.what()));
-        emit decodingFinished(false);
-        processingTime = t.elapsed();
-        return "";
+        errorMessage = QString(e.what());
     }
+
+    emit error(errorMessage);
+    emit decodingFinished(false);
+    processingTime = t.elapsed();
+    return "";
 }
 
 QString QZXing::decodeImageFromFile(const QString& imageFilePath, int maxWidth, int maxHeight, bool smoothTransformation)
@@ -335,7 +350,7 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
-//        bool success =  image.save("tmp.bmp","BMP");
+        //        bool success =  image.save("tmp.bmp","BMP");
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }
