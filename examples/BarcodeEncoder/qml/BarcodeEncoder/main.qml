@@ -37,6 +37,7 @@ Rectangle {
 
         Image{
             id:resultImage
+            anchors.centerIn: parent
         }
     }
 
