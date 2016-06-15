@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
 
     QZXing::registerQMLTypes();
     QtQuick2ApplicationViewer viewer;
+
+    QZXing::registerQMLImageProvider(viewer);
     viewer.setMainQmlFile(QStringLiteral("qml/BarcodeEncoder/main.qml"));
 
     viewer.showExpanded();

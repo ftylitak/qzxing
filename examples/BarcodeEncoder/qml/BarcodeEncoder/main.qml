@@ -23,6 +23,7 @@ Rectangle {
         onClicked: {
             qzxing.encodeData(inputField.text)
             inputField.text = '';
+            resultImage.source = "image://QZXing/latestEncoded";
         }
     }
 
