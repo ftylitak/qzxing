@@ -171,5 +171,8 @@ ArrayRef<byte> CameraImageWrapper::getMatrixP() const
 unsigned int CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
 {
     //values based on http://entropymine.com/imageworsener/grayscale/
-    return (r*7+g*23+b*2)/32;
+    return (306 * (r & 0xFF) +
+           601 * (g & 0xFF) +
+           117 * (b & 0xFF) +
+           0x200) >> 10;
 }
