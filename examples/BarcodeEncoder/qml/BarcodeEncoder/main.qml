@@ -23,6 +23,7 @@ Rectangle {
         onClicked: {
             qzxing.encodeData(inputField.text)
             inputField.text = '';
+            resultImage.source = "";
             resultImage.source = "image://QZXing/latestEncoded";
         }
     }
@@ -34,10 +35,12 @@ Rectangle {
         anchors.right: parent.right
         anchors.margins: 10
         title: "Result barcode image"
+        clip: true
 
         Image{
             id:resultImage
             anchors.centerIn: parent
+            cache: false;
         }
     }
 
