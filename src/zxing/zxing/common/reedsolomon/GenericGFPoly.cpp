@@ -114,7 +114,7 @@ Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other)
     largerCoefficients = temp;
   }
     
-  ArrayRef<int> sumDiff(new Array<int>(largerCoefficients->size()));
+  ArrayRef<int> sumDiff(largerCoefficients->size());
   int lengthDiff = largerCoefficients->size() - smallerCoefficients->size();
   // Copy high-order terms only found in higher-degree polynomial's coefficients
   for (int i = 0; i < lengthDiff; i++) {
