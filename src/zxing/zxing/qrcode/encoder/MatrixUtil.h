@@ -28,6 +28,38 @@ private:
     static const int TYPE_INFO_POLY;
     static const int TYPE_INFO_MASK_PATTERN;
 
+private:
+    // Check if "value" is empty.
+    static bool isEmpty(int value) { return value == 255; }
+    //static bool isEmpty(int value) { return value == -1; }
+
+    static void embedTimingPatterns(ByteMatrix& matrix);
+
+    // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
+    static void embedDarkDotAtLeftBottomCorner(ByteMatrix& matrix);
+
+    static void embedHorizontalSeparationPattern(int xStart,
+                                                 int yStart,
+                                                 ByteMatrix& matrix);
+
+    static void embedVerticalSeparationPattern(int xStart,
+                                               int yStart,
+                                               ByteMatrix& matrix);
+
+    // Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
+    // almost identical, since we cannot write a function that takes 2D arrays in different sizes in
+    // C/C++. We should live with the fact.
+    static void embedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix& matrix);
+
+    static void embedPositionDetectionPattern(int xStart, int yStart, ByteMatrix& matrix);
+
+    // Embed position detection patterns and surrounding vertical/horizontal separators.
+    static void embedPositionDetectionPatternsAndSeparators(ByteMatrix& matrix);
+
+    // Embed position adjustment patterns if need be.
+    static void maybeEmbedPositionAdjustmentPatterns(const Version& version, ByteMatrix& matrix);
+
+public:
     // Set all cells to -1.  -1 means that the cell is empty (not set yet).
     static void clearMatrix(ByteMatrix& matrix) {
         matrix.clear((byte) -1);
@@ -87,46 +119,15 @@ private:
     // operations. We don't care if cofficients are positive or negative.
     static int calculateBCHCode(int value, int poly);
 
+    // Make bit vector of version information. On success, store the result in "bits" and return true.
+    // See 8.10 of JISX0510:2004 (p.45) for details.
+    static void makeVersionInfoBits(const Version& version, BitArray& bits);
+
     // Make bit vector of type information. On success, store the result in "bits" and return true.
     // Encode error correction level and mask pattern. See 8.9 of
     // JISX0510:2004 (p.45) for details.
     static void makeTypeInfoBits(const ErrorCorrectionLevel& ecLevel, int maskPattern, BitArray& bits);
 
-    // Make bit vector of version information. On success, store the result in "bits" and return true.
-    // See 8.10 of JISX0510:2004 (p.45) for details.
-    static void makeVersionInfoBits(const Version& version, BitArray& bits);
-
-private:
-    // Check if "value" is empty.
-    static bool isEmpty(int value) { return value == 255; }
-
-    static void embedTimingPatterns(ByteMatrix& matrix);
-
-    // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
-    static void embedDarkDotAtLeftBottomCorner(ByteMatrix& matrix);
-
-    static void embedHorizontalSeparationPattern(int xStart,
-                                                 int yStart,
-                                                 ByteMatrix& matrix);
-
-    static void embedVerticalSeparationPattern(int xStart,
-                                               int yStart,
-                                               ByteMatrix& matrix);
-
-    // Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
-    // almost identical, since we cannot write a function that takes 2D arrays in different sizes in
-    // C/C++. We should live with the fact.
-    static void embedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix& matrix);
-
-    static void embedPositionDetectionPattern(int xStart, int yStart, ByteMatrix& matrix);
-
-    // Embed position detection patterns and surrounding vertical/horizontal separators.
-    static void embedPositionDetectionPatternsAndSeparators(ByteMatrix& matrix);
-
-    // Embed position adjustment patterns if need be.
-    static void maybeEmbedPositionAdjustmentPatterns(const Version& version, ByteMatrix& matrix);
-
-public:
     // Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
     // success, store the result in "matrix" and return true.
     static void buildMatrix(const BitArray& dataBits,
