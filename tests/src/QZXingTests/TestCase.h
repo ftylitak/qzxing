@@ -33,10 +33,15 @@ protected:
     }
 
     void assertSame(void *expected, void *actual) {
-        if(expected != actual) {
-            throw new zxing::Exception("expected != actual");
-        }
+        assertEquals((int)expected, (int)actual);
     }
+
+    void assertTrue(bool actual) {
+        assertEquals(1, (int)actual);
+    }
+
+public:
+    virtual void execute()=0;
 };
 
 }

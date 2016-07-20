@@ -9,6 +9,6 @@ int main(int argc, char *argv[])
     decodeValidator.executeTests("../../resources/");
 
     zxing::qrcode::tests::EncodeValidator encodeValidator;
-    encodeValidator.Execute();
+    encodeValidator.execute();
 }
 

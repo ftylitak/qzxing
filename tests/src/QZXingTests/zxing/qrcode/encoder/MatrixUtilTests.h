@@ -9,6 +9,11 @@ namespace tests{
 
 class MatrixUtilTests : public TestCase
 {
+public:
+    MatrixUtilTests();
+
+    void execute();
+
 private:
     void testClearMatrix();
     void testEmbedBasicPatterns1();
@@ -21,11 +26,6 @@ private:
     void testCalculateBCHCode();
     void testMakeVersionInfoBits();
     void testMakeTypeInfoInfoBits();
-
-public:
-    MatrixUtilTests();
-
-    void execute();
 };
 
 }

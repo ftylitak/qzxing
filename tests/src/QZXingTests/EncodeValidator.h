@@ -18,7 +18,7 @@ class EncodeValidator : public TestCase
 {
 public:
     EncodeValidator();
-    void Execute();
+    void execute();
 
 private:
     void executeQrCodeEncodeTest();

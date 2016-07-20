@@ -4,6 +4,7 @@
 #include <zxing/qrcode/encoder/Encoder.h>
 #include "TestCase.h"
 #include "zxing/qrcode/encoder/MatrixUtilTests.h"
+#include "zxing/qrcode/encoder/MaskUtilTests.h"
 
 namespace zxing {
 namespace qrcode {
@@ -14,10 +15,14 @@ EncodeValidator::EncodeValidator()
 
 }
 
-void EncodeValidator::Execute()
+void EncodeValidator::execute()
 {
     try{
-        testGetAlphanumericCode();
+        MatrixUtilTests t;
+        t.execute();
+
+        MaskUtilTests t1;
+        t1.execute();
     }
     catch(zxing::Exception &e)
     {
