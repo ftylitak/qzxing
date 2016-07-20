@@ -76,6 +76,8 @@ public:
 
     void toBytes(int bitOffset, std::vector<byte>& array, int offset, int numBytes) const;
 
+    const std::string toString() const;
+
     static ArrayRef<int> makeArray(int size) {
         return ArrayRef<int>((size + 31) / 32);
       }

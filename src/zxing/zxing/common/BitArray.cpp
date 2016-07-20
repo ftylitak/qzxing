@@ -18,6 +18,7 @@
 #include <zxing/common/BitArray.h>
 #include <zxing/common/Array.h>
 #include <cstring>
+#include <sstream>
 
 using std::vector;
 using zxing::BitArray;
@@ -257,4 +258,20 @@ void BitArray::toBytes(int bitOffset, std::vector<byte>& array, int offset, int 
         }
         array[offset + i] = (byte) theByte;
     }
+}
+
+const std::string BitArray::toString() const
+{
+    std::stringstream result;// = new StringBuilder(2 * width * height + 2);
+
+    for (size_t i = 0; i < size; i++) {
+      if ((i & 0x07) == 0) {
+        result << ' ';
+      }
+      result << (get(i) ? 'X' : '.');
+    }
+
+    return result.str();
+
+
 }
