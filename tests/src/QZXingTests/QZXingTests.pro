@@ -12,10 +12,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     DecodeValidator.cpp \
-    ValidationStats.cpp
+    ValidationStats.cpp \
+    EncodeValidator.cpp \
+    zxing/qrcode/encoder/MatrixUtilTests.cpp
 
 HEADERS += \
     DecodeValidator.h \
-    ValidationStats.h
+    ValidationStats.h \
+    EncodeValidator.h \
+    zxing/qrcode/encoder/MatrixUtilTests.h \
+    TestCase.h
 
 include(../../../src/QZXing.pri)
