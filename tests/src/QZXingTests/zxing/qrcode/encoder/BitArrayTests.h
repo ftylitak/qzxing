@@ -11,8 +11,16 @@ namespace tests{
 class BitArrayTests : public TestCase
 {
 private:
-    static long getUnsignedInt(BitArray &v, int index);
+    static long unsigned int getUnsignedInt(BitArray &v, int index);
 
+    void testAppendBit();
+    void testAppendBits();
+    void testNumBytes();
+    void testAppendBitVector();
+    void testXOR();
+    void testXOR2();
+    void testAt();
+    void testToString();
 public:
     BitArrayTests();
 
