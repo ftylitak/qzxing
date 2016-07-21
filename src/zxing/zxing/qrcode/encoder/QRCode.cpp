@@ -44,22 +44,24 @@ Ref<ByteMatrix> QRCode::getMatrix() const
 const std::string QRCode::toString()
 {
     std::stringstream result;
-    result << "<<\n";
-//    result << " mode: {unimpl}";
+    result << "<<";
+//    result << "\n mode: {unimpl}";
 //    result << mode_;
     result << "\n ecLevel: {unimpl}";
     //result << ecLevel_;
-    result << "\n version: ";
+    result << "\n version: {unimpl}";
     //result << version_;
     result << "\n maskPattern: ";
     result << maskPattern_;
     //  if (matrix_ == null) {
     //    result.append("\n matrix: null\n");
     //  } else {
-    result << "\n matrix:\n";
-    result << matrix_ptr_->toString();
+    if (matrix_ptr_)
+        result << "\n matrix:\n" << matrix_ptr_->toString();
+    else
+        result << "\n matrix: null\n";
     //  }
-    result << ">>\n";
+    result << "\n>>";
     return result.str();
 }
 

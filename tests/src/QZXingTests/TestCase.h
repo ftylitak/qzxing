@@ -18,6 +18,10 @@ private:
         return QString::number(item);
     }
 
+    static QString itemToString(long unsigned item) {
+        return QString::number(item);
+    }
+
     static QString itemToString(byte item) {
         return QString::number(item);
     }
@@ -38,6 +42,10 @@ protected:
 
     void assertTrue(bool actual) {
         assertEquals(1, (int)actual);
+    }
+
+    void assertFalse(bool actual) {
+        assertEquals(0, (int)actual);
     }
 
 public:
