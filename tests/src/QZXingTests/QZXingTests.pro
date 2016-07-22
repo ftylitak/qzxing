@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     zxing/qrcode/encoder/MatrixUtilTests.cpp \
     zxing/qrcode/encoder/MaskUtilTests.cpp \
     zxing/qrcode/encoder/BitArrayTests.cpp \
-    zxing/qrcode/encoder/QRCodeTests.cpp
+    zxing/qrcode/encoder/QRCodeTests.cpp \
+    zxing/qrcode/encoder/EncoderTests.cpp
 
 HEADERS += \
     DecodeValidator.h \
@@ -27,6 +28,7 @@ HEADERS += \
     TestCase.h \
     zxing/qrcode/encoder/MaskUtilTests.h \
     zxing/qrcode/encoder/BitArrayTests.h \
-    zxing/qrcode/encoder/QRCodeTests.h
+    zxing/qrcode/encoder/QRCodeTests.h \
+    zxing/qrcode/encoder/EncoderTests.h
 
 include(../../../src/QZXing.pri)

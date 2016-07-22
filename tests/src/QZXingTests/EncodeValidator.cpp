@@ -7,6 +7,7 @@
 #include "zxing/qrcode/encoder/MaskUtilTests.h"
 #include "zxing/qrcode/encoder/BitArrayTests.h"
 #include "zxing/qrcode/encoder/QRCodeTests.h"
+#include "zxing/qrcode/encoder/EncoderTests.h"
 
 namespace zxing {
 namespace qrcode {
@@ -31,6 +32,9 @@ void EncodeValidator::execute()
 
         QRCodeTests t3;
         t3.execute();
+
+        EncoderTests t4;
+        t4.execute();
     }
     catch(zxing::Exception &e)
     {

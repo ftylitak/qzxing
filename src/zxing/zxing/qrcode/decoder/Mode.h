@@ -59,8 +59,13 @@ public:
   int getBits() const { return bits_; }
 
   bool operator==(const Mode& other);
+  bool operator!=(const Mode& other);
 
   std::string getName() const { return name_; }
+
+  std::string toString() const {
+      return getName();
+  }
 };
 }
 }

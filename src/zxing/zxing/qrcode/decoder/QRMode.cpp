@@ -114,5 +114,10 @@ bool Mode::operator==(const Mode& other)
             && characterCountBitsForVersions10To26_ == other.characterCountBitsForVersions10To26_
             && characterCountBitsForVersions27AndHigher_ == other.characterCountBitsForVersions27AndHigher_
             && name_ == other.name_
-            && bits_ == other.bits_ );
+             && bits_ == other.bits_ );
+}
+
+bool Mode::operator!=(const zxing::qrcode::Mode &other)
+{
+    return !(operator==(other));
 }

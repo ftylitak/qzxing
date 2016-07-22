@@ -10,6 +10,11 @@ namespace tests{
 
 class BitArrayTests : public TestCase
 {
+public:
+    BitArrayTests();
+
+    void execute();
+
 private:
     static long unsigned int getUnsignedInt(BitArray &v, int index);
 
@@ -21,10 +26,6 @@ private:
     void testXOR2();
     void testAt();
     void testToString();
-public:
-    BitArrayTests();
-
-    void execute();
 };
 
 }

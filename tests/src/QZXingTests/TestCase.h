@@ -4,6 +4,7 @@
 #include <QZXing.h>
 #include <zxing/Exception.h>
 #include <QtGlobal>
+#include <zxing/qrcode/decoder/Mode.h>
 
 namespace zxing{
 
@@ -26,6 +27,10 @@ private:
         return QString::number(item);
     }
 
+    static QString itemToString(qrcode::Mode& item) {
+        return QString::fromStdString(item.toString());
+    }
+
 protected:
     template<class T> void assertEquals(T expected, T actual) {
         if(expected != actual) {
@@ -34,6 +39,10 @@ protected:
             Q_ASSERT_X(false, "assertEquals", message.toStdString().c_str());
             throw new zxing::Exception(message.toStdString().c_str());
         }
+    }
+
+    void assertSame(qrcode::Mode &expected, qrcode::Mode &actual){
+        assertEquals(expected, actual);
     }
 
     void assertSame(void *expected, void *actual) {
