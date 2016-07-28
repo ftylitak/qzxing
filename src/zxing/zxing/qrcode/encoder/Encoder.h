@@ -15,28 +15,6 @@ namespace qrcode {
 
 class Encoder {
 
-private:
-    static const int ALPHANUMERIC_TABLE_SIZE;
-    static const int ALPHANUMERIC_TABLE[];
-    static const QString DEFAULT_BYTE_MODE_ENCODING;
-
-  /**
-   * The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
-   * Basically it applies four rules and summate all penalties.
-   */
-  static int calculateMaskPenalty(const ByteMatrix& matrix);
-
-  /**
-   *  Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
-   * internally by chooseMode(). On success, store the result in "qrCode".
-   *
-   * We recommend you to use QRCode::EC_LEVEL_L (the lowest level) for
-   * "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
-   * strong error correction for this purpose.
-   *
-   * Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
-   * with which clients can specify the encoding mode. For now, we don't need the functionality.
-   */
 public:
   static Ref<QRCode> encode(const QString& content, ErrorCorrectionLevel &ecLevel);
 
@@ -48,28 +26,34 @@ public:
    */
   static int getAlphanumericCode(int code);
 
-  static Mode chooseMode(const QString& content);
-
   /**
    * Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
    * if it is Shift_JIS, and the input is only double-byte Kanji, then we return {@link Mode#KANJI}.
    */
-private:
-  static Mode chooseMode(const QString& content, const QString& encoding);
+  static Mode chooseMode(const QString& content);
 
-  //static bool isOnlyDoubleByteKanji(const QString& content);
+  /**
+   * Append mode info. On success, store the result in "bits".
+   */
+  static void appendModeInfo(const Mode& mode, BitArray &bits);
 
-  static int chooseMaskPattern(Ref<BitArray> bits,
-                                       ErrorCorrectionLevel& ecLevel,
-                                       Ref<Version> version,
-                                       Ref<ByteMatrix> matrix);
+  /**
+   * Append length info. On success, store the result in "bits".
+   */
+  static void appendLengthInfo(int numLetters, const Version& version, const Mode& mode, BitArray& bits);
 
-  static Ref<Version> chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel) ;
+  /**
+   * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
+   */
+  static void appendBytes(const QString& content,
+                          Mode& mode,
+                          BitArray& bits,
+                          const QString& encoding);
 
+protected:
   /**
    * Terminate bits as described in 8.4.8 and 8.4.9 of JISX0510:2004 (p.24).
    */
-protected:
   static void terminateBits(int numDataBytes, BitArray& bits);
 
   /**
@@ -95,25 +79,6 @@ protected:
 
   static ArrayRef<byte> generateECBytes(const std::vector<byte> &dataBytes, int numEcBytesInBlock);
 
-  /**
-   * Append mode info. On success, store the result in "bits".
-   */
-  static void appendModeInfo(const Mode& mode, BitArray &bits);
-
-
-  /**
-   * Append length info. On success, store the result in "bits".
-   */
-  static void appendLengthInfo(int numLetters, const Version& version, const Mode& mode, BitArray& bits);
-
-  /**
-   * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
-   */
-  static void appendBytes(const QString& content,
-                          Mode& mode,
-                          BitArray& bits,
-                          const QString& encoding);
-
   static void appendNumericBytes(const QString& content, BitArray& bits);
 
   static void appendAlphanumericBytes(const QString& content, BitArray& bits);
@@ -122,9 +87,43 @@ protected:
 
   static void appendKanjiBytes(const QString& content, BitArray& bits);
 
+  static Mode chooseMode(const QString& content, const QString& encoding);
+
+  //static bool isOnlyDoubleByteKanji(const QString& content);
+
 private:
+  static int chooseMaskPattern(Ref<BitArray> bits,
+                                       ErrorCorrectionLevel& ecLevel,
+                                       Ref<Version> version,
+                                       Ref<ByteMatrix> matrix);
+
+  static Ref<Version> chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel) ;
+
   static void appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bits);
 
+  /**
+   * The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
+   * Basically it applies four rules and summate all penalties.
+   */
+  static int calculateMaskPenalty(const ByteMatrix& matrix);
+
+  /**
+   *  Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
+   * internally by chooseMode(). On success, store the result in "qrCode".
+   *
+   * We recommend you to use QRCode::EC_LEVEL_L (the lowest level) for
+   * "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
+   * strong error correction for this purpose.
+   *
+   * Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
+   * with which clients can specify the encoding mode. For now, we don't need the functionality.
+   */
+
+  static const int ALPHANUMERIC_TABLE_SIZE;
+  static const int ALPHANUMERIC_TABLE[];
+
+public:  //should not be public, temp solution for tests
+  static const QString DEFAULT_BYTE_MODE_ENCODING;
 };
 
 }

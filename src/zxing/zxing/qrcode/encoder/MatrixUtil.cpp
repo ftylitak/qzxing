@@ -218,7 +218,7 @@ void MatrixUtil::embedDataBits(const BitArray& dataBits, int maskPattern, ByteMa
     }
     // All bits should be consumed.
     if (bitIndex != dataBits.getSize()) {
-        throw new zxing::WriterException("Not all bits consumed: " + bitIndex + '/' + dataBits.getSize());
+        throw zxing::WriterException("Not all bits consumed: " + bitIndex + '/' + dataBits.getSize());
     }
 }
 
@@ -252,7 +252,7 @@ int MatrixUtil::calculateBCHCode(int value, int poly)
 void MatrixUtil::makeTypeInfoBits(const ErrorCorrectionLevel& ecLevel, int maskPattern, BitArray& bits)
 {
     if (!QRCode::isValidMaskPattern(maskPattern)) {
-        throw new WriterException("Invalid mask pattern");
+        throw WriterException("Invalid mask pattern");
     }
     int typeInfo = (ecLevel.bits() << 3) | maskPattern;
     bits.appendBits(typeInfo, 5);
@@ -265,7 +265,7 @@ void MatrixUtil::makeTypeInfoBits(const ErrorCorrectionLevel& ecLevel, int maskP
     bits.xor_(maskBits);
 
     if (bits.getSize() != 15) {  // Just in case.
-        throw new WriterException("should not happen but we got: " + bits.getSize());
+        throw WriterException("should not happen but we got: " + bits.getSize());
     }
 }
 
@@ -278,7 +278,7 @@ void MatrixUtil::makeVersionInfoBits(const Version& version, BitArray& bits)
     bits.appendBits(bchCode, 12);
 
     if (bits.getSize() != 18) {  // Just in case.
-        throw new WriterException("should not happen but we got: " + bits.getSize());
+        throw WriterException("should not happen but we got: " + bits.getSize());
     }
 }
 
@@ -302,7 +302,7 @@ void MatrixUtil::embedTimingPatterns(ByteMatrix& matrix)
 void MatrixUtil::embedDarkDotAtLeftBottomCorner(ByteMatrix& matrix)
 {
     if (matrix.get(8, matrix.getHeight() - 8) == 0) {
-        throw new WriterException();
+        throw WriterException();
     }
     matrix.set(8, matrix.getHeight() - 8, (byte)1);
 }
@@ -313,7 +313,7 @@ void MatrixUtil::embedHorizontalSeparationPattern(int xStart,
 {
     for (int x = 0; x < 8; ++x) {
         if (!isEmpty(matrix.get(xStart + x, yStart))) {
-            throw new WriterException();
+            throw WriterException();
         }
         matrix.set(xStart + x, yStart, (byte)0);
     }
@@ -325,7 +325,7 @@ void MatrixUtil::embedVerticalSeparationPattern(int xStart,
 {
     for (int y = 0; y < 7; ++y) {
         if (!isEmpty(matrix.get(xStart, yStart + y))) {
-            throw new WriterException();
+            throw WriterException();
         }
         matrix.set(xStart, yStart + y, (byte)0);
     }

@@ -151,7 +151,7 @@ Ref<ModulusPoly> ModulusPoly::add(Ref<ModulusPoly> other) {
 
 Ref<ModulusPoly> ModulusPoly::subtract(Ref<ModulusPoly> other) {
   if (&field_ != &other->field_) {
-    throw new IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
+    throw IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
   }
   if (other->isZero()) {
     return Ref<ModulusPoly>(this);
@@ -161,7 +161,7 @@ Ref<ModulusPoly> ModulusPoly::subtract(Ref<ModulusPoly> other) {
 
 Ref<ModulusPoly> ModulusPoly::multiply(Ref<ModulusPoly> other) {
   if (&field_ != &other->field_) {
-    throw new IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
+    throw IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
   }
   if (isZero() || other->isZero()) {
     return field_.getZero();
@@ -207,7 +207,7 @@ Ref<ModulusPoly> ModulusPoly::multiply(int scalar) {
 
 Ref<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient) {
   if (degree < 0) {
-    throw new IllegalArgumentException("negative degree!");
+    throw IllegalArgumentException("negative degree!");
   }
   if (coefficient == 0) {
     return field_.getZero();
@@ -222,10 +222,10 @@ Ref<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient) {
 
 std::vector<Ref<ModulusPoly> > ModulusPoly::divide(Ref<ModulusPoly> other) {
   if (&field_ != &other->field_) {
-    throw new IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
+    throw IllegalArgumentException("ModulusPolys do not have same ModulusGF field");
   }
   if (other->isZero()) {
-    throw new IllegalArgumentException("Divide by 0");
+    throw IllegalArgumentException("Divide by 0");
   }
 
   Ref<ModulusPoly> quotient (field_.getZero());

@@ -36,11 +36,11 @@ Ref<GenericGFPoly> ReedSolomonEncoder::buildGenerator(int degree)
 void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
 {
     if (ecBytes == 0) {
-        throw new Exception("No error correction bytes");
+        throw Exception("No error correction bytes");
     }
     int dataBytes = toEncode.size() - ecBytes;
     if (dataBytes <= 0) {
-        throw new Exception("No data bytes provided");
+        throw Exception("No data bytes provided");
     }
     Ref<GenericGFPoly> generator = buildGenerator(ecBytes);
     ArrayRef<int> infoCoefficients(dataBytes);

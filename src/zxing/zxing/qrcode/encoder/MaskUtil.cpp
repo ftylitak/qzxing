@@ -163,7 +163,7 @@ bool MaskUtil::getDataMaskBit(int maskPattern, int x, int y)
         intermediate = ((temp % 3) + ((y + x) & 0x1)) & 0x1;
         break;
     default:
-        throw new IllegalArgumentException("Invalid mask pattern: " + maskPattern);
+        throw IllegalArgumentException("Invalid mask pattern: " + maskPattern);
     }
     return intermediate == 0;
 }

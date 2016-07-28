@@ -238,7 +238,7 @@ Ref<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel
             return version;
         }
     }
-    throw new WriterException("Data too big");
+    throw WriterException("Data too big");
 }
 
 /**
@@ -252,7 +252,7 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
         message += QString::number(bits.getSize());
         message += " > ";
         message += QString::number(capacity);
-        throw new WriterException(message.toStdString().c_str());
+        throw WriterException(message.toStdString().c_str());
     }
     for (int i = 0; i < 4 && bits.getSize() < capacity; ++i) {
         bits.appendBit(false);
@@ -272,7 +272,7 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
         bits.appendBits((i & 0x01) == 0 ? 0xEC : 0x11, 8);
     }
     if (bits.getSize() != capacity) {
-        throw new WriterException("Bits size does not equal capacity");
+        throw WriterException("Bits size does not equal capacity");
     }
 }
 
@@ -289,7 +289,7 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
                                                      std::vector<int>& numECBytesInBlock)
 {
     if (blockID >= numRSBlocks) {
-        throw new WriterException("Block ID too large");
+        throw WriterException("Block ID too large");
     }
     // numRsBlocksInGroup2 = 196 % 5 = 1
     int numRsBlocksInGroup2 = numTotalBytes % numRSBlocks;
@@ -310,11 +310,11 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
     // Sanity checks.
     // 26 = 26
     if (numEcBytesInGroup1 != numEcBytesInGroup2) {
-        throw new WriterException("EC bytes mismatch");
+        throw WriterException("EC bytes mismatch");
     }
     // 5 = 4 + 1.
     if (numRSBlocks != numRsBlocksInGroup1 + numRsBlocksInGroup2) {
-        throw new WriterException("RS blocks mismatch");
+        throw WriterException("RS blocks mismatch");
     }
     // 196 = (13 + 26) * 4 + (14 + 26) * 1
     if (numTotalBytes !=
@@ -322,7 +322,7 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
              numRsBlocksInGroup1) +
             ((numDataBytesInGroup2 + numEcBytesInGroup2) *
              numRsBlocksInGroup2)) {
-        throw new WriterException("Total bytes mismatch");
+        throw WriterException("Total bytes mismatch");
     }
 
     if (numDataBytesInBlock.size() < 1 )
@@ -352,7 +352,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 
     // "bits" must have "getNumDataBytes" bytes of data.
     if (bits.getSizeInBytes() != numDataBytes)
-        throw new WriterException("Number of bits and data bytes does not match");
+        throw WriterException("Number of bits and data bytes does not match");
 
     // Step 1.  Divide data bytes into blocks and generate error correction bytes for them. We'll
     // store the divided data bytes blocks and error correction bytes blocks into "blocks".
@@ -382,7 +382,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         dataBytesOffset += numDataBytesInBlock[0];
     }
     if (numDataBytes != dataBytesOffset) {
-        throw new WriterException("Data bytes does not match offset");
+        throw WriterException("Data bytes does not match offset");
     }
 
     BitArray* result = new BitArray;
@@ -411,7 +411,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         message += " and ";
         message += QString(result->getSizeInBytes());
         message += " differ.";
-        throw new WriterException(message.toStdString().c_str());
+        throw WriterException(message.toStdString().c_str());
     }
 
     return result;
@@ -457,7 +457,7 @@ void Encoder::appendLengthInfo(int numLetters, const Version& version, const Mod
         message += " is bigger than ";
         message += QString::number((1 << numBits) - 1);
 
-        throw new WriterException(message.toStdString().c_str());
+        throw WriterException(message.toStdString().c_str());
     }
     bits.appendBits(numLetters, numBits);
 }
@@ -481,7 +481,7 @@ void Encoder::appendBytes(const QString& content,
     else {
         QString message("Invalid mode: ");
         message += QString::fromStdString(mode.getName());
-        throw new WriterException(message.toStdString().c_str());
+        throw WriterException(message.toStdString().c_str());
     }
 }
 
@@ -517,12 +517,12 @@ void Encoder::appendAlphanumericBytes(const QString& content, BitArray& bits)
     while (i < length) {
         int code1 = getAlphanumericCode(content.at(i).toLatin1());
         if (code1 == -1) {
-            throw new WriterException();
+            throw WriterException();
         }
         if (i + 1 < length) {
             int code2 = getAlphanumericCode(content.at(i + 1).toLatin1());
             if (code2 == -1) {
-                throw new WriterException();
+                throw WriterException();
             }
             // Encode two alphanumeric letters in 11 bits.
             bits.appendBits(code1 * 45 + code2, 11);
@@ -542,7 +542,7 @@ void Encoder::append8BitBytes(const QString& content, BitArray& bits, const QStr
     //    try {
     //        bytes = content.getBytes(encoding);
     //    } catch (UnsupportedEncodingException uee) {
-    //        throw new WriterException(uee);
+    //        throw WriterException(uee);
     //    }
 
     for (int i=0; i<content.size(); i++) {
@@ -556,7 +556,7 @@ void Encoder::appendKanjiBytes(const QString& content, BitArray& bits)
     //    try {
     //        bytes = content.getBytes("Shift_JIS");
     //    } catch (UnsupportedEncodingException uee) {
-    //        throw new WriterException(uee);
+    //        throw WriterException(uee);
     //    }
     int length = content.size();
     for (int i = 0; i < length; i += 2) {
@@ -570,7 +570,7 @@ void Encoder::appendKanjiBytes(const QString& content, BitArray& bits)
             subtracted = code - 0xc140;
         }
         if (subtracted == -1) {
-            throw new WriterException("Invalid byte sequence");
+            throw WriterException("Invalid byte sequence");
         }
         int encoded = ((subtracted >> 8) * 0xc0) + (subtracted & 0xff);
         bits.appendBits(encoded, 13);
