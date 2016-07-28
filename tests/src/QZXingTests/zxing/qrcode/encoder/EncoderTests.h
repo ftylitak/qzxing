@@ -17,6 +17,11 @@ public:
 private:
     void testGetAlphanumericCode();
     void testChooseMode();
+    //void testEncode();
+    //void testSimpleUTF8ECI();
+    void testAppendModeInfo();
+    void testAppendLengthInfo();
+    void testAppendBytes();
 
     static std::string shiftJISString(byte bytes[]);
 };

@@ -34,10 +34,10 @@ private:
 protected:
     template<class T> void assertEquals(T expected, T actual) {
         if(expected != actual) {
-            QString message = QString("Expected: ") + itemToString(expected) +
-                    QString(", Got: ") + itemToString(actual);
-            Q_ASSERT_X(false, "assertEquals", message.toStdString().c_str());
-            throw new zxing::Exception(message.toStdString().c_str());
+            QString message = QString("Expected: \n") + itemToString(expected) +
+                    QString(", Got: \n") + itemToString(actual);
+            //Q_ASSERT_X(false, "assertEquals", message.toStdString().c_str());
+            throw zxing::Exception(message.toStdString().c_str());
         }
     }
 
