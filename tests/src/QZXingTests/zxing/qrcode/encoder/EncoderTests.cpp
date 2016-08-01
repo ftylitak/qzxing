@@ -22,6 +22,8 @@ void EncoderTests::execute()
     testInterleaveWithECBytes();
     testAppendNumericBytes();
     testAppendAlphanumericBytes();
+    testAppend8BitBytes();
+    testGenerateECBytes();
 }
 
 void EncoderTests::testGetAlphanumericCode()
@@ -138,11 +140,11 @@ void EncoderTests::testAppendBytes()
     assertEquals(" ..X.X." , bits.toString());
     // Lower letters such as 'a' cannot be encoded in MODE_ALPHANUMERIC.
     ASSERT_THROWS(
-        EncoderHack::appendBytes("a", Mode::ALPHANUMERIC, bits, EncoderHack::DEFAULT_BYTE_MODE_ENCODING);
-    )
-    // Should use append8BitBytes.
-    // 0x61, 0x62, 0x63
-    bits = BitArray();
+                EncoderHack::appendBytes("a", Mode::ALPHANUMERIC, bits, EncoderHack::DEFAULT_BYTE_MODE_ENCODING);
+            )
+            // Should use append8BitBytes.
+            // 0x61, 0x62, 0x63
+            bits = BitArray();
     EncoderHack::appendBytes("abc", Mode::BYTE, bits, EncoderHack::DEFAULT_BYTE_MODE_ENCODING);
     assertEquals(" .XX....X .XX...X. .XX...XX", bits.toString());
     // Anything can be encoded in QRCode.MODE_8BIT_BYTE.
@@ -337,6 +339,51 @@ void EncoderTests::testAppendAlphanumericBytes()
     bits = BitArray();
 
     ASSERT_THROWS( Encoder::appendAlphanumericBytes("abc", bits); )
+}
+
+void EncoderTests::testAppend8BitBytes()
+{
+    BitArray bits;
+    Encoder::append8BitBytes("abc", bits, Encoder::DEFAULT_BYTE_MODE_ENCODING);
+    assertEquals(" .XX....X .XX...X. .XX...XX", bits.toString());
+    // Empty.
+    bits = BitArray();
+    Encoder::append8BitBytes("", bits, Encoder::DEFAULT_BYTE_MODE_ENCODING);
+    assertEquals("", bits.toString());
+}
+
+void EncoderTests::testGenerateECBytes()
+{
+    const byte dataBytes_arr[] = {32, 65, (byte)205, 69, 41, (byte)220, 46, (byte)128, (byte)236};
+    std::vector<byte> dataBytes (dataBytes_arr, dataBytes_arr + getArrayLength(dataBytes_arr));
+    ArrayRef<byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
+    const int expected[] = {
+        42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
+    };
+    assertEquals( getArrayLength(expected), ecBytes.count());
+    for (int x = 0; x < getArrayLength(expected); x++) {
+        assertEquals(expected[x], ecBytes[x] & 0xFF);
+    }
+//    dataBytes = new byte[] {67, 70, 22, 38, 54, 70, 86, 102, 118,
+//        (byte)134, (byte)150, (byte)166, (byte)182, (byte)198, (byte)214};
+//    ecBytes = Encoder.generateECBytes(dataBytes, 18);
+//    expected = new int[] {
+//        175, 80, 155, 64, 178, 45, 214, 233, 65, 209, 12, 155, 117, 31, 140, 214, 27, 187
+//    };
+//    assertEquals(expected.length, ecBytes.length);
+//    for (int x = 0; x < expected.length; x++) {
+//        assertEquals(expected[x], ecBytes[x] & 0xFF);
+//    }
+//    // High-order zero coefficient case.
+//    dataBytes = new byte[] {32, 49, (byte)205, 69, 42, 20, 0, (byte)236, 17};
+//    ecBytes = Encoder.generateECBytes(dataBytes, 17);
+//    expected = new int[] {
+//        0, 3, 130, 179, 194, 0, 55, 211, 110, 79, 98, 72, 170, 96, 211, 137, 213
+//    };
+//    assertEquals(expected.length, ecBytes.length);
+//    for (int x = 0; x < expected.length; x++) {
+//        assertEquals(expected[x], ecBytes[x] & 0xFF);
+//    }
 }
 
 

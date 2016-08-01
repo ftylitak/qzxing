@@ -3,12 +3,12 @@
 
 #include "DecodeValidator.h"
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char */*argv[]*/)
 {
     DecodeValidator decodeValidator;
     decodeValidator.executeTests("../../resources/");
 
-    zxing::qrcode::tests::EncodeValidator encodeValidator;
+    zxing::tests::EncodeValidator encodeValidator;
     encodeValidator.execute();
 }
 

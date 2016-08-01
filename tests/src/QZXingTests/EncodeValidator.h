@@ -11,7 +11,6 @@
 #include <TestCase.h>
 
 namespace zxing {
-namespace qrcode {
 namespace tests{
 
 class EncodeValidator : public TestCase
@@ -19,15 +18,8 @@ class EncodeValidator : public TestCase
 public:
     EncodeValidator();
     void execute();
-
-private:
-    void executeQrCodeEncodeTest();
-    void testGetAlphanumericCode();
-
-    void testChooseMode();
 };
 
-}
 }
 }
 

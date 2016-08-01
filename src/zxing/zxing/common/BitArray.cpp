@@ -27,6 +27,9 @@ using zxing::BitArray;
 // VC++
 using zxing::Ref;
 
+
+namespace zxing {
+
 int BitArray::makeArraySize(int size) {
     return (size + 31) / 32;
 }
@@ -273,5 +276,7 @@ const std::string BitArray::toString() const
 
     return result.str();
 
+
+}
 
 }

@@ -34,6 +34,9 @@ private:
     void testInterleaveWithECBytes();
     void testAppendNumericBytes();
     void testAppendAlphanumericBytes();
+    void testAppend8BitBytes();
+    //void testAppendKanjiBytes(); not yet supported
+    void testGenerateECBytes();
 
     static std::string shiftJISString(byte bytes[]);
 };

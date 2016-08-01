@@ -29,13 +29,16 @@
 
 using zxing::Ref;
 using zxing::DecoderResult;
-using zxing::datamatrix::Decoder;
-using zxing::datamatrix::DataBlock;
-using zxing::datamatrix::DecodedBitStreamParser;
+//using zxing::datamatrix::Decoder;
+//using zxing::datamatrix::DataBlock;
+//using zxing::datamatrix::DecodedBitStreamParser;
 
 // VC++
 using zxing::ArrayRef;
 using zxing::BitMatrix;
+
+namespace zxing {
+namespace datamatrix {
 
 Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
@@ -92,4 +95,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   // Decode the contents of that stream of bytes
   DecodedBitStreamParser decodedBSParser;
   return Ref<DecoderResult> (decodedBSParser.decode(resultBytes));
+}
+
+}
 }
