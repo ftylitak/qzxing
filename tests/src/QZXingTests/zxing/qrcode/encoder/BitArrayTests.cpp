@@ -165,7 +165,7 @@ void BitArrayTests::testToString()
 {
     BitArray v;
     v.appendBits(0xdead, 16);  // 1101 1110 1010 1101
-    assertEquals(std::string(" XX.XXXX. X.X.XX.X"), v.toString());
+    assertEquals(" XX.XXXX. X.X.XX.X", v.toString());
 }
 
 }

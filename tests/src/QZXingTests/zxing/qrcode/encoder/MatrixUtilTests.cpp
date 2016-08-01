@@ -267,14 +267,14 @@ void MatrixUtilTests::testMakeVersionInfoBits() {
     // From Appendix D in JISX0510:2004 (p 68)
     BitArray bits;
     MatrixUtil::makeVersionInfoBits(*Version::getVersionForNumber(7), bits);
-    assertEquals(std::string(" ...XXXXX ..X..X.X .."), bits.toString());
+    assertEquals(" ...XXXXX ..X..X.X ..", bits.toString());
 }
 
 void MatrixUtilTests::testMakeTypeInfoInfoBits()  {
     // From Appendix C in JISX0510:2004 (p 65)
     BitArray bits;
     MatrixUtil::makeTypeInfoBits(ErrorCorrectionLevel::M, 5, bits);
-    assertEquals(std::string(" X......X X..XXX."), bits.toString());
+    assertEquals(" X......X X..XXX.", bits.toString());
   }
 
 }
