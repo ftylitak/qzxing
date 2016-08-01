@@ -8,6 +8,22 @@
 
 namespace zxing{
 
+// TO-DO
+// use macros  __FILE__, __LINE__
+
+template<typename T, int sz>
+static int getArrayLength(T(&)[sz])
+{
+    return sz;
+}
+
+#define ASSERT_THROWS(x) \
+    try { \
+        #x; \
+        assertTrue(false); \
+    } catch(zxing::Exception &/*e*/) { \
+    }
+
 class TestCase {
 
 private:
@@ -34,11 +50,15 @@ private:
 protected:
     template<class T> void assertEquals(T expected, T actual) {
         if(expected != actual) {
-            QString message = QString("Expected: \n") + itemToString(expected) +
-                    QString(", Got: \n") + itemToString(actual);
-            //Q_ASSERT_X(false, "assertEquals", message.toStdString().c_str());
+            QString message = QString("\nExpected: \n[") + itemToString(expected) +
+                    QString("], \nGot: \n[") + itemToString(actual) + QString("]");
             throw zxing::Exception(message.toStdString().c_str());
         }
+    }
+
+    void assertEquals(const char* expected, const std::string &actual) {
+        std::string expected_str(expected);
+        assertEquals(expected_str, actual);
     }
 
     void assertSame(qrcode::Mode &expected, qrcode::Mode &actual){
