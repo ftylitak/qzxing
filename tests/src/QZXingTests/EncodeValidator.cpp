@@ -36,7 +36,7 @@ void EncodeValidator::execute()
         EncoderTests t4;
         t4.execute();
     } catch(zxing::Exception &e) {
-        qDebug() << e.what();
+        qDebug() << "Exception: " <<  e.what();
     }
 }
 

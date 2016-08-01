@@ -351,8 +351,14 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 {
 
     // "bits" must have "getNumDataBytes" bytes of data.
-    if (bits.getSizeInBytes() != numDataBytes)
-        throw WriterException("Number of bits and data bytes does not match");
+    if (bits.getSizeInBytes() != numDataBytes) {
+        QString message("Encoder::interleaveWithECBytes: Number of bits [");
+        message += QString::number(bits.getSizeInBytes());
+        message += "] and data bytes [";
+        message += QString::number(numDataBytes);
+        message += "] does not match";
+        throw WriterException( message.toStdString().c_str() );
+    }
 
     // Step 1.  Divide data bytes into blocks and generate error correction bytes for them. We'll
     // store the divided data bytes blocks and error correction bytes blocks into "blocks".
