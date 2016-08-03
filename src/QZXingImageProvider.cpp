@@ -1,4 +1,4 @@
-#include "qzxingimageprovider.h"
+#include "QZXingImageProvider.h"
 
 QZXingImageProvider *QZXingImageProvider::singletonInstance_ptr_ = NULL;
 
