@@ -16,3 +16,8 @@ Supports barcode decoding for the following types:
  * Data Matrix
  * Aztec (beta)
  * PDF 417 (beta)
+
+## contact
+In case of bug reports or feature requests feel free to open an [issue](https://github.com/ftylitak/qzxing/issues). 
+
+For general discussion you can use the forum at the project's old hosting site: [SourceForge](https://sourceforge.net/p/qzxing/discussion/general/)
