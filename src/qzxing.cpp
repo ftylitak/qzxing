@@ -9,9 +9,14 @@
 #include "imagehandler.h"
 #include <QTime>
 #include <QUrl>
+#include <QFileInfo>
 #include <zxing/qrcode/encoder/Encoder.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include <QColor>
+
+#include <QQmlEngine>
+#include <QQmlContext>
+#include <QQuickImageProvider>
 
 using namespace zxing;
 
@@ -296,8 +301,8 @@ QString QZXing::decodeImageQML(QObject *item)
 }
 
 QString QZXing::decodeSubImageQML(QObject *item,
-                                  const double offsetX, const double offsetY,
-                                  const double width, const double height)
+                                  const int offsetX, const int offsetY,
+                                  const int width, const int height)
 {
     if(item  == NULL)
     {
@@ -317,21 +322,31 @@ QString QZXing::decodeImageQML(const QUrl &imageUrl)
 }
 
 QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
-                                  const double offsetX, const double offsetY,
-                                  const double width, const double height)
+                                  const int offsetX, const int offsetY,
+                                  const int width, const int height)
 {
     QString imagePath = imageUrl.path();
     imagePath = imagePath.trimmed();
-    QFile file(imagePath);
-    if (!file.exists()) {
-        qDebug() << "[decodeSubImageQML()] The file" << file.fileName() << "does not exist.";
-        emit decodingFinished(false);
-        return "";
+    QImage img;
+    if (imageUrl.scheme() == "image") {
+        if (imagePath.startsWith("/"))
+            imagePath = imagePath.right(imagePath.length() - 1);
+        QQmlEngine *engine = QQmlEngine::contextForObject(this)->engine();
+        QQuickImageProvider *imageProvider = static_cast<QQuickImageProvider *>(engine->imageProvider(imageUrl.host()));
+        QSize imgSize;
+        img = imageProvider->requestImage(imagePath, &imgSize, QSize());
+    } else {
+        QFileInfo fileInfo(imagePath);
+        if (!fileInfo.exists()) {
+            qDebug() << "[decodeSubImageQML()] The file" << imagePath << "does not exist.";
+            emit decodingFinished(false);
+            return "";
+        }
+        img = QImage(imagePath);
     }
-    QImage img(imageUrl.path());
-    if(!(offsetX == 0 && offsetY == 0 && width == 0 && height == 0)) {
+
+    if (offsetX || offsetY || width || height)
         img = img.copy(offsetX, offsetY, width, height);
-    }
     return decodeImage(img);
 }
 
