@@ -36,11 +36,11 @@
 #if defined(_WIN32) || defined(_WIN64)
 
 #include <float.h>
-#include <math.h>
+#include <cmath>
 
 namespace zxing {
-inline bool isnan_z(float v) {return _isnan(v) != 0;}
-inline bool isnan_z(double v) {return _isnan(v) != 0;}
+inline bool isnan_z(float v) {return std::isnan(v) != 0;}
+inline bool isnan_z(double v) {return std::isnan(v) != 0;}
 inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
 }
 
