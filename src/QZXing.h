@@ -168,8 +168,9 @@ public slots:
 signals:
     void decodingStarted();
     void decodingFinished(bool succeeded);
-    void tagFound(QString tag);
     void enabledFormatsChanged();
+    void tagFound(QString tag);
+    void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet) const;
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QRectF &rect) const;
     void error(QString msg);
 

@@ -190,68 +190,68 @@ void QZXing::setDecoder(const uint &hint)
  * \brief getTagRec - returns rectangle containing the tag.
  *
  * To be able display tag rectangle regardless of the size of the bit matrix rect is in related coordinates [0; 1].
- * \param resultPoints 
+ * \param resultPoints
  * \param bitMatrix
  * \return
  */
 QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<BitMatrix> &bitMatrix)
 {
     if (resultPoints->size() < 2)
-	return QRectF();
+        return QRectF();
     
     int matrixWidth = bitMatrix->getWidth();
     int matrixHeight = bitMatrix->getHeight();
     // 1D barcode
     if (resultPoints->size() == 2) {
-	WhiteRectangleDetector detector(bitMatrix);
-    	std::vector<Ref<ResultPoint> > resultRectPoints = detector.detect();
+        WhiteRectangleDetector detector(bitMatrix);
+        std::vector<Ref<ResultPoint> > resultRectPoints = detector.detect();
         
-	if (resultRectPoints.size() != 4)
-     	    return QRectF();
+        if (resultRectPoints.size() != 4)
+            return QRectF();
 
-	qreal xMin = resultPoints[0]->getX();
+        qreal xMin = resultPoints[0]->getX();
         qreal xMax = xMin;
-	for (unsigned int i = 1; i < resultPoints->size(); ++i) {
+        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
             qreal x = resultPoints[i]->getX();
             if (x < xMin)
-		xMin = x;
-	    if (x > xMax)
-		xMax = x;
-    	} 
-	
-	qreal yMin = resultRectPoints[0]->getY();
-	qreal yMax = yMin;
-    	for (unsigned int i = 1; i < resultRectPoints.size(); ++i) {
+                xMin = x;
+            if (x > xMax)
+                xMax = x;
+        }
+
+        qreal yMin = resultRectPoints[0]->getY();
+        qreal yMax = yMin;
+        for (unsigned int i = 1; i < resultRectPoints.size(); ++i) {
             qreal y = resultRectPoints[i]->getY();
             if (y < yMin)
-		yMin = y;
-	    if (y > yMax)
-		yMax = y;
-    	}
+                yMin = y;
+            if (y > yMax)
+                yMax = y;
+        }
 
-	return QRectF(QPointF(xMin / matrixWidth, yMax / matrixHeight), QPointF(xMax / matrixWidth, yMin / matrixHeight));
+        return QRectF(QPointF(xMin / matrixWidth, yMax / matrixHeight), QPointF(xMax / matrixWidth, yMin / matrixHeight));
     }
 
     // 2D QR code
     if (resultPoints->size() == 4) {
-	qreal xMin = resultPoints[0]->getX();
+        qreal xMin = resultPoints[0]->getX();
         qreal xMax = xMin;
-	qreal yMin = resultPoints[0]->getY();
-	qreal yMax = yMin;
-	for (unsigned int i = 1; i < resultPoints->size(); ++i) {
+        qreal yMin = resultPoints[0]->getY();
+        qreal yMax = yMin;
+        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
             qreal x = resultPoints[i]->getX();
-	    qreal y = resultPoints[i]->getY();
+            qreal y = resultPoints[i]->getY();
             if (x < xMin)
-		xMin = x;
-	    if (x > xMax)
-		xMax = x;
-	    if (y < yMin)
-		yMin = y;
-	    if (y > yMax)
-		yMax = y;
-    	} 
+                xMin = x;
+            if (x > xMax)
+                xMax = x;
+            if (y < yMin)
+                yMin = y;
+            if (y > yMax)
+                yMax = y;
+        }
 
-	return QRectF(QPointF(xMin / matrixWidth, yMax / matrixHeight), QPointF(xMax / matrixWidth, yMin / matrixHeight));
+        return QRectF(QPointF(xMin / matrixWidth, yMax / matrixHeight), QPointF(xMax / matrixWidth, yMin / matrixHeight));
     }
 
     return QRectF();
@@ -310,6 +310,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
                     try {
                         res = decoder->decode(rotatedImage, hints);
+                        processingTime = t.elapsed();
                         hasSucceded = true;
                     } catch(zxing::Exception &e) {}
                 }
@@ -328,11 +329,13 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                         string = codec->toUnicode(res->getText()->getText().c_str());
                 }
                 emit tagFound(string);
+                emit tagFoundAdvanced(string, foundedFmt, charSet_);
 
-		const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
-		emit tagFoundAdvanced(string, foundedFmt, charSet_, rect);
+                try {
+                    const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
+                    emit tagFoundAdvanced(string, foundedFmt, charSet_, rect);
+                }catch(zxing::Exception &/*e*/){}
             }
-            processingTime = t.elapsed();
             emit decodingFinished(true);
             return string;
         }
