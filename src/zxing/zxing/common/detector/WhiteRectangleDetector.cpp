@@ -33,23 +33,12 @@ using zxing::common::detector::MathUtils;
 // VC++
 using zxing::BitMatrix;
 
-int WhiteRectangleDetector::INIT_SIZE = 30; //note, why 30, not 10
+int WhiteRectangleDetector::INIT_SIZE = 10;
 int WhiteRectangleDetector::CORR = 1;
 
 WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image) :
    WhiteRectangleDetector(image, INIT_SIZE, image->getWidth() >> 1, image->getHeight() >> 1)
 {
-////  width_ = image->getWidth();
-////  height_ = image->getHeight();
-  
-////  leftInit_ = (width_ - INIT_SIZE) >> 1;
-////  rightInit_ = (width_ + INIT_SIZE) >> 1;
-////  upInit_ = (height_ - INIT_SIZE) >> 1;
-////  downInit_ = (height_ + INIT_SIZE) >> 1;
-  
-//  if (upInit_ < 0 || leftInit_ < 0 || downInit_ >= height_ || rightInit_ >= width_) {
-//    throw NotFoundException("Invalid dimensions WhiteRectangleDetector");
-//}
 }
 
 WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image, int initSize, int x, int y) : image_(image) {
