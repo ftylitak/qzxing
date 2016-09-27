@@ -25,15 +25,25 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         return QImage();
     }
 
-    bool imgReady = false;
     QTime timer;
     timer.start();
-    auto img = item->grabToImage();
-    connect(img.data(), &QQuickItemGrabResult::ready, this, [&imgReady](){imgReady = true;});
-    while (!imgReady && timer.elapsed() < 1000) {
+    QSharedPointer<QQuickItemGrabResult> result = item->grabToImage();
+    pendingGrabbersLocker.lockForWrite();
+    pendingGrabbers << result.data();
+    pendingGrabbersLocker.unlock();
+
+    connect(result.data(), &QQuickItemGrabResult::ready, this, &ImageHandler::imageGrabberReady);
+    while (timer.elapsed() < 1000) {
+        pendingGrabbersLocker.lockForRead();
+        if (!pendingGrabbers.contains(result.data())) {
+            pendingGrabbersLocker.unlock();
+            break;
+        }
+        pendingGrabbersLocker.unlock();
         qApp->processEvents();
         QThread::yieldCurrentThread();
     }
+    QImage img = result->image();
 #else
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
@@ -59,9 +69,9 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         height = 0;
 
     if (offsetX || offsetY || width || height)
-        return img->image().copy(offsetX, offsetY, width, height);
+        return img.copy(offsetX, offsetY, width, height);
     else
-        return img->image();
+        return img;
 }
 
 void ImageHandler::save(QObject *imageObj, const QString &path,
@@ -71,4 +81,13 @@ void ImageHandler::save(QObject *imageObj, const QString &path,
     QImage img = extractQImage(imageObj, offsetX, offsetY, width, height);
     img.save(path);
 }
+
+#if QT_VERSION >= 0x050000
+    void ImageHandler::imageGrabberReady()
+    {
+        pendingGrabbersLocker.lockForWrite();
+        pendingGrabbers.remove(sender());
+        pendingGrabbersLocker.unlock();
+    }
+#endif
 

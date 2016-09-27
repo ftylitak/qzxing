@@ -13,7 +13,7 @@
 #include <QQmlEngine>
 #endif
 
-#include <qzxingimageprovider.h>
+#include "QZXingImageProvider.h"
 
 // forward declaration
 namespace zxing {
