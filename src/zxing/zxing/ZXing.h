@@ -41,16 +41,20 @@
 namespace zxing {
 inline bool isnan_z(float v) {return std::isnan(v) != 0;}
 inline bool isnan_z(double v) {return std::isnan(v) != 0;}
-inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
 }
 
-#else
-
-//#include <cmath>
-
+#elif (__cplusplus >= 201103L)
+#include <cmath>
+namespace zxing {
+inline bool isnan_z(float v) {
+    return std::isnan(v);
+}
+inline bool isnan_z(double v) {
+    return std::isnan(v);
+}
+}
+#elif(__STDC_VERSION__ >= 199901L)
 #include <math.h>
-
-
 namespace zxing {
 inline bool isnan_z(float v) {
     return isnan(v);
@@ -58,10 +62,23 @@ inline bool isnan_z(float v) {
 inline bool isnan_z(double v) {
     return isnan(v);
 }
-inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
 }
-
+#else
+namespace zxing {
+inline bool isnan_z(float v) {
+    volatile float d = v;
+    return d != d;
+}
+inline bool isnan_z(double v) {
+    volatile double d = v;
+    return d != d;
+}
+}
 #endif
+
+namespace zxing {
+	inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
+}
 
 #if ZXING_DEBUG
 
