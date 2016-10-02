@@ -13,7 +13,7 @@
 #include <QQmlEngine>
 #endif
 
-#include <qzxingimageprovider.h>
+#include "QZXingImageProvider.h"
 
 // forward declaration
 namespace zxing {
@@ -120,8 +120,8 @@ public slots:
      * of a portion of the image. (Suggested for Qt 4.x)
      */
     QString decodeSubImageQML(QObject *item,
-                              const double offsetX = 0 , const double offsetY = 0,
-                              const double width = 0, const double height = 0);
+                              const int offsetX = 0, const int offsetY = 0,
+                              const int width = 0, const int height = 0);
 
     /**
      * The decoding function accessible from QML. (Suggested for Qt 5.x)
@@ -138,8 +138,8 @@ public slots:
      * (Suggested for Qt 5.x)
      */
     QString decodeSubImageQML(const QUrl &imageUrl,
-                              const double offsetX = 0, const double offsetY = 0,
-                              const double width = 0, const double height = 0);
+                              const int offsetX = 0, const int offsetY = 0,
+                              const int width = 0, const int height = 0);
 
     /**
      * The main encoding function. Currently supports only Qr code encoding
