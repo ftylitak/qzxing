@@ -1,1 +1,1 @@
-this project is deprecated thus removed. It is replaced by [QZXingLive](examples/QZXingLive/)
+this project is deprecated thus removed. It is replaced by [QZXingLive](../QZXingLive/)
