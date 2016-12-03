@@ -153,6 +153,28 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
         image = QImage((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), QImage::Format_RGB888);
 
+    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
+        image = QImage(videoFrame.size, QImage::Format_RGB32);
+        const uchar *data = (uchar*) videoFrame.data.data();
+        const int width = image.width();
+        const int height = image.height();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                const uchar Y = data[y * width + x];
+                const uchar U = data[y * width / 4 + x / 2 + width * height];
+                const uchar V = data[y * width / 4 + x / 2 + width * height * 5 / 4];
+                const int C = (int) Y - 16;
+                const int D = (int) U - 128;
+                const int E = (int) V - 128;
+                image.setPixel(x, y, qRgb(
+                    qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
+                    qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
+                    qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
+                ));
+            }
+        }
+    }
+
     /// TODO: Handle (create QImages from) YUV formats.
 
     if(image.isNull())
