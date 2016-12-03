@@ -10,6 +10,19 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+HEADERS += \
+    DecodeValidator.h \
+    ValidationStats.h \
+    EncodeValidator.h \
+    TestCase.h \
+    zxing/qrcode/encoder/MatrixUtilTests.h \
+    zxing/qrcode/encoder/MaskUtilTests.h \
+    zxing/qrcode/encoder/BitArrayTests.h \
+    zxing/qrcode/encoder/QRCodeTests.h \
+    zxing/qrcode/encoder/EncoderTests.h \
+    zxing/common/reedsolomon/ReedSolomonEncoderTests.h
+    #\backward.hpp
+
 SOURCES += main.cpp \
     DecodeValidator.cpp \
     ValidationStats.cpp \
@@ -19,18 +32,7 @@ SOURCES += main.cpp \
     zxing/qrcode/encoder/BitArrayTests.cpp \
     zxing/qrcode/encoder/QRCodeTests.cpp \
     zxing/qrcode/encoder/EncoderTests.cpp \
-    zxing/common/reedsolomon/ReedSolomonEncoderTests.cpp
-
-HEADERS += \
-    DecodeValidator.h \
-    ValidationStats.h \
-    EncodeValidator.h \
-    zxing/qrcode/encoder/MatrixUtilTests.h \
-    TestCase.h \
-    zxing/qrcode/encoder/MaskUtilTests.h \
-    zxing/qrcode/encoder/BitArrayTests.h \
-    zxing/qrcode/encoder/QRCodeTests.h \
-    zxing/qrcode/encoder/EncoderTests.h \
-    zxing/common/reedsolomon/ReedSolomonEncoderTests.h
+    zxing/common/reedsolomon/ReedSolomonEncoderTests.cpp \
+    TestCase.cpp
 
 include(../../../src/QZXing.pri)

@@ -5,6 +5,8 @@
 #include <zxing/Exception.h>
 #include <QtGlobal>
 #include <zxing/qrcode/decoder/Mode.h>
+#include "backward.hpp"
+#include <QStringList>
 
 namespace zxing{
 
@@ -52,6 +54,23 @@ protected:
         if(expected != actual) {
             QString message = QString("\nExpected: \n[") + itemToString(expected) +
                     QString("], \nGot: \n[") + itemToString(actual) + QString("]");
+
+            backward::StackTrace st;
+            st.load_here(32);
+
+            backward::TraceResolver tr;
+            tr.load_stacktrace(st);
+            for (size_t i = 0; i < st.size(); ++i) {
+                backward::ResolvedTrace trace = tr.resolve(st[i]);
+                message += QString::fromStdString("\n#");
+                message += QString::number(i);
+                message += QString::fromStdString(trace.object_filename);
+                message += QString::fromStdString(trace.object_function);
+                message += QString("[");
+                message += QString::number((int)trace.addr);
+                message += QString("]\n");
+            }
+
             throw zxing::Exception(message.toStdString().c_str());
         }
     }
@@ -76,6 +95,22 @@ protected:
     void assertFalse(bool actual) {
         assertEquals(0, (int)actual);
     }
+
+    void assertDataEquals(const std::string &message,
+                            const std::vector<int> &expected,
+                            const std::vector<int> & received)
+    {
+        for (int i = 0; i < expected.size(); i++) {
+            if (expected[i] != received[i]) {
+                qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
+                     arrayToString(Arrays.copyOf(received, expected.length)))*/;
+                assertTrue(false);
+            }
+        }
+    }
+
+    static void initializeRandom();
+    static int generateRandomNumber(int range);
 
 public:
     virtual void execute()=0;

@@ -2,22 +2,37 @@
 #define REEDSOLOMONENCODERTESTS_H
 
 #include "TestCase.h"
-#include "zxing/common/reedsolomon/ReedSolomonEncoder.h"
+#include <zxing/common/reedsolomon/GenericGF.h>
 
 namespace zxing{
 namespace tests{
 
-class ReedSolomonEncoderTests : public TestCase
+class ReedSolomonTests : public TestCase
 {
+private:
+    static const int DECODER_RANDOM_TEST_ITERATIONS;
+    static const int DECODER_TEST_ITERATIONS;
+
 public:
-    ReedSolomonEncoderTests();
+    ReedSolomonTests();
 
     void execute();
 
 protected:
+    void testQRCode();
 
-//    const std::vector<byte>& dataBytes
-//    void testEncoder(Ref<GenericGF> field, int[] dataWords, int[] ecWords);
+private:
+    void corrupt(std::vector<int> &received, int howMany, int max);
+    void testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize, int ecSize);
+    void testEncodeDecode(Ref<GenericGF> field,
+                          const std::vector<int> &dataWords,
+                          const std::vector<int> & ecWords);
+    void testEncoder(Ref<GenericGF> field,
+                     const std::vector<int> &dataWords,
+                     const std::vector<int> & ecWords);
+    void testDecoder(Ref<GenericGF> field,
+                     const std::vector<int> &dataWords,
+                     const std::vector<int> & ecWords);
 };
 
 }

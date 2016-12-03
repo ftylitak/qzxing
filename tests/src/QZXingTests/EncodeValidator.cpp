@@ -13,7 +13,7 @@
 namespace zxing {
 namespace tests{
 
-EncodeValidator::EncodeValidator()
+EncodeValidator::EncodeValidator() : TestCase()
 {
 
 }
@@ -33,7 +33,7 @@ void EncodeValidator::execute()
         qrcode::tests::QRCodeTests t3;
         t3.execute();
 
-        ReedSolomonEncoderTests t4;
+        ReedSolomonTests t4;
         t4.execute();
 
         qrcode::tests::EncoderTests t5;
