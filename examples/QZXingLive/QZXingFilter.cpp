@@ -153,6 +153,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
         image = QImage((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), QImage::Format_RGB888);
 
+    //fix for issues #4 and #9
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
         image = QImage(videoFrame.size, QImage::Format_RGB32);
         const uchar *data = (uchar*) videoFrame.data.data();
