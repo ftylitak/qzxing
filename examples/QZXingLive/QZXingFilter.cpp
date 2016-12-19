@@ -108,24 +108,37 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
 static QImage rgbDataToGrayscale(const uchar* data, const int width, const int height,
                                  const int alpha, const int red,
                                  const int green, const int blue,
+                                 const QRect& captureRect,
                                  const bool isPremultiplied = false)
 {
-    QImage image(width, height, QImage::Format_Grayscale8);
-    uchar* pixel = image.bits();
-    uchar* const pixelEnd = pixel + (width * height);
     const int stride = (alpha < 0) ? 3 : 4;
 
-    for (; pixel != pixelEnd; ++pixel, data += stride) {
-        uchar r = data[red];
-        uchar g = data[green];
-        uchar b = data[blue];
-        if (isPremultiplied) {
-            uchar a = data[alpha];
-            r = (uint(r) * 255) / a;
-            g = (uint(g) * 255) / a;
-            b = (uint(b) * 255) / a;
+    const int startX = captureRect.x();
+    const int startY = captureRect.y();
+    const int targetWidth = captureRect.isNull() ? width : captureRect.width();
+    const int targetHeight = captureRect.isNull() ? height : captureRect.height();
+    const int endX = width - startX - targetWidth;
+    const int skipX = (endX + startX) * stride;
+
+    QImage image(targetWidth, targetHeight, QImage::Format_Grayscale8);
+    uchar* pixel = image.bits();
+    data += (startY * width + startX) * stride;
+    for (int y = 0; y < targetHeight; ++y) {
+        for (int x = 0; x < targetWidth; ++x) {
+            uchar r = data[red];
+            uchar g = data[green];
+            uchar b = data[blue];
+            if (isPremultiplied) {
+                uchar a = data[alpha];
+                r = (uint(r) * 255) / a;
+                g = (uint(g) * 255) / a;
+                b = (uint(b) * 255) / a;
+            }
+            *pixel = gray(r, g, b);
+            ++pixel;
+            data += stride;
         }
-        *pixel = gray(r, g, b);
+        data += skipX;
     }
     return image;
 }
@@ -143,19 +156,19 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
     /// Let's try to convert it from RGB formats
     if (videoFrame.pixelFormat == QVideoFrame::Format_RGB32)
-        image = rgbDataToGrayscale(data, width, height, -1, 1, 2, 3);
+        image = rgbDataToGrayscale(data, width, height, -1, 1, 2, 3, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32)
-        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3);
+        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32_Premultiplied)
-        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, true);
+        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, captureRect, true);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32)
-        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0);
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32_Premultiplied)
-        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0, true);
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0, captureRect, true);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR32)
-        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0);
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
-        image = rgbDataToGrayscale(data, width, height, -1, 2, 1, 0);
+        image = rgbDataToGrayscale(data, width, height, -1, 2, 1, 0, captureRect);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR555)
@@ -225,7 +238,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-    if (!captureRect.isEmpty())
+    if (!captureRect.isEmpty() && image.size() != captureRect.size())
         image = image.copy(captureRect);
 
 //    qDebug() << "image.size()" << image.size();
