@@ -4,13 +4,24 @@
 #include <QtConcurrent/QtConcurrent>
 
 namespace {
-  uchar gray(uchar r, uchar g, uchar b)
-  {
-      return (306 * (r & 0xFF) +
-              601 * (g & 0xFF) +
-              117 * (b & 0xFF) +
-              0x200) >> 10;
-  }
+    uchar gray(uchar r, uchar g, uchar b)
+    {
+        return (306 * (r & 0xFF) +
+                601 * (g & 0xFF) +
+                117 * (b & 0xFF) +
+                0x200) >> 10;
+    }
+    uchar yuvToGray(uchar Y, uchar U, uchar V)
+    {
+        const int C = (int) Y - 16;
+        const int D = (int) U - 128;
+        const int E = (int) V - 128;
+        return gray(
+            qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
+            qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
+            qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
+        );
+    }
 }
 
 QZXingFilter::QZXingFilter(QObject *parent)
@@ -166,14 +177,27 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
                 const uchar Y = data[Y_offset + x];
                 const uchar U = data[U_offset + x_2];
                 const uchar V = data[V_offset + x_2];
-                const int C = (int) Y - 16;
-                const int D = (int) U - 128;
-                const int E = (int) V - 128;
-                *pixel = gray(
-                    qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
-                    qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
-                    qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
-                );
+                *pixel = yuvToGray(Y, U, V);
+                ++pixel;
+            }
+        }
+    }
+
+    // nv12 format, encountered on macOS
+    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_NV12) {
+        image = QImage(videoFrame.size, QImage::Format_Grayscale8);
+        uchar* pixel = image.bits();
+        const uchar* y_data = data;
+        const uchar* uv_data = data + (height * width);
+        for (int y = 0; y < height; y++) {
+            const int w_y_2 = width * int(y / 2); // floored half-y
+            for (int x = 0; x < width; x++) {
+                const uchar Y = *y_data;
+                const int uv_index = (w_y_2 + x / 2) * 2;
+                const uchar U = uv_data[uv_index];
+                const uchar V = uv_data[uv_index + 1];
+                y_data++;
+                *pixel = yuvToGray(Y, U, V);
                 ++pixel;
             }
         }
