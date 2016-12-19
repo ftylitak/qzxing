@@ -59,32 +59,6 @@ QVideoFilterRunnable * QZXingFilter::createFilterRunnable()
     return new QZXingFilterRunnable(this);
 }
 
-/// Qt cant natively create a QImage from certain PixelFormats (BGR and YUV).
-/// As Android QVideoFrames are encoded as BGR, we created this conversion function.
-QImage QZXingFilter::fromBGRAtoARGB(const uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat)
-{
-    if(pixelFormat != QVideoFrame::Format_BGRA32
-            && pixelFormat != QVideoFrame::Format_BGRA32_Premultiplied
-            && pixelFormat != QVideoFrame::Format_BGR32)
-    {
-        return QImage();
-    }
-
-    QImage image(size.width(), size.height(), QImage::Format_Grayscale8);
-
-    uchar* out = image.bits();
-    const int bits = size.width() * size.height();
-    for (int i = 0; i < bits; ++i)
-    {
-        *out = gray(data[2], data[1], data[0]);
-        // alpha is ignored
-        data += 4;
-        ++out;
-    }
-
-    return image;
-}
-
 ///
 /// QZXingFilterRunnable
 ///
@@ -131,6 +105,31 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     return * input;
 }
 
+static QImage rgbDataToGrayscale(const uchar* data, const int width, const int height,
+                                 const int alpha, const int red,
+                                 const int green, const int blue,
+                                 const bool isPremultiplied = false)
+{
+    QImage image(width, height, QImage::Format_Grayscale8);
+    uchar* pixel = image.bits();
+    uchar* const pixelEnd = pixel + (width * height);
+    const int stride = (alpha < 0) ? 3 : 4;
+
+    for (; pixel != pixelEnd; ++pixel, data += stride) {
+        uchar r = data[red];
+        uchar g = data[green];
+        uchar b = data[blue];
+        if (isPremultiplied) {
+            uchar a = data[alpha];
+            r = (uint(r) * 255) / a;
+            g = (uint(g) * 255) / a;
+            b = (uint(b) * 255) / a;
+        }
+        *pixel = gray(r, g, b);
+    }
+    return image;
+}
+
 void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& captureRect)
 {
     static unsigned int i = 0; i++;
@@ -140,13 +139,23 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     const int height = videoFrame.size.height();
     const uchar* data = (uchar*) videoFrame.data.constData();
     /// Create QImage from QVideoFrame.
-    QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
-    QImage image(data, width, height, imageFormat);
+    QImage image;
 
-    /// If it fails, it's probably a format problem.
-    /// Let's try to convert it from BGR formats to RGB
-    if(image.isNull())
-        image = QZXingFilter::fromBGRAtoARGB(data, videoFrame.size, videoFrame.pixelFormat);
+    /// Let's try to convert it from RGB formats
+    if (videoFrame.pixelFormat == QVideoFrame::Format_RGB32)
+        image = rgbDataToGrayscale(data, width, height, -1, 1, 2, 3);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32)
+        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32_Premultiplied)
+        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, true);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32)
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32_Premultiplied)
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0, true);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR32)
+        image = rgbDataToGrayscale(data, width, height, 3, 2, 1, 0);
+    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
+        image = rgbDataToGrayscale(data, width, height, -1, 2, 1, 0);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR555)
@@ -155,10 +164,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR565)
         image = QImage(data, width, height, QImage::Format_RGB16);
-
-    /// This is a forced "conversion", colors end up swapped.
-    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
-        image = QImage(data, width, height, QImage::Format_RGB888);
 
     //fix for issues #4 and #9
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
@@ -205,12 +210,17 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
     /// TODO: Handle (create QImages from) YUV formats.
 
+    if (image.isNull()) {
+        QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
+        image = QImage(data, width, height, imageFormat);
+    }
+
     if(image.isNull())
     {
         qDebug() << "QZXingFilterRunnable error: Cant create image file to process.";
         qDebug() << "Maybe it was a format conversion problem? ";
         qDebug() << "VideoFrame format: " << videoFrame.pixelFormat;
-        qDebug() << "Image corresponding format: " << imageFormat;
+        qDebug() << "Image corresponding format: " << QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
         filter->decoding = false;
         return;
     }

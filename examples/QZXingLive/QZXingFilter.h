@@ -88,8 +88,6 @@ class QZXingFilter : public QAbstractVideoFilter
         QZXing* getDecoder() { return &decoder; }
 
         QVideoFilterRunnable * createFilterRunnable();
-
-        static QImage fromBGRAtoARGB(const uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat);
 };
 
 /// A new Runnable is created everytime the filter gets a new frame
