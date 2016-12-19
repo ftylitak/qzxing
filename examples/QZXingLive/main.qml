@@ -34,6 +34,15 @@ ApplicationWindow
         z: 50
         text: "Tags detected: " + detectedTags
     }
+    Text
+    {
+        id: fps
+        font.pixelSize: 20
+        anchors.top: parent.top
+        anchors.right: parent.right
+        z: 50
+        text: (1000 / zxingFilter.timePerFrameDecode).toFixed(0) + "fps"
+    }
 
     Camera
     {
@@ -103,9 +112,14 @@ ApplicationWindow
 //            console.log("started");
         }
 
+        property int framesDecoded: 0
+        property real timePerFrameDecode: 0
+
         onDecodingFinished:
         {
-           console.log("frame finished: " + succeeded, decodeTime);
+           timePerFrameDecode = (decodeTime + framesDecoded * timePerFrameDecode) / (framesDecoded + 1);
+           framesDecoded++;
+           console.log("frame finished: " + succeeded, decodeTime, timePerFrameDecode, framesDecoded);
         }
     }
 
