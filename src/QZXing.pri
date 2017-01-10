@@ -14,6 +14,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \
     $$PWD/QZXing.h \
+    $$PWD/QZXingFilter.h \
     $$PWD/zxing/zxing/ZXing.h \
     $$PWD/zxing/zxing/IllegalStateException.h \
     $$PWD/zxing/zxing/InvertedLuminanceSource.h \
@@ -139,6 +140,7 @@ HEADERS += $$PWD/QZXing_global.h \
 SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/QZXingImageProvider.cpp\
     $$PWD/qzxing.cpp \
+    $$PWD/QZXingFilter.cpp \
     $$PWD/imagehandler.cpp \
     $$PWD/zxing/zxing/ResultIO.cpp \
     $$PWD/zxing/zxing/InvertedLuminanceSource.cpp \
