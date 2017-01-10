@@ -7,16 +7,11 @@ QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
     , decoding(false)
 {
-    /// By default all the types are enabled but hence that it is extra processing.
-    decoder.setDecoder(QZXing::DecoderFormat_Aztec | QZXing::DecoderFormat_QR_CODE);
-
     /// Conecting signals to handlers that will send signals to QML
     connect(&decoder, &QZXing::decodingStarted,
             this, &QZXingFilter::handleDecodingStarted);
     connect(&decoder, &QZXing::decodingFinished,
             this, &QZXingFilter::handleDecodingFinished);
-    connect(&decoder, &QZXing::tagFound,
-            this, &QZXingFilter::handleTagFound);
 }
 
 QZXingFilter::~QZXingFilter()
@@ -36,12 +31,6 @@ void QZXingFilter::handleDecodingFinished(bool succeeded)
     decoding = false;
     emit decodingFinished(succeeded, decoder.getProcessTimeOfLastDecoding());
     emit isDecodingChanged();
-}
-
-void QZXingFilter::handleTagFound(QString tag)
-{
-//    qDebug() << "handleTagFound";
-    emit tagFound(tag);
 }
 
 QVideoFilterRunnable * QZXingFilter::createFilterRunnable()

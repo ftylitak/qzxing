@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
+    qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return app.exec();

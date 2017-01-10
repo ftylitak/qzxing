@@ -59,17 +59,16 @@ class QZXingFilter : public QAbstractVideoFilter
 
     Q_OBJECT
         Q_PROPERTY(bool decoding READ isDecoding NOTIFY isDecodingChanged)
+        Q_PROPERTY(QZXing* decoder READ getDecoder)
 
     signals:
         void isDecodingChanged();
         void decodingFinished(bool succeeded, int decodeTime);
-        void tagFound(QString tag);
         void decodingStarted();
 
     private slots:
         void handleDecodingStarted();
         void handleDecodingFinished(bool succeeded);
-        void handleTagFound(QString tag);
 
     private: /// Attributes
         QZXing decoder;
@@ -83,6 +82,7 @@ class QZXingFilter : public QAbstractVideoFilter
         virtual ~QZXingFilter();
 
         bool isDecoding() {return decoding; }
+        QZXing* getDecoder() { return &decoder; }
 
         QVideoFilterRunnable * createFilterRunnable();
 

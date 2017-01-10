@@ -1,7 +1,7 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick.Window 2.0
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
-import QtQuick.Dialogs 1.2
 import QtMultimedia 5.5
 
 import QZXing 2.3
@@ -13,6 +13,9 @@ ApplicationWindow
     width: 640
     height: 480
     title: "Qt QZXing Filter Test"
+
+    property int detectedTags: 0
+    property string lastTag: ""
 
     Rectangle
     {
@@ -29,12 +32,16 @@ ApplicationWindow
         anchors.top: parent.top
         anchors.left: parent.left
         z: 50
-        text: "......"
+        text: "Tags detected: " + detectedTags
     }
 
     Camera
     {
         id:camera
+        focus {
+            focusMode: CameraFocus.FocusContinuous
+            focusPointMode: CameraFocus.FocusPointAuto
+        }
     }
 
     VideoOutput
@@ -45,37 +52,43 @@ ApplicationWindow
         anchors.bottom: text2.top
         anchors.left: parent.left
         anchors.right: parent.right
-     //   autoOrientation: true
+        autoOrientation: true
+        fillMode: VideoOutput.PreserveAspectCrop
         filters: [ zxingFilter ]
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                camera.focus.customFocusPoint = Qt.point(mouse.x / width,  mouse.y / height);
+                camera.focus.focusMode = CameraFocus.FocusMacro;
+                camera.focus.focusPointMode = CameraFocus.FocusPointCustom;
+            }
+        }
     }
 
     QZXingFilter
     {
         id: zxingFilter
+        decoder {
+            enabledDecoders: QZXing.DecoderFormat_EAN_13 | QZXing.DecoderFormat_CODE_39 | QZXing.DecoderFormat_QR_CODE
+
+            onTagFound: {
+                console.log(tag + " | " + decoder.foundedFormat() + " | " + decoder.charSet());
+
+                window.detectedTags++;
+                window.lastTag = tag;
+            }
+
+            tryHarder: true
+        }
 
         onDecodingStarted:
         {
-
+//            console.log("started");
         }
 
         onDecodingFinished:
         {
-            if(succeeded)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
-
-        onTagFound:
-        {
-            console.log("--!!--");
-            console.log(tag);
-            text1.text = "--00--";
-            text2.text = tag;
+           console.log("frame finished: " + succeeded, decodeTime);
         }
     }
 
@@ -87,6 +100,25 @@ ApplicationWindow
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         z: 50
-        text: "Nothing yet..."
+        text: "Last tag: " + lastTag
+    }
+    Switch {
+        text: "Autofocus"
+        checked: camera.focus.focusMode === CameraFocus.FocusContinuous
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+        }
+        onCheckedChanged: {
+            if (checked) {
+                camera.focus.focusMode = CameraFocus.FocusContinuous
+                camera.focus.focusPointMode = CameraFocus.FocusPointAuto
+            } else {
+                camera.focus.focusPointMode = CameraFocus.FocusPointCustom
+                camera.focus.customFocusPoint = Qt.point(0.5,  0.5)
+            }
+        }
+        font.family: Qt.platform.os === 'android' ? 'Droid Sans Mono' : 'Monospace'
+        font.pixelSize: Screen.pixelDensity * 5
     }
 }
