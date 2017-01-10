@@ -95,7 +95,7 @@ ApplicationWindow
                 window.lastTag = tag;
             }
 
-            tryHarder: true
+            tryHarder: false
         }
 
         onDecodingStarted:
