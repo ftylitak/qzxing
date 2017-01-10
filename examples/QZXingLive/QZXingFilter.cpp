@@ -186,14 +186,12 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if (!captureRect.isEmpty())
         image = image.copy(captureRect);
 
-//    qDebug() << "image.size() " << image.size();
-//    qDebug() << "image.format() " << image.format();
+//    qDebug() << "image.size()" << image.size();
+//    qDebug() << "image.format()" << image.format();
+//    qDebug() << "videoFrame.pixelFormat" << videoFrame.pixelFormat;
 
-//    QString path;
-//    path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest";
-//    qDebug() << "saving image " + QString::number(i) + " at:  "
-//             << path << image.save(path + "/test_" + QString::number(i) + ".png");
-//    qDebug() << i << image.format() << videoFrame.pixelFormat;
+//    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
+//    qDebug() << "saving image" << i << "at:" << path << image.save(path);
 
     QString tag = filter->decoder.decodeImage(image, image.width(), image.height());
 
