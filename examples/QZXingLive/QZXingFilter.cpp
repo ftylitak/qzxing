@@ -180,26 +180,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if (!captureRect.isEmpty())
         image = image.copy(captureRect);
 
-    /// The frames we get from the camera may be reflected horizontally or vertically
-    /// As the decoder can't handle reflected frames, we swap them in all possible frames, changing the swap mode each frame.
-	/// TODO: Maybe there is a better way to know this orientation beforehand? Or should we try decoding all of them?
-    switch (i % 4)
-    {
-        case 0:
-            image = image.mirrored(false, false);
-        break;
-        case 1:
-            image = image.mirrored(true, false);
-        break;
-        case 2:
-            image = image.mirrored(false, true);
-        break;
-        case 3:
-            image = image.mirrored(true, true);
-        break;
-    }
-
-//    qDebug() << "image mirrored type == " << (i % 4);
 //    qDebug() << "image.size() " << image.size();
 //    qDebug() << "image.format() " << image.format();
 
@@ -207,6 +187,24 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 //    path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest";
 //    qDebug() << "saving image " + QString::number(i) + " at:  "
 //             << path << image.save(path + "/test_" + QString::number(i) + ".png");
+//    qDebug() << i << image.format() << videoFrame.pixelFormat;
 
-    filter->decoder.decodeImage(image);
+    QString tag = filter->decoder.decodeImage(image, image.width(), image.height());
+
+    const bool tryHarder = filter->decoder.getTryHarder();
+    /// The frames we get from the camera may be reflected horizontally or vertically
+    /// As the decoder can't handle reflected frames, we swap them in all possible frames, changing the swap mode each frame.
+    /// TODO: Maybe there is a better way to know this orientation beforehand? Or should we try decoding all of them?
+    if (tag.isEmpty() && tryHarder) {
+        image = image.mirrored(true, false);
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
+    }
+    if (tag.isEmpty() && tryHarder) {
+        image = image.mirrored(false, true);
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
+    }
+    if (tag.isEmpty() && tryHarder) {
+        image = image.mirrored(true, true);
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
+    }
 }
