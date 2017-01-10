@@ -50,7 +50,7 @@ QVideoFilterRunnable * QZXingFilter::createFilterRunnable()
 
 /// Qt cant natively create a QImage from certain PixelFormats (BGR and YUV).
 /// As Android QVideoFrames are encoded as BGR, we created this conversion function.
-QImage QZXingFilter::fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat)
+QImage QZXingFilter::fromBGRAtoARGB(const uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat)
 {
     if(pixelFormat != QVideoFrame::Format_BGRA32
             && pixelFormat != QVideoFrame::Format_BGRA32_Premultiplied
@@ -62,13 +62,12 @@ QImage QZXingFilter::fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::Pixel
     QImage image(size.width(), size.height(), QImage::Format_Grayscale8);
 
     uchar* out = image.bits();
-    uchar* in = data;
     const int bits = size.width() * size.height();
     for (int i = 0; i < bits; ++i)
     {
-        *out = gray(in[2], in[1], in[0]);
+        *out = gray(data[2], data[1], data[0]);
         // alpha is ignored
-        in += 4;
+        data += 4;
         ++out;
     }
 
@@ -126,47 +125,56 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     static unsigned int i = 0; i++;
 //    qDebug() << "Future: Going to process frame: " << i;
 
+    const int width = videoFrame.size.width();
+    const int height = videoFrame.size.height();
+    const uchar* data = (uchar*) videoFrame.data.constData();
     /// Create QImage from QVideoFrame.
     QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
-    QImage image((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), imageFormat);
+    QImage image(data, width, height, imageFormat);
 
     /// If it fails, it's probably a format problem.
     /// Let's try to convert it from BGR formats to RGB
     if(image.isNull())
-        image = QZXingFilter::fromBGRAtoARGB((uchar*)videoFrame.data.data(), videoFrame.size, videoFrame.pixelFormat);
+        image = QZXingFilter::fromBGRAtoARGB(data, videoFrame.size, videoFrame.pixelFormat);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR555)
-        image = QImage((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), QImage::Format_RGB555);
+        image = QImage(data, width, height, QImage::Format_RGB555);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR565)
-        image = QImage((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), QImage::Format_RGB16);
+        image = QImage(data, width, height, QImage::Format_RGB16);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
-        image = QImage((uchar*)videoFrame.data.data(), videoFrame.size.width(), videoFrame.size.height(), QImage::Format_RGB888);
+        image = QImage(data, width, height, QImage::Format_RGB888);
 
     //fix for issues #4 and #9
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
         image = QImage(videoFrame.size, QImage::Format_Grayscale8);
-        const uchar *data = (uchar*) videoFrame.data.data();
-        const int width = image.width();
-        const int height = image.height();
+        uchar* pixel = image.bits();
+        const int wh = width * height;
+        const int w_2 = width / 2;
+        const int wh_54 = wh * 5 / 4;
         for (int y = 0; y < height; y++) {
-            uchar* scanline = image.scanLine(y);
+            const int Y_offset = y * width;
+            const int y_2 = y / 2;
+            const int U_offset = y_2 * w_2 + wh;
+            const int V_offset = y_2 * w_2 + wh_54;
             for (int x = 0; x < width; x++) {
-                const uchar Y = data[y * width + x];
-                const uchar U = data[y * width / 4 + x / 2 + width * height];
-                const uchar V = data[y * width / 4 + x / 2 + width * height * 5 / 4];
+                const int x_2 = x / 2;
+                const uchar Y = data[Y_offset + x];
+                const uchar U = data[U_offset + x_2];
+                const uchar V = data[V_offset + x_2];
                 const int C = (int) Y - 16;
                 const int D = (int) U - 128;
                 const int E = (int) V - 128;
-                scanline[x] = gray(
+                *pixel = gray(
                     qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
                     qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
                     qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
                 );
+                ++pixel;
             }
         }
     }
