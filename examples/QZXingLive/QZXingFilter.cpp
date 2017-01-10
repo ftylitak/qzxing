@@ -3,6 +3,16 @@
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
 
+namespace {
+  uchar gray(uchar r, uchar g, uchar b)
+  {
+      return (306 * (r & 0xFF) +
+              601 * (g & 0xFF) +
+              117 * (b & 0xFF) +
+              0x200) >> 10;
+  }
+}
+
 QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
     , decoding(false)
@@ -49,22 +59,17 @@ QImage QZXingFilter::fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::Pixel
         return QImage();
     }
 
-    QImage image(data, size.width(), size.height(), QImage::Format_ARGB32);
+    QImage image(size.width(), size.height(), QImage::Format_Grayscale8);
 
-    int curPixel = 0;
-    unsigned char * pCur = 0;
-    unsigned char * pPixel = image.bits();
-    for (int i = 0; i < size.width() * size.height(); ++i)
+    uchar* out = image.bits();
+    uchar* in = data;
+    const int bits = size.width() * size.height();
+    for (int i = 0; i < bits; ++i)
     {
-        curPixel = *((int *)pPixel); /// This changes the order of the bytes. Endianness?
-        pCur = (unsigned char *)&curPixel;
-
-        /*B*/ pPixel[0] = pCur[0]; // B
-        /*G*/ pPixel[1] = pCur[1]; // G
-        /*R*/ pPixel[2] = pCur[2]; // R
-        /*A*/ pPixel[3] = 0xFF;    // A Channel is ignored.
-
-        pPixel += 4;
+        *out = gray(in[2], in[1], in[0]);
+        // alpha is ignored
+        in += 4;
+        ++out;
     }
 
     return image;
@@ -144,11 +149,12 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
     //fix for issues #4 and #9
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
-        image = QImage(videoFrame.size, QImage::Format_RGB32);
+        image = QImage(videoFrame.size, QImage::Format_Grayscale8);
         const uchar *data = (uchar*) videoFrame.data.data();
         const int width = image.width();
         const int height = image.height();
         for (int y = 0; y < height; y++) {
+            uchar* scanline = image.scanLine(y);
             for (int x = 0; x < width; x++) {
                 const uchar Y = data[y * width + x];
                 const uchar U = data[y * width / 4 + x / 2 + width * height];
@@ -156,11 +162,11 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
                 const int C = (int) Y - 16;
                 const int D = (int) U - 128;
                 const int E = (int) V - 128;
-                image.setPixel(x, y, qRgb(
+                scanline[x] = gray(
                     qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
                     qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
                     qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
-                ));
+                );
             }
         }
     }
