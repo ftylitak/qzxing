@@ -111,12 +111,12 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     filter->frame.copyData(* input);
 
     /// All processing that has to happen in another thread, as we are now in the UI thread.
-    filter->processThread = QtConcurrent::run(this, &QZXingFilterRunnable::processVideoFrameProbed, filter->frame);
+    filter->processThread = QtConcurrent::run(this, &QZXingFilterRunnable::processVideoFrameProbed, filter->frame, filter->captureRect.toRect());
 
     return * input;
 }
 
-void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame)
+void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& captureRect)
 {
     static unsigned int i = 0; i++;
 //    qDebug() << "Future: Going to process frame: " << i;
@@ -176,6 +176,9 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         filter->decoding = false;
         return;
     }
+
+    if (!captureRect.isEmpty())
+        image = image.copy(captureRect);
 
     /// The frames we get from the camera may be reflected horizontally or vertically
     /// As the decoder can't handle reflected frames, we swap them in all possible frames, changing the swap mode each frame.

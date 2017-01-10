@@ -53,7 +53,7 @@ ApplicationWindow
         anchors.left: parent.left
         anchors.right: parent.right
         autoOrientation: true
-        fillMode: VideoOutput.PreserveAspectCrop
+        fillMode: VideoOutput.Stretch
         filters: [ zxingFilter ]
         MouseArea {
             anchors.fill: parent
@@ -63,11 +63,28 @@ ApplicationWindow
                 camera.focus.focusPointMode = CameraFocus.FocusPointCustom;
             }
         }
+        Rectangle {
+            id: captureZone
+            color: "red"
+            opacity: 0.2
+            width: parent.width / 2
+            height: parent.height / 2
+            anchors.centerIn: parent
+        }
     }
 
     QZXingFilter
     {
         id: zxingFilter
+        captureRect: {
+            // setup bindings
+            videoOutput.contentRect;
+            videoOutput.sourceRect;
+            return videoOutput.mapRectToSource(videoOutput.mapNormalizedRectToItem(Qt.rect(
+                0.25, 0.25, 0.5, 0.5
+            )));
+        }
+
         decoder {
             enabledDecoders: QZXing.DecoderFormat_EAN_13 | QZXing.DecoderFormat_CODE_39 | QZXing.DecoderFormat_QR_CODE
 
