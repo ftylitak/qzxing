@@ -37,6 +37,10 @@ private:
         return QString::number(item);
     }
 
+    static QString itemToString(void* item) {
+        return QString::number(reinterpret_cast<uintptr_t>(item));
+    }
+
     static QString itemToString(long unsigned item) {
         return QString::number(item);
     }
@@ -67,7 +71,7 @@ protected:
                 message += QString::fromStdString(trace.object_filename);
                 message += QString::fromStdString(trace.object_function);
                 message += QString("[");
-                message += QString::number((int)trace.addr);
+                message += itemToString(trace.addr);
                 message += QString("]\n");
             }
 
@@ -85,15 +89,15 @@ protected:
     }
 
     void assertSame(void *expected, void *actual) {
-        assertEquals((int)expected, (int)actual);
+        assertEquals(expected, actual);
     }
 
     void assertTrue(bool actual) {
-        assertEquals(1, (int)actual);
+        assertEquals(true, actual);
     }
 
     void assertFalse(bool actual) {
-        assertEquals(0, (int)actual);
+        assertEquals(false, actual);
     }
 
     void assertDataEquals(const std::string &message,
