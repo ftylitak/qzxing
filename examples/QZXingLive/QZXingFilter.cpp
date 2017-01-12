@@ -51,7 +51,7 @@ QVideoFilterRunnable * QZXingFilter::createFilterRunnable()
 
 /// Qt cant natively create a QImage from certain PixelFormats (BGR and YUV).
 /// As Android QVideoFrames are encoded as BGR, we created this conversion function.
-QImage QZXingFilter::fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat)
+QImage QZXingFilter::fromBGRAtoARGB(uchar * data, int dataSize, QSize size, QVideoFrame::PixelFormat pixelFormat)
 {
     if(pixelFormat != QVideoFrame::Format_BGRA32
             && pixelFormat != QVideoFrame::Format_BGRA32_Premultiplied
@@ -61,11 +61,12 @@ QImage QZXingFilter::fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::Pixel
     }
 
     QImage image(data, size.width(), size.height(), QImage::Format_ARGB32);
+    if(image.isNull()) return image;
 
     int curPixel = 0;
     unsigned char * pCur = 0;
     unsigned char * pPixel = image.bits();
-    for (int i = 0; i < size.width() * size.height(); ++i)
+    for (int i = 0; i < size.width() * size.height() && i < dataSize; ++i)
     {
         curPixel = *((int *)pPixel); /// This changes the order of the bytes. Endianness?
         pCur = (unsigned char *)&curPixel;
@@ -139,7 +140,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     /// If it fails, it's probably a format problem.
     /// Let's try to convert it from BGR formats to RGB
     if(image.isNull())
-        image = QZXingFilter::fromBGRAtoARGB((uchar*)videoFrame.data.data(), videoFrame.size, videoFrame.pixelFormat);
+        image = QZXingFilter::fromBGRAtoARGB((uchar*)videoFrame.data.data(), videoFrame.data.size(), videoFrame.size, videoFrame.pixelFormat);
 
     /// This is a forced "conversion", colors end up swapped.
     if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR555)
