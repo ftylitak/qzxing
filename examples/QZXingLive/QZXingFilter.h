@@ -86,7 +86,7 @@ class QZXingFilter : public QAbstractVideoFilter
 
         QVideoFilterRunnable * createFilterRunnable();
 
-        static QImage fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat);
+        static QImage fromBGRAtoARGB(uchar * data, int dataSize, QSize size, QVideoFrame::PixelFormat pixelFormat);
 };
 
 /// A new Runnable is created everytime the filter gets a new frame
