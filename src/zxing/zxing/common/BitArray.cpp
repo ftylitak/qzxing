@@ -144,6 +144,9 @@ namespace {
 // N.B.: This only works for 32 bit ints ...
 int numberOfTrailingZeros(int i) {
     // HD, Figure 5-14
+#if defined(__clang__) || defined(__GNUC__)
+    return __builtin_ctz(i);
+#else
     int y;
     if (i == 0) return 32;
     int n = 31;
@@ -152,6 +155,7 @@ int numberOfTrailingZeros(int i) {
     y = i << 4; if (y != 0) { n = n - 4; i = y; }
     y = i << 2; if (y != 0) { n = n - 2; i = y; }
     return n - (((unsigned int)(i << 1)) >> 31);
+#endif
 }
 }
 

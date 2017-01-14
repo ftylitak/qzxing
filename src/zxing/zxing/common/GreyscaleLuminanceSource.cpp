@@ -58,16 +58,16 @@ ArrayRef<byte> GreyscaleLuminanceSource::getRow(int y, ArrayRef<byte> row) const
 }
 
 ArrayRef<byte> GreyscaleLuminanceSource::getMatrix() const {
-  int size = getWidth() * getHeight();
-  ArrayRef<byte> result (size);
   if (left_ == 0 && top_ == 0 && dataWidth_ == getWidth() && dataHeight_ == getHeight()) {
-    memcpy(&result[0], &greyData_[0], size);
+    return greyData_;
   } else {
+    int size = getWidth() * getHeight();
+    ArrayRef<byte> result (size);
     for (int row = 0; row < getHeight(); row++) {
       memcpy(&result[row * getWidth()], &greyData_[(top_ + row) * dataWidth_ + left_], getWidth());
     }
+    return result;
   }
-  return result;
 }
 
 Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {

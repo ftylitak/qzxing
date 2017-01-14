@@ -40,6 +40,7 @@ class
     Q_ENUMS(DecoderFormat)
     Q_PROPERTY(int processingTime READ getProcessTimeOfLastDecoding)
     Q_PROPERTY(uint enabledDecoders READ getEnabledFormats WRITE setDecoder NOTIFY enabledFormatsChanged)
+    Q_PROPERTY(bool tryHarder READ getTryHarder WRITE setTryHarder)
 
 public:
     /*
@@ -90,8 +91,8 @@ public:
     void setTryHarder(bool tryHarder);
     bool getTryHarder();
     static QString decoderFormatToString(int fmt);
-    QString foundedFormat() const;
-    QString charSet() const;
+    Q_INVOKABLE QString foundedFormat() const;
+    Q_INVOKABLE QString charSet() const;
 
 public slots:
     /**

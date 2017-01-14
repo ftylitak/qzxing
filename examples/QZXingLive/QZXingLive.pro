@@ -4,8 +4,7 @@ QT += qml quick widgets multimedia
 
 CONFIG += c++11
 
-SOURCES += main.cpp \
-    QZXingFilter.cpp
+SOURCES += main.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,6 +15,3 @@ include(../../src/QZXing.pri)
 
 # Default rules for deployment.
 include(deployment.pri)
-
-HEADERS += \
-    QZXingFilter.h

@@ -24,16 +24,23 @@ using namespace zxing;
 QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false)
 {
     decoder = new MultiFormatReader();
-    /*setDecoder(DecoderFormat_QR_CODE |
+    setDecoder(DecoderFormat_QR_CODE |
                DecoderFormat_DATA_MATRIX |
                DecoderFormat_UPC_E |
                DecoderFormat_UPC_A |
+               DecoderFormat_UPC_EAN_EXTENSION |
+               DecoderFormat_RSS_14 |
+               DecoderFormat_RSS_EXPANDED |
+               DecoderFormat_PDF_417 |
+               DecoderFormat_MAXICODE |
                DecoderFormat_EAN_8 |
                DecoderFormat_EAN_13 |
                DecoderFormat_CODE_128 |
+               DecoderFormat_CODE_93 |
                DecoderFormat_CODE_39 |
+               DecoderFormat_CODABAR |
                DecoderFormat_ITF |
-               DecoderFormat_Aztec);*/
+               DecoderFormat_Aztec);
     imageHandler = new ImageHandler();
 }
 

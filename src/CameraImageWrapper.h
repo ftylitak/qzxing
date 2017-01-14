@@ -32,12 +32,8 @@ public:
 private:
     ArrayRef<zxing::byte> getRowP(int y, ArrayRef<zxing::byte> row) const;
     ArrayRef<zxing::byte> getMatrixP() const;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
-    QImage* grayScaleImage(const QImage *origin);
-#endif
-    unsigned int gray(unsigned int r, unsigned int g, unsigned int b);
 
-    QImage* image;
+    QImage image;
     Ref<GreyscaleLuminanceSource> delegate;
 };
 

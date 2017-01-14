@@ -59,21 +59,23 @@ class QZXingFilter : public QAbstractVideoFilter
 
     Q_OBJECT
         Q_PROPERTY(bool decoding READ isDecoding NOTIFY isDecodingChanged)
+        Q_PROPERTY(QZXing* decoder READ getDecoder)
+        Q_PROPERTY(QRectF captureRect MEMBER captureRect NOTIFY captureRectChanged)
 
     signals:
         void isDecodingChanged();
         void decodingFinished(bool succeeded, int decodeTime);
-        void tagFound(QString tag);
         void decodingStarted();
+        void captureRectChanged();
 
     private slots:
         void handleDecodingStarted();
         void handleDecodingFinished(bool succeeded);
-        void handleTagFound(QString tag);
 
     private: /// Attributes
         QZXing decoder;
         bool decoding;
+        QRectF captureRect;
 
         SimpleVideoFrame frame;
         QFuture<void> processThread;
@@ -83,10 +85,9 @@ class QZXingFilter : public QAbstractVideoFilter
         virtual ~QZXingFilter();
 
         bool isDecoding() {return decoding; }
+        QZXing* getDecoder() { return &decoder; }
 
         QVideoFilterRunnable * createFilterRunnable();
-
-        static QImage fromBGRAtoARGB(uchar * data, QSize size, QVideoFrame::PixelFormat pixelFormat);
 };
 
 /// A new Runnable is created everytime the filter gets a new frame
@@ -98,7 +99,7 @@ class QZXingFilterRunnable : public QObject, public QVideoFilterRunnable
         explicit QZXingFilterRunnable(QZXingFilter * filter);
         /// This method is called whenever we get a new frame. It runs in the UI thread.
         QVideoFrame run(QVideoFrame * input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags);
-        void processVideoFrameProbed(SimpleVideoFrame & videoFrame);
+        void processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& captureRect);
 
     private:
         QZXingFilter * filter;
