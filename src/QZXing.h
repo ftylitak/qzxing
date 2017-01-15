@@ -73,12 +73,14 @@ public:
 
     QZXing(DecoderFormat decodeHints, QObject *parent = NULL);
 
+#ifdef QZXING_QML
+
 #if QT_VERSION >= 0x040700
     static void registerQMLTypes()
     {
         qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
     }
-#endif
+#endif //QT_VERSION >= Qt 4.7
 
 #if  QT_VERSION >= 0x050000
     static void registerQMLImageProvider(const QQuickView& view)
@@ -86,7 +88,9 @@ public:
         QQmlEngine *engine = view.engine();
         engine->addImageProvider(QLatin1String("QZXing"), QZXingImageProvider::getInstance());
     }
-#endif
+#endif //QT_VERSION >= Qt 5.0
+
+#endif //QZXING_QML
 
     void setTryHarder(bool tryHarder);
     bool getTryHarder();

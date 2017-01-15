@@ -1,7 +1,6 @@
-QT       += core gui widgets
+QT       += core gui
 
-greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
-greaterThan(QT_MAJOR_VERSION, 4): QT += quick
+CONFIG += qzxing_qml
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
@@ -14,7 +13,6 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
     $$PWD/imagehandler.h \
     $$PWD/QZXing.h \
-    $$PWD/QZXingFilter.h \
     $$PWD/zxing/zxing/ZXing.h \
     $$PWD/zxing/zxing/IllegalStateException.h \
     $$PWD/zxing/zxing/InvertedLuminanceSource.h \
@@ -134,13 +132,10 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/EncodeHint.h \
     $$PWD/zxing/zxing/UnsupportedEncodingException.h \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
-    $$PWD/zxing/zxing/common/Types.h \
-    $$PWD/QZXingImageProvider.h
+    $$PWD/zxing/zxing/common/Types.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
-    $$PWD/QZXingImageProvider.cpp\
     $$PWD/qzxing.cpp \
-    $$PWD/QZXingFilter.cpp \
     $$PWD/imagehandler.cpp \
     $$PWD/zxing/zxing/ResultIO.cpp \
     $$PWD/zxing/zxing/InvertedLuminanceSource.cpp \
@@ -249,6 +244,30 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp \
     $$PWD/zxing/zxing/EncodeHint.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
+
+qzxing_qml {
+
+    greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
+    greaterThan(QT_MAJOR_VERSION, 4): QT += quick
+
+    DEFINES += QZXING_QML
+
+    HEADERS +=  \
+        $$PWD/QZXingImageProvider.h
+
+    SOURCES +=  \
+        $$PWD/QZXingImageProvider.cpp
+}
+
+qzxing_multimedia {
+    QT += multimedia
+
+    HEADERS += \
+        $$PWD/QZXingFilter.h
+
+    SOURCES += \
+        $$PWD/QZXingFilter.cpp
+}
 
 symbian {
     TARGET.UID3 = 0xE618743C

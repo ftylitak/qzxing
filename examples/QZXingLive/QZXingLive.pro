@@ -1,8 +1,8 @@
 TEMPLATE = app
 
-QT += qml quick widgets multimedia
+QT += qml quick
 
-CONFIG += c++11
+CONFIG += c++11 qzxing_multimedia
 
 SOURCES += main.cpp
 

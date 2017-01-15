@@ -1,7 +1,5 @@
-QT += core
-QT -= gui
-
 CONFIG += gnu++11
+CONFIG -= qzxing_qml
 QMAKE_CXXFLAGS += -std=gnu++11
 
 TARGET = QZXingTests

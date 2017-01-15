@@ -1,14 +1,17 @@
 #include "imagehandler.h"
-#include <QGraphicsObject>
 #include <QImage>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
 #include <QDebug>
 #include <QQuickItem>
 #include <QQuickItemGrabResult>
 #include <QQuickWindow>
 #include <QThread>
 #include <QTime>
+
+#if QT_VERSION < 0x050000
+    #include <QGraphicsObject>
+    #include <QStyleOptionGraphicsItem>
+#endif // QT_VERSION < Qt 5.0
 
 ImageHandler::ImageHandler(QObject *parent) :
     QObject(parent)
