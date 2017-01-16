@@ -79,6 +79,11 @@ public:
     static void registerQMLTypes()
     {
         qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
+
+#ifdef QZXING_MULTIMEDIA
+        qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
+#endif //QZXING_MULTIMEDIA
+
     }
 #endif //QT_VERSION >= Qt 4.7
 

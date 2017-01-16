@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #include <Qt>
-#include "QZXingFilter.h"
+#include <QZXing.h>
 
 int main(int argc, char *argv[])
 {
@@ -13,8 +13,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
-    qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
+    QZXing::registerQMLTypes();
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return app.exec();

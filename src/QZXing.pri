@@ -262,6 +262,8 @@ qzxing_qml {
 qzxing_multimedia {
     QT += multimedia
 
+    DEFINES += QZXING_MULTIMEDIA
+
     HEADERS += \
         $$PWD/QZXingFilter.h
 
