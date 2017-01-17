@@ -27,8 +27,8 @@ namespace {
 
 QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
-    , decoding(false)
     , decoder_p(new QZXing())
+    , decoding(false)
 {
     /// Conecting signals to handlers that will send signals to QML
     connect(decoder_p, &QZXing::decodingStarted,
@@ -39,7 +39,8 @@ QZXingFilter::QZXingFilter(QObject *parent)
 
 QZXingFilter::~QZXingFilter()
 {
-
+    if(decoder_p)
+        delete decoder_p;
 }
 
 bool QZXingFilter::isDecoding()
