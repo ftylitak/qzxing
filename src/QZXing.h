@@ -15,6 +15,10 @@
 
 #include "QZXingImageProvider.h"
 
+#ifdef QZXING_MULTIMEDIA
+#include "QZXingFilter.h"
+#endif//#ifdef QZXING_MULTIMEDIA
+
 // forward declaration
 namespace zxing {
 class MultiFormatReader;
