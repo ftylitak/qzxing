@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QAbstractVideoFilter>
+#include <QDebug>
+#include <QFuture>
 
 //forward declaration
 class QZXing;
