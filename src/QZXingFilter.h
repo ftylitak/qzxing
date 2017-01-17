@@ -63,7 +63,7 @@ class QZXingFilter : public QAbstractVideoFilter
 
     Q_OBJECT
         Q_PROPERTY(bool decoding READ isDecoding NOTIFY isDecodingChanged)
-        Q_PROPERTY(QZXing* decoder_p READ getDecoder)
+        Q_PROPERTY(QZXing* decoder READ getDecoder)
         Q_PROPERTY(QRectF captureRect MEMBER captureRect NOTIFY captureRectChanged)
 
     signals:
