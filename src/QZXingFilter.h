@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QAbstractVideoFilter>
-#include <QZXing.h>
+
+//forward declaration
+class QZXing;
 
 ///
 /// References:
@@ -59,7 +61,7 @@ class QZXingFilter : public QAbstractVideoFilter
 
     Q_OBJECT
         Q_PROPERTY(bool decoding READ isDecoding NOTIFY isDecodingChanged)
-        Q_PROPERTY(QZXing* decoder READ getDecoder)
+        Q_PROPERTY(QZXing* decoder_p READ getDecoder)
         Q_PROPERTY(QRectF captureRect MEMBER captureRect NOTIFY captureRectChanged)
 
     signals:
@@ -73,7 +75,7 @@ class QZXingFilter : public QAbstractVideoFilter
         void handleDecodingFinished(bool succeeded);
 
     private: /// Attributes
-        QZXing decoder;
+        QZXing* decoder_p;
         bool decoding;
         QRectF captureRect;
 
@@ -84,8 +86,10 @@ class QZXingFilter : public QAbstractVideoFilter
         explicit QZXingFilter(QObject *parent = 0);
         virtual ~QZXingFilter();
 
-        bool isDecoding() {return decoding; }
-        QZXing* getDecoder() { return &decoder; }
+        bool isDecoding();
+        QZXing* getDecoder();
+//        bool isDecoding() {return decoding; }
+//        QZXing* getDecoder() { return &decoder; }
 
         QVideoFilterRunnable * createFilterRunnable();
 };
