@@ -5,9 +5,7 @@
 #include <QAbstractVideoFilter>
 #include <QDebug>
 #include <QFuture>
-
-//forward declaration
-class QZXing;
+#include <QZXing.h>
 
 ///
 /// References:
@@ -77,7 +75,7 @@ class QZXingFilter : public QAbstractVideoFilter
         void handleDecodingFinished(bool succeeded);
 
     private: /// Attributes
-        QZXing* decoder_p;
+        QZXing decoder;
         bool decoding;
         QRectF captureRect;
 
@@ -88,10 +86,8 @@ class QZXingFilter : public QAbstractVideoFilter
         explicit QZXingFilter(QObject *parent = 0);
         virtual ~QZXingFilter();
 
-        bool isDecoding();
-        QZXing* getDecoder();
-//        bool isDecoding() {return decoding; }
-//        QZXing* getDecoder() { return &decoder; }
+        bool isDecoding() {return decoding; }
+        QZXing* getDecoder() { return &decoder; }
 
         QVideoFilterRunnable * createFilterRunnable();
 };

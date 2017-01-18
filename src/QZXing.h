@@ -5,19 +5,11 @@
 #include <QObject>
 #include <QImage>
 
-#if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
-#include <QtDeclarative>
-#elif QT_VERSION >= 0x050000
-#include <QtQml/qqml.h>
-#include <QQuickView>
-#include <QQmlEngine>
+#if QT_VERSION >= 0x050000
+class QQuickView;
 #endif
 
 #include "QZXingImageProvider.h"
-
-#ifdef QZXING_MULTIMEDIA
-#include "QZXingFilter.h"
-#endif//#ifdef QZXING_MULTIMEDIA
 
 // forward declaration
 namespace zxing {
@@ -80,23 +72,11 @@ public:
 #ifdef QZXING_QML
 
 #if QT_VERSION >= 0x040700
-    static void registerQMLTypes()
-    {
-        qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
-
-#ifdef QZXING_MULTIMEDIA
-        qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
-#endif //QZXING_MULTIMEDIA
-
-    }
+    static void registerQMLTypes();
 #endif //QT_VERSION >= Qt 4.7
 
 #if  QT_VERSION >= 0x050000
-    static void registerQMLImageProvider(const QQuickView& view)
-    {
-        QQmlEngine *engine = view.engine();
-        engine->addImageProvider(QLatin1String("QZXing"), QZXingImageProvider::getInstance());
-    }
+    static void registerQMLImageProvider(const QQuickView& view);
 #endif //QT_VERSION >= Qt 5.0
 
 #endif //QZXING_QML

@@ -1,6 +1,5 @@
 #include "QZXingFilter.h"
 
-#include <QZXing.h>
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
 
@@ -27,30 +26,18 @@ namespace {
 
 QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
-    , decoder_p(new QZXing())
     , decoding(false)
 {
     /// Conecting signals to handlers that will send signals to QML
-    connect(decoder_p, &QZXing::decodingStarted,
+    connect(&decoder, &QZXing::decodingStarted,
             this, &QZXingFilter::handleDecodingStarted);
-    connect(decoder_p, &QZXing::decodingFinished,
+    connect(&decoder, &QZXing::decodingFinished,
             this, &QZXingFilter::handleDecodingFinished);
 }
 
 QZXingFilter::~QZXingFilter()
 {
-    if(decoder_p)
-        delete decoder_p;
-}
 
-bool QZXingFilter::isDecoding()
-{
-    return decoding;
-}
-
-QZXing *QZXingFilter::getDecoder()
-{
-    return decoder_p;
 }
 
 void QZXingFilter::handleDecodingStarted()
@@ -63,7 +50,7 @@ void QZXingFilter::handleDecodingStarted()
 void QZXingFilter::handleDecodingFinished(bool succeeded)
 {
     decoding = false;
-    emit decodingFinished(succeeded, decoder_p->getProcessTimeOfLastDecoding());
+    emit decodingFinished(succeeded, decoder.getProcessTimeOfLastDecoding());
     emit isDecodingChanged();
 }
 
@@ -261,22 +248,22 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 //    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
 //    qDebug() << "saving image" << i << "at:" << path << image.save(path);
 
-    QString tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+    QString tag = filter->decoder.decodeImage(image, image.width(), image.height());
 
-    const bool tryHarder = filter->decoder_p->getTryHarder();
+    const bool tryHarder = filter->decoder.getTryHarder();
     /// The frames we get from the camera may be reflected horizontally or vertically
     /// As the decoder can't handle reflected frames, we swap them in all possible frames, changing the swap mode each frame.
     /// TODO: Maybe there is a better way to know this orientation beforehand? Or should we try decoding all of them?
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(true, false);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
     }
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(false, true);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
     }
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(true, true);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = filter->decoder.decodeImage(image, image.width(), image.height());
     }
 }
