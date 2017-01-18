@@ -118,6 +118,11 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     return * input;
 }
 
+static bool isRectValid(const QRect& rect)
+{
+  return rect.x() > 0 && rect.y() > 0 && rect.isValid();
+}
+
 static QImage rgbDataToGrayscale(const uchar* data, const int width, const int height,
                                  const int alpha, const int red,
                                  const int green, const int blue,
@@ -126,10 +131,10 @@ static QImage rgbDataToGrayscale(const uchar* data, const int width, const int h
 {
     const int stride = (alpha < 0) ? 3 : 4;
 
-    const int startX = captureRect.x();
-    const int startY = captureRect.y();
-    const int targetWidth = captureRect.isNull() ? width : captureRect.width();
-    const int targetHeight = captureRect.isNull() ? height : captureRect.height();
+    const int startX = isRectValid(captureRect) ? captureRect.x() : 0;
+    const int startY = isRectValid(captureRect) ? captureRect.y() : 0;
+    const int targetWidth = isRectValid(captureRect) ? captureRect.width() : width;
+    const int targetHeight = isRectValid(captureRect) ? captureRect.height() : height;
     const int endX = width - startX - targetWidth;
     const int skipX = (endX + startX) * stride;
 
@@ -251,7 +256,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-    if (!captureRect.isEmpty() && image.size() != captureRect.size())
+    if (isRectValid(captureRect) && image.size() != captureRect.size())
         image = image.copy(captureRect);
 
 //    qDebug() << "image.size()" << image.size();
