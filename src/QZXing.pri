@@ -11,7 +11,7 @@ INCLUDEPATH  += $$PWD \
 
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
-    $$PWD/imagehandler.h \
+    $$PWD/ImageHandler.h \
     $$PWD/QZXing.h \
     $$PWD/zxing/zxing/ZXing.h \
     $$PWD/zxing/zxing/IllegalStateException.h \
@@ -135,8 +135,8 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/common/Types.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
-    $$PWD/qzxing.cpp \
-    $$PWD/imagehandler.cpp \
+    $$PWD/QZXing.cpp \
+    $$PWD/ImageHandler.cpp \
     $$PWD/zxing/zxing/ResultIO.cpp \
     $$PWD/zxing/zxing/InvertedLuminanceSource.cpp \
     $$PWD/zxing/zxing/ChecksumException.cpp \

@@ -6,7 +6,7 @@
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
 #include "CameraImageWrapper.h"
-#include "imagehandler.h"
+#include "ImageHandler.h"
 #include <QTime>
 #include <QUrl>
 #include <QFileInfo>

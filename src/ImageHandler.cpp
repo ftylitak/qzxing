@@ -1,4 +1,4 @@
-#include "imagehandler.h"
+#include "ImageHandler.h"
 #include <QImage>
 #include <QPainter>
 #include <QDebug>
