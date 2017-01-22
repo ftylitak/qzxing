@@ -39,6 +39,10 @@ QZXingFilter::QZXingFilter(QObject *parent)
 
 QZXingFilter::~QZXingFilter()
 {
+    if(!processThread.isFinished()) {
+      processThread.cancel();
+      processThread.waitForFinished();
+    }
     if(decoder_p)
         delete decoder_p;
 }
@@ -82,6 +86,10 @@ QZXingFilterRunnable::QZXingFilterRunnable(QZXingFilter * filter)
 {
 
 }
+QZXingFilterRunnable::~QZXingFilterRunnable()
+{
+    filter = nullptr;
+}
 
 QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags)
 {
@@ -118,6 +126,11 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     return * input;
 }
 
+static bool isRectValid(const QRect& rect)
+{
+  return rect.x() > 0 && rect.y() > 0 && rect.isValid();
+}
+
 static QImage rgbDataToGrayscale(const uchar* data, const int width, const int height,
                                  const int alpha, const int red,
                                  const int green, const int blue,
@@ -126,10 +139,10 @@ static QImage rgbDataToGrayscale(const uchar* data, const int width, const int h
 {
     const int stride = (alpha < 0) ? 3 : 4;
 
-    const int startX = captureRect.x();
-    const int startY = captureRect.y();
-    const int targetWidth = captureRect.isNull() ? width : captureRect.width();
-    const int targetHeight = captureRect.isNull() ? height : captureRect.height();
+    const int startX = isRectValid(captureRect) ? captureRect.x() : 0;
+    const int startY = isRectValid(captureRect) ? captureRect.y() : 0;
+    const int targetWidth = isRectValid(captureRect) ? captureRect.width() : width;
+    const int targetHeight = isRectValid(captureRect) ? captureRect.height() : height;
     const int endX = width - startX - targetWidth;
     const int skipX = (endX + startX) * stride;
 
@@ -261,7 +274,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 //    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
 //    qDebug() << "saving image" << i << "at:" << path << image.save(path);
 
-    QString tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+    QString tag = decode(image);
 
     const bool tryHarder = filter->decoder_p->getTryHarder();
     /// The frames we get from the camera may be reflected horizontally or vertically
@@ -269,14 +282,20 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     /// TODO: Maybe there is a better way to know this orientation beforehand? Or should we try decoding all of them?
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(true, false);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = decode(image);
     }
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(false, true);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = decode(image);
     }
     if (tag.isEmpty() && tryHarder) {
         image = image.mirrored(true, true);
-        tag = filter->decoder_p->decodeImage(image, image.width(), image.height());
+        tag = decode(image);
     }
+}
+
+QString QZXingFilterRunnable::decode(const QImage &image)
+{
+    return (filter != nullptr) ?
+      filter->decoder_p->decodeImage(image, image.width(), image.height()) : QString();
 }
