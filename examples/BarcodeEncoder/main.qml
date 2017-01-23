@@ -1,10 +1,11 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.0
 import QZXing 2.3
 
-Rectangle {
-    width: 360
-    height: 360
+ApplicationWindow {
+    visible: true
+    width: 640
+    height: 480
 
     TextField {
         id: inputField
@@ -18,7 +19,7 @@ Rectangle {
         id: submit
         anchors.right: parent.right
         anchors.top: parent.top
-        text: "decode"
+        text: "encode"
         anchors.margins: 10
         onClicked: {
             qzxing.encodeData(inputField.text)
