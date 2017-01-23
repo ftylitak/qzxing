@@ -264,7 +264,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-    if (!captureRect.isEmpty() && image.size() != captureRect.size())
+    if (isRectValid(captureRect) && image.size() != captureRect.size())
         image = image.copy(captureRect);
 
 //    qDebug() << "image.size()" << image.size();
