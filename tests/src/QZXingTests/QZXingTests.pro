@@ -25,12 +25,12 @@ SOURCES += main.cpp \
     DecodeValidator.cpp \
     ValidationStats.cpp \
     EncodeValidator.cpp \
+    TestCase.cpp \
     zxing/qrcode/encoder/MatrixUtilTests.cpp \
     zxing/qrcode/encoder/MaskUtilTests.cpp \
     zxing/qrcode/encoder/BitArrayTests.cpp \
     zxing/qrcode/encoder/QRCodeTests.cpp \
     zxing/qrcode/encoder/EncoderTests.cpp \
-    zxing/common/reedsolomon/ReedSolomonEncoderTests.cpp \
-    TestCase.cpp
+    zxing/common/reedsolomon/ReedSolomonEncoderTests.cpp
 
 include(../../../src/QZXing.pri)
