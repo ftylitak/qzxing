@@ -128,7 +128,7 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
 
 static bool isRectValid(const QRect& rect)
 {
-  return rect.x() > 0 && rect.y() > 0 && rect.isValid();
+  return rect.x() >= 0 && rect.y() >= 0 && rect.isValid();
 }
 
 static QImage rgbDataToGrayscale(const uchar* data, const int width, const int height,
@@ -264,7 +264,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-    if (!captureRect.isEmpty() && image.size() != captureRect.size())
+    if (isRectValid(captureRect) && image.size() != captureRect.size())
         image = image.copy(captureRect);
 
 //    qDebug() << "image.size()" << image.size();
