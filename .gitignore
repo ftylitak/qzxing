@@ -22,3 +22,6 @@ debug/
 *.sln
 *.suo
 *.vcxproj*
+.gradle
+.idea
+.build

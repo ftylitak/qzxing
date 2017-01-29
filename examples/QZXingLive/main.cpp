@@ -6,15 +6,17 @@
 
 #include <Qt>
 #include <QZXing.h>
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
 
     QZXing::registerQMLTypes();
 
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    Application customApp;
+    customApp.checkPermissions();
+
     return app.exec();
 }
