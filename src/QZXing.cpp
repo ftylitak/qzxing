@@ -19,6 +19,22 @@
 #include <QQmlContext>
 #include <QQuickImageProvider>
 
+
+#if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
+    #include <QtDeclarative>
+#elif QT_VERSION >= 0x050000
+    #include <QtQml/qqml.h>
+#endif
+
+#ifdef QZXING_MULTIMEDIA
+    #include "QZXingFilter.h"
+#endif //QZXING_MULTIMEDIA
+
+#ifdef QZXING_QML
+    #include "QZXingImageProvider.h"
+#endif //QZXING_QML
+
+
 using namespace zxing;
 
 QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false)
@@ -60,6 +76,29 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 
     setDecoder(decodeHints);
 }
+
+#ifdef QZXING_QML
+
+#if QT_VERSION >= 0x040700
+void QZXing::registerQMLTypes()
+{
+    qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
+
+#ifdef QZXING_MULTIMEDIA
+    qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
+#endif //QZXING_MULTIMEDIA
+
+}
+#endif //QT_VERSION >= Qt 4.7
+
+#if  QT_VERSION >= 0x050000
+void QZXing::registerQMLImageProvider(QQmlEngine& engine)
+{
+    engine.addImageProvider(QLatin1String("QZXing"), QZXingImageProvider::getInstance());
+}
+#endif //QT_VERSION >= Qt 5.0
+
+#endif //QZXING_QML
 
 void QZXing::setTryHarder(bool tryHarder)
 {
