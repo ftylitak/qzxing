@@ -12,10 +12,12 @@ CONFIG(debug, debug|release) {
 }
 
 HEADERS += \
-    application.h
+    application.h \
+    native.h
 
 SOURCES += main.cpp \
-    application.cpp
+    application.cpp \
+    native.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,12 +31,6 @@ include(deployment.pri)
 
 android {
     QT += androidextras
-
-    HEADERS += \
-        native.h
-
-    SOURCES +=  \
-        native.cpp
 
     DISTFILES += \
         android/AndroidManifest.xml \
