@@ -15,11 +15,6 @@
 #include <zxing/common/detector/WhiteRectangleDetector.h>
 #include <QColor>
 
-#include <QQmlEngine>
-#include <QQmlContext>
-#include <QQuickImageProvider>
-
-
 #if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
     #include <QtDeclarative>
 #elif QT_VERSION >= 0x050000
@@ -31,6 +26,9 @@
 #endif //QZXING_MULTIMEDIA
 
 #ifdef QZXING_QML
+    #include <QQmlEngine>
+    #include <QQmlContext>
+    #include <QQuickImageProvider>
     #include "QZXingImageProvider.h"
 #endif //QZXING_QML
 
@@ -379,6 +377,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                     if (codec)
                         string = codec->toUnicode(res->getText()->getText().c_str());
                 }
+
                 emit tagFound(string);
                 emit tagFoundAdvanced(string, foundedFmt, charSet_);
 
@@ -448,6 +447,8 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
+#ifdef QZXING_QML
+
     QString imagePath = imageUrl.path();
     imagePath = imagePath.trimmed();
     QImage img;
@@ -471,6 +472,9 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
     if (offsetX || offsetY || width || height)
         img = img.copy(offsetX, offsetY, width, height);
     return decodeImage(img);
+#else
+    return decodeImage(QImage());
+#endif //QZXING_QML
 }
 
 QImage QZXing::encodeData(const QString& data)
@@ -488,7 +492,9 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
+#ifdef QZXING_QML
         QZXingImageProvider::getInstance()->storeImage(image);
+#endif //QZXING_QML
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }

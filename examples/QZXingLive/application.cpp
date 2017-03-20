@@ -5,7 +5,6 @@
 #if defined(Q_OS_ANDROID)
     #include <QAndroidJniObject>
     #include <QtAndroid>
-
 #endif // Q_OS_ANDROID
 
 Application::Application()

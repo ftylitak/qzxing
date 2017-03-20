@@ -14,9 +14,7 @@
 # limitations under the License.
 #
 
-QT       += core gui
-
-CONFIG += qzxing_qml
+QT       += core
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
@@ -261,7 +259,22 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/EncodeHint.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
 
+qzxing_multimedia {
+    QT += multimedia
+
+    CONFIG += qzxing_qml
+
+    DEFINES += QZXING_MULTIMEDIA
+
+    HEADERS += \
+        $$PWD/QZXingFilter.h
+
+    SOURCES += \
+        $$PWD/QZXingFilter.cpp
+}
+
 qzxing_qml {
+    QT += gui
 
     greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
     greaterThan(QT_MAJOR_VERSION, 4): QT += quick
@@ -273,18 +286,6 @@ qzxing_qml {
 
     SOURCES +=  \
         $$PWD/QZXingImageProvider.cpp
-}
-
-qzxing_multimedia {
-    QT += multimedia
-
-    DEFINES += QZXING_MULTIMEDIA
-
-    HEADERS += \
-        $$PWD/QZXingFilter.h
-
-    SOURCES += \
-        $$PWD/QZXingFilter.cpp
 }
 
 symbian {
