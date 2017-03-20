@@ -60,6 +60,7 @@ struct SimpleVideoFrame
         if(data.size() != frame.mappedBytes())
         {
             qDebug() << "needed to resize";
+            qDebug() << "size: " << data.size() << ", new size: " << frame.mappedBytes();
             data.resize(frame.mappedBytes());
         }
         memcpy(data.data(), frame.bits(), frame.mappedBytes());

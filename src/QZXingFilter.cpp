@@ -28,7 +28,7 @@ QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
     , decoding(false)
 {
-    /// Conecting signals to handlers that will send signals to QML
+    /// Connecting signals to handlers that will send signals to QML
     connect(&decoder, &QZXing::decodingStarted,
             this, &QZXingFilter::handleDecodingStarted);
     connect(&decoder, &QZXing::decodingFinished,
@@ -130,12 +130,13 @@ static QImage rgbDataToGrayscale(const uchar* data, const int width, const int h
     const int targetWidth = isRectValid(captureRect) ? captureRect.width() : width;
     const int targetHeight = isRectValid(captureRect) ? captureRect.height() : height;
     const int endX = width - startX - targetWidth;
-    const int skipX = (endX + startX) * stride;
+    const int skipX = (endX + startX ) * stride;
 
     QImage image(targetWidth, targetHeight, QImage::Format_Grayscale8);
-    uchar* pixel = image.bits();
+    uchar* pixelInit = image.bits();
     data += (startY * width + startX) * stride;
-    for (int y = 0; y < targetHeight; ++y) {
+    for (int y = 1; y <= targetHeight; ++y) {
+        uchar* pixel = pixelInit + (targetHeight - y) * targetWidth;
         for (int x = 0; x < targetWidth; ++x) {
             uchar r = data[red];
             uchar g = data[green];
@@ -152,6 +153,17 @@ static QImage rgbDataToGrayscale(const uchar* data, const int width, const int h
         }
         data += skipX;
     }
+
+//    QTransform myTransform;
+//    myTransform.rotate(180);
+//    myTransform.scale(-1, 1);
+//    return image.transformed(myTransform);
+
+    //    static int cnt = 0;
+    //    QImage image_pre(width, height, QImage::Format_RGB32);
+    //    memcpy(image_pre.bits(), data, width*height*stride);
+    //    image_pre.save("D:\\tmp\\" + QString::number(cnt++) + ".png");
+
     return image;
 }
 
@@ -168,7 +180,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
     /// Let's try to convert it from RGB formats
     if (videoFrame.pixelFormat == QVideoFrame::Format_RGB32)
-        image = rgbDataToGrayscale(data, width, height, -1, 1, 2, 3, captureRect);
+        image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32)
         image = rgbDataToGrayscale(data, width, height, 0, 1, 2, 3, captureRect);
     else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32_Premultiplied)
