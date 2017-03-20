@@ -1,8 +1,9 @@
-#if defined(Q_OS_ANDROID)
-    #include <jni.h>
-#endif //Q_OS_ANDROID
 #include "native.h"
 #include <QMetaObject>
+#if defined(Q_OS_ANDROID)
+    #include <jni.h>
+#endif // Q_OS_ANDROID
+
 
 QObject *NativeHelpers::application_p_ = 0;
 
