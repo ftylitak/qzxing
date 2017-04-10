@@ -2,9 +2,6 @@
 #include <QImage>
 #include <QPainter>
 #include <QDebug>
-#include <QQuickItem>
-#include <QQuickItemGrabResult>
-#include <QQuickWindow>
 #include <QThread>
 #include <QTime>
 
@@ -13,6 +10,12 @@
     #include <QStyleOptionGraphicsItem>
 #endif // QT_VERSION < Qt 5.0
 
+#if defined(QZXING_QML)
+    #include <QQuickItem>
+    #include <QQuickItemGrabResult>
+    #include <QQuickWindow>
+#endif //QZXING_QML
+
 ImageHandler::ImageHandler(QObject *parent) :
     QObject(parent)
 {
@@ -20,6 +23,8 @@ ImageHandler::ImageHandler(QObject *parent) :
 
 QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, int width, int height)
 {
+    QImage img;
+#if defined(QZXING_QML)
 #if QT_VERSION >= 0x050000
     QQuickItem *item = qobject_cast<QQuickItem *>(imageObj);
 
@@ -46,7 +51,7 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         qApp->processEvents();
         QThread::yieldCurrentThread();
     }
-    QImage img = result->image();
+    img = result->image();
 #else
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
@@ -55,12 +60,13 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         return QImage();
     }
 
-    QImage img(item->boundingRect().size().toSize(), QImage::Format_RGB32);
+    img = QImage(item->boundingRect().size().toSize(), QImage::Format_RGB32);
     img.fill(QColor(255, 255, 255).rgb());
     QPainter painter(&img);
     QStyleOptionGraphicsItem styleOption;
     item->paint(&painter, &styleOption);
 #endif
+#endif //defined(QZXING_QML)
 
     if (offsetX < 0)
         offsetX = 0;

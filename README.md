@@ -35,25 +35,27 @@ Project file config tags are now introduced to be able to control the dependenci
 The core part requires only "core" and "gui" Qt modules. Though for backward compatibility "quick" Qt module is also required. 
 The 3 level of dependencies are:
 
-###QZXing with QML (default)
-By including QZXing.pri or by building QZXing.pro, apart from the core functionality for C++ it will also include the QML functionality.
+### QZXing (core)
+By including QZXing.pri or by building QZXing.pro you get the core functionality of QZXing which requires only QtCore and QtGui (because of QImage).
 
-###QZXing (no QML, only core)
-If an application is not going to use QML functionality, it is now possible to ditch the dependency to it. This can be done by adding the folloing line to the .pro file of its project:
+Warning! The initial default configuration till 20/03/2017 was including qzxing_qml. This tag could not be removed once added, so it was needed to be removed from the defaults. 
+
+### QZXing (core + QML)
+If an application is going to use QML functionality, it is now possible to add the dependency to it. This can be done by adding the folloing line to the .pro file of its project:
 	
-	CONFIG -= qzxing_qml
+	CONFIG += qzxing_qml
 	
-###QZXing + QZXingFilter
-QZXing includes QZXingFilter, a QAbstractVideoFilter implementation to provide a mean of providing live feed to the decoding library. 
+### QZXing + QZXingFilter
+QZXing includes QZXingFilter, a QAbstractVideoFilter implementation to provide a mean of providing live feed to the decoding library. It automatically includes QML implementation as well.
 This option requires "multimedia" Qt module this is why it is considered as a separate configuration. It can be used by adding the folloing line to the .pro file of a project:
 
 	CONFIG += qzxing_multimedia
 	
-#How to use
+# How to use
 
 Follows simple code snippets that brefly show the use of the library. For more details advise the examples included in the repository and the [wiki](https://github.com/ftylitak/qzxing/wiki).
 
-##C++/Qt
+## C++/Qt
 
 	
 	#include <QZXing.h>
@@ -66,7 +68,7 @@ Follows simple code snippets that brefly show the use of the library. For more d
 		QString result = decoder.decodeImage(imageToDecode);
 	}
 	
-##QML
+## QML
 
 First register QZXing type to the QML engine.
 

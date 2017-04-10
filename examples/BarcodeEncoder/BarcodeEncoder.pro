@@ -1,6 +1,6 @@
 QT += qml quick
 
-CONFIG += c++11
+CONFIG += c++11 qzxing_qml
 
 SOURCES += main.cpp
 
