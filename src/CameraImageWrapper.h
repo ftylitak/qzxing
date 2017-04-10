@@ -45,12 +45,12 @@ public:
     bool isRotateSupported() const;
     Ref<LuminanceSource> invert() const;
     Ref<LuminanceSource> rotateCounterClockwise() const;
+
+    inline byte gray(unsigned int r, unsigned int g, unsigned int b);
   
 private:
     ArrayRef<zxing::byte> getRowP(int y, ArrayRef<zxing::byte> row) const;
     ArrayRef<zxing::byte> getMatrixP() const;
-
-    inline byte gray(unsigned int r, unsigned int g, unsigned int b);
     void updateImageAsGrayscale(const QImage &origin);
 
     Ref<GreyscaleLuminanceSource> delegate;

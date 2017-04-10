@@ -208,13 +208,19 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
 {
     imageBytes.clear();
 
+    bool needsConvesionToGrayscale = origin.format() != QImage::Format_Grayscale8;
+
+    QRgb pixel;
     for(int j=0; j<origin.height(); j++)
     {
         ArrayRef<byte> line(origin.width());
         for(int i=0; i<origin.width(); i++)
         {
-            QRgb pixel = origin.pixel(i,j);
-            line[i] = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
+            pixel = origin.pixel(i,j);
+            if(needsConvesionToGrayscale)
+                line[i] = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
+            else
+                line[i] = pixel & 0xFF;
         }
         imageBytes.push_back(line);
     }
