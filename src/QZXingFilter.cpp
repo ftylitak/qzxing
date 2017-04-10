@@ -154,16 +154,6 @@ static QImage rgbDataToGrayscale(const uchar* data, const int width, const int h
         data += skipX;
     }
 
-//    QTransform myTransform;
-//    myTransform.rotate(180);
-//    myTransform.scale(-1, 1);
-//    return image.transformed(myTransform);
-
-    //    static int cnt = 0;
-    //    QImage image_pre(width, height, QImage::Format_RGB32);
-    //    memcpy(image_pre.bits(), data, width*height*stride);
-    //    image_pre.save("D:\\tmp\\" + QString::number(cnt++) + ".png");
-
     return image;
 }
 
