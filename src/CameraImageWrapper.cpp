@@ -77,7 +77,7 @@ CameraImageWrapper::CameraImageWrapper(const QImage &sourceImage) : LuminanceSou
 
 CameraImageWrapper::CameraImageWrapper(CameraImageWrapper& otherInstance) : LuminanceSource(otherInstance.getWidth(), otherInstance.getHeight())
 {
-    imageBytes = otherInstance.getOriginalImage();
+    imageBytesPerRow = otherInstance.getOriginalImage();
     delegate = otherInstance.getDelegate();
 }
 
@@ -101,9 +101,9 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
         return new CameraImageWrapper(sourceImage);
 }
 
-QVector<ArrayRef<byte> > CameraImageWrapper::getOriginalImage()
+ArrayRef<ArrayRef<byte> > CameraImageWrapper::getOriginalImage()
 {
-    return imageBytes;
+    return imageBytesPerRow;
 }
 
 ArrayRef<byte> CameraImageWrapper::getRow(int y, ArrayRef<byte> row) const
@@ -171,31 +171,12 @@ ArrayRef<byte> CameraImageWrapper::getRowP(int y, ArrayRef<byte> row) const
 
     Q_ASSERT(y >= 0 && y < getHeight());
 
-    return imageBytes[y];
+    return imageBytesPerRow[y];
 }
 
 ArrayRef<byte> CameraImageWrapper::getMatrixP() const
 {
-    const int width = getWidth();
-    const int height = getHeight();
-
-    ArrayRef<byte> tmpRow(0);
-    ArrayRef<byte> arr(width*height);
-
-    byte* m = &arr[0];
-
-    for(int y=0; y<height; y++)
-    {
-        tmpRow = getRowP(y, tmpRow);
-#if __cplusplus > 199711L
-        memcpy(m, tmpRow->values().data(), width);
-#else
-        memcpy(m, &tmpRow[0], width);
-#endif
-        m += width * sizeof(byte);
-    }
-
-    return arr;
+    return imageBytes;
 }
 
 byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
@@ -206,23 +187,38 @@ byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
 
 void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
 {
-    imageBytes.clear();
-
     bool needsConvesionToGrayscale = origin.format() != QImage::Format_Grayscale8;
 
     QRgb pixel;
-    for(int j=0; j<origin.height(); j++)
+    byte pixelGrayscale;
+
+    const int width = getWidth();
+    const int height = getHeight();
+
+    imageBytes = ArrayRef<byte>(height*width);
+    imageBytesPerRow = ArrayRef<ArrayRef<byte>>(height);
+    byte* m = &imageBytes[0];
+
+    for(int j=0; j<height; j++)
     {
-        ArrayRef<byte> line(origin.width());
-        for(int i=0; i<origin.width(); i++)
+        ArrayRef<byte> line(width);
+        for(int i=0; i<width; i++)
         {
             pixel = origin.pixel(i,j);
             if(needsConvesionToGrayscale)
-                line[i] = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
+                pixelGrayscale = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
             else
-                line[i] = pixel & 0xFF;
+                pixelGrayscale = pixel & 0xFF;
+            line[i] = pixelGrayscale;
         }
-        imageBytes.push_back(line);
+        imageBytesPerRow[j] = line;
+
+#if __cplusplus > 199711L
+        memcpy(m, line->values().data(), width);
+#else
+        memcpy(m, &line[0], width);
+#endif
+        m += width * sizeof(byte);
     }
 }
 

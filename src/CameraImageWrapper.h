@@ -20,7 +20,6 @@
 #include <QImage>
 #include <QString>
 #include <zxing/zxing/common/GreyscaleLuminanceSource.h>
-#include <QVector>
 
 using namespace zxing;
 
@@ -34,7 +33,7 @@ public:
 
     static CameraImageWrapper* Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
     
-    QVector<ArrayRef<byte>> getOriginalImage();
+    ArrayRef<ArrayRef<byte> > getOriginalImage();
     Ref<GreyscaleLuminanceSource> getDelegate() { return delegate; }
 
     ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const;
@@ -54,7 +53,8 @@ private:
     void updateImageAsGrayscale(const QImage &origin);
 
     Ref<GreyscaleLuminanceSource> delegate;
-    QVector<ArrayRef<byte>> imageBytes;
+    ArrayRef<ArrayRef<byte>> imageBytesPerRow;
+    ArrayRef<byte> imageBytes;
 
     static const byte B_TO_GREYSCALE[256];
     static const byte G_TO_GREYSCALE[256];
