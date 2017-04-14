@@ -58,7 +58,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
 
     // Append ECI segment if applicable
     if (mode == Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
-        zxing::common::CharacterSetECI* eci =
+        zxing::common::CharacterSetECI const * eci =
                 zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding.toStdString().c_str());
         if (eci != NULL) {
             appendECI(*eci, headerBits);

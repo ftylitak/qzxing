@@ -185,7 +185,7 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
 std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
                                                       string& result,
                                                       int count,
-                                                      CharacterSetECI* currentCharacterSetECI,
+                                                      CharacterSetECI const * currentCharacterSetECI,
                                                       ArrayRef< ArrayRef<byte> >& byteSegments,
                                                       Hashtable const& hints) {
     int nBytes = count;
@@ -359,7 +359,7 @@ DecodedBitStreamParser::decode(ArrayRef<byte> bytes,
     string result;
     result.reserve(50);
     ArrayRef< ArrayRef<byte> > byteSegments (0);
-    CharacterSetECI* currentCharacterSetECI = 0;
+    const CharacterSetECI* currentCharacterSetECI = 0;
     string charSet = "";
     try {
         bool fc1InEffect = false;
