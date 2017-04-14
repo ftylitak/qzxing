@@ -282,28 +282,10 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 //    qDebug() << "image.size()" << image.size();
 //    qDebug() << "image.format()" << image.format();
 //    qDebug() << "videoFrame.pixelFormat" << videoFrame.pixelFormat;
-
 //    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
 //    qDebug() << "saving image" << i << "at:" << path << image.save(path);
 
-    QString tag = decode(image);
-
-    const bool tryHarder = filter->decoder.getTryHarder();
-    /// The frames we get from the camera may be reflected horizontally or vertically
-    /// As the decoder can't handle reflected frames, we swap them in all possible frames, changing the swap mode each frame.
-    /// TODO: Maybe there is a better way to know this orientation beforehand? Or should we try decoding all of them?
-    if (tag.isEmpty() && tryHarder) {
-        image = image.mirrored(true, false);
-        tag = decode(image);
-    }
-    if (tag.isEmpty() && tryHarder) {
-        image = image.mirrored(false, true);
-        tag = decode(image);
-    }
-    if (tag.isEmpty() && tryHarder) {
-        image = image.mirrored(true, true);
-        tag = decode(image);
-    }
+    decode(image);
 }
 
 QString QZXingFilterRunnable::decode(const QImage &image)
