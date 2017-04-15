@@ -410,6 +410,7 @@ void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringst
     byteSegments.push_back(bytes[i]);
     result << (byte)bytes[i];
   }
+  delete bytes;
 }
 }
 }
