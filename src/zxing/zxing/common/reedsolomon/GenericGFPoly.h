@@ -32,11 +32,11 @@ class GenericGF;
   
 class GenericGFPoly : public Counted {
 private:
-  Ref<GenericGF> field_;
+  GenericGF *field_;
   ArrayRef<int> coefficients_;
     
 public:
-  GenericGFPoly(Ref<GenericGF> field, ArrayRef<int> coefficients);
+  GenericGFPoly(GenericGF *field, ArrayRef<int> coefficients);
   ArrayRef<int> getCoefficients();
   int getDegree();
   bool isZero();
@@ -46,7 +46,7 @@ public:
   Ref<GenericGFPoly> multiply(Ref<GenericGFPoly> other);
   Ref<GenericGFPoly> multiply(int scalar);
   Ref<GenericGFPoly> multiplyByMonomial(int degree, int coefficient);
-  std::vector<Ref<GenericGFPoly> > divide(Ref<GenericGFPoly> other);
+  std::vector<Ref<GenericGFPoly>> divide(Ref<GenericGFPoly> other);
     
 
 };

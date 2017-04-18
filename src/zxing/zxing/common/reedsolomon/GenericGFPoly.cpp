@@ -31,7 +31,7 @@ using zxing::Ref;
 // VC++
 using zxing::GenericGF;
 
-GenericGFPoly::GenericGFPoly(Ref<GenericGF> field,
+GenericGFPoly::GenericGFPoly(GenericGF *field,
                              ArrayRef<int> coefficients)
   :  field_(field) {
   if (coefficients->size() == 0) {
@@ -96,7 +96,7 @@ int GenericGFPoly::evaluateAt(int a) {
 }
   
 Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other) {
-  if (!(field_.object_ == other->field_.object_)) {
+  if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
   if (isZero()) {
@@ -130,7 +130,7 @@ Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other)
 }
   
 Ref<GenericGFPoly> GenericGFPoly::multiply(Ref<zxing::GenericGFPoly> other) {
-  if (!(field_.object_ == other->field_.object_)) {
+  if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
     
@@ -186,8 +186,8 @@ Ref<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int coefficient
   return Ref<GenericGFPoly>(new GenericGFPoly(field_, product));
 }
   
-std::vector<Ref<GenericGFPoly> > GenericGFPoly::divide(Ref<GenericGFPoly> other) {
-  if (!(field_.object_ == other->field_.object_)) {
+std::vector<Ref<GenericGFPoly>> GenericGFPoly::divide(Ref<GenericGFPoly> other) {
+  if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
   if (other->isZero()) {

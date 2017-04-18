@@ -38,7 +38,9 @@ void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
     if (ecBytes == 0) {
         throw Exception("No error correction bytes");
     }
-    int dataBytes = toEncode.size() - ecBytes;
+    //int dataBytes = toEncode.size() - ecBytes;
+    int dataBytes = toEncode.size();// - ecBytes;
+    toEncode.resize(toEncode.size()+ecBytes);
     if (dataBytes <= 0) {
         throw Exception("No data bytes provided");
     }
@@ -64,8 +66,11 @@ void ReedSolomonEncoder::encode(std::vector<int> &toEncode, int ecBytes)
 	//toEncode.insert(toEncode.begin() + (dataBytes-1) + numZeroCoefficients,
     //                coefficients.array_->values().begin(),
     //                coefficients.array_->values().end());
+
+    //toEncode.resize(toEncode.size() + numZeroCoefficients + coefficients->size());
+
 	for (size_t i = 0; i < coefficients->size(); i++)
-        toEncode[dataBytes + numZeroCoefficients + i] = coefficients[i];
+      toEncode[dataBytes + numZeroCoefficients + i] = coefficients[i];
 }
 
 }
