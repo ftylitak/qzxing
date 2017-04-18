@@ -104,6 +104,25 @@ protected:
                             const std::vector<int> &expected,
                             const std::vector<int> & received)
     {
+        if(expected.size() != received.size())
+            assertTrue(false);
+
+        for (int i = 0; i < expected.size(); i++) {
+            if (expected[i] != received[i]) {
+                qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
+                     arrayToString(Arrays.copyOf(received, expected.length)))*/;
+                assertTrue(false);
+            }
+        }
+    }
+
+    void assertDataEquals(const std::string &message,
+                            const std::vector<int> &expected,
+                            const ArrayRef<int> &received)
+    {
+        if(expected.size() != received->size())
+            assertTrue(false);
+
         for (int i = 0; i < expected.size(); i++) {
             if (expected[i] != received[i]) {
                 qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
