@@ -108,5 +108,3 @@ The in the QML file
  
 # contact
 In case of bug reports or feature requests feel free to open an [issue](https://github.com/ftylitak/qzxing/issues). 
-
-For general discussion you can use the forum at the project's old hosting site: [SourceForge](https://sourceforge.net/p/qzxing/discussion/general/)
