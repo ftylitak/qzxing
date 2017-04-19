@@ -38,7 +38,7 @@ void ReedSolomonEncoder::encode(std::vector<byte> &toEncode, int ecBytes)
     if (ecBytes == 0) {
         throw Exception("No error correction bytes");
     }
-    //int dataBytes = toEncode.size() - ecBytes;
+
     int dataBytes = toEncode.size();// - ecBytes;
     toEncode.resize(toEncode.size()+ecBytes);
     if (dataBytes <= 0) {
@@ -46,7 +46,7 @@ void ReedSolomonEncoder::encode(std::vector<byte> &toEncode, int ecBytes)
     }
     Ref<GenericGFPoly> generator = buildGenerator(ecBytes);
     ArrayRef<int> infoCoefficients(dataBytes);
-    //memcpy(infoCoefficients.operator ->(), toEncode.data(), dataBytes);
+
     //to-do optimize the following loop
     for(int i=0; i< dataBytes; i++)
         infoCoefficients[i] = toEncode[i];
@@ -59,15 +59,6 @@ void ReedSolomonEncoder::encode(std::vector<byte> &toEncode, int ecBytes)
     for (int i = 0; i < numZeroCoefficients; i++) {
         toEncode[dataBytes + i] = 0;
     }
-
-    //original kept for future checks
-    //System.arraycopy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.length);
-    
-	//toEncode.insert(toEncode.begin() + (dataBytes-1) + numZeroCoefficients,
-    //                coefficients.array_->values().begin(),
-    //                coefficients.array_->values().end());
-
-    //toEncode.resize(toEncode.size() + numZeroCoefficients + coefficients->size());
 
 	for (size_t i = 0; i < coefficients->size(); i++)
       toEncode[dataBytes + numZeroCoefficients + i] = coefficients[i];

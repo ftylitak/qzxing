@@ -364,7 +364,7 @@ void EncoderTests::testGenerateECBytes()
     const byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };
-    assertEquals( getArrayLength(expected), ecBytes.count());
+    assertEquals( getArrayLength(expected), ecBytes->size());
     for (int x = 0; x < getArrayLength(expected); x++) {
         assertEquals(expected[x], ecBytes[x]);
     }

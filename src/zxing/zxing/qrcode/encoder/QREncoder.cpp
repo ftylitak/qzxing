@@ -423,20 +423,17 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<byte> Encoder::generateECBytes(std::vector<byte>& dataBytes, int numEcBytesInBlock)
+ArrayRef<byte> Encoder::generateECBytes(const std::vector<byte>& dataBytes, int numEcBytesInBlock)
 {
     int numDataBytes = dataBytes.size();
-//    std::vector<int> toEncode(numDataBytes);
-    //toEncode.resize(numDataBytes + numEcBytesInBlock);
-//    for (int i = 0; i < numDataBytes; i++)
-//        toEncode[i] = dataBytes[i];
+    std::vector<byte> dataBytesCopy(dataBytes);
 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
-    encoder.encode(dataBytes, numEcBytesInBlock);
+    encoder.encode(dataBytesCopy, numEcBytesInBlock);
 
     ArrayRef<byte> ecBytes(numEcBytesInBlock);
     for (int i = 0; i < numEcBytesInBlock; i++) {
-        ecBytes[i] = dataBytes[numDataBytes + i];
+        ecBytes[i] = dataBytesCopy[numDataBytes + i];
     }
     return ecBytes;
 }
