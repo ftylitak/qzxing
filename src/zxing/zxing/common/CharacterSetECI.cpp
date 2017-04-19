@@ -18,16 +18,19 @@
 #include <zxing/common/CharacterSetECI.h>
 #include <zxing/common/IllegalArgumentException.h>
 #include <zxing/FormatException.h>
+#include <cstdlib>
 
 using std::string;
-
-using zxing::common::CharacterSetECI;
 using zxing::IllegalArgumentException;
+
+namespace zxing {
+namespace common {
 
 std::map<int, CharacterSetECI*> CharacterSetECI::VALUE_TO_ECI;
 std::map<std::string, CharacterSetECI*> CharacterSetECI::NAME_TO_ECI;
+std::vector<CharacterSetECI*> CharacterSetECI::ECItables;
 
-const bool CharacterSetECI::inited = CharacterSetECI::init_tables();
+bool CharacterSetECI::inited = CharacterSetECI::init_tables();
 
 #define ADD_CHARACTER_SET(VALUES, STRINGS) \
   { static int values[] = {VALUES, -1}; \
@@ -64,6 +67,9 @@ bool CharacterSetECI::init_tables() {
   ADD_CHARACTER_SET(28, "Big5");
   ADD_CHARACTER_SET(29, "GB18030" XC "GB2312" XC "EUC_CN" XC "GBK");
   ADD_CHARACTER_SET(30, "EUC_KR" XC "EUC-KR");
+
+  std::atexit(removeAllCharacterSets);
+
   return true;
 }
 
@@ -71,14 +77,7 @@ bool CharacterSetECI::init_tables() {
 
 CharacterSetECI::CharacterSetECI(int const* values,
                                  char const* const* names) 
-  : values_(values), names_(names) {
-  for(int const* values = values_; *values != -1; values++) {
-    VALUE_TO_ECI[*values] = this;
-  }
-  for(char const* const* names = names_; *names; names++) {
-    NAME_TO_ECI[string(*names)] = this;
-  }
-}
+  : Counted(), values_(values), names_(names) {}
 
 char const* CharacterSetECI::name() const {
   return names_[0];
@@ -89,7 +88,15 @@ int CharacterSetECI::getValue() const {
 }
 
 void CharacterSetECI::addCharacterSet(int const* values, char const* const* names) {
-  new CharacterSetECI(values, names);
+  CharacterSetECI* charSet = new CharacterSetECI(values, names);
+  for(int const* values_tmp = values; *values_tmp != -1; values_tmp++) {
+    VALUE_TO_ECI[*values_tmp] = charSet;
+  }
+  for(char const* const* names_tmp = names; *names_tmp; names_tmp++) {
+    NAME_TO_ECI[string(*names_tmp)] = charSet;
+  }
+
+  ECItables.push_back(charSet);
 }
 
 CharacterSetECI* CharacterSetECI::getCharacterSetECIByValue(int value) {
@@ -101,4 +108,21 @@ CharacterSetECI* CharacterSetECI::getCharacterSetECIByValue(int value) {
 
 CharacterSetECI* CharacterSetECI::getCharacterSetECIByName(string const& name) {
   return NAME_TO_ECI[name];
+}
+
+void CharacterSetECI::removeAllCharacterSets()
+{
+    VALUE_TO_ECI.clear();
+    NAME_TO_ECI.clear();
+
+    for (std::vector<CharacterSetECI*>::iterator i=ECItables.begin();i!=ECItables.end();i++)
+    {
+        delete *i;
+    }
+    ECItables.clear();
+
+    inited=false;
+ }
+
+}
 }
