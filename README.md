@@ -17,7 +17,7 @@ Supports barcode decoding for the following types:
  * Aztec (beta)
  * PDF 417 (beta)
 
-#How to include
+# How to include
 
 The project can be used in two ways:
 ## Embed the source code. 
