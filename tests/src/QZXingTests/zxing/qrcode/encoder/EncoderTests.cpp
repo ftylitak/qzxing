@@ -354,15 +354,19 @@ void EncoderTests::testAppend8BitBytes()
 
 void EncoderTests::testGenerateECBytes()
 {
-    const byte dataBytes_arr[] = {32, 65, (byte)205, 69, 41, (byte)220, 46, (byte)128, (byte)236};
+    const byte dataBytes_arr[] = {32, 65, 205, 69, 41, 220, 46, 128, 236};
     std::vector<byte> dataBytes (dataBytes_arr, dataBytes_arr + getArrayLength(dataBytes_arr));
+//    std::vector<byte> dataBytes(getArrayLength(dataBytes_arr));
+//    for(int i=0; i<dataBytes.size(); i++)
+//        dataBytes[i] = dataBytes_arr[i];
+
     ArrayRef<byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
-    const int expected[] = {
+    const byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };
     assertEquals( getArrayLength(expected), ecBytes.count());
     for (int x = 0; x < getArrayLength(expected); x++) {
-        assertEquals(expected[x], ecBytes[x] & 0xFF);
+        assertEquals(expected[x], ecBytes[x]);
     }
 //    dataBytes = new byte[] {67, 70, 22, 38, 54, 70, 86, 102, 118,
 //        (byte)134, (byte)150, (byte)166, (byte)182, (byte)198, (byte)214};

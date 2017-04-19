@@ -4,6 +4,7 @@
 #include <zxing/common/reedsolomon/GenericGFPoly.h>
 #include <zxing/common/reedsolomon/GenericGF.h>
 #include <zxing/common/Array.h>
+#include <zxing/common/Types.h>
 
 namespace zxing {
 
@@ -18,7 +19,7 @@ private:
 public:
     ReedSolomonEncoder(Ref<GenericGF> field);
 
-    void encode(std::vector<int>& toEncode, int ecBytes);
+    void encode(std::vector<byte> &toEncode, int ecBytes);
 };
 
 }

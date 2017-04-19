@@ -22,17 +22,17 @@ protected:
     void testQRCode();
 
 private:
-    void corrupt(std::vector<int> &received, int howMany, int max);
+    void corrupt(std::vector<byte> &received, int howMany, int max);
     void testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize, int ecSize);
     void testEncodeDecode(Ref<GenericGF> field,
-                          const std::vector<int> &dataWords,
-                          const std::vector<int> & ecWords);
+                          const std::vector<byte> &dataWords,
+                          const std::vector<byte> & ecWords);
     void testEncoder(Ref<GenericGF> field,
-                     const std::vector<int> &dataWords,
-                     const std::vector<int> & ecWords);
+                     const std::vector<byte> &dataWords,
+                     const std::vector<byte> & ecWords);
     void testDecoder(Ref<GenericGF> field,
-                     const std::vector<int> &dataWords,
-                     const std::vector<int> & ecWords);
+                     const std::vector<byte> &dataWords,
+                     const std::vector<byte> & ecWords);
 };
 
 }

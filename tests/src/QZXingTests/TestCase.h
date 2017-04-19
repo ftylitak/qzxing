@@ -84,6 +84,10 @@ protected:
         assertEquals(expected_str, actual);
     }
 
+//    void assertEquals(int expected, int actual) {
+//        assertEquals(expected, actual);
+//    }
+
     void assertSame(qrcode::Mode &expected, qrcode::Mode &actual){
         assertEquals(expected, actual);
     }
@@ -101,8 +105,8 @@ protected:
     }
 
     void assertDataEquals(const std::string &message,
-                            const std::vector<int> &expected,
-                            const std::vector<int> & received)
+                            const std::vector<byte> &expected,
+                            const std::vector<byte> & received)
     {
         if(expected.size() != received.size())
             assertTrue(false);
@@ -117,8 +121,8 @@ protected:
     }
 
     void assertDataEquals(const std::string &message,
-                            const std::vector<int> &expected,
-                            const ArrayRef<int> &received)
+                            const std::vector<byte> &expected,
+                            const ArrayRef<byte> &received)
     {
         if(expected.size() != received->size())
             assertTrue(false);
@@ -130,6 +134,17 @@ protected:
                 assertTrue(false);
             }
         }
+    }
+
+    void assertDataEquals(const std::string &message,
+                            const std::vector<byte> &expected,
+                            const ArrayRef<int> &received)
+    {
+        ArrayRef<byte> received_copy(received->size());
+        for(int i=0; i<received_copy->size(); i++)
+            received_copy[i] = received[i];
+
+        assertDataEquals(message, expected, received_copy);
     }
 
     static void initializeRandom();

@@ -43,7 +43,7 @@ void ReedSolomonTests::testQRCode()
 //    testEncodeDecodeRandom(GenericGF::QR_CODE_FIELD_256, 220, 35);
   }
 
-void ReedSolomonTests::corrupt(std::vector<int> &received, int howMany, int max)
+void ReedSolomonTests::corrupt(std::vector<byte> &received, int howMany, int max)
 {
     std::vector<bool> corrupted(received.size(), false);
     for (int j = 0; j < howMany; j++) {
@@ -63,9 +63,9 @@ void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize
     assertTrue(dataSize > 0 && dataSize <= field->getSize() - 3); /*"Invalid data size for " + field, */
     assertTrue(ecSize > 0 && ecSize + dataSize <= field->getSize()); /*"Invalid ECC size for " + field, */
     ReedSolomonEncoder encoder(field);
-    std::vector<int> message;//(dataSize + ecSize);
-    std::vector<int> dataWords(dataSize);
-    std::vector<int> ecWords(ecSize);
+    std::vector<byte> message;//(dataSize + ecSize);
+    std::vector<byte> dataWords(dataSize);
+    std::vector<byte> ecWords(ecSize);
     initializeRandom();
     int iterations = field->getSize() > 256 ? 1 : DECODER_RANDOM_TEST_ITERATIONS;
     for (int i = 0; i < iterations; i++) {
@@ -83,20 +83,20 @@ void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize
 }
 
 void ReedSolomonTests::testEncodeDecode(Ref<GenericGF> field,
-                      const std::vector<int> &dataWords,
-                      const std::vector<int> & ecWords)
+                      const std::vector<byte> &dataWords,
+                      const std::vector<byte> &ecWords)
 {
     testEncoder(field, dataWords, ecWords);
     testDecoder(field, dataWords, ecWords);
 }
 
 void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
-                                  const std::vector<int> &dataWords,
-                                  const std::vector<int> & ecWords)
+                                  const std::vector<byte> &dataWords,
+                                  const std::vector<byte> &ecWords)
 {
     ReedSolomonEncoder encoder(field);
-    std::vector<int> messageExpected;
-    std::vector<int> message(dataWords);
+    std::vector<byte> messageExpected;
+    std::vector<byte> message(dataWords);
 
     messageExpected = dataWords;
     messageExpected.insert(std::end(messageExpected), std::begin(ecWords), std::end(ecWords));
@@ -107,11 +107,11 @@ void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
   }
 
 void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
-                                   const std::vector<int> &dataWords,
-                                   const std::vector<int> & ecWords) {
+                                   const std::vector<byte> &dataWords,
+                                   const std::vector<byte> &ecWords) {
     ReedSolomonDecoder decoder(field);
-    std::vector<int> message;
-    std::vector<int> referenceMessage;
+    std::vector<byte> message;
+    std::vector<byte> referenceMessage;
 
     int maxErrors = ecWords.size() / 2;
     initializeRandom();
@@ -133,6 +133,7 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
             ArrayRef<int> messageArrayRef(message.size());
             for(int i=0; i<message.size(); i++)
                 messageArrayRef[i] = message[i];
+
             try {
                 decoder.decode(messageArrayRef, ecWords.size());
             } catch(zxing::Exception &e) {
