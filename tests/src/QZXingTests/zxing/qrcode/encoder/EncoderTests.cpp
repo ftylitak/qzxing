@@ -354,40 +354,43 @@ void EncoderTests::testAppend8BitBytes()
 
 void EncoderTests::testGenerateECBytes()
 {
-    const byte dataBytes_arr[] = {32, 65, 205, 69, 41, 220, 46, 128, 236};
-    std::vector<byte> dataBytes (dataBytes_arr, dataBytes_arr + getArrayLength(dataBytes_arr));
-//    std::vector<byte> dataBytes(getArrayLength(dataBytes_arr));
-//    for(int i=0; i<dataBytes.size(); i++)
-//        dataBytes[i] = dataBytes_arr[i];
+    std::vector<byte> dataBytes = {32, 65, 205, 69, 41, 220, 46, 128, 236};
 
     ArrayRef<byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
-    const byte expected[] = {
+    byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };
     assertEquals( getArrayLength(expected), ecBytes->size());
     for (int x = 0; x < getArrayLength(expected); x++) {
         assertEquals(expected[x], ecBytes[x]);
     }
-//    dataBytes = new byte[] {67, 70, 22, 38, 54, 70, 86, 102, 118,
-//        (byte)134, (byte)150, (byte)166, (byte)182, (byte)198, (byte)214};
-//    ecBytes = Encoder.generateECBytes(dataBytes, 18);
-//    expected = new int[] {
-//        175, 80, 155, 64, 178, 45, 214, 233, 65, 209, 12, 155, 117, 31, 140, 214, 27, 187
-//    };
-//    assertEquals(expected.length, ecBytes.length);
-//    for (int x = 0; x < expected.length; x++) {
-//        assertEquals(expected[x], ecBytes[x] & 0xFF);
-//    }
-//    // High-order zero coefficient case.
-//    dataBytes = new byte[] {32, 49, (byte)205, 69, 42, 20, 0, (byte)236, 17};
-//    ecBytes = Encoder.generateECBytes(dataBytes, 17);
-//    expected = new int[] {
-//        0, 3, 130, 179, 194, 0, 55, 211, 110, 79, 98, 72, 170, 96, 211, 137, 213
-//    };
-//    assertEquals(expected.length, ecBytes.length);
-//    for (int x = 0; x < expected.length; x++) {
-//        assertEquals(expected[x], ecBytes[x] & 0xFF);
-//    }
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    dataBytes =  {67, 70, 22, 38, 54, 70, 86, 102, 118,
+            134, 150, 166, 182, 198, 214};
+    ecBytes = Encoder::generateECBytes(dataBytes, 18);
+    byte expected2[] = {
+        175, 80, 155, 64, 178, 45, 214, 233, 65, 209, 12, 155, 117, 31, 140, 214, 27, 187
+    };
+
+    assertEquals(getArrayLength(expected2), ecBytes->size());
+    for (int x = 0; x < getArrayLength(expected2); x++) {
+        assertEquals(expected2[x], ecBytes[x] );
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    // High-order zero coefficient case.
+    dataBytes = {32, 49, 205, 69, 42, 20, 0, 236, 17};
+    ecBytes = Encoder::generateECBytes(dataBytes, 17);
+    byte expected3[] = {
+        0, 3, 130, 179, 194, 0, 55, 211, 110, 79, 98, 72, 170, 96, 211, 137, 213
+    };
+    assertEquals(getArrayLength(expected3), ecBytes->size());
+    for (int x = 0; x < getArrayLength(expected3); x++) {
+        assertEquals(expected3[x], ecBytes[x]);
+    }
 }
 
 
