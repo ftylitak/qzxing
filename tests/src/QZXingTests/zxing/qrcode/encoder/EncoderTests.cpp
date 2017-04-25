@@ -227,8 +227,7 @@ void EncoderTests::testGetNumDataBytesAndNumECBytesForBlockID()
 
 void EncoderTests::testInterleaveWithECBytes()
 {
-    const byte arr[] = {32, 65, (byte)205, 69, 41, (byte)220, 46, (byte)128, (byte)236};
-    int length = getArrayLength(arr);
+    const byte arr[] = {32, 65, 205, 69, 41, 220, 46, 128, 236};
     std::vector<byte> dataBytes (arr, arr + getArrayLength(arr));
 
     BitArray in;
@@ -239,58 +238,62 @@ void EncoderTests::testInterleaveWithECBytes()
     BitArray* out = Encoder::interleaveWithECBytes(in, 26, 9, 1);
     const byte expected[] = {
         // Data bytes.
-        32, 65, (byte)205, 69, 41, (byte)220, 46, (byte)128, (byte)236,
+        32, 65, 205, 69, 41, 220, 46, 128, 236,
         // Error correction bytes.
-        42, (byte)159, 74, (byte)221, (byte)244, (byte)169, (byte)239, (byte)150, (byte)138, 70,
-        (byte)237, 85, (byte)224, 96, 74, (byte)219, 61,
+        42, 159, 74, 221, 244, 169, 239, 150, 138, 70,
+        237, 85, 224, 96, 74, 219, 61,
     };
     int expectedLength = getArrayLength(expected);
     assertEquals(expectedLength, out->getSizeInBytes());
     std::vector<byte> outArray;
     out->toBytes(0, outArray, 0, expectedLength);
+
     // Can't use Arrays.equals(), because outArray may be longer than out.sizeInBytes()
-    //    for (int x = 0; x < expectedLength; x++) {
-    //        assertEquals(expected[x], outArray[x]);  //throughs here => will be continued after all the tests
-    //    }
+    for (int x = 0; x < expectedLength; x++) {
+        assertEquals(expected[x], outArray[x]);  //throughs here => will be continued after all the tests
+    }
 
-    //    // Numbers are from http://www.swetake.com/qr/qr8.html
-    //    dataBytes = new byte[] {
-    //        67, 70, 22, 38, 54, 70, 86, 102, 118, (byte)134, (byte)150, (byte)166, (byte)182,
-    //                (byte)198, (byte)214, (byte)230, (byte)247, 7, 23, 39, 55, 71, 87, 103, 119, (byte)135,
-    //                (byte)151, (byte)166, 22, 38, 54, 70, 86, 102, 118, (byte)134, (byte)150, (byte)166,
-    //                (byte)182, (byte)198, (byte)214, (byte)230, (byte)247, 7, 23, 39, 55, 71, 87, 103, 119,
-    //                (byte)135, (byte)151, (byte)160, (byte)236, 17, (byte)236, 17, (byte)236, 17, (byte)236,
-    //                17
-    //    };
-    //    in = new BitArray();
-    //    for (byte dataByte: dataBytes) {
-    //        in.appendBits(dataByte, 8);
-    //    }
+    // Numbers are from http://www.swetake.com/qr/qr8.html
+    const byte arr2[] = {
+        67, 70, 22, 38, 54, 70, 86, 102, 118, 134, 150, 166, 182,
+                198, 214, 230, 247, 7, 23, 39, 55, 71, 87, 103, 119, 135,
+                151, 166, 22, 38, 54, 70, 86, 102, 118, 134, 150, 166,
+                182, 198, 214, 230, 247, 7, 23, 39, 55, 71, 87, 103, 119,
+                135, 151, 160, 236, 17, 236, 17, 236, 17, 236,
+                17
+    };
+    dataBytes = std::vector<byte>(arr2, arr2 + getArrayLength(arr2));
 
-    //    out = Encoder.interleaveWithECBytes(in, 134, 62, 4);
-    //    expected = new byte[] {
-    //        // Data bytes.
-    //        67, (byte)230, 54, 55, 70, (byte)247, 70, 71, 22, 7, 86, 87, 38, 23, 102, 103, 54, 39,
-    //                118, 119, 70, 55, (byte)134, (byte)135, 86, 71, (byte)150, (byte)151, 102, 87, (byte)166,
-    //                (byte)160, 118, 103, (byte)182, (byte)236, (byte)134, 119, (byte)198, 17, (byte)150,
-    //                (byte)135, (byte)214, (byte)236, (byte)166, (byte)151, (byte)230, 17, (byte)182,
-    //                (byte)166, (byte)247, (byte)236, (byte)198, 22, 7, 17, (byte)214, 38, 23, (byte)236, 39,
-    //                17,
-    //                // Error correction bytes.
-    //                (byte)175, (byte)155, (byte)245, (byte)236, 80, (byte)146, 56, 74, (byte)155, (byte)165,
-    //                (byte)133, (byte)142, 64, (byte)183, (byte)132, 13, (byte)178, 54, (byte)132, 108, 45,
-    //                113, 53, 50, (byte)214, 98, (byte)193, (byte)152, (byte)233, (byte)147, 50, 71, 65,
-    //                (byte)190, 82, 51, (byte)209, (byte)199, (byte)171, 54, 12, 112, 57, 113, (byte)155, 117,
-    //                (byte)211, (byte)164, 117, 30, (byte)158, (byte)225, 31, (byte)190, (byte)242, 38,
-    //                (byte)140, 61, (byte)179, (byte)154, (byte)214, (byte)138, (byte)147, 87, 27, 96, 77, 47,
-    //                (byte)187, 49, (byte)156, (byte)214,
-    //    };
-    //    assertEquals(expected.length, out.getSizeInBytes());
-    //    outArray = new byte[expected.length];
-    //    out.toBytes(0, outArray, 0, expected.length);
-    //    for (int x = 0; x < expected.length; x++) {
-    //        assertEquals(expected[x], outArray[x]);
-    //    }
+    in = BitArray();
+    foreach (byte dataByte, dataBytes) {
+        in.appendBits(dataByte, 8);
+    }
+
+    out = Encoder::interleaveWithECBytes(in, 134, 62, 4);
+    const byte expected2[] = {
+        // Data bytes.
+        67, 230, 54, 55, 70, 247, 70, 71, 22, 7, 86, 87, 38, 23, 102, 103, 54, 39,
+                118, 119, 70, 55, 134, 135, 86, 71, 150, 151, 102, 87, 166,
+                160, 118, 103, 182, 236, 134, 119, 198, 17, 150,
+                135, 214, 236, 166, 151, 230, 17, 182,
+                166, 247, 236, 198, 22, 7, 17, 214, 38, 23, 236, 39,
+                17,
+                // Error correction bytes.
+                175, 155, 245, 236, 80, 146, 56, 74, 155, 165,
+                133, 142, 64, 183, 132, 13, 178, 54, 132, 108, 45,
+                113, 53, 50, 214, 98, 193, 152, 233, 147, 50, 71, 65,
+                190, 82, 51, 209, 199, 171, 54, 12, 112, 57, 113, 155, 117,
+                211, 164, 117, 30, 158, 225, 31, 190, 242, 38,
+                140, 61, 179, 154, 214, 138, 147, 87, 27, 96, 77, 47,
+                187, 49, 156, 214,
+    };
+    expectedLength = getArrayLength(expected2);
+    assertEquals(expectedLength, out->getSizeInBytes());
+    outArray.clear();
+    out->toBytes(0, outArray, 0, expectedLength);
+    for (int x = 0; x < expectedLength; x++) {
+        assertEquals(expected2[x], outArray[x]);
+    }
 }
 
 void EncoderTests::testAppendNumericBytes()
@@ -368,7 +371,7 @@ void EncoderTests::testGenerateECBytes()
     /////////////////////////////////////////////////////////////////////////////
 
     dataBytes =  {67, 70, 22, 38, 54, 70, 86, 102, 118,
-            134, 150, 166, 182, 198, 214};
+                  134, 150, 166, 182, 198, 214};
     ecBytes = Encoder::generateECBytes(dataBytes, 18);
     byte expected2[] = {
         175, 80, 155, 64, 178, 45, 214, 233, 65, 209, 12, 155, 117, 31, 140, 214, 27, 187
