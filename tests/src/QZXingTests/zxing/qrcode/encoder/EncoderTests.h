@@ -24,7 +24,7 @@ public:
 private:
     void testGetAlphanumericCode();
     void testChooseMode();
-    //void testEncode();
+    void testEncode();
     //void testSimpleUTF8ECI();
     void testAppendModeInfo();
     void testAppendLengthInfo();
