@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
+//#include "QZXingImageProvider.h"
 
 namespace {
     uchar gray(uchar r, uchar g, uchar b)
@@ -158,7 +159,13 @@ static QImage rgbDataToGrayscale(const uchar* data, const CaptureRect& captureRe
     uchar* pixelInit = image.bits();
     data += (captureRect.startY * captureRect.sourceWidth + captureRect.startX) * stride;
     for (int y = 1; y <= captureRect.targetHeight; ++y) {
+
+    //Quick fix for iOS devices. Will be handled better in the future
+#ifdef Q_OS_IOS
+        uchar* pixel = pixelInit + y * captureRect.targetWidth;
+#else
         uchar* pixel = pixelInit + (captureRect.targetHeight - y) * captureRect.targetWidth;
+#endif
         for (int x = 0; x < captureRect.targetWidth; ++x) {
             uchar r = data[red];
             uchar g = data[green];
@@ -284,6 +291,8 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 //    qDebug() << "videoFrame.pixelFormat" << videoFrame.pixelFormat;
 //    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
 //    qDebug() << "saving image" << i << "at:" << path << image.save(path);
+
+    //QZXingImageProvider::getInstance()->storeImage(image);
 
     decode(image);
 }
