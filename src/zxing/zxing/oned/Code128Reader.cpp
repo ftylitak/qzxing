@@ -417,6 +417,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
               break;
             case CODE_FNC_2:
             case CODE_FNC_3:
+              break;
             case CODE_FNC_4_B:
               if (!upperMode && shiftUpperMode) {
                 upperMode = true;
