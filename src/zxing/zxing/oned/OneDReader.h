@@ -22,6 +22,7 @@
  */
 
 #include <zxing/Reader.h>
+#include <zxing/DecodeHints.h>
 
 namespace zxing {
 namespace oned {
@@ -32,6 +33,7 @@ private:
 
 protected:
   static const int INTEGER_MATH_SHIFT = 8;
+  DecodeHints activeHints;
 
   struct Range {
   private:

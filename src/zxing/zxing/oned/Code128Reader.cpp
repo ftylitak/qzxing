@@ -23,6 +23,8 @@
 #include <zxing/NotFoundException.h>
 #include <zxing/FormatException.h>
 #include <zxing/ChecksumException.h>
+#include <zxing/DecodeHints.h>
+#include <zxing/BarcodeFormat.h>
 #include <math.h>
 #include <string.h>
 #include <sstream>
@@ -248,8 +250,8 @@ int Code128Reader::decodeCode(Ref<BitArray> row, vector<int>& counters, int rowO
 }
 
 Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
-  // boolean convertFNC1 = hints != null && hints.containsKey(DecodeHintType.ASSUME_GS1);
-  boolean convertFNC1 = false;
+  //bool convertFNC1 = activeHints.containsFormat(zxing::BarcodeFormat(zxing::BarcodeFormat::Value::ASSUME_GS1));
+  bool convertFNC1 = true;
   vector<int> startPatternInfo (findStartPattern(row));
   int startCode = startPatternInfo[2];
   int codeSet;
@@ -282,6 +284,8 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
   int checksumTotal = startCode;
   int multiplier = 0;
   bool lastCharacterWasPrintable = true;
+  bool upperMode = false;
+  bool shiftUpperMode = false;
 
   std::ostringstream oss;
 
@@ -324,9 +328,19 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
 
       case CODE_CODE_A:
         if (code < 64) {
-          result.append(1, (byte) (' ' + code));
+            if (shiftUpperMode == upperMode) {
+              result.append(1,(byte) (' ' + code));
+            } else {
+              result.append(1,(byte) (' ' + code + 128));
+            }
+            shiftUpperMode = false;
         } else if (code < 96) {
-          result.append(1, (byte) (code - 64));
+            if (shiftUpperMode == upperMode) {
+              result.append(1, (byte) (code - 64));
+            } else {
+              result.append(1, (byte) (code + 64));
+            }
+            shiftUpperMode = false;
         } else {
           // Don't let CODE_STOP, which always appears, affect whether whether we think the
           // last code was printable or not.
@@ -348,8 +362,17 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
               break;
             case CODE_FNC_2:
             case CODE_FNC_3:
+              break;
             case CODE_FNC_4_A:
-              // do nothing?
+              if (!upperMode && shiftUpperMode) {
+                upperMode = true;
+                shiftUpperMode = false;
+              } else if (upperMode && shiftUpperMode) {
+                upperMode = false;
+                shiftUpperMode = false;
+              } else {
+                shiftUpperMode = true;
+              }
               break;
             case CODE_SHIFT:
               isNextShifted = true;
@@ -369,17 +392,41 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
         break;
       case CODE_CODE_B:
         if (code < 96) {
-          result.append(1, (byte) (' ' + code));
+            if (shiftUpperMode == upperMode) {
+              result.append(1, (byte) (' ' + code));
+            } else {
+              result.append(1, (byte) (' ' + code + 128));
+            }
+            shiftUpperMode = false;
         } else {
           if (code != CODE_STOP) {
             lastCharacterWasPrintable = false;
           }
           switch (code) {
-            case CODE_FNC_1:
+          case CODE_FNC_1:
+              if (convertFNC1) {
+                if (result.length() == 0) {
+                  // GS1 specification 5.4.3.7. and 5.4.6.4. If the first char after the start code
+                  // is FNC1 then this is GS1-128. We add the symbology identifier.
+                  result.append("]C1");
+                } else {
+                  // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
+                  result.append(1, (byte) 29);
+                }
+              }
+              break;
             case CODE_FNC_2:
             case CODE_FNC_3:
             case CODE_FNC_4_B:
-              // do nothing?
+              if (!upperMode && shiftUpperMode) {
+                upperMode = true;
+                shiftUpperMode = false;
+              } else if (upperMode && shiftUpperMode) {
+                upperMode = false;
+                shiftUpperMode = false;
+              } else {
+                shiftUpperMode = true;
+              }
               break;
             case CODE_SHIFT:
               isNextShifted = true;
@@ -412,7 +459,16 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
           }
           switch (code) {
             case CODE_FNC_1:
-              // do nothing?
+              if (convertFNC1) {
+                if (result.length() == 0) {
+                  // GS1 specification 5.4.3.7. and 5.4.6.4. If the first char after the start code
+                  // is FNC1 then this is GS1-128. We add the symbology identifier.
+                  result.append("]C1");
+                } else {
+                  // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
+                  result.append(1, (byte) 29);
+                }
+              }
               break;
             case CODE_CODE_A:
               codeSet = CODE_CODE_A;

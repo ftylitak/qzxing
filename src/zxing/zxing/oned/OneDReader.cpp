@@ -121,6 +121,7 @@ Ref<Result> OneDReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints) {
       }
 
       // Java hints stuff missing
+      activeHints = hints;
 
       try {
         // Look for a barcode
@@ -145,6 +146,8 @@ Ref<Result> OneDReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints) {
         (void)re;
         continue;
       }
+
+      activeHints = DecodeHints();
     }
   }
   throw NotFoundException();

@@ -111,6 +111,7 @@ bool DecodeHints::containsFormat(BarcodeFormat tocheck) const {
   case BarcodeFormat::UPC_A: checkAgainst |= UPC_A_HINT; break;
   case BarcodeFormat::UPC_E: checkAgainst |= UPC_E_HINT; break;
   case BarcodeFormat::UPC_EAN_EXTENSION: checkAgainst |= UPC_EAN_EXTENSION_HINT; break;
+  case BarcodeFormat::ASSUME_GS1: checkAgainst |= ASSUME_GS1; break;
   default: throw IllegalArgumentException("Unrecognizd barcode format");
   }
   return (hints & checkAgainst) != 0;
