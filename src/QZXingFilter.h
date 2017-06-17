@@ -114,13 +114,16 @@ class QZXingFilterRunnable : public QObject, public QVideoFilterRunnable
         virtual ~QZXingFilterRunnable();
         /// This method is called whenever we get a new frame. It runs in the UI thread.
         QVideoFrame run(QVideoFrame * input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags);
-        void processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& captureRect);
+        //void processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& captureRect);
+
+        static void processVideoFrameProbed(QZXingFilter* filter);
 
     private:
         QString decode(const QImage &image);
 
     private:
-        QZXingFilter * filter;
+        QZXingFilter* filter;
+        QList<QZXingFilter*> filters;
 };
 
 #endif // QZXingFilter_H

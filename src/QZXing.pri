@@ -260,7 +260,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
 
 qzxing_multimedia {
-    QT += multimedia
+    QT += multimedia concurrent
 
     CONFIG += qzxing_qml
 

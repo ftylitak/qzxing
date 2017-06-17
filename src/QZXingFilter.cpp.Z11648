@@ -69,7 +69,6 @@ QVideoFilterRunnable * QZXingFilter::createFilterRunnable()
 
 QZXingFilterRunnable::QZXingFilterRunnable(QZXingFilter * filter)
     : QObject(nullptr)
-    , filter(filter)
     , filters()
 {
     filters.append(filter);
@@ -110,7 +109,7 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     filter->frame.copyData(* input);
 
     /// All processing that has to happen in another thread, as we are now in the UI thread.
-    filter->processThread = QtConcurrent::map(filters, &QZXingFilterRunnable::processVideoFrameProbed);
+    filter->processThread = QtConcurrent::run(this, &QZXingFilterRunnable::processVideoFrameProbed, filter->frame, filter->captureRect.toRect());
 
     return * input;
 }
@@ -190,11 +189,8 @@ static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureR
 
 void QZXingFilterRunnable::processVideoFrameProbed(QZXingFilter* filter)
 {
-    if(!filter)
-        return;
-
-    SimpleVideoFrame & videoFrame = filter->frame;
-    const QRect& _captureRect = filter->captureRect.toRect();
+    SimpleVideoFrame & videoFrame;
+    const QRect& _captureRect
 
     static unsigned int i = 0; i++;
 //    qDebug() << "Future: Going to process frame: " << i;
@@ -316,14 +312,13 @@ void QZXingFilterRunnable::processVideoFrameProbed(QZXingFilter* filter)
 
     //QZXingImageProvider::getInstance()->storeImage(image);
 
-    //decode(*image_ptr);
-    filter->decoder.decodeImage(*image_ptr, image_ptr->width(), image_ptr->height());
+    decode(*image_ptr);
 
     delete image_ptr;
 }
 
-//QString QZXingFilterRunnable::decode(const QImage &image)
-//{
-//    return (filter != nullptr) ?
-//      filter->decoder.decodeImage(image, image.width(), image.height()) : QString();
-//}
+QString QZXingFilterRunnable::decode(const QImage &image)
+{
+    return (filter != nullptr) ?
+      filter->decoder.decodeImage(image, image.width(), image.height()) : QString();
+}
