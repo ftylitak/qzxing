@@ -87,17 +87,17 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     /// These checks are attempt on having only 1 frame being processed at a time.
     if(!input || !input->isValid())
     {
-//        qDebug() << "[QZXingFilterRunnable] Invalid Input ";
+        //qDebug() << "[QZXingFilterRunnable] Invalid Input ";
         return * input;
     }
     if(filter->isDecoding())
     {
-//        qDebug() << "------ decoder busy.";
+        //qDebug() << "------ decoder busy.";
         return * input;
     }
     if(!filter->processThread.isFinished())
     {
-//        qDebug() << "--[]-- decoder busy.";
+        //qDebug() << "--[]-- decoder busy.";
         return * input;
     }
 
@@ -145,7 +145,7 @@ struct CaptureRect
     int endY;
 };
 
-static QImage rgbDataToGrayscale(const uchar* data, const CaptureRect& captureRect,
+static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureRect,
                                  const int alpha, const int red,
                                  const int green, const int blue,
                                  const bool isPremultiplied = false)
@@ -155,8 +155,8 @@ static QImage rgbDataToGrayscale(const uchar* data, const CaptureRect& captureRe
     const int endX = captureRect.sourceWidth - captureRect.startX - captureRect.targetWidth;
     const int skipX = (endX + captureRect.startX) * stride;
 
-    QImage image(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
-    uchar* pixelInit = image.bits();
+    QImage *image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
+    uchar* pixelInit = image_ptr->bits();
     data += (captureRect.startY * captureRect.sourceWidth + captureRect.startX) * stride;
     for (int y = 1; y <= captureRect.targetHeight; ++y) {
 
@@ -183,7 +183,7 @@ static QImage rgbDataToGrayscale(const uchar* data, const CaptureRect& captureRe
         data += skipX;
     }
 
-    return image;
+    return image_ptr;
 }
 
 void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& _captureRect)
@@ -195,40 +195,52 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     const int height = videoFrame.size.height();
     const CaptureRect captureRect(_captureRect, width, height);
     const uchar* data = (uchar*) videoFrame.data.constData();
+
+    uchar* pixel;
+    int wh;
+    int w_2;
+    int wh_54;
+
     /// Create QImage from QVideoFrame.
-    QImage image;
+    QImage *image_ptr = nullptr;
 
-    /// Let's try to convert it from RGB formats
-    if (videoFrame.pixelFormat == QVideoFrame::Format_RGB32)
-        image = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32)
-        image = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_ARGB32_Premultiplied)
-        image = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3, true);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32)
-        image = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGRA32_Premultiplied)
-        image = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0, true);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR32)
-        image = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0);
-    else if (videoFrame.pixelFormat == QVideoFrame::Format_BGR24)
-        image = rgbDataToGrayscale(data, captureRect, -1, 2, 1, 0);
-
-    /// This is a forced "conversion", colors end up swapped.
-    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR555)
-        image = QImage(data, width, height, QImage::Format_RGB555);
-
-    /// This is a forced "conversion", colors end up swapped.
-    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_BGR565)
-        image = QImage(data, width, height, QImage::Format_RGB16);
-
-    //fix for issues #4 and #9
-    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_YUV420P) {
-        image = QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
-        uchar* pixel = image.bits();
-        const int wh = width * height;
-        const int w_2 = width / 2;
-        const int wh_54 = wh * 5 / 4;
+    switch (videoFrame.pixelFormat) {
+    case QVideoFrame::Format_RGB32:
+        image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
+        break;
+    case QVideoFrame::Format_ARGB32:
+        break;
+        image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
+    case QVideoFrame::Format_ARGB32_Premultiplied:
+        image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3, true);
+        break;
+    case QVideoFrame::Format_BGRA32:
+        image_ptr = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0);
+        break;
+    case QVideoFrame::Format_BGRA32_Premultiplied:
+        image_ptr = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0, true);
+        break;
+    case QVideoFrame::Format_BGR32:
+        image_ptr = rgbDataToGrayscale(data, captureRect, 3, 2, 1, 0);
+        break;
+    case QVideoFrame::Format_BGR24:
+        image_ptr = rgbDataToGrayscale(data, captureRect, -1, 2, 1, 0);
+        break;
+    case QVideoFrame::Format_BGR555:
+        /// This is a forced "conversion", colors end up swapped.
+        image_ptr = new QImage(data, width, height, QImage::Format_RGB555);
+        break;
+    case QVideoFrame::Format_BGR565:
+        /// This is a forced "conversion", colors end up swapped.
+        image_ptr = new QImage(data, width, height, QImage::Format_RGB16);
+        break;
+    case QVideoFrame::Format_YUV420P:
+        //fix for issues #4 and #9
+        image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
+        pixel = image_ptr->bits();
+        wh = width * height;
+        w_2 = width / 2;
+        wh_54 = wh * 5 / 4;
 
         for (int y = captureRect.startY; y < captureRect.endY; y++) {
             const int Y_offset = y * width;
@@ -244,36 +256,38 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
                 ++pixel;
             }
         }
-    }
+        break;
+    case QVideoFrame::Format_NV12:
+        /// nv12 format, encountered on macOS
+        image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
+        pixel = image_ptr->bits();
+        wh = width * height;
+        w_2 = width / 2;
+        wh_54 = wh * 5 / 4;
 
-    // nv12 format, encountered on macOS
-    if(image.isNull() && videoFrame.pixelFormat == QVideoFrame::Format_NV12) {
-        image = QImage(videoFrame.size, QImage::Format_Grayscale8);
-        uchar* pixel = image.bits();
-        const uchar* y_data = data;
-        const uchar* uv_data = data + (height * width);
-        for (int y = 0; y < height; y++) {
-            const int w_y_2 = width * int(y / 2); // floored half-y
-            for (int x = 0; x < width; x++) {
-                const uchar Y = *y_data;
-                const int uv_index = (w_y_2 + x / 2) * 2;
-                const uchar U = uv_data[uv_index];
-                const uchar V = uv_data[uv_index + 1];
-                y_data++;
+        for (int y = captureRect.startY; y < captureRect.endY; y++) {
+            const int Y_offset = y * width;
+            const int y_2 = y / 2;
+            const int U_offset = y_2 * w_2 + wh;
+            const int V_offset = y_2 * w_2 + wh_54;
+            for (int x = captureRect.startX; x < captureRect.endX; x++) {
+                const int x_2 = x / 2;
+                const uchar Y = data[Y_offset + x];
+                const uchar U = data[U_offset + x_2];
+                const uchar V = data[V_offset + x_2];
                 *pixel = yuvToGray(Y, U, V);
                 ++pixel;
             }
         }
-    }
-
+        break;
     /// TODO: Handle (create QImages from) YUV formats.
-
-    if (image.isNull()) {
+    default:
         QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
-        image = QImage(data, width, height, imageFormat);
+        image_ptr = new QImage(data, width, height, imageFormat);
+        break;
     }
 
-    if(image.isNull())
+    if(!image_ptr || image_ptr->isNull())
     {
         qDebug() << "QZXingFilterRunnable error: Cant create image file to process.";
         qDebug() << "Maybe it was a format conversion problem? ";
@@ -283,8 +297,8 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-    if (captureRect.isValid && image.size() != _captureRect.size())
-        image = image.copy(_captureRect);
+    if (captureRect.isValid && image_ptr->size() != _captureRect.size())
+        image_ptr = new QImage(image_ptr->copy(_captureRect));
 
 //    qDebug() << "image.size()" << image.size();
 //    qDebug() << "image.format()" << image.format();
@@ -294,7 +308,9 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
     //QZXingImageProvider::getInstance()->storeImage(image);
 
-    decode(image);
+    decode(*image_ptr);
+
+    delete image_ptr;
 }
 
 QString QZXingFilterRunnable::decode(const QImage &image)

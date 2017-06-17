@@ -45,11 +45,6 @@ struct SimpleVideoFrame
         , pixelFormat{QVideoFrame::Format_Invalid}
     {}
 
-    SimpleVideoFrame(QVideoFrame & frame)
-    {
-        copyData(frame);
-    }
-
     void copyData(QVideoFrame & frame)
     {
         frame.map(QAbstractVideoBuffer::ReadOnly);
