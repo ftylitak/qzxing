@@ -32,7 +32,7 @@ private:
     std::vector< Ref<UPCEANReader> > readers;
 public:
     MultiFormatUPCEANReader(DecodeHints hints);
-    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
 };
 
 }

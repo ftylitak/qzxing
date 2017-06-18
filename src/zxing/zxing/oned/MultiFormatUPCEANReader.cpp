@@ -61,7 +61,7 @@ MultiFormatUPCEANReader::MultiFormatUPCEANReader(DecodeHints hints) : readers() 
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row) {
+Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
   // Compute this location once and reuse it on multiple implementations
   UPCEANReader::Range startGuardPattern = UPCEANReader::findStartGuardPattern(row);
   for (int i = 0, e = readers.size(); i < e; i++) {

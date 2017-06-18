@@ -74,7 +74,8 @@ public:
         DecoderFormat_RSS_EXPANDED = 1 << 14,
         DecoderFormat_UPC_A = 1 << 15,
         DecoderFormat_UPC_E = 1 << 16,
-        DecoderFormat_UPC_EAN_EXTENSION = 1 << 17
+        DecoderFormat_UPC_EAN_EXTENSION = 1 << 17,
+        DecoderFormat_CODE_128_GS1 = 1 << 18
     } ;
     typedef unsigned int DecoderFormatType;
 

@@ -30,7 +30,7 @@ namespace zxing {
     public:
       MultiFormatOneDReader(DecodeHints hints);
 
-      Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+      Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
     };
   }
 }

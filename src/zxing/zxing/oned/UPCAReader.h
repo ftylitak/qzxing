@@ -37,7 +37,7 @@ public:
 
   int decodeMiddle(Ref<BitArray> row, Range const& startRange, std::string& resultString);
 
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
   Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& startGuardRange);
   Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
 
