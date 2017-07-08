@@ -126,6 +126,9 @@ QString QZXing::decoderFormatToString(int fmt)
     case DecoderFormat_CODE_128:
         return "CODE_128";
 
+    case DecoderFormat_CODE_128_GS1:
+        return "CODE_128_GS1";
+
     case DecoderFormat_DATA_MATRIX:
         return "DATA_MATRIX";
 
@@ -229,6 +232,12 @@ void QZXing::setDecoder(const uint &hint)
 
     if(hint & DecoderFormat_UPC_EAN_EXTENSION)
         newHints |= DecodeHints::UPC_EAN_EXTENSION_HINT;
+
+    if(hint & DecoderFormat_CODE_128_GS1)
+    {
+        newHints |= DecodeHints::CODE_128_HINT;
+        newHints |= DecodeHints::ASSUME_GS1;
+    }
 
     enabledDecoders = newHints;
 

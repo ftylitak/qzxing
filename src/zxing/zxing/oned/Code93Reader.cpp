@@ -64,7 +64,7 @@ Code93Reader::Code93Reader() {
   counters.resize(6);
 }
 
-Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
+Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
   Range start (findAsteriskPattern(row));
   // Read off white space    
   int nextStart = row->getNextSet(start[1]);

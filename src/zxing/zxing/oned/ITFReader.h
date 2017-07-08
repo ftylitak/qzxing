@@ -43,7 +43,7 @@ private:
 			
   void append(char* s, char c);
 public:
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
   ITFReader();
   ~ITFReader();
 };

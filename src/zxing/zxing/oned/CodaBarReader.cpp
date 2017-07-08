@@ -76,7 +76,7 @@ const int CodaBarReader::PADDING =
 CodaBarReader::CodaBarReader() 
   : counters(80, 0), counterLength(0) {}
 
-Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row) {
+Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
 
   { // Arrays.fill(counters, 0);
     int size = counters.size();

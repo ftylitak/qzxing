@@ -32,8 +32,8 @@ using zxing::DecodeHints;
 
 UPCAReader::UPCAReader() : ean13Reader() {}
 
-Ref<Result> UPCAReader::decodeRow(int rowNumber, Ref<BitArray> row) {
-  return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row));
+Ref<Result> UPCAReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
+  return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, hints));
 }
 
 Ref<Result> UPCAReader::decodeRow(int rowNumber,

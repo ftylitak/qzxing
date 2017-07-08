@@ -54,7 +54,7 @@ public:
   Code39Reader(bool usingCheckDigit_);
   Code39Reader(bool usingCheckDigit_, bool extendedMode_);
 			
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
 };
 
 }

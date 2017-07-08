@@ -66,7 +66,7 @@ public:
                            Range const& startRange,
                            std::string& resultString) = 0;
 
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
   virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& range);
 
   static int decodeDigit(Ref<BitArray> row,

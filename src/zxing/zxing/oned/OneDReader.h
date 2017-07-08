@@ -22,6 +22,7 @@
  */
 
 #include <zxing/Reader.h>
+#include <zxing/DecodeHints.h>
 
 namespace zxing {
 namespace oned {
@@ -62,12 +63,11 @@ protected:
 
 public:
 
-  OneDReader();
   virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
 
   // Implementations must not throw any exceptions. If a barcode is not found on this row,
   // a empty ref should be returned e.g. return Ref<Result>();
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row) = 0;
+  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) = 0;
 
   static void recordPattern(Ref<BitArray> row,
                             int start,

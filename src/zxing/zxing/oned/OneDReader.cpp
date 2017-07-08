@@ -35,8 +35,6 @@ using zxing::BinaryBitmap;
 using zxing::BitArray;
 using zxing::DecodeHints;
 
-OneDReader::OneDReader() {}
-
 Ref<Result> OneDReader::decode(Ref<BinaryBitmap> image, DecodeHints hints) {
   try {
     return doDecode(image, hints);
@@ -120,12 +118,10 @@ Ref<Result> OneDReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints) {
         row->reverse(); // reverse the row and continue
       }
 
-      // Java hints stuff missing
-
       try {
         // Look for a barcode
         // std::cerr << "rn " << rowNumber << " " << typeid(*this).name() << std::endl;
-        Ref<Result> result = decodeRow(rowNumber, row);
+        Ref<Result> result = decodeRow(rowNumber, row, hints);
         // We found our barcode
         if (attempt == 1) {
           // But it was upside down, so note that

@@ -92,7 +92,7 @@ Code39Reader::Code39Reader(bool usingCheckDigit_, bool extendedMode_) {
   init(usingCheckDigit_, extendedMode_);
 }
 
-Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row) {
+Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
   std::vector<int>& theCounters (counters);
   { // Arrays.fill(counters, 0);
     int size = theCounters.size();

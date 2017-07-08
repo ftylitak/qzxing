@@ -10,12 +10,12 @@ Supports barcode decoding for the following types:
  * ITF 	
  * Code 39 
  * Code 93 	
- * Code 128 	
+ * Code 128 (GS1) 	
  * Codabar 	
  * QR Code
  * Data Matrix
  * Aztec (beta)
- * PDF 417 (beta)
+ * PDF 417
 
 # How to include
 

@@ -23,6 +23,7 @@ void DecodeValidator::initializeDecoderCorrelation()
     decoderCorrelationMap["code39"] = QZXing::DecoderFormat_CODE_39;
     decoderCorrelationMap["code93"] = QZXing::DecoderFormat_CODE_93;
     decoderCorrelationMap["code128"] = QZXing::DecoderFormat_CODE_128;
+    decoderCorrelationMap["code128gs1"] = QZXing::DecoderFormat_CODE_128_GS1;
     decoderCorrelationMap["datamatrix"] = QZXing::DecoderFormat_DATA_MATRIX;
     decoderCorrelationMap["ean8"] = QZXing::DecoderFormat_EAN_8;
     decoderCorrelationMap["ean13"] = QZXing::DecoderFormat_EAN_13;
