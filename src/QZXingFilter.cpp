@@ -209,8 +209,8 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
         break;
     case QVideoFrame::Format_ARGB32:
-        break;
         image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3);
+	break;
     case QVideoFrame::Format_ARGB32_Premultiplied:
         image_ptr = rgbDataToGrayscale(data, captureRect, 0, 1, 2, 3, true);
         break;
