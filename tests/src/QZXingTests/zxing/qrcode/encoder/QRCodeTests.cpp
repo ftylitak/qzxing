@@ -50,9 +50,9 @@ void QRCodeTests::testToString1() {
     QRCode qrCode;
     std::string expected =
             "<<\n"
-            //      " mode: null\n"
-            " ecLevel: {unimpl}\n"
-            " version: {unimpl}\n"
+            " mode: null\n"
+            " ecLevel: null\n"
+            " version: null\n"
             " maskPattern: -1\n"
             " matrix: null\n"
             "\n>>";
@@ -74,11 +74,9 @@ void QRCodeTests::testToString2()
     }
     qrCode.setMatrix(matrix);
     std::string expected = "<<\n"
-            //" mode: BYTE\n"
-            //" ecLevel: H\n"
-            " ecLevel: {unimpl}\n"
-            //" version: 1\n"
-            " version: {unimpl}\n"
+            " mode: BYTE\n"
+            " ecLevel: H\n"
+            " version: 1\n"
             " maskPattern: 3\n"
             " matrix:\n"
             " 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0\n"

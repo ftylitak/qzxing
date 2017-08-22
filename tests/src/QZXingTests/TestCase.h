@@ -50,7 +50,7 @@ private:
     }
 
     static QString itemToString(qrcode::Mode& item) {
-        return QString::fromStdString(item.toString());
+        return QString::fromStdString(item.getName());
     }
 
 protected:

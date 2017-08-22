@@ -45,22 +45,36 @@ const std::string QRCode::toString()
 {
     std::stringstream result;
     result << "<<";
-//    result << "\n mode: {unimpl}";
-//    result << mode_;
-    result << "\n ecLevel: {unimpl}";
-    //result << ecLevel_;
-    result << "\n version: {unimpl}";
-    //result << version_;
+
+    result << "\n mode: ";
+    result << mode_.getName();
+
+    result << "\n ecLevel: ";
+    if(!ecLevel_ptr_.empty())
+        result << ecLevel_ptr_->name();
+    else
+        result << "null";
+
+    result << "\n version: ";
+    if(!version_ptr_.empty())
+    {
+        std::string version_str;
+        std::ostringstream convert;
+        convert << version_ptr_->getVersionNumber();
+        version_str = convert.str();
+        result << version_str;
+    }
+    else
+        result << "null";
+
     result << "\n maskPattern: ";
     result << maskPattern_;
-    //  if (matrix_ == null) {
-    //    result.append("\n matrix: null\n");
-    //  } else {
+
     if (matrix_ptr_)
         result << "\n matrix:\n" << matrix_ptr_->toString();
     else
         result << "\n matrix: null\n";
-    //  }
+
     result << "\n>>";
     return result.str();
 }
