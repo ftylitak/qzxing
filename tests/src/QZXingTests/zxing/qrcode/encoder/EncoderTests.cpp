@@ -13,17 +13,17 @@ void EncoderTests::execute()
 {
     testGetAlphanumericCode();
     testChooseMode();
-    testEncode();
     testAppendModeInfo();
-    testAppendLengthInfo();
     testAppendBytes();
-    testTerminateBits();
+    testAppendLengthInfo();
     testGetNumDataBytesAndNumECBytesForBlockID();
+    testTerminateBits();
     testInterleaveWithECBytes();
+    testGenerateECBytes();
     testAppendNumericBytes();
     testAppendAlphanumericBytes();
     testAppend8BitBytes();
-    testGenerateECBytes();
+    testEncode();
 }
 
 void EncoderTests::testGetAlphanumericCode()

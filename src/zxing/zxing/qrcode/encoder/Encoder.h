@@ -107,6 +107,14 @@ private:
    */
   static int calculateMaskPenalty(const ByteMatrix& matrix);
 
+  static int calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
+                                 Ref<Version> version);
+  static bool willFit(int numInputBits, Ref<Version> version, const ErrorCorrectionLevel &ecLevel);
+  static Ref<Version> recommendVersion(ErrorCorrectionLevel &ecLevel,
+                                            Mode &mode,
+                                            BitArray &headerBits,
+                                            BitArray &dataBits);
+
   /**
    *  Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
    * internally by chooseMode(). On success, store the result in "qrCode".

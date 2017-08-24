@@ -73,21 +73,32 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     BitArray dataBits;
     appendBytes(content, mode, dataBits, encoding);
 
-    // Hard part: need to know version to know how many bits length takes. But need to know how many
-    // bits it takes to know version. First we take a guess at version by assuming version will be
-    // the minimum, 1:
+//    // Hard part: need to know version to know how many bits length takes. But need to know how many
+//    // bits it takes to know version. First we take a guess at version by assuming version will be
+//    // the minimum, 1:
 
-    int provisionalBitsNeeded = headerBits.getSize()
-            + mode.getCharacterCountBits(Version::getVersionForNumber(1))
-            + dataBits.getSize();
-    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
+//    int provisionalBitsNeeded = headerBits.getSize()
+//            + mode.getCharacterCountBits(Version::getVersionForNumber(1))
+//            + dataBits.getSize();
+//    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
 
-    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
+//    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
 
-    int bitsNeeded = headerBits.getSize()
-            + mode.getCharacterCountBits(provisionalVersion)
-            + dataBits.getSize();
-    Ref<Version> version = chooseVersion(bitsNeeded, ecLevel);
+//    int bitsNeeded = headerBits.getSize()
+//            + mode.getCharacterCountBits(provisionalVersion)
+//            + dataBits.getSize();
+//    Ref<Version> version = chooseVersion(bitsNeeded, ecLevel);
+
+    Ref<Version> version;
+    if (hints != NULL/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
+        version = Version::getVersionForNumber(1);
+        int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
+        if (!willFit(bitsNeeded, version, ecLevel)) {
+            throw new WriterException("Data too big for requested version");
+        }
+    } else {
+        version = recommendVersion(ecLevel, mode, headerBits, dataBits);
+    }
 
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
@@ -129,6 +140,19 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
 
     //return NULL;
 }
+
+bool Encoder::willFit(int numInputBits, Ref<Version> version, const ErrorCorrectionLevel &ecLevel) {
+      // In the following comments, we use numbers of Version 7-H.
+      // numBytes = 196
+      int numBytes = version->getTotalCodewords();
+      // getNumECBytes = 130
+      ECBlocks& ecBlocks = version->getECBlocksForLevel(ecLevel);
+      int numEcBytes = ecBlocks.getTotalECCodewords();
+      // getNumDataBytes = 196 - 130 = 66
+      int numDataBytes = numBytes - numEcBytes;
+      int totalInputBytes = (numInputBits + 7) / 8;
+      return numDataBytes >= totalInputBytes;
+  }
 
 /**
    * @return the code point of the table used in alphanumeric mode or
@@ -217,6 +241,7 @@ int Encoder::chooseMaskPattern(Ref<BitArray> bits,
             minPenalty = penalty;
             bestMaskPattern = maskPattern;
         }
+        std::cout << std::string("i: ") << maskPattern << std::string(", penantly: ") << penalty << std::endl;
     }
     return bestMaskPattern;
 }
@@ -226,18 +251,11 @@ Ref<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel
     // In the following comments, we use numbers of Version 7-H.
     for (int versionNum = 1; versionNum <= 40; versionNum++) {
         Ref<Version> version = Version::getVersionForNumber(versionNum);
-        // numBytes = 196
-        int numBytes = version->getTotalCodewords();
-        // getNumECBytes = 130
-        ECBlocks& ecBlocks = version->getECBlocksForLevel(ecLevel);
-        int numEcBytes = ecBlocks.getTotalECCodewords();
-        // getNumDataBytes = 196 - 130 = 66
-        int numDataBytes = numBytes - numEcBytes;
-        int totalInputBytes = (numInputBits + 7) / 8;
-        if (numDataBytes >= totalInputBytes) {
+        if (willFit(numInputBits, version, ecLevel)) {
             return version;
         }
     }
+
     throw WriterException("Data too big");
 }
 
@@ -583,6 +601,28 @@ void Encoder::appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bit
     bits.appendBits(Mode::ECI.getBits(), 4);
     // This is correct for values up to 127, which is all we need now.
     bits.appendBits(eci.getValue(), 8);
+}
+
+int Encoder::calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
+                                 Ref<Version> version)
+{
+    return headerBits.getSize() + mode.getCharacterCountBits(&(*version)) + dataBits.getSize();
+}
+
+Ref<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
+                                          Mode &mode,
+                                          BitArray &headerBits,
+                                          BitArray &dataBits)
+{
+    // Hard part: need to know version to know how many bits length takes. But need to know how many
+    // bits it takes to know version. First we take a guess at version by assuming version will be
+    // the minimum, 1:
+    int provisionalBitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, Version::getVersionForNumber(1));
+    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
+
+    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
+    int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, provisionalVersion);
+    return chooseVersion(bitsNeeded, ecLevel);
 }
 
 }

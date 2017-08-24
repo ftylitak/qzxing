@@ -60,8 +60,9 @@ const std::string ByteMatrix::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
     for (size_t y = 0; y < height_; y++) {
+        const std::vector<byte>& bytesY = bytes_[y];
         for (size_t x = 0; x < width_; x++) {
-            switch (bytes_[y][x]) {
+            switch (bytesY[x]) {
             case 0:
                 result << " 0";
                 break;

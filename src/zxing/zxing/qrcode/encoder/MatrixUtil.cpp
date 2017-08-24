@@ -224,12 +224,16 @@ void MatrixUtil::embedDataBits(const BitArray& dataBits, int maskPattern, ByteMa
 
 int MatrixUtil::findMSBSet(int value)
 {
-    int numDigits = 0;
-    while (value != 0) {
-        value = ((unsigned int)value) >> 1; //need to recheck, original operator >>>=1
-        ++numDigits;
+    int sizeOfTypeBits = (sizeof(int)*8);
+    int sample = ( value < 0 ) ? 0 : value;
+    int leadingZeros = ( value < 0 ) ? 0 : sizeOfTypeBits;
+
+    while(sample) {
+        sample >>= 1;
+        --leadingZeros;
     }
-    return numDigits;
+
+    return sizeOfTypeBits - leadingZeros;
 }
 
 int MatrixUtil::calculateBCHCode(int value, int poly)
@@ -389,13 +393,17 @@ void MatrixUtil::maybeEmbedPositionAdjustmentPatterns(const Version& version, By
     int index = version.getVersionNumber() - 1;
     const int *coordinates = POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE[index];
     int numCoordinates = 7; //POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE[index].length; //need to change the constant 7
-    for (int i = 0; i < numCoordinates; ++i) {
-        for (int j = 0; j < numCoordinates; ++j) {
-            int y = coordinates[i];
+
+    for (int i = 0; i < numCoordinates; i++) {
+        int y = coordinates[i];
+        if(y < 0)
+            continue;
+
+        for (int j = 0; j < numCoordinates; j++) {
             int x = coordinates[j];
-            if (x == -1 || y == -1) {
+            if (x < 0)
                 continue;
-            }
+
             // If the cell is unset, we embed the position adjustment pattern here.
             if (isEmpty(matrix.get(x, y))) {
                 // -2 is necessary since the x/y coordinates point to the center of the pattern, not the
