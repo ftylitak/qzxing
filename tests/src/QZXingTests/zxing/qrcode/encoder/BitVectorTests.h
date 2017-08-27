@@ -1,5 +1,5 @@
-#ifndef BITARRAYTESTS_H
-#define BITARRAYTESTS_H
+#ifndef BITVECTORTESTS_H
+#define BITVECTORTESTS_H
 
 #include "TestCase.h"
 #include "zxing/common/BitArray.h"
@@ -8,10 +8,10 @@ namespace zxing{
 namespace qrcode{
 namespace tests{
 
-class BitArrayTests : public TestCase
+class BitVectorTests : public TestCase
 {
 public:
-    BitArrayTests();
+    BitVectorTests();
 
     void execute();
 
@@ -32,4 +32,4 @@ private:
 }
 }
 
-#endif // BITARRAYTESTS_H
+#endif // BITVECTORTESTS_H

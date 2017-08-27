@@ -53,6 +53,10 @@ private:
         return QString::fromStdString(item.getName());
     }
 
+    static QString itemToString(unsigned int item) {
+        return QString::number(item);
+    }
+
 protected:
     template<class T> void assertEquals(T expected, T actual) {
         if(expected != actual) {

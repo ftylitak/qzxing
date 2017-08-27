@@ -1,22 +1,22 @@
-#include "BitArrayTests.h"
+#include "BitVectorTests.h"
 
 namespace zxing{
 namespace qrcode{
 namespace tests{
 
-BitArrayTests::BitArrayTests()
+BitVectorTests::BitVectorTests()
 {
 
 }
 
-void BitArrayTests::execute()
+void BitVectorTests::execute()
 {
     testAppendBit();
     testAppendBits();
     testNumBytes();
 }
 
-unsigned long zxing::qrcode::tests::BitArrayTests::getUnsignedInt(BitArray &v, int index)
+unsigned long zxing::qrcode::tests::BitVectorTests::getUnsignedInt(BitArray &v, int index)
 {
     long result = 0L;
     for (int i = 0, offset = index << 3; i < 32; i++) {
@@ -27,7 +27,7 @@ unsigned long zxing::qrcode::tests::BitArrayTests::getUnsignedInt(BitArray &v, i
     return result;
 }
 
-void BitArrayTests::testAppendBit()
+void BitVectorTests::testAppendBit()
 {
     BitArray v;
     assertEquals(0, v.getSizeInBytes());
@@ -73,7 +73,7 @@ void BitArrayTests::testAppendBit()
     assertEquals(0xaa800000ul, getUnsignedInt(v, 0));
 }
 
-void BitArrayTests::testAppendBits()
+void BitVectorTests::testAppendBits()
 {
     BitArray v;
     v.appendBits(0x1, 1);
@@ -89,7 +89,7 @@ void BitArrayTests::testAppendBits()
     assertEquals(0xff700000ul, getUnsignedInt(v, 0));
 }
 
-void BitArrayTests::testNumBytes()
+void BitVectorTests::testNumBytes()
 {
     BitArray v;
     assertEquals(0, v.getSizeInBytes());
@@ -105,7 +105,7 @@ void BitArrayTests::testNumBytes()
     assertEquals(3, v.getSizeInBytes());
 }
 
-void BitArrayTests::testAppendBitVector()
+void BitVectorTests::testAppendBitVector()
 {
     BitArray v1;
     v1.appendBits(0xbe, 8);
@@ -116,7 +116,7 @@ void BitArrayTests::testAppendBitVector()
     assertEquals(std::string(" X.XXXXX. XXX.XXXX"), v1.toString());
 }
 
-void BitArrayTests::testXOR()
+void BitVectorTests::testXOR()
 {
     BitArray v1;
     v1.appendBits(0x5555aaaa, 32);
@@ -126,7 +126,7 @@ void BitArrayTests::testXOR()
     assertEquals(0xfffffffful, getUnsignedInt(v1, 0));
 }
 
-void BitArrayTests::testXOR2()
+void BitVectorTests::testXOR2()
 {
     BitArray v1;
     v1.appendBits(0x2a, 7);  // 010 1010
@@ -136,7 +136,7 @@ void BitArrayTests::testXOR2()
     assertEquals(0xfe000000ul, getUnsignedInt(v1, 0));  // 1111 1110
 }
 
-void BitArrayTests::testAt()
+void BitVectorTests::testAt()
 {
     BitArray v;
     v.appendBits(0xdead, 16);  // 1101 1110 1010 1101
@@ -161,7 +161,7 @@ void BitArrayTests::testAt()
     assertTrue(v.get(15));
 }
 
-void BitArrayTests::testToString()
+void BitVectorTests::testToString()
 {
     BitArray v;
     v.appendBits(0xdead, 16);  // 1101 1110 1010 1101

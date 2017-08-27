@@ -39,6 +39,15 @@ BitArray::BitArray(): size(0), bits(1) {}
 BitArray::BitArray(int size_)
     : size(size_), bits(makeArraySize(size)) {}
 
+//this could be wrong. TODO: check size value
+BitArray::BitArray(std::vector<int> other)
+    : size(other.size()), bits(other.size())
+{
+    for(int i=0; i<other.size(); i++)
+        if(other[i])
+            set(i);
+}
+
 BitArray::~BitArray() {
 }
 
