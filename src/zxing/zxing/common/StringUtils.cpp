@@ -18,6 +18,7 @@
 
 #include <zxing/common/StringUtils.h>
 #include <zxing/DecodeHints.h>
+#include <sstream>
 
 using namespace std;
 using namespace zxing;
@@ -195,4 +196,13 @@ StringUtils::guessEncoding(byte* bytes, int length,
   }
   // Otherwise, we take a wild guess with platform encoding
   return PLATFORM_DEFAULT_ENCODING;
+}
+
+string StringUtils::intToStr(int number)
+{
+    std::ostringstream ostr; //output string stream
+    ostr << number; //use the string stream just like cout,
+    //except the stream prints not to stdout but to a string.
+
+    return ostr.str(); //the str() function of the stream
 }

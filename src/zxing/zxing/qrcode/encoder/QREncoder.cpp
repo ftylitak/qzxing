@@ -11,6 +11,7 @@
 #include <limits>
 #include "MatrixUtil.h"
 #include <string>
+#include "zxing/common/StringUtils.h"
 
 namespace zxing {
 namespace qrcode {
@@ -26,7 +27,7 @@ const int Encoder::ALPHANUMERIC_TABLE[Encoder::ALPHANUMERIC_TABLE_SIZE] = {
     25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,  // 0x50-0x5f
 };
 
-const QString Encoder::DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
+const std::string Encoder::DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
 
 int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
 {
@@ -36,15 +37,15 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
             + MaskUtil::applyMaskPenaltyRule4(matrix);
 }
 
-Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLevel)
+Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel)
 {
     return encode(content, ecLevel, NULL);
 }
 
-Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
+Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
-    QString encoding = hints == NULL ? "" : QString(hints->getCharacterSet().c_str());
+    std::string encoding = hints == NULL ? "" : hints->getCharacterSet();
     if (encoding == "")
         encoding = DEFAULT_BYTE_MODE_ENCODING;
 
@@ -59,7 +60,7 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     // Append ECI segment if applicable
     if (mode == Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
         zxing::common::CharacterSetECI const * eci =
-                zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding.toStdString().c_str());
+                zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding);
         if (eci != NULL) {
             appendECI(*eci, headerBits);
         }
@@ -72,22 +73,6 @@ Ref<QRCode> Encoder::encode(const QString& content, ErrorCorrectionLevel &ecLeve
     // main payload yet.
     BitArray dataBits;
     appendBytes(content, mode, dataBits, encoding);
-
-//    // Hard part: need to know version to know how many bits length takes. But need to know how many
-//    // bits it takes to know version. First we take a guess at version by assuming version will be
-//    // the minimum, 1:
-
-//    int provisionalBitsNeeded = headerBits.getSize()
-//            + mode.getCharacterCountBits(Version::getVersionForNumber(1))
-//            + dataBits.getSize();
-//    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
-
-//    // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
-
-//    int bitsNeeded = headerBits.getSize()
-//            + mode.getCharacterCountBits(provisionalVersion)
-//            + dataBits.getSize();
-//    Ref<Version> version = chooseVersion(bitsNeeded, ecLevel);
 
     Ref<Version> version;
     if (hints != NULL/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
@@ -166,16 +151,11 @@ int Encoder::getAlphanumericCode(int code)
     return -1;
 }
 
-Mode Encoder::chooseMode(const QString& content)
-{
-    return chooseMode(content, "");
-}
-
 /**
    * Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
    * if it is Shift_JIS, and the input is only double-byte Kanji, then we return {@link Mode#KANJI}.
    */
-Mode Encoder::chooseMode(const QString& content, const QString& encoding)
+Mode Encoder::chooseMode(const std::string& content, const std::string& encoding)
 {
     if (encoding == "Shift_JIS") 
 	{
@@ -186,7 +166,7 @@ Mode Encoder::chooseMode(const QString& content, const QString& encoding)
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
     for (int i = 0; i < content.size(); i++) {
-        char c = content.at(i).toLatin1();
+        char c = content.at(i);
         if (c >= '0' && c <= '9') {
             hasNumeric = true;
         } else if (getAlphanumericCode(c) != -1) {
@@ -204,7 +184,7 @@ Mode Encoder::chooseMode(const QString& content, const QString& encoding)
     return Mode::BYTE;
 }
 
-//bool Encoder::isOnlyDoubleByteKanji(const QString& content)
+//bool Encoder::isOnlyDoubleByteKanji(const std::string& content)
 //{
 //    std::vector<byte> bytes;
 //    try {
@@ -266,11 +246,11 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
 {
     int capacity = numDataBytes << 3;
     if (bits.getSize() > capacity) {
-        QString message("data bits cannot fit in the QR Code");
-        message += QString::number(bits.getSize());
+        std::string message("data bits cannot fit in the QR Code");
+        message += zxing::common::StringUtils::intToStr(bits.getSize());
         message += " > ";
-        message += QString::number(capacity);
-        throw WriterException(message.toStdString().c_str());
+        message += zxing::common::StringUtils::intToStr(capacity);
+        throw WriterException(message.c_str());
     }
     for (int i = 0; i < 4 && bits.getSize() < capacity; ++i) {
         bits.appendBit(false);
@@ -370,12 +350,12 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 
     // "bits" must have "getNumDataBytes" bytes of data.
     if (bits.getSizeInBytes() != numDataBytes) {
-        QString message("Encoder::interleaveWithECBytes: Number of bits [");
-        message += QString::number(bits.getSizeInBytes());
+        std::string message("Encoder::interleaveWithECBytes: Number of bits [");
+        message += zxing::common::StringUtils::intToStr(bits.getSizeInBytes());
         message += "] and data bytes [";
-        message += QString::number(numDataBytes);
+        message += zxing::common::StringUtils::intToStr(numDataBytes);
         message += "] does not match";
-        throw WriterException( message.toStdString().c_str() );
+        throw WriterException( message.c_str());
     }
 
     // Step 1.  Divide data bytes into blocks and generate error correction bytes for them. We'll
@@ -430,12 +410,12 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         }
     }
     if (numTotalBytes != result->getSizeInBytes()) {  // Should be same.
-        QString message("Interleaving error: ");
-        message += QString::number(numTotalBytes);
+        std::string message("Interleaving error: ");
+        message += zxing::common::StringUtils::intToStr(numTotalBytes);
         message += " and ";
-        message += QString(result->getSizeInBytes());
+        message += zxing::common::StringUtils::intToStr(result->getSizeInBytes());
         message += " differ.";
-        throw WriterException(message.toStdString().c_str());
+        throw WriterException(message.c_str());
     }
 
     return result;
@@ -473,11 +453,11 @@ void Encoder::appendLengthInfo(int numLetters, const Version& version, const Mod
 {
     int numBits = mode.getCharacterCountBits(&version);
     if (numLetters >= (1 << numBits)) {
-        QString message = QString::number(numLetters);
+        std::string message = zxing::common::StringUtils::intToStr(numLetters);
         message += " is bigger than ";
-        message += QString::number((1 << numBits) - 1);
+        message += zxing::common::StringUtils::intToStr((1 << numBits) - 1);
 
-        throw WriterException(message.toStdString().c_str());
+        throw WriterException(message.c_str());
     }
     bits.appendBits(numLetters, numBits);
 }
@@ -485,10 +465,10 @@ void Encoder::appendLengthInfo(int numLetters, const Version& version, const Mod
 /**
    * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
    */
-void Encoder::appendBytes(const QString& content,
+void Encoder::appendBytes(const std::string& content,
                           Mode& mode,
                           BitArray& bits,
-                          const QString& encoding)
+                          const std::string& encoding)
 {
     if (mode == Mode::NUMERIC)
         appendNumericBytes(content, bits);
@@ -499,27 +479,27 @@ void Encoder::appendBytes(const QString& content,
     else if (mode == Mode::KANJI)
         appendKanjiBytes(content, bits);
     else {
-        QString message("Invalid mode: ");
-        message += QString::fromStdString(mode.getName());
-        throw WriterException(message.toStdString().c_str());
+        std::string message("Invalid mode: ");
+        message += mode.getName();
+        throw WriterException(message.c_str());
     }
 }
 
-void Encoder::appendNumericBytes( const QString& content, BitArray& bits)
+void Encoder::appendNumericBytes( const std::string& content, BitArray& bits)
 {
     int length = content.size();
     int i = 0;
     while (i < length) {
-        int num1 = content.at(i).toLatin1() - '0';
+        int num1 = content.at(i) - '0';
         if (i + 2 < length) {
             // Encode three numeric letters in ten bits.
-            int num2 = content.at(i + 1).toLatin1() - '0';
-            int num3 = content.at(i + 2).toLatin1() - '0';
+            int num2 = content.at(i + 1) - '0';
+            int num3 = content.at(i + 2) - '0';
             bits.appendBits(num1 * 100 + num2 * 10 + num3, 10);
             i += 3;
         } else if (i + 1 < length) {
             // Encode two numeric letters in seven bits.
-            int num2 = content.at(i + 1).toLatin1() - '0';
+            int num2 = content.at(i + 1) - '0';
             bits.appendBits(num1 * 10 + num2, 7);
             i += 2;
         } else {
@@ -530,17 +510,17 @@ void Encoder::appendNumericBytes( const QString& content, BitArray& bits)
     }
 }
 
-void Encoder::appendAlphanumericBytes(const QString& content, BitArray& bits)
+void Encoder::appendAlphanumericBytes(const std::string& content, BitArray& bits)
 {
     int length = content.length();
     int i = 0;
     while (i < length) {
-        int code1 = getAlphanumericCode(content.at(i).toLatin1());
+        int code1 = getAlphanumericCode(content.at(i));
         if (code1 == -1) {
             throw WriterException();
         }
         if (i + 1 < length) {
-            int code2 = getAlphanumericCode(content.at(i + 1).toLatin1());
+            int code2 = getAlphanumericCode(content.at(i + 1));
             if (code2 == -1) {
                 throw WriterException();
             }
@@ -555,9 +535,9 @@ void Encoder::appendAlphanumericBytes(const QString& content, BitArray& bits)
     }
 }
 
-void Encoder::append8BitBytes(const QString& content, BitArray& bits, const QString& /*encoding*/)
+void Encoder::append8BitBytes(const std::string& content, BitArray& bits, const std::string& /*encoding*/)
 {
-    // For now we will suppose that all the encoding has been handled by QString class.
+    // For now we will suppose that all the encoding has been handled by std::string class.
     //    byte[] bytes;
     //    try {
     //        bytes = content.getBytes(encoding);
@@ -566,13 +546,13 @@ void Encoder::append8BitBytes(const QString& content, BitArray& bits, const QStr
     //    }
 
     for (int i=0; i<content.size(); i++) {
-        bits.appendBits(content.at(i).toLatin1(), 8);
+        bits.appendBits(content.at(i), 8);
     }
 }
 
-void Encoder::appendKanjiBytes(const QString& content, BitArray& bits)
+void Encoder::appendKanjiBytes(const std::string& content, BitArray& bits)
 {
-    // For now we will suppose that all the encoding has been handled by QString class.
+    // For now we will suppose that all the encoding has been handled by std::string class.
     //    try {
     //        bytes = content.getBytes("Shift_JIS");
     //    } catch (UnsupportedEncodingException uee) {
@@ -580,8 +560,8 @@ void Encoder::appendKanjiBytes(const QString& content, BitArray& bits)
     //    }
     int length = content.size();
     for (int i = 0; i < length; i += 2) {
-        int byte1 = content.at(i).toLatin1() & 0xFF;
-        int byte2 = content.at(i + 1).toLatin1() & 0xFF;
+        int byte1 = content.at(i) & 0xFF;
+        int byte2 = content.at(i + 1) & 0xFF;
         int code = (byte1 << 8) | byte2;
         int subtracted = -1;
         if (code >= 0x8140 && code <= 0x9ffc) {

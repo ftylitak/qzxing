@@ -490,7 +490,7 @@ QImage QZXing::encodeData(const QString& data)
 {
     QImage image;
     try {
-        Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data, qrcode::ErrorCorrectionLevel::L );
+        Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data.toStdString(), qrcode::ErrorCorrectionLevel::L );
         Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
         const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
         image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
