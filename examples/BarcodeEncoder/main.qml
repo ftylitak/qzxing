@@ -1,51 +1,34 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import QZXing 2.3
+import QtQuick.Layouts 1.3
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
 
-    TextField {
-        id: inputField
-        anchors.left: parent.left
-        anchors.right: submit.left
-        anchors.top: parent.top
-        anchors.margins: 10
-    }
-
-    Button {
-        id: submit
-        anchors.right: parent.right
-        anchors.top: parent.top
-        text: "encode"
-        anchors.margins: 10
-        onClicked: {
-            qzxing.encodeData(inputField.text)
-            inputField.text = '';
-            resultImage.source = "";
-            resultImage.source = "image://QZXing/latestEncoded";
+    ColumnLayout {
+        anchors {
+            fill: parent
+            margins: 10
         }
-    }
-
-    GroupBox {
-        anchors.top: inputField.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 10
-        title: "Result barcode image"
-        clip: true
-
-        Image{
-            id:resultImage
-            anchors.centerIn: parent
-            cache: false;
+        TextField {
+            id: inputField
+            Layout.fillWidth: true
+            selectByMouse: true
+            text: "Hello world!"
         }
-    }
-
-    QZXing {
-        id: qzxing
+        GroupBox {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            title: "Result barcode image"
+            clip: true
+            Image{
+                id:resultImage
+                anchors.centerIn: parent
+                source: "image://QZXing/qrcode/" + inputField.text
+                cache: false;
+            }
+        }
     }
 }
