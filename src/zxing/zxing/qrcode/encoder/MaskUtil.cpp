@@ -1,6 +1,7 @@
 #include "MaskUtil.h"
 #include <zxing/common/IllegalArgumentException.h>
 #include <stdlib.h>
+#include <algorithm> 
 
 namespace zxing {
 namespace qrcode {
