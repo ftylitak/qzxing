@@ -153,7 +153,7 @@ public slots:
     /**
      * The main encoding function. Currently supports only Qr code encoding
      */
-    QImage encodeData(const QString& data);
+    static QImage encodeData(const QString& data);
 
     /**
       * Get the prossecing time in millisecond of the last decode operation.

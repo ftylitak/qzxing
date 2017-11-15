@@ -23,16 +23,9 @@
 
 class QZXingImageProvider : public QQuickImageProvider
 {
-private:
-    QPixmap storedPixmap;
-    static QZXingImageProvider *singletonInstance_ptr_;
-protected:
-    QZXingImageProvider();
 public:
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
-    void storeImage(const QImage& providedImage);
-
-    static QZXingImageProvider* getInstance();
+    QZXingImageProvider();
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 };
 
 #endif // QZXINGIMAGEPROVIDER_H

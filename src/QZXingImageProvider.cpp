@@ -1,28 +1,31 @@
 #include "QZXingImageProvider.h"
+#include <QZXing>
 
-QZXingImageProvider *QZXingImageProvider::singletonInstance_ptr_ = NULL;
-
-QZXingImageProvider::QZXingImageProvider() : QQuickImageProvider(QQuickImageProvider::Pixmap)
+QZXingImageProvider::QZXingImageProvider() : QQuickImageProvider(QQuickImageProvider::Image)
 {
 }
 
-QPixmap QZXingImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    if(id == "latestEncoded")
-        return storedPixmap;
-    else
-        return QPixmap();
-}
+    int slashIndex = id.indexOf('/');
+    if (slashIndex == -1) {
+        qWarning() << "Can't parse url" << id << ". Usage is <format>/<data>";
+        return QImage();
+    }
 
-void QZXingImageProvider::storeImage(const QImage &providedImage)
-{
-    storedPixmap = QPixmap::fromImage(providedImage);
-}
+    QUrl formatUrl = id.left(slashIndex);
+    QString encodeFormat = formatUrl.path();
+    if (encodeFormat != "qrcode") {
+        qWarning() << "Encoding format" << encodeFormat << "is not supported. Only qrcode is supported";
+        return QImage();
+    }
 
-QZXingImageProvider *QZXingImageProvider::getInstance()
-{
-    if(!singletonInstance_ptr_)
-        singletonInstance_ptr_ = new QZXingImageProvider();
+    QList<QPair<QString, QString>> encodeOptions = QUrlQuery(formatUrl).queryItems();
+    Q_UNUSED(encodeOptions)
 
-    return singletonInstance_ptr_;
+    QString data = id.mid(slashIndex + 1);
+
+    QImage result = QZXing::encodeData(data);
+    *size = result.size();
+    return result;
 }

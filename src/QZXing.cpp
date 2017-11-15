@@ -92,7 +92,7 @@ void QZXing::registerQMLTypes()
 #if  QT_VERSION >= 0x050000
 void QZXing::registerQMLImageProvider(QQmlEngine& engine)
 {
-    engine.addImageProvider(QLatin1String("QZXing"), QZXingImageProvider::getInstance());
+    engine.addImageProvider(QLatin1String("QZXing"), new QZXingImageProvider());
 }
 #endif //QT_VERSION >= Qt 5.0
 
@@ -501,9 +501,6 @@ QImage QZXing::encodeData(const QString& data)
                                    qRgb(255,255,255));
 
         image = image.scaled(240, 240);
-#ifdef QZXING_QML
-        QZXingImageProvider::getInstance()->storeImage(image);
-#endif //QZXING_QML
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }
