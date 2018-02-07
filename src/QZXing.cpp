@@ -379,7 +379,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             QString string = QString(res->getText()->getText().c_str());
             if (!string.isEmpty() && (string.length() > 0)) {
                 int fmt = res->getBarcodeFormat().value;
-                foundedFmt = decoderFormatToString(fmt);
+                foundedFmt = decoderFormatToString(1<<fmt);
                 charSet_ = QString::fromStdString(res->getCharSet());
                 if (!charSet_.isEmpty()) {
                     QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
