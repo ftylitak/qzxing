@@ -1,0 +1,48 @@
+ADD_FILES( LIB_QZXING
+	BarcodeFormat.cpp
+	BarcodeFormat.h
+	Binarizer.cpp
+	Binarizer.h
+	BinaryBitmap.cpp
+	BinaryBitmap.h
+	ChecksumException.cpp
+	ChecksumException.h
+	DecodeHints.cpp
+	DecodeHints.h
+	EncodeHint.cpp
+	EncodeHint.h
+	Exception.cpp
+	Exception.h
+	FormatException.cpp
+	FormatException.h
+	IllegalStateException.h
+	InvertedLuminanceSource.cpp
+	InvertedLuminanceSource.h
+	LuminanceSource.cpp
+	LuminanceSource.h
+	MultiFormatReader.cpp
+	MultiFormatReader.h
+	NotFoundException.h
+	Reader.cpp
+	Reader.h
+	ReaderException.h
+	Result.cpp
+	Result.h
+	ResultIO.cpp
+	ResultPoint.cpp
+	ResultPoint.h
+	ResultPointCallback.cpp
+	ResultPointCallback.h
+	UnsupportedEncodingException.h
+	WriterException.h
+	ZXing.h
+)
+
+
+add_subdirectory(aztec)
+add_subdirectory(common)
+add_subdirectory(datamatrix)
+add_subdirectory(multi)
+add_subdirectory(oned)
+add_subdirectory(pdf417)
+add_subdirectory(qrcode)
