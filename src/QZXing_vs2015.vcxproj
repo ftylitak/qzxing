@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1AA8EEB7-988D-3D7F-B39E-5DFF8B0AE56A}</ProjectGuid>
+    <RootNamespace>QZXing</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <PlatformToolSet>v140</PlatformToolSet>
+    <OutputDirectory>release\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>QZXing2</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <PlatformToolSet>v140</PlatformToolSet>
+    <OutputDirectory>debug\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <IntermediateDirectory>debug\</IntermediateDirectory>
+    <PrimaryOutput>QZXing2</PrimaryOutput>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">QZXing2</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">QZXing2</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;.;zxing;zxing\win32\zxing;zxing\win32\zxing\msvc;$(QTDIR)\include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;release;$(QTDIR)\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QZXING_LIBRARY;ZXING_ICONV_CONST;NOFMAXL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Gui.lib;$(QTDIR)\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>..\lib\release\QZXing2.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <Version>2.3</Version>
+      <ProgramDatabaseFile>..\lib\release\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QZXING_LIBRARY;ZXING_ICONV_CONST;NOFMAXL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;.;zxing;zxing\win32\zxing;zxing\win32\zxing\msvc;$(QTDIR)\include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;debug;$(QTDIR)\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>debug\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QZXING_LIBRARY;ZXING_ICONV_CONST;NOFMAXL;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <OutputFile>..\lib\debug\QZXing2.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <Version>2.3</Version>
+      <ProgramDatabaseFile>..\lib\debug\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QZXING_LIBRARY;ZXING_ICONV_CONST;NOFMAXL;QT_GUI_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Debug\moc_ImageHandler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_QZXing.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Release\moc_ImageHandler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Release\moc_QZXing.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="zxing\zxing\aztec\decoder\AztecDecoder.cpp" />
+    <ClCompile Include="zxing\zxing\aztec\detector\AztecDetector.cpp" />
+    <ClCompile Include="zxing\zxing\aztec\AztecDetectorResult.cpp" />
+    <ClCompile Include="zxing\zxing\aztec\AztecReader.cpp" />
+    <ClCompile Include="zxing\zxing\BarcodeFormat.cpp" />
+    <ClCompile Include="zxing\bigint\BigInteger.cc" />
+    <ClCompile Include="zxing\bigint\BigIntegerAlgorithms.cc" />
+    <ClCompile Include="zxing\bigint\BigIntegerUtils.cc" />
+    <ClCompile Include="zxing\bigint\BigUnsigned.cc" />
+    <ClCompile Include="zxing\bigint\BigUnsignedInABase.cc" />
+    <ClCompile Include="zxing\zxing\Binarizer.cpp" />
+    <ClCompile Include="zxing\zxing\BinaryBitmap.cpp" />
+    <ClCompile Include="zxing\zxing\common\BitArray.cpp" />
+    <ClCompile Include="zxing\zxing\common\BitArrayIO.cpp" />
+    <ClCompile Include="zxing\zxing\common\BitMatrix.cpp" />
+    <ClCompile Include="zxing\zxing\common\BitSource.cpp" />
+    <ClCompile Include="zxing\zxing\multi\ByQuadrantReader.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\encoder\ByteMatrix.cpp" />
+    <ClCompile Include="CameraImageWrapper.cpp" />
+    <ClCompile Include="zxing\zxing\common\CharacterSetECI.cpp" />
+    <ClCompile Include="zxing\zxing\ChecksumException.cpp" />
+    <ClCompile Include="zxing\zxing\oned\CodaBarReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\Code128Reader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\Code39Reader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\Code93Reader.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\decoder\DataMatrixBitMatrixParser.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\detector\DataMatrixCornerPoint.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\decoder\DataMatrixDataBlock.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\decoder\DataMatrixDecodedBitStreamParser.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\decoder\DataMatrixDecoder.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\detector\DataMatrixDetector.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\detector\DataMatrixDetectorException.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\DataMatrixReader.cpp" />
+    <ClCompile Include="zxing\zxing\datamatrix\DataMatrixVersion.cpp" />
+    <ClCompile Include="zxing\zxing\DecodeHints.cpp" />
+    <ClCompile Include="zxing\zxing\common\DecoderResult.cpp" />
+    <ClCompile Include="zxing\zxing\common\DetectorResult.cpp" />
+    <ClCompile Include="zxing\zxing\oned\EAN13Reader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\EAN8Reader.cpp" />
+    <ClCompile Include="zxing\zxing\EncodeHint.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\ec\ErrorCorrection.cpp" />
+    <ClCompile Include="zxing\zxing\Exception.cpp" />
+    <ClCompile Include="zxing\zxing\FormatException.cpp" />
+    <ClCompile Include="zxing\zxing\common\reedsolomon\GenericGF.cpp" />
+    <ClCompile Include="zxing\zxing\common\reedsolomon\GenericGFPoly.cpp" />
+    <ClCompile Include="zxing\zxing\multi\GenericMultipleBarcodeReader.cpp" />
+    <ClCompile Include="zxing\zxing\common\GlobalHistogramBinarizer.cpp" />
+    <ClCompile Include="zxing\zxing\common\GreyscaleLuminanceSource.cpp" />
+    <ClCompile Include="zxing\zxing\common\GreyscaleRotatedLuminanceSource.cpp" />
+    <ClCompile Include="zxing\zxing\common\GridSampler.cpp" />
+    <ClCompile Include="zxing\zxing\common\HybridBinarizer.cpp" />
+    <ClCompile Include="zxing\zxing\oned\ITFReader.cpp" />
+    <ClCompile Include="zxing\zxing\common\IllegalArgumentException.cpp" />
+    <ClCompile Include="ImageHandler.cpp" />
+    <ClCompile Include="zxing\zxing\InvertedLuminanceSource.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\detector\LinesSampler.cpp" />
+    <ClCompile Include="zxing\zxing\LuminanceSource.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\encoder\MaskUtil.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\encoder\MatrixUtil.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\ec\ModulusGF.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\ec\ModulusPoly.cpp" />
+    <ClCompile Include="zxing\zxing\common\detector\MonochromeRectangleDetector.cpp" />
+    <ClCompile Include="zxing\zxing\multi\qrcode\detector\MultiDetector.cpp" />
+    <ClCompile Include="zxing\zxing\multi\qrcode\detector\MultiFinderPatternFinder.cpp" />
+    <ClCompile Include="zxing\zxing\oned\MultiFormatOneDReader.cpp" />
+    <ClCompile Include="zxing\zxing\MultiFormatReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\MultiFormatUPCEANReader.cpp" />
+    <ClCompile Include="zxing\zxing\multi\MultipleBarcodeReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\OneDReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\OneDResultPoint.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\PDF417BitMatrixParser.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\PDF417DecodedBitStreamParser.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\decoder\PDF417Decoder.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\detector\PDF417Detector.cpp" />
+    <ClCompile Include="zxing\zxing\pdf417\PDF417Reader.cpp" />
+    <ClCompile Include="zxing\zxing\common\PerspectiveTransform.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRAlignmentPattern.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRAlignmentPatternFinder.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRBitMatrixParser.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\encoder\QRCode.cpp" />
+    <ClCompile Include="zxing\zxing\multi\qrcode\QRCodeMultiReader.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\QRCodeReader.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRDataBlock.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRDataMask.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRDecodedBitStreamParser.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRDecoder.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRDetector.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\encoder\QREncoder.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\QRErrorCorrectionLevel.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRFinderPattern.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRFinderPatternFinder.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\detector\QRFinderPatternInfo.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\QRFormatInformation.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\decoder\QRMode.cpp" />
+    <ClCompile Include="zxing\zxing\qrcode\QRVersion.cpp" />
+    <ClCompile Include="QZXing.cpp" />
+    <ClCompile Include="zxing\zxing\Reader.cpp" />
+    <ClCompile Include="zxing\zxing\common\reedsolomon\ReedSolomonDecoder.cpp" />
+    <ClCompile Include="zxing\zxing\common\reedsolomon\ReedSolomonEncoder.cpp" />
+    <ClCompile Include="zxing\zxing\common\reedsolomon\ReedSolomonException.cpp" />
+    <ClCompile Include="zxing\zxing\Result.cpp" />
+    <ClCompile Include="zxing\zxing\ResultIO.cpp" />
+    <ClCompile Include="zxing\zxing\ResultPoint.cpp" />
+    <ClCompile Include="zxing\zxing\ResultPointCallback.cpp" />
+    <ClCompile Include="zxing\zxing\common\Str.cpp" />
+    <ClCompile Include="zxing\zxing\common\StringUtils.cpp" />
+    <ClCompile Include="zxing\zxing\oned\UPCAReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\UPCEANReader.cpp" />
+    <ClCompile Include="zxing\zxing\oned\UPCEReader.cpp" />
+    <ClCompile Include="zxing\zxing\common\detector\WhiteRectangleDetector.cpp" />
+    <ClCompile Include="zxing\win32\zxing\win_iconv.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="zxing\zxing\qrcode\detector\AlignmentPattern.h" />
+    <ClInclude Include="zxing\zxing\qrcode\detector\AlignmentPatternFinder.h" />
+    <ClInclude Include="zxing\zxing\common\Array.h" />
+    <ClInclude Include="zxing\zxing\aztec\AztecDetectorResult.h" />
+    <ClInclude Include="zxing\zxing\aztec\AztecReader.h" />
+    <ClInclude Include="zxing\zxing\BarcodeFormat.h" />
+    <ClInclude Include="zxing\bigint\BigInteger.hh" />
+    <ClInclude Include="zxing\bigint\BigIntegerAlgorithms.hh" />
+    <ClInclude Include="zxing\bigint\BigIntegerLibrary.hh" />
+    <ClInclude Include="zxing\bigint\BigIntegerUtils.hh" />
+    <ClInclude Include="zxing\bigint\BigUnsigned.hh" />
+    <ClInclude Include="zxing\bigint\BigUnsignedInABase.hh" />
+    <ClInclude Include="zxing\zxing\Binarizer.h" />
+    <ClInclude Include="zxing\zxing\BinaryBitmap.h" />
+    <ClInclude Include="zxing\zxing\common\BitArray.h" />
+    <ClInclude Include="zxing\zxing\common\BitMatrix.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\decoder\BitMatrixParser.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\BitMatrixParser.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\BitMatrixParser.h" />
+    <ClInclude Include="zxing\zxing\common\BitSource.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\BlockPair.h" />
+    <ClInclude Include="zxing\zxing\multi\ByQuadrantReader.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\ByteMatrix.h" />
+    <ClInclude Include="CameraImageWrapper.h" />
+    <ClInclude Include="zxing\zxing\common\CharacterSetECI.h" />
+    <ClInclude Include="zxing\zxing\ChecksumException.h" />
+    <ClInclude Include="zxing\zxing\oned\CodaBarReader.h" />
+    <ClInclude Include="zxing\zxing\oned\Code128Reader.h" />
+    <ClInclude Include="zxing\zxing\oned\Code39Reader.h" />
+    <ClInclude Include="zxing\zxing\oned\Code93Reader.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\detector\CornerPoint.h" />
+    <ClInclude Include="zxing\zxing\common\Counted.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\decoder\DataBlock.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\DataBlock.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\DataMask.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\DataMatrixReader.h" />
+    <ClInclude Include="zxing\zxing\DecodeHints.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\decoder\DecodedBitStreamParser.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\DecodedBitStreamParser.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\DecodedBitStreamParser.h" />
+    <ClInclude Include="zxing\zxing\aztec\decoder\Decoder.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\decoder\Decoder.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\Decoder.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\Decoder.h" />
+    <ClInclude Include="zxing\zxing\common\DecoderResult.h" />
+    <ClInclude Include="zxing\zxing\aztec\detector\Detector.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\detector\Detector.h" />
+    <ClInclude Include="zxing\zxing\pdf417\detector\Detector.h" />
+    <ClInclude Include="zxing\zxing\qrcode\detector\Detector.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\detector\DetectorException.h" />
+    <ClInclude Include="zxing\zxing\common\DetectorResult.h" />
+    <ClInclude Include="zxing\zxing\oned\EAN13Reader.h" />
+    <ClInclude Include="zxing\zxing\oned\EAN8Reader.h" />
+    <ClInclude Include="zxing\zxing\EncodeHint.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\Encoder.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\ec\ErrorCorrection.h" />
+    <ClInclude Include="zxing\zxing\qrcode\ErrorCorrectionLevel.h" />
+    <ClInclude Include="zxing\zxing\Exception.h" />
+    <ClInclude Include="zxing\zxing\qrcode\detector\FinderPattern.h" />
+    <ClInclude Include="zxing\zxing\qrcode\detector\FinderPatternFinder.h" />
+    <ClInclude Include="zxing\zxing\qrcode\detector\FinderPatternInfo.h" />
+    <ClInclude Include="zxing\zxing\FormatException.h" />
+    <ClInclude Include="zxing\zxing\qrcode\FormatInformation.h" />
+    <ClInclude Include="zxing\zxing\common\reedsolomon\GenericGF.h" />
+    <ClInclude Include="zxing\zxing\common\reedsolomon\GenericGFPoly.h" />
+    <ClInclude Include="zxing\zxing\multi\GenericMultipleBarcodeReader.h" />
+    <ClInclude Include="zxing\zxing\common\GlobalHistogramBinarizer.h" />
+    <ClInclude Include="zxing\zxing\common\GreyscaleLuminanceSource.h" />
+    <ClInclude Include="zxing\zxing\common\GreyscaleRotatedLuminanceSource.h" />
+    <ClInclude Include="zxing\zxing\common\GridSampler.h" />
+    <ClInclude Include="zxing\zxing\common\HybridBinarizer.h" />
+    <ClInclude Include="zxing\zxing\oned\ITFReader.h" />
+    <ClInclude Include="zxing\zxing\common\IllegalArgumentException.h" />
+    <ClInclude Include="zxing\zxing\IllegalStateException.h" />
+    <CustomBuild Include="ImageHandler.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQZXING_LIBRARY -DZXING_ICONV_CONST -DNOFMAXL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -D_WINDLL "-I." "-I.\zxing" "-I.\zxing\win32\zxing" "-I.\zxing\win32\zxing\msvc" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ImageHandler.h...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQZXING_LIBRARY -DZXING_ICONV_CONST -DNOFMAXL -DQT_GUI_LIB -DQT_CORE_LIB -D_WINDLL "-I." "-I.\zxing" "-I.\zxing\win32\zxing" "-I.\zxing\win32\zxing\msvc" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ImageHandler.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="zxing\zxing\InvertedLuminanceSource.h" />
+    <ClInclude Include="zxing\zxing\common\detector\JavaMath.h" />
+    <ClInclude Include="zxing\zxing\pdf417\detector\LinesSampler.h" />
+    <ClInclude Include="zxing\zxing\LuminanceSource.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\MaskUtil.h" />
+    <ClInclude Include="zxing\zxing\common\detector\MathUtils.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\MatrixUtil.h" />
+    <ClInclude Include="zxing\zxing\qrcode\decoder\Mode.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\ec\ModulusGF.h" />
+    <ClInclude Include="zxing\zxing\pdf417\decoder\ec\ModulusPoly.h" />
+    <ClInclude Include="zxing\zxing\common\detector\MonochromeRectangleDetector.h" />
+    <ClInclude Include="zxing\zxing\multi\qrcode\detector\MultiDetector.h" />
+    <ClInclude Include="zxing\zxing\multi\qrcode\detector\MultiFinderPatternFinder.h" />
+    <ClInclude Include="zxing\zxing\oned\MultiFormatOneDReader.h" />
+    <ClInclude Include="zxing\zxing\MultiFormatReader.h" />
+    <ClInclude Include="zxing\zxing\oned\MultiFormatUPCEANReader.h" />
+    <ClInclude Include="zxing\zxing\multi\MultipleBarcodeReader.h" />
+    <ClInclude Include="zxing\zxing\NotFoundException.h" />
+    <ClInclude Include="zxing\bigint\NumberlikeArray.hh" />
+    <ClInclude Include="zxing\zxing\oned\OneDReader.h" />
+    <ClInclude Include="zxing\zxing\oned\OneDResultPoint.h" />
+    <ClInclude Include="zxing\zxing\pdf417\PDF417Reader.h" />
+    <ClInclude Include="zxing\zxing\common\PerspectiveTransform.h" />
+    <ClInclude Include="zxing\zxing\common\Point.h" />
+    <ClInclude Include="zxing\zxing\qrcode\encoder\QRCode.h" />
+    <ClInclude Include="zxing\zxing\multi\qrcode\QRCodeMultiReader.h" />
+    <ClInclude Include="zxing\zxing\qrcode\QRCodeReader.h" />
+    <CustomBuild Include="QZXing.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQZXING_LIBRARY -DZXING_ICONV_CONST -DNOFMAXL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -D_WINDLL "-I." "-I.\zxing" "-I.\zxing\win32\zxing" "-I.\zxing\win32\zxing\msvc" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing QZXing.h...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQZXING_LIBRARY -DZXING_ICONV_CONST -DNOFMAXL -DQT_GUI_LIB -DQT_CORE_LIB -D_WINDLL "-I." "-I.\zxing" "-I.\zxing\win32\zxing" "-I.\zxing\win32\zxing\msvc" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing QZXing.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="QZXing_global.h" />
+    <ClInclude Include="zxing\zxing\Reader.h" />
+    <ClInclude Include="zxing\zxing\ReaderException.h" />
+    <ClInclude Include="zxing\zxing\common\reedsolomon\ReedSolomonDecoder.h" />
+    <ClInclude Include="zxing\zxing\common\reedsolomon\ReedSolomonEncoder.h" />
+    <ClInclude Include="zxing\zxing\common\reedsolomon\ReedSolomonException.h" />
+    <ClInclude Include="zxing\zxing\Result.h" />
+    <ClInclude Include="zxing\zxing\ResultPoint.h" />
+    <ClInclude Include="zxing\zxing\ResultPointCallback.h" />
+    <ClInclude Include="zxing\zxing\common\Str.h" />
+    <ClInclude Include="zxing\zxing\common\StringUtils.h" />
+    <ClInclude Include="zxing\zxing\common\Types.h" />
+    <ClInclude Include="zxing\zxing\oned\UPCAReader.h" />
+    <ClInclude Include="zxing\zxing\oned\UPCEANReader.h" />
+    <ClInclude Include="zxing\zxing\oned\UPCEReader.h" />
+    <ClInclude Include="zxing\zxing\UnsupportedEncodingException.h" />
+    <ClInclude Include="zxing\zxing\datamatrix\Version.h" />
+    <ClInclude Include="zxing\zxing\qrcode\Version.h" />
+    <ClInclude Include="zxing\zxing\common\detector\WhiteRectangleDetector.h" />
+    <ClInclude Include="zxing\zxing\WriterException.h" />
+    <ClInclude Include="zxing\zxing\ZXing.h" />
+    <ClInclude Include="zxing\win32\zxing\iconv.h" />
+    <ClInclude Include="zxing\win32\zxing\msvc\stdint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:strictStrings -Zc:throwingNew -Zi -MDd -GR -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E -Za $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;debug\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_predefs.h;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:strictStrings -Zc:throwingNew -O2 -MD -GR -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E -Za $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="G:\qzxing\qzxing-master\src\QZXing_resource.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
