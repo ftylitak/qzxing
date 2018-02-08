@@ -38,7 +38,7 @@ class ImageHandler;
   * Anyone interested in using more technical stuff
   * from the ZXing library is welcomed to add/edit on free will.
   *
-  * Regarding DecoderFormat, by default all of those are enabled (except DataMatrix will is still not supported)
+  * Regarding DecoderFormat, by default all of those are enabled
   */
 class
         #ifndef DISABLE_LIBRARY_FEATURES
@@ -78,6 +78,11 @@ public:
         DecoderFormat_CODE_128_GS1 = 1 << 18
     } ;
     typedef unsigned int DecoderFormatType;
+
+    enum EncoderFormat {
+        EncoderFormat_INVALID,
+        EncoderFormat_QR_CODE
+    };
 
     QZXing(QObject *parent = NULL);
     ~QZXing();
@@ -153,7 +158,10 @@ public slots:
     /**
      * The main encoding function. Currently supports only Qr code encoding
      */
-    static QImage encodeData(const QString& data);
+    static QImage encodeData(const QString& data,
+                             const EncoderFormat encoderFormat = EncoderFormat_QR_CODE,
+                             const QSize encoderImageSize = QSize(240, 240)/*,
+                             const errorcorrectionleve*/);
 
     /**
       * Get the prossecing time in millisecond of the last decode operation.
