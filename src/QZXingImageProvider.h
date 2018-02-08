@@ -17,7 +17,6 @@
 #ifndef QZXINGIMAGEPROVIDER_H
 #define QZXINGIMAGEPROVIDER_H
 
-#include <QObject>
 #include <QQuickImageProvider>
 #include <QImage>
 

@@ -14,22 +14,24 @@
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include <zxing/common/detector/WhiteRectangleDetector.h>
 #include <QColor>
+#include <QtCore/QTextCodec>
+#include <QDebug>
 
 #if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
-    #include <QtDeclarative>
+#include <QtDeclarative>
 #elif QT_VERSION >= 0x050000
-    #include <QtQml/qqml.h>
+#include <QtQml/qqml.h>
 #endif
 
 #ifdef QZXING_MULTIMEDIA
-    #include "QZXingFilter.h"
+#include "QZXingFilter.h"
 #endif //QZXING_MULTIMEDIA
 
 #ifdef QZXING_QML
-    #include <QQmlEngine>
-    #include <QQmlContext>
-    #include <QQuickImageProvider>
-    #include "QZXingImageProvider.h"
+#include <QQmlEngine>
+#include <QQmlContext>
+#include <QQuickImageProvider>
+#include "QZXingImageProvider.h"
 #endif //QZXING_QML
 
 
@@ -486,21 +488,33 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
 #endif //QZXING_QML
 }
 
-QImage QZXing::encodeData(const QString& data)
+QImage QZXing::encodeData(const QString& data,
+                          const EncoderFormat encoderFormat,
+                          const QSize encoderImageSize)
 {
     QImage image;
-    try {
-        Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data.toStdString(), qrcode::ErrorCorrectionLevel::L );
-        Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
-        const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
-        image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
-        for(int i=0; i<bytesRef->getWidth(); i++)
-            for(int j=0; j<bytesRef->getHeight(); j++)
-                image.setPixel(i, j, bytes[i][j] ?
-                                   qRgb(0,0,0) :
-                                   qRgb(255,255,255));
 
-        image = image.scaled(240, 240);
+    try {
+        switch (encoderFormat) {
+        case EncoderFormat_QR_CODE:
+        {
+            Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data.toStdString(), qrcode::ErrorCorrectionLevel::L );
+            Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
+            const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
+            image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
+            for(int i=0; i<bytesRef->getWidth(); i++)
+                for(int j=0; j<bytesRef->getHeight(); j++)
+                    image.setPixel(i, j, bytes[i][j] ?
+                                       qRgb(0,0,0) :
+                                       qRgb(255,255,255));
+
+            image = image.scaled(240, 240);
+            break;
+        }
+        case EncoderFormat_INVALID:
+        default:
+            break;
+        }
     } catch (std::exception& e) {
         std::cout << "Error: " << e.what() << std::endl;
     }
