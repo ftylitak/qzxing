@@ -111,7 +111,7 @@ void BitMatrix::setRow(int y, Ref<zxing::BitArray> row)
     }
 
     //change with memcopy
-    for(size_t i=0; i<width; i++)
+    for(size_t i=0; i<(size_t)width; i++)
         bits[y * rowSize + i] = row->get(i);
 }
 

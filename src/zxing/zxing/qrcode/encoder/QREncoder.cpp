@@ -165,7 +165,7 @@ Mode Encoder::chooseMode(const std::string& content, const std::string& encoding
 
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
-    for (int i = 0; i < content.size(); i++) {
+    for (int i = 0; i < (int)content.size(); i++) {
         char c = content.at(i);
         if (c >= '0' && c <= '9') {
             hasNumeric = true;
@@ -544,7 +544,7 @@ void Encoder::append8BitBytes(const std::string& content, BitArray& bits, const 
     //        throw WriterException(uee);
     //    }
 
-    for (int i=0; i<content.size(); i++) {
+    for (int i=0; i<(int)content.size(); i++) {
         bits.appendBits(content.at(i), 8);
     }
 }

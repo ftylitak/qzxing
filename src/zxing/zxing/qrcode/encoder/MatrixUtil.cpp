@@ -187,7 +187,7 @@ void MatrixUtil::embedDataBits(const BitArray& dataBits, int maskPattern, ByteMa
         if (x == 6) {
             x -= 1;
         }
-        while (y >= 0 && y < matrix.getHeight()) {
+        while (y >= 0 && y < (int)matrix.getHeight()) {
             for (int i = 0; i < 2; ++i) {
                 int xx = x - i;
                 // Skip the cell if it's not empty.

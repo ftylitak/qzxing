@@ -121,7 +121,7 @@ int MaskUtil::applyMaskPenaltyRule4(const ByteMatrix& matrix)
     int height = matrix.getHeight();
     for (int y = 0; y < height; y++) {
         const std::vector<byte>& arrayY = array[y];
-        for (size_t x = 0; x < width; x++) {
+        for (size_t x = 0; x < (size_t)width; x++) {
             if (arrayY[x] == 1) {
                 numDarkCells++;
             }
@@ -184,7 +184,7 @@ int MaskUtil::applyMaskPenaltyRule1Internal(const ByteMatrix& matrix, bool isHor
     int iLimit = isHorizontal ? matrix.getHeight() : matrix.getWidth();
     int jLimit = isHorizontal ? matrix.getWidth() : matrix.getHeight();
     const std::vector<std::vector<byte> >& array = matrix.getArray();
-    for (size_t i = 0; i < iLimit; i++) {
+    for (size_t i = 0; i < (size_t)iLimit; i++) {
         int numSameBitCells = 0;
         int prevBit = -1;
         for (int j = 0; j < jLimit; j++) {
