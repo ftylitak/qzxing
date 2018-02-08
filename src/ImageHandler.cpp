@@ -23,6 +23,7 @@ ImageHandler::ImageHandler(QObject *parent) :
 
 QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, int width, int height)
 {
+	Q_UNUSED(imageObj);
     QImage img;
 #if defined(QZXING_QML)
 #if QT_VERSION >= 0x050000

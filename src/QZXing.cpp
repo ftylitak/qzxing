@@ -269,7 +269,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
         qreal xMin = resultPoints[0]->getX();
         qreal xMax = xMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
+        for (unsigned int i = 1; i < (unsigned int)resultPoints->size(); ++i) {
             qreal x = resultPoints[i]->getX();
             if (x < xMin)
                 xMin = x;
@@ -296,7 +296,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
         qreal xMax = xMin;
         qreal yMin = resultPoints[0]->getY();
         qreal yMax = yMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
+        for (unsigned int i = 1; i < (unsigned int)resultPoints->size(); ++i) {
             qreal x = resultPoints[i]->getX();
             qreal y = resultPoints[i]->getY();
             if (x < xMin)
@@ -456,6 +456,11 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
+	Q_UNUSED(imageUrl);
+	Q_UNUSED(offsetX);
+	Q_UNUSED(offsetY);
+	Q_UNUSED(width);
+	Q_UNUSED(height);
 #ifdef QZXING_QML
 
     QString imagePath = imageUrl.path();
@@ -494,8 +499,8 @@ QImage QZXing::encodeData(const QString& data)
         Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
         const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
         image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
-        for(int i=0; i<bytesRef->getWidth(); i++)
-            for(int j=0; j<bytesRef->getHeight(); j++)
+        for(int i=0; i<(int)bytesRef->getWidth(); i++)
+            for(int j=0; j<(int)bytesRef->getHeight(); j++)
                 image.setPixel(i, j, bytes[i][j] ?
                                    qRgb(0,0,0) :
                                    qRgb(255,255,255));
