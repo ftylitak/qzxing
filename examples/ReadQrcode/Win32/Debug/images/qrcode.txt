@@ -1,0 +1,7 @@
+ok bank: 	http://zb.ew1.cn/zy/scannGZH.do?topOpenid=ohMcv05kBhQDFE7c-StCM3k46t6A
+ok car: 	http://weixin.qq.com/r/bT795f-E6qKVrbuG92t-
+game1:	http://qstx.rxdouniu.cn/admin/scan_return?erweimaId=210099
+ok game2:	https://weixin.qq.com/g/AzRgVxdFRO_WQ75t
+ok gun:		http://u.wechat.com/MLoR1IR4PcqwKG4Erg72R2U
+ok money1:	http://weixin.qq.com/q/02LPMboeJpb0_10000w03m
+ok money2:	http://huvv9.qixiadie.cn/springboard/59ca2f91a5f0ae9f3ff72679/callback/CK1372778108499/QRC:S1yzeybwLrq2/rk5lgNBUB9b
