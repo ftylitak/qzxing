@@ -490,7 +490,8 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
 
 QImage QZXing::encodeData(const QString& data,
                           const EncoderFormat encoderFormat,
-                          const QSize encoderImageSize)
+                          const QSize encoderImageSize,
+                          const EncodeErrorCorrectionLevel errorCorrectionLevel)
 {
     QImage image;
 
@@ -498,7 +499,16 @@ QImage QZXing::encodeData(const QString& data,
         switch (encoderFormat) {
         case EncoderFormat_QR_CODE:
         {
-            Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(data.toStdString(), qrcode::ErrorCorrectionLevel::L );
+            Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
+                        data.toStdString(),
+                        errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
+                            qrcode::ErrorCorrectionLevel::H :
+                        (errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
+                            qrcode::ErrorCorrectionLevel::Q :
+                        (errorCorrectionLevel == EncodeErrorCorrectionLevel_M ?
+                             qrcode::ErrorCorrectionLevel::M :
+                             qrcode::ErrorCorrectionLevel::L)));
+
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
             image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
@@ -508,7 +518,7 @@ QImage QZXing::encodeData(const QString& data,
                                        qRgb(0,0,0) :
                                        qRgb(255,255,255));
 
-            image = image.scaled(240, 240);
+            image = image.scaled(encoderImageSize);
             break;
         }
         case EncoderFormat_INVALID:

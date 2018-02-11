@@ -84,6 +84,13 @@ public:
         EncoderFormat_QR_CODE
     };
 
+    enum EncodeErrorCorrectionLevel {
+        EncodeErrorCorrectionLevel_L = 0,
+        EncodeErrorCorrectionLevel_M,
+        EncodeErrorCorrectionLevel_Q,
+        EncodeErrorCorrectionLevel_H
+    };
+
     QZXing(QObject *parent = NULL);
     ~QZXing();
 
@@ -160,8 +167,8 @@ public slots:
      */
     static QImage encodeData(const QString& data,
                              const EncoderFormat encoderFormat = EncoderFormat_QR_CODE,
-                             const QSize encoderImageSize = QSize(240, 240)/*,
-                             const errorcorrectionleve*/);
+                             const QSize encoderImageSize = QSize(240, 240),
+                             const EncodeErrorCorrectionLevel errorCorrectionLevel = EncodeErrorCorrectionLevel_L);
 
     /**
       * Get the prossecing time in millisecond of the last decode operation.
