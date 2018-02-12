@@ -165,8 +165,13 @@ Use the encoding function with its default settings:
 * Error Correction Level: Low (L)
 
 ```cpp
-QString data = "text to be encoded";
-QImage barcode = QZXing::encodeData(data);
+#include <QZXing.h>
+
+int main() 
+{
+    QString data = "text to be encoded";
+    QImage barcode = QZXing::encodeData(data);
+}    
 ```
 
 Or use the encoding function with custom settings:
@@ -207,6 +212,8 @@ Or use the encoding function with custom settings that are passed like URL query
 
 
 ```qml
+import QZXing 2.3
+
 TextField {
 	id: inputField
 	text: "Hello world!"
