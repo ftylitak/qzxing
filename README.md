@@ -190,6 +190,8 @@ The encoding function can be easily used in QML through QZXing's Image Provider:
 Default settings:
 
 ```qml
+import QZXing 2.3
+
 TextField {
 	id: inputField
 	text: "Hello world!"
