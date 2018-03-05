@@ -327,6 +327,8 @@ symbian {
 
 win32-msvc*{
 
+    DEFINES += __STDC_LIMIT_MACROS
+
     INCLUDEPATH += $$PWD/zxing/win32/zxing \
 	            $$PWD/zxing/win32/zxing/msvc
     HEADERS += $$PWD/zxing/win32/zxing/msvc/stdint.h \
