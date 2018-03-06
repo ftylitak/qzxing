@@ -7,6 +7,7 @@
 #include <zxing/qrcode/decoder/Mode.h>
 #include "backward.hpp"
 #include <QStringList>
+#include <QDebug>
 
 namespace zxing{
 

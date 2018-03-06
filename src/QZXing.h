@@ -194,6 +194,7 @@ signals:
     void decodingFinished(bool succeeded);
     void enabledFormatsChanged();
     void tagFound(QString tag);
+    void tagFound(QByteArray tagRawBytes);
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet) const;
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QRectF &rect) const;
     void error(QString msg);
