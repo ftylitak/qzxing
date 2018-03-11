@@ -204,15 +204,14 @@ Image{
 }
 ```
 
-Or use the encoding function with custom settings that are passed like URL query parameters:
+Or use the encoding function with the optional custom settings that are passed like URL query parameters:
 
 | attribute name | value      | description                                   |
 | -------------- | ---------- | --------------------------------------------- |
-| width          | int        | width in pixels                               |
-| height         | int        | height in pixels                              |
 | corretionLevel | L, M, Q, H | the error correction level                    |
 | format         | qrcode     | the encode formatter. Currently only QR Code. |
 
+the size of the image can be adjusted by using the Image.sourceWidth and Image.sourceHeight properties of Image QML element.
 
 ```qml
 import QZXing 2.3
@@ -224,11 +223,10 @@ TextField {
 
 Image{
 	source: "image://QZXing/encode/" + inputField.text +
-					"?width=250" +
-					"&height=250" +
-					"&corretionLevel=M" +
+					"?corretionLevel=M" +
 					"&format=qrcode"
-	cache: false;
+	sourceSize.width: 320
+	sourceSize.height: 320
 }
 ```
 

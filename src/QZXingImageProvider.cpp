@@ -23,49 +23,48 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
         return QImage();
     }
 
-    int optionAreaIndex = id.lastIndexOf('?');
+    int customSettingsIndex = id.lastIndexOf('?');
 
     QString data;
     QImage result;
-    if(optionAreaIndex >= 0)
+    QString corretionLevel;
+    QString format;
+    QZXing::EncodeErrorCorrectionLevel correctionLevelEnum =
+            QZXing::EncodeErrorCorrectionLevel_L;
+
+    if(customSettingsIndex >= 0)
     {
         int startOfDataIndex = slashIndex + 1;
-        data = id.mid(startOfDataIndex, optionAreaIndex - (startOfDataIndex));
+        data = id.mid(startOfDataIndex, customSettingsIndex - (startOfDataIndex));
 
         //The dummy option has been added due to a bug(?) of QUrlQuery
         // it could not recognize the first key-value pair provided
-        QUrlQuery optionQuery("options?dummy=&" + id.mid(optionAreaIndex + 1));
+        QUrlQuery optionQuery("options?dummy=&" + id.mid(customSettingsIndex + 1));
 
-        QString width = optionQuery.queryItemValue("width");
-        QString height = optionQuery.queryItemValue("height");
-        QString corretionLevel = optionQuery.queryItemValue("corretionLevel");
-        QString format = optionQuery.queryItemValue("format");
+        corretionLevel = optionQuery.queryItemValue("corretionLevel");
+        format = optionQuery.queryItemValue("format");
 
-        if(format != "qrcode")
-        {
-            qWarning() << "Format not supported: " << format;
-            return QImage();
-        }
-
-        if(height.isEmpty() && !width.isEmpty())
-            height = width;
-
-        if(width.isEmpty() && height.isEmpty())
-            width = height;
-
-        QZXing::EncodeErrorCorrectionLevel correctionLevelEnum;
         if(corretionLevel == "H")
             correctionLevelEnum = QZXing::EncodeErrorCorrectionLevel_H;
         else if(corretionLevel == "Q")
             correctionLevelEnum = QZXing::EncodeErrorCorrectionLevel_Q;
         else if(corretionLevel == "M")
             correctionLevelEnum = QZXing::EncodeErrorCorrectionLevel_M;
-        else
+        else if(corretionLevel == "L")
             correctionLevelEnum = QZXing::EncodeErrorCorrectionLevel_L;
+    }
+
+    if(!corretionLevel.isEmpty() || !format.isEmpty())
+    {
+        if(format != "qrcode")
+        {
+            qWarning() << "Format not supported: " << format;
+            return QImage();
+        }
 
         result = QZXing::encodeData(data, QZXing::EncoderFormat_QR_CODE,
-                                    QSize(width.toInt(), height.toInt()),
-                                    correctionLevelEnum);
+                                            requestedSize,
+                                            correctionLevelEnum);
     }
     else
     {

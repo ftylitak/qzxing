@@ -63,7 +63,7 @@
 
     </application>
 
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="23"/>
+    <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="24"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.

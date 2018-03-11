@@ -10,8 +10,7 @@ ApplicationWindow {
 
     minimumWidth: formatGroupBox.width +
                   errorCorrectionlevelGroupBox.width +
-                  sizeGroupBox.width +
-                  6 * advancedOptions.spacing
+                  5 * advancedOptions.spacing
 
     property bool isAdvancedOptionsEnabled: advancedSwitch.position;
 
@@ -76,57 +75,33 @@ ApplicationWindow {
                     model: ["L", "M", "Q", "H"]
                 }
             }
-
-            GroupBox {
-                id: sizeGroupBox
-                anchors.verticalCenter: parent.verticalCenter
-                title: "Size"
-                GridLayout {
-                    RadioButton {
-                        id: radioButtonSize120
-                        text: "120x120"
-                    }
-                    RadioButton {
-                        id: radioButtonSize240
-                        checked: true
-                        text: "240x240"
-                    }
-                    RadioButton {
-                        id: radioButtonSize320
-                        text: "320x320"
-                    }
-                }
-            }
         }
 
         Rectangle {
+            id: barcodeRectangle
             Layout.fillWidth: true
             Layout.fillHeight: true
             border.width: 1
             border.color: "#bdbebf"
             clip: true
 
+            property int imageWidth: Math.min(height, width) * 0.7;
+
             Image{
                 id:resultImage
                 anchors.centerIn: parent
+                sourceSize.width: barcodeRectangle.imageWidth
+                sourceSize.height: barcodeRectangle.imageWidth
 
                 source: mainLayout.getImageRequestString()
-                cache: false;
+                //cache: false;
             }
         }
 
         function getImageRequestString() {
             if(mainWindow.isAdvancedOptionsEnabled) {
-                var width;
-                var height;
-                if (radioButtonSize120.checked) {width = "120"; height = "120"}
-                else if (radioButtonSize240.checked) {width = "240"; height = "240"}
-                else if (radioButtonSize320.checked) {width = "320"; height = "320"}
-
                 return "image://QZXing/encode/" + inputField.text +
-                            "?width="+width+
-                            "&height="+height+
-                            "&corretionLevel=" + errorCorrectionlevelCombo.currentText +
+                            "?corretionLevel=" + errorCorrectionlevelCombo.currentText +
                             "&format=" + formatCombo.currentText
             }
             else
