@@ -201,6 +201,8 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     int w_2;
     int wh_54;
 
+    uint32_t *yuvPtr = (uint32_t *)data;
+
     /// Create QImage from QVideoFrame.
     QImage *image_ptr = nullptr;
 
@@ -280,7 +282,23 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
             }
         }
         break;
-    /// TODO: Handle (create QImages from) YUV formats.
+    case QVideoFrame::Format_YUYV:
+        image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
+        pixel = image_ptr->bits();
+
+        for (int y = captureRect.startY; y < captureRect.endY; y++){
+            uint32_t *row = &yuvPtr[y*(width/2)-(width/4)];
+            for (int x = captureRect.startX; x < captureRect.endX; x++){
+                uint32_t pxl = row[x];
+                const int y0 = (unsigned char)((uint8_t *)&pxl)[0];
+                const int u = (unsigned char)((uint8_t *)&pxl)[1];
+                const int v = (unsigned char)((uint8_t *)&pxl)[3];
+                *pixel = yuvToGray(y0, u, v);
+                ++pixel;
+            }
+        }
+        break;
+        /// TODO: Handle (create QImages from) YUV formats.
     default:
         QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat);
         image_ptr = new QImage(data, width, height, imageFormat);
@@ -300,11 +318,11 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if (captureRect.isValid && image_ptr->size() != _captureRect.size())
         image_ptr = new QImage(image_ptr->copy(_captureRect));
 
-//    qDebug() << "image.size()" << image.size();
-//    qDebug() << "image.format()" << image.format();
-//    qDebug() << "videoFrame.pixelFormat" << videoFrame.pixelFormat;
-//    const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
-//    qDebug() << "saving image" << i << "at:" << path << image.save(path);
+    //qDebug() << "image.size()" << image_ptr->size();
+    //qDebug() << "image.format()" << image_ptr->format();
+    //qDebug() << "videoFrame.pixelFormat" << videoFrame.pixelFormat;
+    //const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i % 100) + ".png";
+    //qDebug() << "saving image" << i << "at:" << path << image_ptr->save(path);
 
     //QZXingImageProvider::getInstance()->storeImage(image);
 
