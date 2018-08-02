@@ -321,6 +321,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 {
     QTime t;
     t.start();
+    processingTime = -1;
     Ref<Result> res;
     emit decodingStarted();
 
@@ -349,6 +350,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         bool hasSucceded = false;
         try {
             res = decoder->decode(bb, hints);
+            processingTime = t.elapsed();
             hasSucceded = true;
         }catch(zxing::Exception &e){}
 
@@ -358,8 +360,9 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
             try {
                 res = decoder->decode(bb, hints);
+                processingTime = t.elapsed();
                 hasSucceded = true;
-            } catch(zxing::Exception &e) {}
+            } catch(zxing::Exception &/*e*/) {}
 
             if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
@@ -372,7 +375,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                         res = decoder->decode(rotatedImage, hints);
                         processingTime = t.elapsed();
                         hasSucceded = true;
-                    } catch(zxing::Exception &e) {}
+                    } catch(zxing::Exception &/*e*/) {}
                 }
             }
         }
