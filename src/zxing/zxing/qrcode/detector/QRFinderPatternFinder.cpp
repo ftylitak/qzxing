@@ -25,6 +25,9 @@
 #include <zxing/DecodeHints.h>
 #include <cstring>
 
+//#include <limits>
+//#include <math.h>
+
 using std::sort;
 using std::max;
 using std::abs;
@@ -50,10 +53,10 @@ public:
   FurthestFromAverageComparator(float averageModuleSize) :
     averageModuleSize_(averageModuleSize) {
   }
-  int operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
+  bool operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
     float dA = abs(a->getEstimatedModuleSize() - averageModuleSize_);
     float dB = abs(b->getEstimatedModuleSize() - averageModuleSize_);
-    return dA < dB ? -1 : dA == dB ? 0 : 1;
+    return dA > dB;// ? -1 : dA == dB ? 0 : 1;
   }
 };
 
@@ -63,14 +66,23 @@ public:
   CenterComparator(float averageModuleSize) :
     averageModuleSize_(averageModuleSize) {
   }
-  int operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
+  bool operator()(Ref<FinderPattern> a, Ref<FinderPattern> b) {
     // N.B.: we want the result in descending order ...
+    if(a.empty() && b.empty())
+        return true;
+    else if(a.empty() && !b.empty())
+        return true;
+    else if(!a.empty() && b.empty())
+        return false;
+
     if (a->getCount() != b->getCount()) {
-      return b->getCount() - a->getCount();
+      return a->getCount() < b->getCount();
     } else {
       float dA = abs(a->getEstimatedModuleSize() - averageModuleSize_);
       float dB = abs(b->getEstimatedModuleSize() - averageModuleSize_);
-      return dA < dB ? 1 : dA == dB ? 0 : -1;
+      return dA < dB;
+      //return dA < dB ? 1 : dA == dB ? 0 : -1;
+      //return dA < dB ? 1 : (fabs(dA - dB) < std::numeric_limits<float>::epsilon()) ? 0 : -1;
     }
   }
 };
