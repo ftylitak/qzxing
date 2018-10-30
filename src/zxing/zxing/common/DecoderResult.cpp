@@ -37,7 +37,7 @@ DecoderResult::DecoderResult(ArrayRef<byte> rawBytes,
                              Ref<String> text)
   : rawBytes_(rawBytes), text_(text),charSet_("") {}
 
-ArrayRef<byte> DecoderResult::getRawBytes() {
+ArrayRef<zxing::byte> DecoderResult::getRawBytes() {
   return rawBytes_;
 }
 
