@@ -38,17 +38,6 @@ private:
   int rowSize;
   ArrayRef<int> bits;
 
-//#define ZX_LOG_DIGITS(digits) \
-//    ((digits == 8) ? 3 : \
-//     ((digits == 16) ? 4 : \
-//      ((digits == 32) ? 5 : \
-//       ((digits == 64) ? 6 : \
-//        ((digits == 128) ? 7 : \
-//         (-1))))))
-
-//  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
-//  static const int bitsMask = (1 << logBits) - 1;
-
 public:
   BitMatrix(int dimension);
   BitMatrix(int width, int height);
