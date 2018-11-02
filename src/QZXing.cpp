@@ -487,6 +487,11 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
         img = img.copy(offsetX, offsetY, width, height);
     return decodeImage(img);
 #else
+    Q_UNUSED(imageUrl);
+    Q_UNUSED(offsetX);
+    Q_UNUSED(offsetY);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
     return decodeImage(QImage());
 #endif //QZXING_QML
 }
