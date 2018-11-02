@@ -1,5 +1,5 @@
-#ifndef __REED_SOLOMON_EXCEPTION_H__
-#define __REED_SOLOMON_EXCEPTION_H__
+#ifndef ZXING_REED_SOLOMON_EXCEPTION_H
+#define ZXING_REED_SOLOMON_EXCEPTION_H
 
 /*
  *  ReedSolomonException.h
@@ -30,4 +30,4 @@ public:
 };
 }
 
-#endif // __REED_SOLOMON_EXCEPTION_H__
+#endif // ZXING_REED_SOLOMON_EXCEPTION_H

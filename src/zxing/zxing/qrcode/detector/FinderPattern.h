@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __FINDER_PATTERN_H__
-#define __FINDER_PATTERN_H__
+#ifndef ZXING_FINDER_PATTERN_H
+#define ZXING_FINDER_PATTERN_H
 
 /*
  *  FinderPattern.h
@@ -45,4 +45,4 @@ namespace zxing {
 	}
 }
 
-#endif // __FINDER_PATTERN_H__
+#endif // ZXING_FINDER_PATTERN_H

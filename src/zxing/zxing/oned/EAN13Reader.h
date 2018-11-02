@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __EAN_13_READER_H__
-#define __EAN_13_READER_H__
+#ifndef ZXING_EAN_13_READER_H
+#define ZXING_EAN_13_READER_H
 
 /*
  *  EAN13Reader.h
@@ -46,4 +46,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_EAN_13_READER_H
+

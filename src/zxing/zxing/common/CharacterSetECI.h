@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __CHARACTERSET_ECI__
-#define __CHARACTERSET_ECI__
+#ifndef ZXING_CHARACTERSET_ECI
+#define ZXING_CHARACTERSET_ECI
 
 /*
  * Copyright 2008-2011 ZXing authors
@@ -54,4 +54,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_CHARACTERSET_ECI
+

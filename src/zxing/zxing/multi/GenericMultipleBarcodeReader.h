@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __GENERIC_MULTIPLE_BARCODE_READER_H__
-#define __GENERIC_MULTIPLE_BARCODE_READER_H__
+#ifndef ZXING_GENERIC_MULTIPLE_BARCODE_READER_H
+#define ZXING_GENERIC_MULTIPLE_BARCODE_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -48,4 +48,4 @@ class GenericMultipleBarcodeReader : public MultipleBarcodeReader {
 }
 }
 
-#endif // __GENERIC_MULTIPLE_BARCODE_READER_H__
+#endif // ZXING_GENERIC_MULTIPLE_BARCODE_READER_H

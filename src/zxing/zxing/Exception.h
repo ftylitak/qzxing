@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __EXCEPTION_H__
-#define __EXCEPTION_H__
+#ifndef ZXING_EXCEPTION_H
+#define ZXING_EXCEPTION_H
 
 /*
  *  Exception.h
@@ -48,4 +48,4 @@ private:
 
 }
 
-#endif // __EXCEPTION_H__
+#endif // ZXING_EXCEPTION_H

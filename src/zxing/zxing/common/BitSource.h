@@ -1,5 +1,5 @@
-#ifndef __BIT_SOURCE_H__
-#define __BIT_SOURCE_H__
+#ifndef ZXING_BIT_SOURCE_H
+#define ZXING_BIT_SOURCE_H
 
 /*
  *  BitSource.h
@@ -71,4 +71,4 @@ public:
 
 }
 
-#endif // __BIT_SOURCE_H__
+#endif // ZXING_BIT_SOURCE_H

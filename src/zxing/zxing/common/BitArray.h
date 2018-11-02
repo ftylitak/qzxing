@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __BIT_ARRAY_H__
-#define __BIT_ARRAY_H__
+#ifndef ZXING_BIT_ARRAY_H
+#define ZXING_BIT_ARRAY_H
 
 /*
  *  Copyright 2010 ZXing authors. All rights reserved.
@@ -100,4 +100,4 @@ std::ostream& operator << (std::ostream&, BitArray const&);
 
 }
 
-#endif // __BIT_ARRAY_H__
+#endif // ZXING_BIT_ARRAY_H

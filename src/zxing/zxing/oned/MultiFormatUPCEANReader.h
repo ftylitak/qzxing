@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __MULTI_FORMAT_UPC_EAN_READER_H__
-#define __MULTI_FORMAT_UPC_EAN_READER_H__
+#ifndef ZXING_MULTI_FORMAT_UPC_EAN_READER_H
+#define ZXING_MULTI_FORMAT_UPC_EAN_READER_H
 /*
  *  MultiFormatUPCEANReader.h
  *  ZXing
@@ -38,4 +38,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_MULTI_FORMAT_UPC_EAN_READER_H
+

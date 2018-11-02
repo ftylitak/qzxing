@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __BIT_MATRIX_H__
-#define __BIT_MATRIX_H__
+#ifndef ZXING_BIT_MATRIX_H
+#define ZXING_BIT_MATRIX_H
 
 /*
  *  BitMatrix.h
@@ -81,4 +81,4 @@ private:
 
 }
 
-#endif // __BIT_MATRIX_H__
+#endif // ZXING_BIT_MATRIX_H

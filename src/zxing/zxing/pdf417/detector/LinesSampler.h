@@ -1,5 +1,5 @@
-#ifndef __LINESSAMPLER_H__
-#define __LINESSAMPLER_H__
+#ifndef ZXING_LINESSAMPLER_H
+#define ZXING_LINESSAMPLER_H
 
 /*
  * Copyright 2010 ZXing authors All rights reserved.
@@ -119,4 +119,4 @@ public:
 }
 }
 
-#endif // __LINESSAMPLER_H__
+#endif // ZXING_LINESSAMPLER_H

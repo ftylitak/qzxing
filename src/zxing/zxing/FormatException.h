@@ -1,5 +1,5 @@
-#ifndef __FORMAT_EXCEPTION_H__
-#define __FORMAT_EXCEPTION_H__
+#ifndef ZXING_FORMAT_EXCEPTION_H
+#define ZXING_FORMAT_EXCEPTION_H
 
 /*
  *  FormatException.h
@@ -34,4 +34,4 @@ public:
 };
 
 }
-#endif // __FORMAT_EXCEPTION_H__
+#endif // ZXING_FORMAT_EXCEPTION_H

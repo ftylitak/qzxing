@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __ARRAY_H__
-#define __ARRAY_H__
+#ifndef ZXING_ARRAY_H
+#define ZXING_ARRAY_H
 
 /*
  *  Array.h
@@ -170,4 +170,4 @@ public:
 
 } // namespace zxing
 
-#endif // __ARRAY_H__
+#endif // ZXING_ARRAY_H

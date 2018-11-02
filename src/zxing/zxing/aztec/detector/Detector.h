@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#ifndef __ZXING_AZTEC_DETECTOR_DETECTOR_H__
-#define __ZXING_AZTEC_DETECTOR_DETECTOR_H__
+#ifndef ZXING_AZTEC_DETECTOR_DETECTOR_H
+#define ZXING_AZTEC_DETECTOR_DETECTOR_H
 
 #include <vector>
 
@@ -89,4 +89,4 @@ class Detector : public Counted {
 }
 }
 
-#endif
+#endif // ZXING_AZTEC_DETECTOR_DETECTOR_H

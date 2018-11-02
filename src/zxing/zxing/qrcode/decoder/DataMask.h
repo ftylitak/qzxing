@@ -1,5 +1,5 @@
-#ifndef __DATA_MASK_H__
-#define __DATA_MASK_H__
+#ifndef ZXING_DATA_MASK_H
+#define ZXING_DATA_MASK_H
 
 /*
  *  DataMask.h
@@ -47,4 +47,4 @@ public:
 }
 }
 
-#endif // __DATA_MASK_H__
+#endif // ZXING_DATA_MASK_H

@@ -1,5 +1,5 @@
-#ifndef __GRID_SAMPLER_H__
-#define __GRID_SAMPLER_H__
+#ifndef ZXING_GRID_SAMPLER_H
+#define ZXING_GRID_SAMPLER_H
 
 /*
  *  GridSampler.h
@@ -42,4 +42,4 @@ public:
 };
 }
 
-#endif // __GRID_SAMPLER_H__
+#endif // ZXING_GRID_SAMPLER_H

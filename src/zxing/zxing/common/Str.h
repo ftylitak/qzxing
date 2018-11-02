@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __STR_H__
-#define __STR_H__
+#ifndef ZXING_STR_H
+#define ZXING_STR_H
 
 /*
  *  Str.h
@@ -48,4 +48,4 @@ public:
 
 }
 
-#endif // __COMMON__STRING_H__
+#endif // ZXING_STR_H

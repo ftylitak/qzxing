@@ -1,5 +1,5 @@
-#ifndef __DECODER_DM_H__
-#define __DECODER_DM_H__
+#ifndef ZXING_DECODER_DM_H
+#define ZXING_DECODER_DM_H
 
 /*
  *  Decoder.h
@@ -46,4 +46,4 @@ public:
 }
 }
 
-#endif // __DECODER_DM_H__
+#endif // ZXING_DECODER_DM_H

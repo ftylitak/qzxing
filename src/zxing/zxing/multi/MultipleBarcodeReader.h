@@ -1,5 +1,5 @@
-#ifndef __MULTIPLE_BARCODE_READER_H__
-#define __MULTIPLE_BARCODE_READER_H__
+#ifndef ZXING_MULTIPLE_BARCODE_READER_H
+#define ZXING_MULTIPLE_BARCODE_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -38,4 +38,4 @@ class MultipleBarcodeReader : public Counted {
 }
 }
 
-#endif // __MULTIPLE_BARCODE_READER_H__
+#endif // ZXING_MULTIPLE_BARCODE_READER_H

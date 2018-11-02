@@ -1,5 +1,5 @@
-#ifndef __RESULT_H__
-#define __RESULT_H__
+#ifndef ZXING_RESULT_H
+#define ZXING_RESULT_H
 
 /*
  *  Result.h
@@ -55,4 +55,4 @@ public:
 };
 
 }
-#endif // __RESULT_H__
+#endif // ZXING_RESULT_H

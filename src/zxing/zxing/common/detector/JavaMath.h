@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __ZXING_COMMON_DETECTOR_MATH_H__
-#define __ZXING_COMMON_DETECTOR_MATH_H__
+#ifndef ZXING_COMMON_DETECTOR_MATH_H
+#define ZXING_COMMON_DETECTOR_MATH_H
 /*
  *  Copyright 2012 ZXing authors All rights reserved.
  *
@@ -40,4 +40,5 @@ class Math {
 }
 }
 
-#endif
+#endif // ZXING_COMMON_DETECTOR_MATH_H
+

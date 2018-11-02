@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __ZXING_H_
-#define __ZXING_H_
+#ifndef ZXING_H
+#define ZXING_H
 
 #define ZXING_ARRAY_LEN(v) ((int)(sizeof(v)/sizeof(v[0])))
 #define ZX_LOG_DIGITS(digits) \

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __LUMINANCESOURCE_H__
-#define __LUMINANCESOURCE_H__
+#ifndef ZXING_LUMINANCESOURCE_H
+#define ZXING_LUMINANCESOURCE_H
 /*
  *  LuminanceSource.h
  *  zxing
@@ -59,4 +59,4 @@ class LuminanceSource : public Counted {
 
 }
 
-#endif /* LUMINANCESOURCE_H_ */
+#endif // ZXING_LUMINANCESOURCE_H

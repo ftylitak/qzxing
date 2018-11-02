@@ -1,5 +1,5 @@
-#ifndef __POINT_H__
-#define __POINT_H__
+#ifndef ZXING_POINT_H
+#define ZXING_POINT_H
 
 /*
  *  Point.h
@@ -44,4 +44,4 @@ public:
   Point end;
 };
 }
-#endif // POINT_H_
+#endif // ZXING_POINT_H

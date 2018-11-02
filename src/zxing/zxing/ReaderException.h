@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __READER_EXCEPTION_H__
-#define __READER_EXCEPTION_H__
+#ifndef ZXING_READER_EXCEPTION_H
+#define ZXING_READER_EXCEPTION_H
 
 /*
  *  ReaderException.h
@@ -34,4 +34,4 @@ class ReaderException : public Exception {
 
 }
 
-#endif // __READER_EXCEPTION_H__
+#endif // ZXING_READER_EXCEPTION_H

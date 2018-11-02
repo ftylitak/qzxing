@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __ERROR_CORRECTION_PDF_H__
-#define __ERROR_CORRECTION_PDF_H__
+#ifndef ZXING_ERROR_CORRECTION_PDF_H
+#define ZXING_ERROR_CORRECTION_PDF_H
 /*
  * Copyright 2012 ZXing authors
  *
@@ -68,4 +68,4 @@ class ErrorCorrection: public Counted {
 }
 }
 
-#endif /* __ERROR_CORRECTION_PDF_H__ */
+#endif /* ZXING_ERROR_CORRECTION_PDF_H */

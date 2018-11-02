@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __ALIGNMENT_PATTERN_H__
-#define __ALIGNMENT_PATTERN_H__
+#ifndef ZXING_ALIGNMENT_PATTERN_H
+#define ZXING_ALIGNMENT_PATTERN_H
 
 /*
  *  AlignmentPattern.h
@@ -42,4 +42,4 @@ namespace zxing {
 	}
 }
 
-#endif // __ALIGNMENT_PATTERN_H__
+#endif // ZXING_ALIGNMENT_PATTERN_H
