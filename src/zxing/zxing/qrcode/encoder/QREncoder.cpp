@@ -420,7 +420,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<byte> Encoder::generateECBytes(const std::vector<zxing::byte>& dataBytes, int numEcBytesInBlock)
+ArrayRef<zxing::byte> Encoder::generateECBytes(const std::vector<zxing::byte>& dataBytes, int numEcBytesInBlock)
 {
     size_t numDataBytes = dataBytes.size();
     std::vector<zxing::byte> dataBytesCopy(dataBytes);

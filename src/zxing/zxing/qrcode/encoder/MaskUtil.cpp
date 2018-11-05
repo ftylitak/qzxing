@@ -183,7 +183,7 @@ int MaskUtil::applyMaskPenaltyRule1Internal(const ByteMatrix& matrix, bool isHor
     int penalty = 0;
     int iLimit = int(isHorizontal ? matrix.getHeight() : matrix.getWidth());
     int jLimit = int(isHorizontal ? matrix.getWidth() : matrix.getHeight());
-    const std::vector<std::vector<byte> >& array = matrix.getArray();
+    const std::vector<std::vector<zxing::byte> >& array = matrix.getArray();
     for (int i = 0; i < iLimit; i++) {
         int numSameBitCells = 0;
         int prevBit = -1;

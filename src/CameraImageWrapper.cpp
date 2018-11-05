@@ -179,7 +179,7 @@ ArrayRef<zxing::byte> CameraImageWrapper::getMatrixP() const
     return imageBytes;
 }
 
-byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
+zxing::byte CameraImageWrapper::gray(unsigned int r, unsigned int g, unsigned int b)
 {
     //the values are not masked with (x & 0xFF) because functions qRed, qGreen, qBlue already do it
     return R_TO_GREYSCALE[r] + G_TO_GREYSCALE[g] + B_TO_GREYSCALE[b];
@@ -197,7 +197,7 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
 
     imageBytes = ArrayRef<zxing::byte>(height*width);
     imageBytesPerRow = ArrayRef<ArrayRef<zxing::byte>>(height);
-    byte* m = &imageBytes[0];
+    zxing::byte* m = &imageBytes[0];
 
     for(int j=0; j<height; j++)
     {
