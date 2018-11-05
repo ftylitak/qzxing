@@ -96,7 +96,7 @@ Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
     // Hack: We store the position in the alphabet table into a
     // StringBuilder, so that we can access the decoded patterns in
     // validatePattern. We'll translate to the actual characters later.
-    decodeRowResult.append(1, (byte)charOffset);
+    decodeRowResult.append(1, (zxing::byte)charOffset);
     nextStart += 8;
     // Stop as soon as we see the end character.
     if (decodeRowResult.length() > 1 &&
@@ -161,7 +161,7 @@ Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
     Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
 
   return Ref<Result>(new Result(Ref<String>(new String(decodeRowResult)),
-                                ArrayRef<byte>(),
+                                ArrayRef<zxing::byte>(),
                                 resultPoints,
                                 BarcodeFormat::CODABAR));
 }

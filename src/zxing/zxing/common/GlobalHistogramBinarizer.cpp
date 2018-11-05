@@ -36,7 +36,7 @@ namespace zxing {
 const int LUMINANCE_BITS = 5;
 const int LUMINANCE_SHIFT = 8 - LUMINANCE_BITS;
 const int LUMINANCE_BUCKETS = 1 << LUMINANCE_BITS;
-const ArrayRef<byte> EMPTY (0);
+const ArrayRef<zxing::byte> EMPTY (0);
 
 GlobalHistogramBinarizer::GlobalHistogramBinarizer(Ref<LuminanceSource> source) 
     : Binarizer(source), luminances(EMPTY), buckets(LUMINANCE_BUCKETS) {}
@@ -45,7 +45,7 @@ GlobalHistogramBinarizer::~GlobalHistogramBinarizer() {}
 
 void GlobalHistogramBinarizer::initArrays(int luminanceSize) {
     if (luminances->size() < luminanceSize) {
-        luminances = ArrayRef<byte>(luminanceSize);
+        luminances = ArrayRef<zxing::byte>(luminanceSize);
     }
 //    for (int x = 0; x < LUMINANCE_BUCKETS; x++) {
 //        buckets[x] = 0;
@@ -64,7 +64,7 @@ Ref<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, Ref<BitArray> row) {
     }
 
     initArrays(width);
-    ArrayRef<byte> localLuminances = source.getRow(y, luminances);
+    ArrayRef<zxing::byte> localLuminances = source.getRow(y, luminances);
     if (false) {
         std::cerr << "gbr " << y << " r ";
         for(int i=0, e=localLuminances->size(); i < e; ++i) {
@@ -108,7 +108,7 @@ Ref<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
     ArrayRef<int> localBuckets = buckets;
     for (int y = 1; y < 5; y++) {
         int row = height * y / 5;
-        ArrayRef<byte> localLuminances = source.getRow(row, luminances);
+        ArrayRef<zxing::byte> localLuminances = source.getRow(row, luminances);
         int right = (width << 2) / 5;
         for (int x = width / 5; x < right; x++) {
             int pixel = localLuminances[x] & 0xff;
@@ -118,7 +118,7 @@ Ref<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
 
     int blackPoint = estimateBlackPoint(localBuckets);
 
-    ArrayRef<byte> localLuminances = source.getMatrix();
+    ArrayRef<zxing::byte> localLuminances = source.getMatrix();
     for (int y = 0; y < height; y++) {
         int offset = y * width;
         for (int x = 0; x < width; x++) {

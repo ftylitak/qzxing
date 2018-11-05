@@ -74,7 +74,7 @@ public:
 
     void xor_(const BitArray& other);
 
-    void toBytes(int bitOffset, std::vector<byte>& array, int offset, int numBytes) const;
+    void toBytes(int bitOffset, std::vector<zxing::byte>& array, int offset, int numBytes) const;
 
     const std::string toString() const;
 

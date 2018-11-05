@@ -33,19 +33,19 @@ namespace zxing {
 class Result : public Counted {
 private:
   Ref<String> text_;
-  ArrayRef<byte> rawBytes_;
+  ArrayRef<zxing::byte> rawBytes_;
   ArrayRef< Ref<ResultPoint> > resultPoints_;
   BarcodeFormat format_;
   std::string charSet_;
 
 public:
   Result(Ref<String> text,
-         ArrayRef<byte> rawBytes,
+         ArrayRef<zxing::byte> rawBytes,
          ArrayRef< Ref<ResultPoint> > resultPoints,
          BarcodeFormat format, std::string charSet = "");
   ~Result();
   Ref<String> getText();
-  ArrayRef<byte> getRawBytes();
+  ArrayRef<zxing::byte> getRawBytes();
   ArrayRef< Ref<ResultPoint> > const& getResultPoints() const;
   ArrayRef< Ref<ResultPoint> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;

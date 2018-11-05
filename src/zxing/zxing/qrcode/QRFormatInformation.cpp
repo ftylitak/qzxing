@@ -40,7 +40,7 @@ int FormatInformation::N_FORMAT_INFO_DECODE_LOOKUPS = 32;
 int FormatInformation::BITS_SET_IN_HALF_BYTE[] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 FormatInformation::FormatInformation(int formatInfo) :
-    errorCorrectionLevel_(ErrorCorrectionLevel::forBits((formatInfo >> 3) & 0x03)), dataMask_((byte)(formatInfo & 0x07)) {
+    errorCorrectionLevel_(ErrorCorrectionLevel::forBits((formatInfo >> 3) & 0x03)), dataMask_((zxing::byte)(formatInfo & 0x07)) {
 }
 
 ErrorCorrectionLevel& FormatInformation::getErrorCorrectionLevel() {

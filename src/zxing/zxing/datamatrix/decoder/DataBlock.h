@@ -32,15 +32,15 @@ namespace datamatrix {
 class DataBlock : public Counted {
 private:
   int numDataCodewords_;
-  ArrayRef<byte> codewords_;
+  ArrayRef<zxing::byte> codewords_;
 
-  DataBlock(int numDataCodewords, ArrayRef<byte> codewords);
+  DataBlock(int numDataCodewords, ArrayRef<zxing::byte> codewords);
 
 public:  
-  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<byte> rawCodewords, Version *version);
+  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version);
 
   int getNumDataCodewords();
-  ArrayRef<byte> getCodewords();
+  ArrayRef<zxing::byte> getCodewords();
 };
 
 }

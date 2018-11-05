@@ -294,11 +294,11 @@ void MatrixUtil::embedTimingPatterns(ByteMatrix& matrix)
         int bit = (i + 1) % 2;
         // Horizontal line.
         if (isEmpty(matrix.get(i, 6))) {
-            matrix.set(i, 6, byte(bit));
+            matrix.set(i, 6, zxing::byte(bit));
         }
         // Vertical line.
         if (isEmpty(matrix.get(6, i))) {
-            matrix.set(6, i, byte(bit));
+            matrix.set(6, i, zxing::byte(bit));
         }
     }
 }
@@ -308,7 +308,7 @@ void MatrixUtil::embedDarkDotAtLeftBottomCorner(ByteMatrix& matrix)
     if (matrix.get(8, matrix.getHeight() - 8) == 0) {
         throw WriterException();
     }
-    matrix.set(8, matrix.getHeight() - 8, byte(1));
+    matrix.set(8, matrix.getHeight() - 8, zxing::byte(1));
 }
 
 void MatrixUtil::embedHorizontalSeparationPattern(int xStart,
@@ -319,7 +319,7 @@ void MatrixUtil::embedHorizontalSeparationPattern(int xStart,
         if (!isEmpty(matrix.get(size_t(xStart + x), size_t(yStart)))) {
             throw WriterException();
         }
-        matrix.set(size_t(xStart + x), size_t(yStart), byte(0));
+        matrix.set(size_t(xStart + x), size_t(yStart), zxing::byte(0));
     }
 }
 
@@ -331,7 +331,7 @@ void MatrixUtil::embedVerticalSeparationPattern(int xStart,
         if (!isEmpty(matrix.get(size_t(xStart), size_t(yStart + y)))) {
             throw WriterException();
         }
-        matrix.set(size_t(xStart), size_t(yStart + y), byte(0));
+        matrix.set(size_t(xStart), size_t(yStart + y), zxing::byte(0));
     }
 }
 
@@ -339,7 +339,7 @@ void MatrixUtil::embedPositionAdjustmentPattern(int xStart, int yStart, ByteMatr
 {
     for (int y = 0; y < 5; ++y) {
         for (int x = 0; x < 5; ++x) {
-            matrix.set(size_t(xStart + x), size_t(yStart + y), byte(POSITION_ADJUSTMENT_PATTERN[y][x]));
+            matrix.set(size_t(xStart + x), size_t(yStart + y), zxing::byte(POSITION_ADJUSTMENT_PATTERN[y][x]));
         }
     }
 }
@@ -348,7 +348,7 @@ void MatrixUtil::embedPositionDetectionPattern(int xStart, int yStart, ByteMatri
 {
     for (int y = 0; y < 7; ++y) {
         for (int x = 0; x < 7; ++x) {
-            matrix.set(size_t(xStart + x), size_t(yStart + y), byte(POSITION_DETECTION_PATTERN[y][x]));
+            matrix.set(size_t(xStart + x), size_t(yStart + y), zxing::byte(POSITION_DETECTION_PATTERN[y][x]));
         }
     }
 }

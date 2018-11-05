@@ -59,7 +59,7 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
   int width = source.getWidth();
   int height = source.getHeight();
   if (width >= MINIMUM_DIMENSION && height >= MINIMUM_DIMENSION) {
-    ArrayRef<byte> luminances = source.getMatrix();
+    ArrayRef<zxing::byte> luminances = source.getMatrix();
     int subWidth = width >> BLOCK_SIZE_POWER;
     if ((width & BLOCK_SIZE_MASK) != 0) {
       subWidth++;
@@ -94,7 +94,7 @@ namespace {
 }
 
 void
-HybridBinarizer::calculateThresholdForBlock(ArrayRef<byte> luminances,
+HybridBinarizer::calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
                                             int subWidth,
                                             int subHeight,
                                             int width,
@@ -130,7 +130,7 @@ HybridBinarizer::calculateThresholdForBlock(ArrayRef<byte> luminances,
   }
 }
 
-void HybridBinarizer::thresholdBlock(ArrayRef<byte> luminances,
+void HybridBinarizer::thresholdBlock(ArrayRef<zxing::byte> luminances,
                                      int xoffset,
                                      int yoffset,
                                      int threshold,
@@ -157,7 +157,7 @@ namespace {
 }
 
 
-ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<byte> luminances,
+ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<zxing::byte> luminances,
                                                     int subWidth,
                                                     int subHeight,
                                                     int width,

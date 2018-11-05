@@ -19,7 +19,7 @@ private:
 public:
     ReedSolomonEncoder(Ref<GenericGF> field);
 
-    void encode(std::vector<byte> &toEncode, int ecBytes);
+    void encode(std::vector<zxing::byte> &toEncode, int ecBytes);
 };
 
 }
