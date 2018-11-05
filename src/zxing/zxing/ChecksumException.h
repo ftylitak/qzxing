@@ -23,11 +23,10 @@
 
 namespace zxing {
   class ChecksumException : public ReaderException {
-    typedef ReaderException Base;
   public:
-    ChecksumException() throw();
-    ChecksumException(const char *msg) throw();
-    ~ChecksumException() throw();
+    ChecksumException() noexcept;
+    ChecksumException(const char *msg) noexcept;
+    ~ChecksumException() noexcept;
   };
 }
 

@@ -28,7 +28,7 @@ class IllegalArgumentException : public Exception {
 public:
   IllegalArgumentException();
   IllegalArgumentException(const char *msg);
-  ~IllegalArgumentException() throw();
+  ~IllegalArgumentException() noexcept;
 };
 
 }

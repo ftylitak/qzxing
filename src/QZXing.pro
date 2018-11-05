@@ -22,6 +22,7 @@ TARGET = QZXing
 TEMPLATE = lib
 
 # CONFIG += staticlib
+gcc:QMAKE_CXXFLAGS += -Wall -Wextra
 
 DEFINES -= DISABLE_LIBRARY_FEATURES
 symbian {
@@ -66,5 +67,3 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/control \
     qtc_packaging/debian_fremantle/compat \
     qtc_packaging/debian_fremantle/changelog
-
-

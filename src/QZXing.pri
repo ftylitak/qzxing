@@ -166,6 +166,11 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/BinaryBitmap.cpp \
     $$PWD/zxing/zxing/Binarizer.cpp \
     $$PWD/zxing/zxing/BarcodeFormat.cpp \
+    $$PWD/zxing/zxing/ReaderException.cpp \
+    $$PWD/zxing/zxing/IllegalStateException.cpp \
+    $$PWD/zxing/zxing/NotFoundException.cpp \
+    $$PWD/zxing/zxing/UnsupportedEncodingException.cpp \
+    $$PWD/zxing/zxing/WriterException.cpp \
     $$PWD/zxing/zxing/aztec/AztecReader.cpp \
     $$PWD/zxing/zxing/aztec/AztecDetectorResult.cpp \
     $$PWD/zxing/zxing/common/StringUtils.cpp \

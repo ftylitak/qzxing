@@ -31,15 +31,11 @@ private:
   char const* const message;
 
 public:
-  Exception() throw() : message(0) {}
-  Exception(const char* msg) throw() : message(copy(msg)) {}
-  Exception(Exception const& that) throw() : std::exception(that), message(copy(that.message)) {}
-  ~Exception() throw() {
-    if(message) {
-      deleteMessage();
-    }
-  }
-  char const* what() const throw() {return message ? message : "";}
+  Exception() noexcept;
+  Exception(const char* msg) noexcept;
+  Exception(Exception const& that) noexcept;
+  ~Exception() noexcept;
+  char const* what() const noexcept;
 
 private:
   static char const* copy(char const*);

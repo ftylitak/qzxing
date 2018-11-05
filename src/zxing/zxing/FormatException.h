@@ -28,7 +28,7 @@ class FormatException : public ReaderException {
 public:
   FormatException();
   FormatException(const char *msg);
-  ~FormatException() throw();
+  ~FormatException() noexcept;
 
   static FormatException const& getFormatInstance();
 };

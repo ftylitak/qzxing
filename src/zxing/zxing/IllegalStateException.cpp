@@ -1,9 +1,9 @@
 /*
- *  IllegalArgumentException.cpp
+ *  IllegalStateException.cpp
  *  zxing
  *
- *  Created by Christian Brunschen on 06/05/2008.
- *  Copyright 2008 Google UK. All rights reserved.
+ *  Created by Alexander Stillich on 05/11/2018.
+ *  Copyright 2008 ZXing authors All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <zxing/IllegalStateException.h>
 
-#include <zxing/common/IllegalArgumentException.h>
+zxing::IllegalStateException::IllegalStateException()  noexcept {
+}
 
-using zxing::IllegalArgumentException;
+zxing::IllegalStateException::IllegalStateException(const char *msg) noexcept
+    : ReaderException(msg) {
+}
 
-IllegalArgumentException::IllegalArgumentException() : Exception() {}
-IllegalArgumentException::IllegalArgumentException(const char *msg) : Exception(msg) {}
-IllegalArgumentException::~IllegalArgumentException() noexcept {}
+zxing::IllegalStateException::~IllegalStateException()  noexcept {
+}

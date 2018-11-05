@@ -2,6 +2,8 @@ TEMPLATE = app
 
 CONFIG += c++11 qzxing_multimedia
 
+gcc:QMAKE_CXXFLAGS += -Wall -Wextra
+
 CONFIG(debug, debug|release) {
     CONFIG+=qml_debug
 } else {

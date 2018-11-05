@@ -7,6 +7,8 @@ QT  += widgets
 
 CONFIG += qzxing_qml
 
+gcc:QMAKE_CXXFLAGS += -Wall -Wextra
+
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
 

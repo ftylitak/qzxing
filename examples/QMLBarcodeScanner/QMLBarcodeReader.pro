@@ -4,6 +4,8 @@ VERSION = 1.1.0
 
 QT += declarative network
 
+gcc:QMAKE_CXXFLAGS += -Wall -Wextra
+
 !maemo5 {
     contains(QT_CONFIG, opengl) {
        # QT += opengl

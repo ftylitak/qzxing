@@ -26,18 +26,41 @@
 
 using zxing::Exception;
 
+Exception::Exception() noexcept
+    : message(nullptr) {
+}
+
+Exception::Exception(const char *msg) noexcept
+    : message(copy(msg)) {
+}
+
+Exception::Exception(const zxing::Exception &that) noexcept
+    : std::exception(that),
+      message(copy(that.message)) {
+}
+
+Exception::~Exception() noexcept {
+    if(message) {
+        deleteMessage();
+    }
+}
+
+const char *Exception::what() const noexcept {
+    return message ? message : "";
+}
+
 void Exception::deleteMessage() {
-  delete [] message;
+    delete [] message;
 }
 
 char const* Exception::copy(char const* msg) {
-  char* message = 0;
-  if (msg) {
-    int l = strlen(msg)+1;
-    if (l) {
-      message = new char[l];
-      strcpy(message, msg);
+    char* message = nullptr;
+    if (msg) {
+        auto l = strlen(msg)+1;
+        if (l) {
+            message = new char[l];
+            strcpy(message, msg);
+        }
     }
-  }
-  return message;
+    return message;
 }

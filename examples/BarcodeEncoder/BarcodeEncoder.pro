@@ -2,6 +2,8 @@ QT += qml quick
 
 CONFIG += c++11 qzxing_qml
 
+gcc:QMAKE_CXXFLAGS += -Wall -Wextra
+
 SOURCES += main.cpp
 
 RESOURCES += qml.qrc
