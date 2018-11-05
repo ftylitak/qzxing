@@ -121,8 +121,8 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
     referenceMessage.insert(std::end(referenceMessage), std::begin(ecWords), std::end(ecWords));
 
     for (int j = 0; j < iterations; j++) {
-        for (int i = 0; i < ecWords.size(); i++) {
-            if (i > 10 && i < ecWords.size() / 2 - 10) {
+        for (int i = 0; i < int(ecWords.size()); i++) {
+            if (i > 10 && i < int(ecWords.size()) / 2 - 10) {
                 // performance improvement - skip intermediate cases in long-running tests
                 i += ecWords.size() / 10;
             }
@@ -131,7 +131,7 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
             corrupt(message, i, field->getSize());
 
             ArrayRef<int> messageArrayRef(message.size());
-            for(int i=0; i<message.size(); i++)
+            for(int i=0; i<int(message.size()); i++)
                 messageArrayRef[i] = message[i];
 
             try {

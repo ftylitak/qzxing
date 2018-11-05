@@ -65,7 +65,6 @@ StringUtils::guessEncoding(zxing::byte* bytes, int length,
   //int isoHighChars = 0;
   int isoHighOther = 0;
 
-  typedef zxing::byte byte;
   boolean utf8bom = length > 3 &&
     bytes[0] == (zxing::byte) 0xEF &&
     bytes[1] == (zxing::byte) 0xBB &&
