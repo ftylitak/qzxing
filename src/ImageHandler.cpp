@@ -29,7 +29,7 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
     QQuickItem *item = qobject_cast<QQuickItem *>(imageObj);
 
     if (!item || !item->window()->isVisible()) {
-        qDebug() << "Item is NULL";
+        qWarning() << "ImageHandler: item is NULL";
         return QImage();
     }
 
@@ -52,11 +52,11 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         QThread::yieldCurrentThread();
     }
     img = result->image();
-#else
+#else // QT_VERSION >= 0x050000
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
     if (!item) {
-        qDebug() << "Item is NULL";
+        qWarning() << "ImageHandler: item is NULL";
         return QImage();
     }
 
@@ -65,8 +65,10 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
     QPainter painter(&img);
     QStyleOptionGraphicsItem styleOption;
     item->paint(&painter, &styleOption);
-#endif
-#endif //defined(QZXING_QML)
+#endif // QT_VERSION >= 0x050000
+#else // defined(QZXING_QML)
+    Q_UNUSED(imageObj);
+#endif // defined(QZXING_QML)
 
     if (offsetX < 0)
         offsetX = 0;
