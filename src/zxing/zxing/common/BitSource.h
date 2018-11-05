@@ -35,7 +35,7 @@ namespace zxing {
  */
 class BitSource : public Counted {
 private:
-  ArrayRef<byte> bytes_;
+  ArrayRef<zxing::byte> bytes_;
   int byteOffset_;
   int bitOffset_;
 public:
@@ -43,7 +43,7 @@ public:
    * @param bytes bytes from which this will read bits. Bits will be read from the first byte first.
    * Bits are read within a byte from most-significant to least-significant bit.
    */
-  BitSource(ArrayRef<byte> &bytes) :
+  BitSource(ArrayRef<zxing::byte> &bytes) :
       bytes_(bytes), byteOffset_(0), bitOffset_(0) {
   }
 

@@ -33,7 +33,7 @@ Ref<GenericGFPoly> ReedSolomonEncoder::buildGenerator(int degree)
     return cachedGenerators_.at(degree); // ??? wont this through exception?
 }
 
-void ReedSolomonEncoder::encode(std::vector<byte> &toEncode, int ecBytes)
+void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
 {
     if (ecBytes == 0) {
         throw Exception("No error correction bytes");

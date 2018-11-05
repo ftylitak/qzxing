@@ -156,7 +156,7 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   ArrayRef< Ref<ResultPoint> > resultPoints(2);
   resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, (float) rowNumber));
-  Ref<Result> decodeResult (new Result(resultString, ArrayRef<byte>(), resultPoints, format));
+  Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
   // Java extension and man stuff
   return decodeResult;
 }

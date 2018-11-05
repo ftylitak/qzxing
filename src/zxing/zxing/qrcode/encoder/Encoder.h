@@ -77,7 +77,7 @@ protected:
                                         int numDataBytes,
                                         int numRSBlocks);
 
-  static ArrayRef<byte> generateECBytes(const std::vector<byte> &dataBytes, int numEcBytesInBlock);
+  static ArrayRef<zxing::byte> generateECBytes(const std::vector<zxing::byte> &dataBytes, int numEcBytesInBlock);
 
   static void appendNumericBytes(const std::string& content, BitArray& bits);
 
