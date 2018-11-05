@@ -190,7 +190,7 @@ Ref<BitMatrix> LinesSampler::sample() {
   detectedCodeWords.resize(rowCount);
 
   // XXX
-  Ref<BitMatrix> grid(new BitMatrix(dimension_, detectedCodeWords.size()));
+  Ref<BitMatrix> grid(new BitMatrix(dimension_, int(detectedCodeWords.size())));
   codewordsToBitMatrix(detectedCodeWords, grid);
 
   return grid;
@@ -712,7 +712,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
     detectedCodeWords.insert(detectedCodeWords.begin() + insertLinesAt[i] + i, vector<int>(symbolsPerLine, 0));
   }
 
-  int rowCount = getValueWithMaxVotes(rowCountVotes,detectedCodeWords.size()).getVote();
+  int rowCount = getValueWithMaxVotes(rowCountVotes, int(detectedCodeWords.size())).getVote();
   // int ecLevel = getValueWithMaxVotes(ecLevelVotes);
 
 #if PDF417_DIAG && OUTPUT_EC_LEVEL

@@ -441,7 +441,7 @@ Ref<BitArray> Decoder::extractBits(Ref<zxing::BitMatrix> matrix) {
                 
   }
             
-  Ref<BitArray> returnValue(new BitArray(rawbits.size()));
+  Ref<BitArray> returnValue(new BitArray(int(rawbits.size())));
   for (int i = 0; i < (int)rawbits.size(); i++) {
     if (rawbits[i]) returnValue->set(i);
   }

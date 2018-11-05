@@ -70,7 +70,7 @@ public:
     return values_[i];
   }
   int size() const {
-    return values_.size();
+    return int(values_.size());
   }
   bool empty() const {
     return values_.size() == 0;
