@@ -30,8 +30,8 @@ private:
 public:
   InvertedLuminanceSource(Ref<LuminanceSource> const&);
 
-  ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
-  ArrayRef<byte> getMatrix() const;
+  ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const;
+  ArrayRef<zxing::byte> getMatrix() const;
 
   boolean isCropSupported() const;
   Ref<LuminanceSource> crop(int left, int top, int width, int height) const;

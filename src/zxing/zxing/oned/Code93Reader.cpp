@@ -130,7 +130,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
   
   return Ref<Result>(new Result(
                        resultString,
-                       ArrayRef<byte>(),
+                       ArrayRef<zxing::byte>(),
                        resultPoints,
                        BarcodeFormat::CODE_93));
 }
@@ -226,7 +226,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'd':
         // +A to +Z map to a to z
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (byte) (next + 32);
+          decodedChar = (zxing::byte) (next + 32);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -234,7 +234,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'a':
         // $A to $Z map to control codes SH to SB
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (byte) (next - 64);
+          decodedChar = (zxing::byte) (next - 64);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -242,9 +242,9 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'b':
         // %A to %E map to control codes ESC to US
         if (next >= 'A' && next <= 'E') {
-          decodedChar = (byte) (next - 38);
+          decodedChar = (zxing::byte) (next - 38);
         } else if (next >= 'F' && next <= 'W') {
-          decodedChar = (byte) (next - 11);
+          decodedChar = (zxing::byte) (next - 11);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -252,7 +252,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'c':
         // /A to /O map to ! to , and /Z maps to :
         if (next >= 'A' && next <= 'O') {
-          decodedChar = (byte) (next - 32);
+          decodedChar = (zxing::byte) (next - 32);
         } else if (next == 'Z') {
           decodedChar = ':';
         } else {

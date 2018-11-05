@@ -15,9 +15,9 @@ private:
   static const int N3;
   static const int N4;
 
-  static bool isWhiteHorizontal(const std::vector<byte>& rowArray, int from, int to);
+  static bool isWhiteHorizontal(const std::vector<zxing::byte>& rowArray, int from, int to);
 
-  static bool isWhiteVertical(const std::vector<std::vector<byte> >& array, int col, int from, int to);
+  static bool isWhiteVertical(const std::vector<std::vector<zxing::byte> >& array, int col, int from, int to);
 
   /**
    * Helper function for applyMaskPenaltyRule1. We need this for doing this calculation in both

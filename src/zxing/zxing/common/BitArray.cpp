@@ -261,7 +261,7 @@ void BitArray::xor_(const BitArray& other)
     }
 }
 
-void BitArray::toBytes(int bitOffset, std::vector<byte>& array, int offset, int numBytes) const
+void BitArray::toBytes(int bitOffset, std::vector<zxing::byte>& array, int offset, int numBytes) const
 {
     if(array.size() < (numBytes + offset))
         array.resize(numBytes + offset);
@@ -274,7 +274,7 @@ void BitArray::toBytes(int bitOffset, std::vector<byte>& array, int offset, int 
             }
             bitOffset++;
         }
-        array[offset + i] = (byte) theByte;
+        array[offset + i] = (zxing::byte) theByte;
     }
 }
 
