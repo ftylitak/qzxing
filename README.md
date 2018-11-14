@@ -1,4 +1,4 @@
-# qzxing
+# qzxing [![Build Status](https://travis-ci.com/ftylitak/qzxing.svg?branch=master)](https://travis-ci.com/ftylitak/qzxing)
 Qt/QML wrapper library for the [ZXing](https://github.com/zxing/zxing) barcode image processing library. 
 
 Supports barcode decoding for the following types: 
