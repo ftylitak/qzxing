@@ -25,9 +25,9 @@ namespace zxing {
 
 class NotFoundException : public ReaderException {
 public:
-  NotFoundException() noexcept;
-  NotFoundException(const char *msg) noexcept;
-  ~NotFoundException() noexcept;
+  NotFoundException() ZXING_NOEXCEPT;
+  NotFoundException(const char *msg) ZXING_NOEXCEPT;
+  ~NotFoundException() ZXING_NOEXCEPT;
 };
 
 }

@@ -19,12 +19,12 @@
  */
 #include <zxing/IllegalStateException.h>
 
-zxing::IllegalStateException::IllegalStateException()  noexcept {
+zxing::IllegalStateException::IllegalStateException()  ZXING_NOEXCEPT {
 }
 
-zxing::IllegalStateException::IllegalStateException(const char *msg) noexcept
+zxing::IllegalStateException::IllegalStateException(const char *msg) ZXING_NOEXCEPT
     : ReaderException(msg) {
 }
 
-zxing::IllegalStateException::~IllegalStateException()  noexcept {
+zxing::IllegalStateException::~IllegalStateException()  ZXING_NOEXCEPT {
 }

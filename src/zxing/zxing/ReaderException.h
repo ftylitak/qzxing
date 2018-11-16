@@ -27,9 +27,9 @@ namespace zxing {
 
 class ReaderException : public Exception {
  public:
-  ReaderException() noexcept;
-  ReaderException(char const* msg) noexcept;
-  ~ReaderException() noexcept;
+  ReaderException() ZXING_NOEXCEPT;
+  ReaderException(char const* msg) ZXING_NOEXCEPT;
+  ~ReaderException() ZXING_NOEXCEPT;
 };
 
 }

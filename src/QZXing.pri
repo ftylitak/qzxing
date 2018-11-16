@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-CONFIG += qt
+CONFIG += qt warn_on
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \

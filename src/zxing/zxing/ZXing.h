@@ -151,4 +151,18 @@ private:
 #define ZXING_TIME_MARK(string) (void)0
 #endif
 
+#ifndef ZXING_NULLPTR
+#if __cplusplus >= 201103L
+   #define ZXING_NULLPTR nullptr
+#else
+   #define ZXING_NULLPTR NULL
+#endif
+#endif // ZXING_NULLPTR
+
+#if __cplusplus >= 201103L
+   #define ZXING_NOEXCEPT noexcept
+#else
+   #define ZXING_NOEXCEPT throw()
+#endif
+
 #endif

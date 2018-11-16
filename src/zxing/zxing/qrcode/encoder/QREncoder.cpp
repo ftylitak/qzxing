@@ -39,13 +39,13 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
 
 Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel)
 {
-    return encode(content, ecLevel, nullptr);
+    return encode(content, ecLevel, ZXING_NULLPTR);
 }
 
 Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
-    std::string encoding = hints == nullptr ? "" : hints->getCharacterSet();
+    std::string encoding = hints == ZXING_NULLPTR ? "" : hints->getCharacterSet();
     if (encoding == "")
         encoding = DEFAULT_BYTE_MODE_ENCODING;
 
@@ -61,7 +61,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     if (mode == Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
         zxing::common::CharacterSetECI const * eci =
                 zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding);
-        if (eci != nullptr) {
+        if (eci != ZXING_NULLPTR) {
             appendECI(*eci, headerBits);
         }
     }
@@ -75,7 +75,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     appendBytes(content, mode, dataBits, encoding);
 
     Ref<Version> version;
-    if (hints != nullptr/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
+    if (hints != ZXING_NULLPTR/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
         version = Version::getVersionForNumber(1);
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
         if (!willFit(bitsNeeded, version, ecLevel)) {

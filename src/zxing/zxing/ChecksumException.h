@@ -24,9 +24,9 @@
 namespace zxing {
   class ChecksumException : public ReaderException {
   public:
-    ChecksumException() noexcept;
-    ChecksumException(const char *msg) noexcept;
-    ~ChecksumException() noexcept;
+    ChecksumException() ZXING_NOEXCEPT;
+    ChecksumException(const char *msg) ZXING_NOEXCEPT;
+    ~ChecksumException() ZXING_NOEXCEPT;
   };
 }
 

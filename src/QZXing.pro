@@ -22,7 +22,6 @@ TARGET = QZXing
 TEMPLATE = lib
 
 # CONFIG += staticlib
-gcc:QMAKE_CXXFLAGS += -Wall -Wextra
 
 DEFINES -= DISABLE_LIBRARY_FEATURES
 symbian {

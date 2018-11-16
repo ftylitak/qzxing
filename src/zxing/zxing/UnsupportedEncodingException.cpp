@@ -19,12 +19,12 @@
  */
 #include <zxing/UnsupportedEncodingException.h>
 
-zxing::UnsupportedEncodingException::UnsupportedEncodingException()  noexcept {
+zxing::UnsupportedEncodingException::UnsupportedEncodingException()  ZXING_NOEXCEPT {
 }
 
-zxing::UnsupportedEncodingException::UnsupportedEncodingException(const char *msg) noexcept
+zxing::UnsupportedEncodingException::UnsupportedEncodingException(const char *msg) ZXING_NOEXCEPT
     : Exception(msg) {
 }
 
-zxing::UnsupportedEncodingException::~UnsupportedEncodingException()  noexcept {
+zxing::UnsupportedEncodingException::~UnsupportedEncodingException()  ZXING_NOEXCEPT {
 }

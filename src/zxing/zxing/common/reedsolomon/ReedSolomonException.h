@@ -25,8 +25,8 @@
 namespace zxing {
 class ReedSolomonException : public Exception {
 public:
-  ReedSolomonException(const char *msg) noexcept;
-  ~ReedSolomonException() noexcept;
+  ReedSolomonException(const char *msg) ZXING_NOEXCEPT;
+  ~ReedSolomonException() ZXING_NOEXCEPT;
 };
 }
 

@@ -1,13 +1,11 @@
 # Add more folders to ship with the application, here
+DEPLOYMENTFOLDERS = folder_01
 folder_01.source = qml/QZXingDragNDropTest
 folder_01.target = qml
-DEPLOYMENTFOLDERS = folder_01
 
 QT  += widgets
 
 CONFIG += qzxing_qml
-
-gcc:QMAKE_CXXFLAGS += -Wall -Wextra
 
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =

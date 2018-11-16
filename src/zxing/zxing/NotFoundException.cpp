@@ -19,12 +19,12 @@
  */
 #include <zxing/NotFoundException.h>
 
-zxing::NotFoundException::NotFoundException()  noexcept {
+zxing::NotFoundException::NotFoundException()  ZXING_NOEXCEPT {
 }
 
-zxing::NotFoundException::NotFoundException(const char *msg) noexcept
+zxing::NotFoundException::NotFoundException(const char *msg) ZXING_NOEXCEPT
     : ReaderException(msg) {
 }
 
-zxing::NotFoundException::~NotFoundException()  noexcept {
+zxing::NotFoundException::~NotFoundException()  ZXING_NOEXCEPT {
 }

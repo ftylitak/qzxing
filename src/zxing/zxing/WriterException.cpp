@@ -19,12 +19,12 @@
  */
 #include <zxing/WriterException.h>
 
-zxing::WriterException::WriterException()  noexcept {
+zxing::WriterException::WriterException()  ZXING_NOEXCEPT {
 }
 
-zxing::WriterException::WriterException(const char *msg) noexcept
+zxing::WriterException::WriterException(const char *msg) ZXING_NOEXCEPT
     : Exception(msg) {
 }
 
-zxing::WriterException::~WriterException()  noexcept {
+zxing::WriterException::~WriterException()  ZXING_NOEXCEPT {
 }

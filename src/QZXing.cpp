@@ -332,7 +332,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         return "";
     }
 
-    CameraImageWrapper *ciw = nullptr;
+    CameraImageWrapper *ciw = ZXING_NULLPTR;
 
     if ((maxWidth > 0) || (maxHeight > 0))
         ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
@@ -440,7 +440,7 @@ QString QZXing::decodeSubImageQML(QObject *item,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
-    if(item  == nullptr)
+    if(item  == ZXING_NULLPTR)
     {
         processingTime = 0;
         emit decodingFinished(false);

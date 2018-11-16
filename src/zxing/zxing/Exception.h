@@ -21,6 +21,8 @@
  * limitations under the License.
  */
 
+#include <zxing/ZXing.h>
+
 #include <string>
 #include <exception>
 
@@ -31,11 +33,11 @@ private:
   char const* const message;
 
 public:
-  Exception() noexcept;
-  Exception(const char* msg) noexcept;
-  Exception(Exception const& that) noexcept;
-  ~Exception() noexcept;
-  char const* what() const noexcept;
+  Exception() ZXING_NOEXCEPT;
+  Exception(const char* msg) ZXING_NOEXCEPT;
+  Exception(Exception const& that) ZXING_NOEXCEPT;
+  ~Exception() ZXING_NOEXCEPT;
+  char const* what() const ZXING_NOEXCEPT;
 
 private:
   static char const* copy(char const*);

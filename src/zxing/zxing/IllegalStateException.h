@@ -25,9 +25,9 @@ namespace zxing {
 
 class IllegalStateException : public ReaderException {
 public:
-  IllegalStateException() noexcept;
-  IllegalStateException(const char *msg) noexcept;
-  ~IllegalStateException() noexcept;
+  IllegalStateException() ZXING_NOEXCEPT;
+  IllegalStateException(const char *msg) ZXING_NOEXCEPT;
+  ~IllegalStateException() ZXING_NOEXCEPT;
 };
 
 }

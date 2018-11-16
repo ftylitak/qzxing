@@ -19,12 +19,12 @@
  */
 #include <zxing/ReaderException.h>
 
-zxing::ReaderException::ReaderException()  noexcept {
+zxing::ReaderException::ReaderException()  ZXING_NOEXCEPT {
 }
 
-zxing::ReaderException::ReaderException(const char *msg) noexcept
+zxing::ReaderException::ReaderException(const char *msg) ZXING_NOEXCEPT
     : Exception(msg) {
 }
 
-zxing::ReaderException::~ReaderException()  noexcept {
+zxing::ReaderException::~ReaderException()  ZXING_NOEXCEPT {
 }

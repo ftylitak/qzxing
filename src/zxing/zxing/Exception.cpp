@@ -26,26 +26,26 @@
 
 using zxing::Exception;
 
-Exception::Exception() noexcept
-    : message(nullptr) {
+Exception::Exception() ZXING_NOEXCEPT
+    : message(ZXING_NULLPTR) {
 }
 
-Exception::Exception(const char *msg) noexcept
+Exception::Exception(const char *msg) ZXING_NOEXCEPT
     : message(copy(msg)) {
 }
 
-Exception::Exception(const zxing::Exception &that) noexcept
+Exception::Exception(const zxing::Exception &that) ZXING_NOEXCEPT
     : std::exception(that),
       message(copy(that.message)) {
 }
 
-Exception::~Exception() noexcept {
+Exception::~Exception() ZXING_NOEXCEPT {
     if(message) {
         deleteMessage();
     }
 }
 
-const char *Exception::what() const noexcept {
+const char *Exception::what() const ZXING_NOEXCEPT {
     return message ? message : "";
 }
 
@@ -54,7 +54,7 @@ void Exception::deleteMessage() {
 }
 
 char const* Exception::copy(char const* msg) {
-    char* message = nullptr;
+    char* message = ZXING_NULLPTR;
     if (msg) {
         auto l = strlen(msg)+1;
         if (l) {
