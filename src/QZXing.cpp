@@ -332,12 +332,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         return "";
     }
 
-    CameraImageWrapper *ciw = NULL;
-
-    if ((maxWidth > 0) || (maxHeight > 0))
-        ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
-    else
-        ciw = CameraImageWrapper::Factory(image, 999, 999, true);
+    CameraImageWrapper *ciw = new CameraImageWrapper(image);
 
     QString errorMessage = "Unknown";
     try {
