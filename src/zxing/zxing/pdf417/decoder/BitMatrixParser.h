@@ -1,5 +1,5 @@
-#ifndef __BIT_MATRIX_PARSER__PDF_H__
-#define __BIT_MATRIX_PARSER__PDF_H__
+#ifndef ZXING_BIT_MATRIX_PARSER_PDF_H
+#define ZXING_BIT_MATRIX_PARSER_PDF_H
 
 /*
  *  BitMatrixParser.h / PDF417
@@ -81,4 +81,4 @@ protected:
 }
 }
 
-#endif // __BIT_MATRIX_PARSER__PDF_H__
+#endif // ZXING_BIT_MATRIX_PARSER_PDF_H

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __RESULT_POINT_H__
-#define __RESULT_POINT_H__
+#ifndef ZXING_RESULT_POINT_H
+#define ZXING_RESULT_POINT_H
 
 /*
  *  ResultPoint.h
@@ -52,4 +52,4 @@ private:
 
 }
 
-#endif // __RESULT_POINT_H__
+#endif // ZXING_RESULT_POINT_H

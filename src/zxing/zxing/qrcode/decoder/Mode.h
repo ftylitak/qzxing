@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __MODE_H__
-#define __MODE_H__
+#ifndef ZXING_MODE_H
+#define ZXING_MODE_H
 
 /*
  *  Mode.h

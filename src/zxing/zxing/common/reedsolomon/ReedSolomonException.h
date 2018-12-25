@@ -1,5 +1,5 @@
-#ifndef __REED_SOLOMON_EXCEPTION_H__
-#define __REED_SOLOMON_EXCEPTION_H__
+#ifndef ZXING_REED_SOLOMON_EXCEPTION_H
+#define ZXING_REED_SOLOMON_EXCEPTION_H
 
 /*
  *  ReedSolomonException.h
@@ -25,9 +25,9 @@
 namespace zxing {
 class ReedSolomonException : public Exception {
 public:
-  ReedSolomonException(const char *msg) throw();
-  ~ReedSolomonException() throw();
+  ReedSolomonException(const char *msg) ZXING_NOEXCEPT;
+  ~ReedSolomonException() ZXING_NOEXCEPT;
 };
 }
 
-#endif // __REED_SOLOMON_EXCEPTION_H__
+#endif // ZXING_REED_SOLOMON_EXCEPTION_H

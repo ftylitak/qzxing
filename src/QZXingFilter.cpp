@@ -1,3 +1,4 @@
+#include "zxing/ZXing.h"
 #include "QZXingFilter.h"
 
 #include <QDebug>
@@ -14,13 +15,13 @@ namespace {
     }
     uchar yuvToGray(uchar Y, uchar U, uchar V)
     {
-        const int C = (int) Y - 16;
-        const int D = (int) U - 128;
-        const int E = (int) V - 128;
+        const int C = int(Y) - 16;
+        const int D = int(U) - 128;
+        const int E = int(V) - 128;
         return gray(
-            qBound(0, (298 * C + 409 * E + 128) >> 8, 255),
-            qBound(0, (298 * C - 100 * D - 208 * E + 128) >> 8, 255),
-            qBound(0, (298 * C + 516 * D + 128) >> 8, 255)
+            qBound<uchar>(0, uchar((298 * C + 409 * E + 128) >> 8), 255),
+            qBound<uchar>(0, uchar((298 * C - 100 * D - 208 * E + 128) >> 8), 255),
+            qBound<uchar>(0, uchar((298 * C + 516 * D + 128) >> 8), 255)
         );
     }
 }
@@ -68,14 +69,14 @@ QVideoFilterRunnable * QZXingFilter::createFilterRunnable()
 ///
 
 QZXingFilterRunnable::QZXingFilterRunnable(QZXingFilter * filter)
-    : QObject(nullptr)
+    : QObject(ZXING_NULLPTR)
     , filter(filter)
 {
 
 }
 QZXingFilterRunnable::~QZXingFilterRunnable()
 {
-    filter = nullptr;
+    filter = ZXING_NULLPTR;
 }
 
 QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags)
@@ -133,6 +134,8 @@ struct CaptureRect
     {}
 
     bool isValid;
+    char pad[3]; // avoid warning about padding
+
     int sourceWidth;
     int sourceHeight;
 
@@ -172,9 +175,9 @@ static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureR
             uchar b = data[blue];
             if (isPremultiplied) {
                 uchar a = data[alpha];
-                r = (uint(r) * 255) / a;
-                g = (uint(g) * 255) / a;
-                b = (uint(b) * 255) / a;
+                r = uchar((uint(r) * 255) / a);
+                g = uchar((uint(g) * 255) / a);
+                b = uchar((uint(b) * 255) / a);
             }
             *pixel = gray(r, g, b);
             ++pixel;
@@ -194,17 +197,17 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     const int width = videoFrame.size.width();
     const int height = videoFrame.size.height();
     const CaptureRect captureRect(_captureRect, width, height);
-    const uchar* data = (uchar*) videoFrame.data.constData();
+    const uchar* data = reinterpret_cast<const uchar *>(videoFrame.data.constData());
 
     uchar* pixel;
     int wh;
     int w_2;
     int wh_54;
 
-    uint32_t *yuvPtr = (uint32_t *)data;
+    const uint32_t *yuvPtr = reinterpret_cast<const uint32_t *>(data);
 
     /// Create QImage from QVideoFrame.
-    QImage *image_ptr = nullptr;
+    QImage *image_ptr = ZXING_NULLPTR;
 
     switch (videoFrame.pixelFormat) {
     case QVideoFrame::Format_RGB32:
@@ -287,12 +290,12 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         pixel = image_ptr->bits();
 
         for (int y = captureRect.startY; y < captureRect.endY; y++){
-            uint32_t *row = &yuvPtr[y*(width/2)-(width/4)];
+            const uint32_t *row = &yuvPtr[y*(width/2)-(width/4)];
             for (int x = captureRect.startX; x < captureRect.endX; x++){
-                uint32_t pxl = row[x];
-                const int y0 = (unsigned char)((uint8_t *)&pxl)[0];
-                const int u = (unsigned char)((uint8_t *)&pxl)[1];
-                const int v = (unsigned char)((uint8_t *)&pxl)[3];
+                const uint8_t *pxl = reinterpret_cast<const uint8_t *>(&row[x]);
+                const uint8_t y0 = pxl[0];
+                const uint8_t u  = pxl[1];
+                const uint8_t v  = pxl[3];
                 *pixel = yuvToGray(y0, u, v);
                 ++pixel;
             }
@@ -333,6 +336,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
 
 QString QZXingFilterRunnable::decode(const QImage &image)
 {
-    return (filter != nullptr) ?
+    return (filter != ZXING_NULLPTR) ?
       filter->decoder.decodeImage(image, image.width(), image.height()) : QString();
 }

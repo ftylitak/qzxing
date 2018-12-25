@@ -1,5 +1,5 @@
-#ifndef __DETECTOR_RESULT_H__
-#define __DETECTOR_RESULT_H__
+#ifndef ZXING_DETECTOR_RESULT_H
+#define ZXING_DETECTOR_RESULT_H
 
 /*
  *  DetectorResult.h
@@ -40,4 +40,4 @@ public:
 
 }
 
-#endif // __DETECTOR_RESULT_H__
+#endif // ZXING_DETECTOR_RESULT_H

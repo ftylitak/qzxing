@@ -39,13 +39,13 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
 
 Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel)
 {
-    return encode(content, ecLevel, NULL);
+    return encode(content, ecLevel, ZXING_NULLPTR);
 }
 
 Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
-    std::string encoding = hints == NULL ? "" : hints->getCharacterSet();
+    std::string encoding = hints == ZXING_NULLPTR ? "" : hints->getCharacterSet();
     if (encoding == "")
         encoding = DEFAULT_BYTE_MODE_ENCODING;
 
@@ -61,7 +61,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     if (mode == Mode::BYTE && DEFAULT_BYTE_MODE_ENCODING != encoding) {
         zxing::common::CharacterSetECI const * eci =
                 zxing::common::CharacterSetECI::getCharacterSetECIByName(encoding);
-        if (eci != NULL) {
+        if (eci != ZXING_NULLPTR) {
             appendECI(*eci, headerBits);
         }
     }
@@ -75,7 +75,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     appendBytes(content, mode, dataBits, encoding);
 
     Ref<Version> version;
-    if (hints != NULL/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
+    if (hints != ZXING_NULLPTR/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
         version = Version::getVersionForNumber(1);
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
         if (!willFit(bitsNeeded, version, ecLevel)) {
@@ -88,7 +88,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
     // Find "length" of main segment and write it
-    int numLetters = (mode == Mode::BYTE) ? dataBits.getSizeInBytes() : content.length();
+    int numLetters = (mode == Mode::BYTE) ? dataBits.getSizeInBytes() : int(content.length());
     appendLengthInfo(numLetters, *version, mode, headerAndDataBits);
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
@@ -103,7 +103,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
                                                   version->getTotalCodewords(),
                                                   numDataBytes,
-                                                  ecBlocks.getECBlocks().size()));
+                                                  int(ecBlocks.getECBlocks().size())));
 
     Ref<QRCode> qrCode(new QRCode);
 
@@ -113,7 +113,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
 
     //  Choose the mask pattern and set to "qrCode".
     int dimension = version->getDimensionForVersion();
-    Ref<ByteMatrix> matrix(new ByteMatrix(dimension, dimension));
+    Ref<ByteMatrix> matrix(new ByteMatrix(size_t(dimension), size_t(dimension)));
     int maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
     qrCode->setMaskPattern(maskPattern);
 
@@ -165,7 +165,7 @@ Mode Encoder::chooseMode(const std::string& content, const std::string& encoding
 
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
-    for (int i = 0; i < content.size(); i++) {
+    for (size_t i = 0; i < content.size(); i++) {
         char c = content.at(i);
         if (c >= '0' && c <= '9') {
             hasNumeric = true;
@@ -375,13 +375,13 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 
         int size = numDataBytesInBlock[0];
         std::vector<zxing::byte> dataBytes;
-        dataBytes.resize(size);
+        dataBytes.resize(size_t(size));
         bits.toBytes(8*dataBytesOffset, dataBytes, 0, size);
         ArrayRef<zxing::byte> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
-        blocks.push_back(BlockPair(ArrayRef<zxing::byte>(dataBytes.data(), dataBytes.size()),ecBytes)); //?? please revisit
+        blocks.push_back(BlockPair(ArrayRef<zxing::byte>(dataBytes.data(), int(dataBytes.size())), ecBytes)); //?? please revisit
 
         maxNumDataBytes = max(maxNumDataBytes, size);
-        maxNumEcBytes = max(maxNumEcBytes, (int)ecBytes->size());
+        maxNumEcBytes = max(maxNumEcBytes, ecBytes->size());
         dataBytesOffset += numDataBytesInBlock[0];
     }
     if (numDataBytes != dataBytesOffset) {
@@ -422,7 +422,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
 
 ArrayRef<zxing::byte> Encoder::generateECBytes(const std::vector<zxing::byte>& dataBytes, int numEcBytesInBlock)
 {
-    int numDataBytes = dataBytes.size();
+    size_t numDataBytes = dataBytes.size();
     std::vector<zxing::byte> dataBytesCopy(dataBytes);
 
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
@@ -430,7 +430,7 @@ ArrayRef<zxing::byte> Encoder::generateECBytes(const std::vector<zxing::byte>& d
 
     ArrayRef<zxing::byte> ecBytes(numEcBytesInBlock);
     for (int i = 0; i < numEcBytesInBlock; i++) {
-        ecBytes[i] = dataBytesCopy[numDataBytes + i];
+        ecBytes[i] = dataBytesCopy[numDataBytes + size_t(i)];
     }
     return ecBytes;
 }
@@ -486,8 +486,8 @@ void Encoder::appendBytes(const std::string& content,
 
 void Encoder::appendNumericBytes( const std::string& content, BitArray& bits)
 {
-    int length = content.size();
-    int i = 0;
+    size_t length = content.size();
+    size_t i = 0;
     while (i < length) {
         int num1 = content.at(i) - '0';
         if (i + 2 < length) {
@@ -511,8 +511,8 @@ void Encoder::appendNumericBytes( const std::string& content, BitArray& bits)
 
 void Encoder::appendAlphanumericBytes(const std::string& content, BitArray& bits)
 {
-    int length = content.length();
-    int i = 0;
+    size_t length = content.length();
+    size_t i = 0;
     while (i < length) {
         int code1 = getAlphanumericCode(content.at(i));
         if (code1 == -1) {
@@ -544,7 +544,7 @@ void Encoder::append8BitBytes(const std::string& content, BitArray& bits, const 
     //        throw WriterException(uee);
     //    }
 
-    for (int i=0; i<content.size(); i++) {
+    for (size_t i=0; i<content.size(); i++) {
         bits.appendBits(content.at(i), 8);
     }
 }
@@ -557,8 +557,8 @@ void Encoder::appendKanjiBytes(const std::string& content, BitArray& bits)
     //    } catch (UnsupportedEncodingException uee) {
     //        throw WriterException(uee);
     //    }
-    int length = content.size();
-    for (int i = 0; i < length; i += 2) {
+    size_t length = content.size();
+    for (size_t i = 0; i < length; i += 2) {
         int byte1 = content.at(i) & 0xFF;
         int byte2 = content.at(i + 1) & 0xFF;
         int code = (byte1 << 8) | byte2;

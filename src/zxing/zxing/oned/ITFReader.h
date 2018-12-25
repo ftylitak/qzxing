@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __ITF_READER_H__
-#define __ITF_READER_H__
+#ifndef ZXING_ITF_READER_H
+#define ZXING_ITF_READER_H
 
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
@@ -51,4 +51,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_ITF_READER_H
+

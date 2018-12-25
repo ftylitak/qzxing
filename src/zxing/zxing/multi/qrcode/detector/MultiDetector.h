@@ -1,5 +1,5 @@
-#ifndef __MULTI_DETECTOR_H__
-#define __MULTI_DETECTOR_H__
+#ifndef ZXING_MULTI_DETECTOR_H
+#define ZXING_MULTI_DETECTOR_H
 
 /*
  *  Copyright 2011 ZXing authors
@@ -34,4 +34,4 @@ class MultiDetector : public zxing::qrcode::Detector {
 }
 }
 
-#endif // __MULTI_DETECTOR_H__
+#endif // ZXING_MULTI_DETECTOR_H

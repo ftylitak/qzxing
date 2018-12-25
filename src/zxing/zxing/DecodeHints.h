@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __DECODEHINTS_H_
-#define __DECODEHINTS_H_
+#ifndef ZXING_DECODEHINTS_H
+#define ZXING_DECODEHINTS_H
 /*
  *  DecodeHintType.h
  *  zxing
@@ -85,4 +85,5 @@ class DecodeHints {
 
 }
 
-#endif
+#endif // ZXING_DECODEHINTS_H
+

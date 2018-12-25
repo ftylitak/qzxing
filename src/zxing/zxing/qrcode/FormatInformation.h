@@ -1,5 +1,5 @@
-#ifndef __FORMAT_INFORMATION_H__
-#define __FORMAT_INFORMATION_H__
+#ifndef ZXING_FORMAT_INFORMATION_H
+#define ZXING_FORMAT_INFORMATION_H
 
 /*
  *  FormatInformation.h
@@ -51,4 +51,4 @@ public:
 }
 }
 
-#endif // __FORMAT_INFORMATION_H__
+#endif // ZXING_FORMAT_INFORMATION_H

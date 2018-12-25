@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __ZXING_COMMON_DETECTOR_MATHUTILS_H__
-#define __ZXING_COMMON_DETECTOR_MATHUTILS_H__
+#ifndef ZXING_COMMON_DETECTOR_MATHUTILS_H
+#define ZXING_COMMON_DETECTOR_MATHUTILS_H
 /*
  *  Copyright 2012 ZXing authors All rights reserved.
  *
@@ -54,4 +54,5 @@ class MathUtils {
 }
 }
 
-#endif
+#endif // ZXING_COMMON_DETECTOR_MATHUTILS_H
+

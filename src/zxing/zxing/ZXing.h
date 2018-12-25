@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __ZXING_H_
-#define __ZXING_H_
+#ifndef ZXING_H
+#define ZXING_H
 
 #define ZXING_ARRAY_LEN(v) ((int)(sizeof(v)/sizeof(v[0])))
 #define ZX_LOG_DIGITS(digits) \
@@ -149,6 +149,20 @@ private:
 #endif
 #ifndef ZXING_TIME_MARK
 #define ZXING_TIME_MARK(string) (void)0
+#endif
+
+#ifndef ZXING_NULLPTR
+#if __cplusplus >= 201103L
+   #define ZXING_NULLPTR nullptr
+#else
+   #define ZXING_NULLPTR NULL
+#endif
+#endif // ZXING_NULLPTR
+
+#if __cplusplus >= 201103L
+   #define ZXING_NOEXCEPT noexcept
+#else
+   #define ZXING_NOEXCEPT throw()
 #endif
 
 #endif

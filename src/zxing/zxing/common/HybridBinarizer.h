@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __HYBRIDBINARIZER_H__
-#define __HYBRIDBINARIZER_H__
+#ifndef ZXING_HYBRIDBINARIZER_H
+#define ZXING_HYBRIDBINARIZER_H
 /*
  *  HybridBinarizer.h
  *  zxing
@@ -64,4 +64,4 @@ namespace zxing {
 
 }
 
-#endif
+#endif // ZXING_HYBRIDBINARIZER_H

@@ -81,7 +81,7 @@ MultiFormatOneDReader::MultiFormatOneDReader(DecodeHints hints) : readers() {
 #include <typeinfo>
 
 Ref<Result> MultiFormatOneDReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
-  int size = readers.size();
+  int size = int(readers.size());
   for (int i = 0; i < size; i++) {
     OneDReader* reader = readers[i];
     try {

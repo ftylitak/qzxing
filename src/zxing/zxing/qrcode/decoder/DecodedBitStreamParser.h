@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __DECODED_BIT_STREAM_PARSER_H__
-#define __DECODED_BIT_STREAM_PARSER_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_H
 
 /*
  *  DecodedBitStreamParser.h
@@ -69,4 +69,4 @@ public:
 }
 }
 
-#endif // __DECODED_BIT_STREAM_PARSER_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_H

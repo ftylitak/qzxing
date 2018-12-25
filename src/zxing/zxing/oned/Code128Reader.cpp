@@ -187,7 +187,7 @@ vector<int> Code128Reader::findStartPattern(Ref<BitArray> row){
   vector<int> counters (6, 0);
   int patternStart = rowOffset;
   bool isWhite = false;
-  int patternLength =  counters.size();
+  int patternLength = int(counters.size());
 
   for (int i = rowOffset; i < width; i++) {
     if (row->get(i) ^ isWhite) {
@@ -312,7 +312,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
 
     // Advance to where the next code will to start
     lastStart = nextStart;
-    for (int i = 0, e = counters.size(); i < e; i++) {
+    for (int i = 0, e = int(counters.size()); i < e; i++) {
       nextStart += counters[i];
     }
 

@@ -1,5 +1,5 @@
-#ifndef __MULTI_FORMAT_ONED_READER_H__
-#define __MULTI_FORMAT_ONED_READER_H__
+#ifndef ZXING_MULTI_FORMAT_ONED_READER_H
+#define ZXING_MULTI_FORMAT_ONED_READER_H
 /*
  *  MultiFormatOneDReader.h
  *  ZXing
@@ -35,4 +35,5 @@ namespace zxing {
   }
 }
 
-#endif
+#endif // ZXING_MULTI_FORMAT_ONED_READER_H
+

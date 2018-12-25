@@ -71,7 +71,7 @@ GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<zxing::byte> row) const 
 ArrayRef<zxing::byte> GreyscaleRotatedLuminanceSource::getMatrix() const {
   ArrayRef<zxing::byte> result (getWidth() * getHeight());
   for (int y = 0; y < getHeight(); y++) {
-    byte* row = &result[y * getWidth()];
+    zxing::byte* row = &result[y * getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
     for (int x = 0; x < getWidth(); x++) {
       row[x] = greyData_[offset];

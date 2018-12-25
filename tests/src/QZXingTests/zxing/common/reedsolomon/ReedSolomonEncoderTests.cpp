@@ -43,7 +43,7 @@ void ReedSolomonTests::testQRCode()
 //    testEncodeDecodeRandom(GenericGF::QR_CODE_FIELD_256, 220, 35);
   }
 
-void ReedSolomonTests::corrupt(std::vector<byte> &received, int howMany, int max)
+void ReedSolomonTests::corrupt(std::vector<zxing::byte> &received, int howMany, int max)
 {
     std::vector<bool> corrupted(received.size(), false);
     for (int j = 0; j < howMany; j++) {
@@ -63,9 +63,9 @@ void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize
     assertTrue(dataSize > 0 && dataSize <= field->getSize() - 3); /*"Invalid data size for " + field, */
     assertTrue(ecSize > 0 && ecSize + dataSize <= field->getSize()); /*"Invalid ECC size for " + field, */
     ReedSolomonEncoder encoder(field);
-    std::vector<byte> message;//(dataSize + ecSize);
-    std::vector<byte> dataWords(dataSize);
-    std::vector<byte> ecWords(ecSize);
+    std::vector<zxing::byte> message;//(dataSize + ecSize);
+    std::vector<zxing::byte> dataWords(dataSize);
+    std::vector<zxing::byte> ecWords(ecSize);
     initializeRandom();
     int iterations = field->getSize() > 256 ? 1 : DECODER_RANDOM_TEST_ITERATIONS;
     for (int i = 0; i < iterations; i++) {
@@ -83,20 +83,20 @@ void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize
 }
 
 void ReedSolomonTests::testEncodeDecode(Ref<GenericGF> field,
-                      const std::vector<byte> &dataWords,
-                      const std::vector<byte> &ecWords)
+                      const std::vector<zxing::byte> &dataWords,
+                      const std::vector<zxing::byte> &ecWords)
 {
     testEncoder(field, dataWords, ecWords);
     testDecoder(field, dataWords, ecWords);
 }
 
 void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
-                                  const std::vector<byte> &dataWords,
-                                  const std::vector<byte> &ecWords)
+                                  const std::vector<zxing::byte> &dataWords,
+                                  const std::vector<zxing::byte> &ecWords)
 {
     ReedSolomonEncoder encoder(field);
-    std::vector<byte> messageExpected;
-    std::vector<byte> message(dataWords);
+    std::vector<zxing::byte> messageExpected;
+    std::vector<zxing::byte> message(dataWords);
 
     messageExpected = dataWords;
     messageExpected.insert(std::end(messageExpected), std::begin(ecWords), std::end(ecWords));
@@ -107,11 +107,11 @@ void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
   }
 
 void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
-                                   const std::vector<byte> &dataWords,
-                                   const std::vector<byte> &ecWords) {
+                                   const std::vector<zxing::byte> &dataWords,
+                                   const std::vector<zxing::byte> &ecWords) {
     ReedSolomonDecoder decoder(field);
-    std::vector<byte> message;
-    std::vector<byte> referenceMessage;
+    std::vector<zxing::byte> message;
+    std::vector<zxing::byte> referenceMessage;
 
     int maxErrors = ecWords.size() / 2;
     initializeRandom();
@@ -121,8 +121,8 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
     referenceMessage.insert(std::end(referenceMessage), std::begin(ecWords), std::end(ecWords));
 
     for (int j = 0; j < iterations; j++) {
-        for (int i = 0; i < ecWords.size(); i++) {
-            if (i > 10 && i < ecWords.size() / 2 - 10) {
+        for (int i = 0; i < int(ecWords.size()); i++) {
+            if (i > 10 && i < int(ecWords.size()) / 2 - 10) {
                 // performance improvement - skip intermediate cases in long-running tests
                 i += ecWords.size() / 10;
             }
@@ -131,7 +131,7 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
             corrupt(message, i, field->getSize());
 
             ArrayRef<int> messageArrayRef(message.size());
-            for(int i=0; i<message.size(); i++)
+            for(int i=0; i<int(message.size()); i++)
                 messageArrayRef[i] = message[i];
 
             try {

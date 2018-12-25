@@ -16,7 +16,7 @@ namespace datamatrix {
 class DetectorException : public Exception {
   public:
     DetectorException(const char *msg);
-    virtual ~DetectorException() throw();
+    virtual ~DetectorException() ZXING_NOEXCEPT;
 };
 } /* namespace nexxera */
 } /* namespace zxing */

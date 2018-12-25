@@ -1,5 +1,5 @@
-#ifndef __DECOCER_PDF_H__
-#define __DECOCER_PDF_H__
+#ifndef ZXING_DECOCER_PDF_H
+#define ZXING_DECOCER_PDF_H
 
 /*
  *  Decoder.h
@@ -59,4 +59,4 @@ public:
 }
 }
 
-#endif // __DECOCER_PDF_H__
+#endif // ZXING_DECOCER_PDF_H

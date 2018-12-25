@@ -21,10 +21,10 @@
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 
 namespace zxing {
-ReedSolomonException::ReedSolomonException(const char *msg) throw() :
+ReedSolomonException::ReedSolomonException(const char *msg) ZXING_NOEXCEPT :
     Exception(msg) {
 }
-ReedSolomonException::~ReedSolomonException() throw() {
+ReedSolomonException::~ReedSolomonException() ZXING_NOEXCEPT {
 }
 
 }

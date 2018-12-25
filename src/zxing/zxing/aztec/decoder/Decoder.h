@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#ifndef __ZXING_AZTEC_DECODER_DECODER_H__
-#define __ZXING_AZTEC_DECODER_DECODER_H__
+#ifndef ZXING_AZTEC_DECODER_DECODER_H
+#define ZXING_AZTEC_DECODER_DECODER_H
 
 #include <zxing/common/BitMatrix.h>
 #include <zxing/common/Str.h>
@@ -66,4 +66,4 @@ class Decoder : public Counted {
 }
 }
 
-#endif
+#endif // ZXING_AZTEC_DECODER_DECODER_H

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __UPC_E_READER_H__
-#define __UPC_E_READER_H__
+#ifndef ZXING_UPC_E_READER_H
+#define ZXING_UPC_E_READER_H
 
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
@@ -44,4 +44,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_UPC_E_READER_H
+

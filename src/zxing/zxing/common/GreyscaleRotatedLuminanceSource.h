@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __GREYSCALE_ROTATED_LUMINANCE_SOURCE__
-#define __GREYSCALE_ROTATED_LUMINANCE_SOURCE__
+#ifndef ZXING_GREYSCALE_ROTATED_LUMINANCE_SOURCE
+#define ZXING_GREYSCALE_ROTATED_LUMINANCE_SOURCE
 /*
  *  GreyscaleRotatedLuminanceSource.h
  *  zxing
@@ -43,4 +43,4 @@ public:
 
 }
 
-#endif
+#endif // ZXING_GREYSCALE_ROTATED_LUMINANCE_SOURCE

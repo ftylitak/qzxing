@@ -1,5 +1,5 @@
-#ifndef __MULTI_FINDER_PATTERN_FINDER_H__
-#define __MULTI_FINDER_PATTERN_FINDER_H__
+#ifndef ZXING_MULTI_FINDER_PATTERN_FINDER_H
+#define ZXING_MULTI_FINDER_PATTERN_FINDER_H
 
 /*
  *  Copyright 2011 ZXing authors
@@ -44,4 +44,4 @@ class MultiFinderPatternFinder : zxing::qrcode::FinderPatternFinder {
 }
 }
 
-#endif // __MULTI_FINDER_PATTERN_FINDER_H__
+#endif // ZXING_MULTI_FINDER_PATTERN_FINDER_H

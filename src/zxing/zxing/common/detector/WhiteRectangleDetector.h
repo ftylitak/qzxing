@@ -1,5 +1,5 @@
-#ifndef __WHITERECTANGLEDETECTOR_H__
-#define __WHITERECTANGLEDETECTOR_H__
+#ifndef ZXING_WHITERECTANGLEDETECTOR_H
+#define ZXING_WHITERECTANGLEDETECTOR_H
 
 /*
  *  WhiteRectangleDetector.h
@@ -56,4 +56,5 @@ class WhiteRectangleDetector : public Counted {
 };
 }
 
-#endif
+#endif // ZXING_WHITERECTANGLEDETECTOR_H
+

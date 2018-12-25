@@ -17,9 +17,9 @@ ReedSolomonEncoder::ReedSolomonEncoder(Ref<GenericGF> field) :
 
 Ref<GenericGFPoly> ReedSolomonEncoder::buildGenerator(int degree)
 {
-    if (degree >= cachedGenerators_.size()) {
+    if (degree >= int(cachedGenerators_.size())) {
         Ref<GenericGFPoly> lastGenerator = cachedGenerators_.at(cachedGenerators_.size() - 1);
-        for (int d = cachedGenerators_.size(); d <= degree; d++)
+        for (int d = int(cachedGenerators_.size()); d <= degree; d++)
         {
             ArrayRef<int> arrayRef(2); //will this work?
             arrayRef[0] = 1;
@@ -30,7 +30,10 @@ Ref<GenericGFPoly> ReedSolomonEncoder::buildGenerator(int degree)
             lastGenerator = nextGenerator;
         }
     }
-    return cachedGenerators_.at(degree); // ??? wont this through exception?
+
+    // ??? wont this through exception?
+    // No the elements up to index degree are added above
+    return cachedGenerators_.at(size_t(degree));
 }
 
 void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
@@ -39,8 +42,8 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
         throw Exception("No error correction bytes");
     }
 
-    int dataBytes = toEncode.size();// - ecBytes;
-    toEncode.resize(toEncode.size()+ecBytes);
+    int dataBytes = int(toEncode.size());// - ecBytes;
+    toEncode.resize(toEncode.size() + size_t(ecBytes));
     if (dataBytes <= 0) {
         throw Exception("No data bytes provided");
     }
@@ -49,7 +52,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
 
     //to-do optimize the following loop
     for(int i=0; i< dataBytes; i++)
-        infoCoefficients[i] = toEncode[i];
+        infoCoefficients[i] = toEncode[size_t(i)];
 
     Ref<GenericGFPoly> info(new GenericGFPoly(field_, infoCoefficients));
     info = info->multiplyByMonomial(ecBytes, 1);
@@ -57,11 +60,11 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
     ArrayRef<int> coefficients = remainder->getCoefficients();
     int numZeroCoefficients = ecBytes - coefficients->size();
     for (int i = 0; i < numZeroCoefficients; i++) {
-        toEncode[dataBytes + i] = 0;
+        toEncode[size_t(dataBytes + i)] = 0;
     }
 
-	for (size_t i = 0; i < coefficients->size(); i++)
-      toEncode[dataBytes + numZeroCoefficients + i] = coefficients[i];
+    for (int i = 0; i < coefficients->size(); i++)
+      toEncode[size_t(dataBytes + numZeroCoefficients + i)] = byte(coefficients[int(i)]);
 }
 
 }

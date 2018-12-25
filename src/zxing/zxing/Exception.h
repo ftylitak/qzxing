@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __EXCEPTION_H__
-#define __EXCEPTION_H__
+#ifndef ZXING_EXCEPTION_H
+#define ZXING_EXCEPTION_H
 
 /*
  *  Exception.h
@@ -21,6 +21,8 @@
  * limitations under the License.
  */
 
+#include <zxing/ZXing.h>
+
 #include <string>
 #include <exception>
 
@@ -31,15 +33,11 @@ private:
   char const* const message;
 
 public:
-  Exception() throw() : message(0) {}
-  Exception(const char* msg) throw() : message(copy(msg)) {}
-  Exception(Exception const& that) throw() : std::exception(that), message(copy(that.message)) {}
-  ~Exception() throw() {
-    if(message) {
-      deleteMessage();
-    }
-  }
-  char const* what() const throw() {return message ? message : "";}
+  Exception() ZXING_NOEXCEPT;
+  Exception(const char* msg) ZXING_NOEXCEPT;
+  Exception(Exception const& that) ZXING_NOEXCEPT;
+  ~Exception() ZXING_NOEXCEPT;
+  char const* what() const ZXING_NOEXCEPT;
 
 private:
   static char const* copy(char const*);
@@ -48,4 +46,4 @@ private:
 
 }
 
-#endif // __EXCEPTION_H__
+#endif // ZXING_EXCEPTION_H
