@@ -75,7 +75,7 @@ void DecodedBitStreamParser::append(std::string &result,
         return;
     }
 
-    const int maxOut = 4 * nIn + 1;
+    const int maxOut = 4 * int(nIn) + 1;
     char* bufOut = new char[maxOut];
 
     ICONV_CONST char *fromPtr = (ICONV_CONST char *)bufIn;
@@ -97,7 +97,7 @@ void DecodedBitStreamParser::append(std::string &result,
     }
     iconv_close(cd);
 
-    int nResult = maxOut - nTo;
+    int nResult = maxOut - int(nTo);
     bufOut[nResult] = '\0';
     result.append((const char *)bufOut);
     delete[] bufOut;

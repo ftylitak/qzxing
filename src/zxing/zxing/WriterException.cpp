@@ -1,10 +1,9 @@
-#ifndef ZXING_ONED_RESULT_POINT_H
-#define ZXING_ONED_RESULT_POINT_H
 /*
- *  OneDResultPoint.h
- *  ZXing
+ *  UnsupportedEncodingException.cpp
+ *  zxing
  *
- *  Copyright 2010 ZXing authors All rights reserved.
+ *  Created by Alexander Stillich on 05/11/2018.
+ *  Copyright 2008 ZXing authors All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <zxing/ResultPoint.h>
-#include <cmath>
+#include <zxing/WriterException.h>
 
-namespace zxing {
-	namespace oned {
-		
-		class OneDResultPoint : public ResultPoint {
-			
-		public:
-			OneDResultPoint(float posX, float posY);
-		};
-	}
+zxing::WriterException::WriterException()  ZXING_NOEXCEPT {
 }
 
-#endif // ZXING_ONED_RESULT_POINT_H
+zxing::WriterException::WriterException(const char *msg) ZXING_NOEXCEPT
+    : Exception(msg) {
+}
 
+zxing::WriterException::~WriterException()  ZXING_NOEXCEPT {
+}

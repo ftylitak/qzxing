@@ -1,5 +1,5 @@
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef ZXING_VERSION_H
+#define ZXING_VERSION_H
 
 /*
  *  Version.h
@@ -83,4 +83,4 @@ public:
 }
 }
 
-#endif // __VERSION_H__
+#endif // ZXING_VERSION_H

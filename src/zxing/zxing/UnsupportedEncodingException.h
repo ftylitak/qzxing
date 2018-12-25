@@ -7,9 +7,9 @@ namespace zxing {
 
 class UnsupportedEncodingException : public Exception {
  public:
-  UnsupportedEncodingException() throw() {}
-  UnsupportedEncodingException(char const* msg) throw() : Exception(msg) {}
-  ~UnsupportedEncodingException() throw() {}
+  UnsupportedEncodingException() ZXING_NOEXCEPT;
+  UnsupportedEncodingException(char const* msg) ZXING_NOEXCEPT;
+  ~UnsupportedEncodingException() ZXING_NOEXCEPT;
 };
 
 }

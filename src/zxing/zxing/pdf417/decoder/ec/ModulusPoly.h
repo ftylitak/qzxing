@@ -1,5 +1,5 @@
-#ifndef __MODULUS_GFPOLY_PDF_H__
-#define __MODULUS_GFPOLY_PDF_H__
+#ifndef ZXING_MODULUS_GFPOLY_PDF_H
+#define ZXING_MODULUS_GFPOLY_PDF_H
 
 /*
  * Copyright 2012 ZXing authors
@@ -65,4 +65,4 @@ class ModulusPoly: public Counted {
 }
 }
 
-#endif /* __MODULUS_GFPOLY_PDF_H__ */
+#endif /* ZXING_MODULUS_GFPOLY_PDF_H */

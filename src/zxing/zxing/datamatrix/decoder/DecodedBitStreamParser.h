@@ -1,5 +1,5 @@
-#ifndef __DECODED_BIT_STREAM_PARSER_DM_H__
-#define __DECODED_BIT_STREAM_PARSER_DM_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_DM_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_DM_H
 
 /*
  *  DecodedBitStreamParser.h
@@ -90,15 +90,16 @@ private:
     int pseudoRandomNumber = ((149 * base256CodewordPosition) % 255) + 1;
     int tempVariable = randomizedBase256Codeword - pseudoRandomNumber;
     return (zxing::byte) (tempVariable >= 0 ? tempVariable : (tempVariable + 256));
-  };
+  }
+
   void append(std::ostream &ost, const char *bufIn, size_t nIn, const char *src);
 
 public:
-  DecodedBitStreamParser() { };
+  DecodedBitStreamParser() { }
   Ref<DecoderResult> decode(ArrayRef<zxing::byte> bytes);
 };
 
 }
 }
 
-#endif // __DECODED_BIT_STREAM_PARSER_DM_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_DM_H

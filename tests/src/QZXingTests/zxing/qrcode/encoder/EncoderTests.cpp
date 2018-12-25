@@ -263,7 +263,7 @@ void EncoderTests::testGetNumDataBytesAndNumECBytesForBlockID()
 void EncoderTests::testInterleaveWithECBytes()
 {
     const byte arr[] = {32, 65, 205, 69, 41, 220, 46, 128, 236};
-    std::vector<byte> dataBytes (arr, arr + getArrayLength(arr));
+    std::vector<zxing::byte> dataBytes (arr, arr + getArrayLength(arr));
 
     BitArray in;
     for (byte dataByte: dataBytes) {
@@ -280,7 +280,7 @@ void EncoderTests::testInterleaveWithECBytes()
     };
     int expectedLength = getArrayLength(expected);
     assertEquals(expectedLength, out->getSizeInBytes());
-    std::vector<byte> outArray;
+    std::vector<zxing::byte> outArray;
     out->toBytes(0, outArray, 0, expectedLength);
 
     // Can't use Arrays.equals(), because outArray may be longer than out.sizeInBytes()
@@ -297,7 +297,7 @@ void EncoderTests::testInterleaveWithECBytes()
         135, 151, 160, 236, 17, 236, 17, 236, 17, 236,
         17
     };
-    dataBytes = std::vector<byte>(arr2, arr2 + getArrayLength(arr2));
+    dataBytes = std::vector<zxing::byte>(arr2, arr2 + getArrayLength(arr2));
 
     in = BitArray();
     foreach (byte dataByte, dataBytes) {
@@ -392,9 +392,9 @@ void EncoderTests::testAppend8BitBytes()
 
 void EncoderTests::testGenerateECBytes()
 {
-    std::vector<byte> dataBytes = {32, 65, 205, 69, 41, 220, 46, 128, 236};
+    std::vector<zxing::byte> dataBytes = {32, 65, 205, 69, 41, 220, 46, 128, 236};
 
-    ArrayRef<byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
+    ArrayRef<zxing::byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
     byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };

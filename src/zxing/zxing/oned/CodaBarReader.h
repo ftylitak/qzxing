@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __CODA_BAR_READER_H__
-#define __CODA_BAR_READER_H__
+#ifndef ZXING_CODA_BAR_READER_H
+#define ZXING_CODA_BAR_READER_H
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
  *
@@ -54,4 +54,4 @@ private:
 }
 }
 
-#endif
+#endif // ZXING_CODA_BAR_READER_H

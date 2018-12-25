@@ -1,5 +1,5 @@
-#ifndef __BINARYBITMAP_H__
-#define __BINARYBITMAP_H__
+#ifndef ZXING_BINARYBITMAP_H
+#define ZXING_BINARYBITMAP_H
 
 /*
  *  BinaryBitmap.h
@@ -53,4 +53,4 @@ namespace zxing {
 	
 }
 
-#endif /* BINARYBITMAP_H_ */
+#endif /* ZXING_BINARYBITMAP_H */

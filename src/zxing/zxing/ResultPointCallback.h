@@ -1,5 +1,5 @@
-#ifndef __RESULT_POINT_CALLBACK_H__
-#define __RESULT_POINT_CALLBACK_H__
+#ifndef ZXING_RESULT_POINT_CALLBACK_H
+#define ZXING_RESULT_POINT_CALLBACK_H
 
 /*
  *  ResultPointCallback.h
@@ -36,4 +36,4 @@ public:
 
 }
 
-#endif // __RESULT_POINT_CALLBACK_H__
+#endif // ZXING_RESULT_POINT_CALLBACK_H

@@ -1,7 +1,7 @@
 #include "MaskUtil.h"
 #include <zxing/common/IllegalArgumentException.h>
 #include <stdlib.h>
-#include <algorithm> 
+#include <algorithm>
 
 namespace zxing {
 namespace qrcode {
@@ -30,11 +30,11 @@ int MaskUtil::applyMaskPenaltyRule2(const ByteMatrix& matrix)
 {
     int penalty = 0;
     const std::vector<std::vector<zxing::byte> >& array = matrix.getArray();
-    int width = matrix.getWidth();
-    int height = matrix.getHeight();
-    for (int y = 0; y < height - 1; y++) {
+    size_t width = matrix.getWidth();
+    size_t height = matrix.getHeight();
+    for (size_t  y = 0; y < height - 1; y++) {
         const std::vector<zxing::byte>& arrayY = array[y];
-        for (int x = 0; x < width - 1; x++) {
+        for (size_t  x = 0; x < width - 1; x++) {
             int value = arrayY[x];
             if (value == arrayY[x + 1] && value == array[y + 1][x] && value == array[y + 1][x + 1]) {
                 penalty++;
@@ -53,30 +53,30 @@ int MaskUtil::applyMaskPenaltyRule3(const ByteMatrix& matrix)
 {
     int numPenalties = 0;
     const std::vector<std::vector<zxing::byte> >& array = matrix.getArray();
-    int width = matrix.getWidth();
-    int height = matrix.getHeight();
+    int width = int(matrix.getWidth());
+    int height = int(matrix.getHeight());
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            const std::vector<zxing::byte>& arrayY = array[y];  // We can at least optimize this access
+            const std::vector<zxing::byte>& arrayY = array[size_t(y)];  // We can at least optimize this access
             if (x + 6 < width &&
-                    arrayY[x] == 1 &&
-                    arrayY[x +  1] == 0 &&
-                    arrayY[x +  2] == 1 &&
-                    arrayY[x +  3] == 1 &&
-                    arrayY[x +  4] == 1 &&
-                    arrayY[x +  5] == 0 &&
-                    arrayY[x +  6] == 1 &&
+                    arrayY[size_t(x)] == 1 &&
+                    arrayY[size_t(x + 1)] == 0 &&
+                    arrayY[size_t(x + 2)] == 1 &&
+                    arrayY[size_t(x + 3)] == 1 &&
+                    arrayY[size_t(x + 4)] == 1 &&
+                    arrayY[size_t(x + 5)] == 0 &&
+                    arrayY[size_t(x + 6)] == 1 &&
                     (isWhiteHorizontal(arrayY, x - 4, x) || isWhiteHorizontal(arrayY, x + 7, x + 11))) {
                 numPenalties++;
             }
             if (y + 6 < height &&
-                    array[y][x] == 1  &&
-                    array[y +  1][x] == 0  &&
-                    array[y +  2][x] == 1  &&
-                    array[y +  3][x] == 1  &&
-                    array[y +  4][x] == 1  &&
-                    array[y +  5][x] == 0  &&
-                    array[y +  6][x] == 1 &&
+                    array[size_t(y)][size_t(x)] == 1  &&
+                    array[size_t(y +  1)][size_t(x)] == 0  &&
+                    array[size_t(y +  2)][size_t(x)] == 1  &&
+                    array[size_t(y +  3)][size_t(x)] == 1  &&
+                    array[size_t(y +  4)][size_t(x)] == 1  &&
+                    array[size_t(y +  5)][size_t(x)] == 0  &&
+                    array[size_t(y +  6)][size_t(x)] == 1 &&
                     (isWhiteVertical(array, x, y - 4, y) || isWhiteVertical(array, x, y + 7, y + 11))) {
                 numPenalties++;
             }
@@ -88,9 +88,9 @@ int MaskUtil::applyMaskPenaltyRule3(const ByteMatrix& matrix)
 bool MaskUtil::isWhiteHorizontal(const std::vector<zxing::byte>& rowArray, int from, int to)
 {
     from = std::max(from, 0);
-    to = std::min(to, (int)rowArray.size());
+    to = std::min(to, int(rowArray.size()));
     for (int i = from; i < to; i++) {
-        if (rowArray[i] == 1) {
+        if (rowArray[size_t(i)] == 1) {
             return false;
         }
     }
@@ -100,9 +100,9 @@ bool MaskUtil::isWhiteHorizontal(const std::vector<zxing::byte>& rowArray, int f
 bool MaskUtil::isWhiteVertical(const std::vector<std::vector<zxing::byte> > &array, int col, int from, int to)
 {
     from = std::max(from, 0);
-    to = std::min(to, (int)array.size());
+    to = std::min(to, int(array.size()));
     for (int i = from; i < to; i++) {
-        if (array[i][col] == 1) {
+        if (array[size_t(i)][size_t(col)] == 1) {
             return false;
         }
     }
@@ -117,9 +117,9 @@ int MaskUtil::applyMaskPenaltyRule4(const ByteMatrix& matrix)
 {
     int numDarkCells = 0;
     const std::vector<std::vector<zxing::byte> >& array = matrix.getArray();
-    int width = matrix.getWidth();
-    int height = matrix.getHeight();
-    for (int y = 0; y < height; y++) {
+    size_t width = matrix.getWidth();
+    size_t height = matrix.getHeight();
+    for (size_t y = 0; y < height; y++) {
         const std::vector<zxing::byte>& arrayY = array[y];
         for (size_t x = 0; x < width; x++) {
             if (arrayY[x] == 1) {
@@ -127,7 +127,7 @@ int MaskUtil::applyMaskPenaltyRule4(const ByteMatrix& matrix)
             }
         }
     }
-    int numTotalCells = matrix.getHeight() * matrix.getWidth();
+    int numTotalCells = int(matrix.getHeight() * matrix.getWidth());
     int fivePercentVariances = abs(numDarkCells * 2 - numTotalCells) * 10 / numTotalCells;
     return fivePercentVariances * N4;
 }
@@ -169,7 +169,7 @@ bool MaskUtil::getDataMaskBit(int maskPattern, int x, int y)
         intermediate = ((temp % 3) + ((y + x) & 0x1)) & 0x1;
         break;
     default:
-        throw IllegalArgumentException("Invalid mask pattern: " + maskPattern);
+        throw IllegalArgumentException("Invalid mask pattern");
     }
     return intermediate == 0;
 }
@@ -181,14 +181,14 @@ bool MaskUtil::getDataMaskBit(int maskPattern, int x, int y)
 int MaskUtil::applyMaskPenaltyRule1Internal(const ByteMatrix& matrix, bool isHorizontal)
 {
     int penalty = 0;
-    int iLimit = isHorizontal ? matrix.getHeight() : matrix.getWidth();
-    int jLimit = isHorizontal ? matrix.getWidth() : matrix.getHeight();
+    int iLimit = int(isHorizontal ? matrix.getHeight() : matrix.getWidth());
+    int jLimit = int(isHorizontal ? matrix.getWidth() : matrix.getHeight());
     const std::vector<std::vector<zxing::byte> >& array = matrix.getArray();
-    for (size_t i = 0; i < iLimit; i++) {
+    for (int i = 0; i < iLimit; i++) {
         int numSameBitCells = 0;
         int prevBit = -1;
         for (int j = 0; j < jLimit; j++) {
-            int bit = isHorizontal ? array[i][j] : array[j][i];
+            int bit = isHorizontal ? array[size_t(i)][size_t(j)] : array[size_t(j)][size_t(i)];
             if (bit == prevBit) {
                 numSameBitCells++;
             } else {

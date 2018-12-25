@@ -1,5 +1,5 @@
-#ifndef __DECODER_RESULT_H__
-#define __DECODER_RESULT_H__
+#ifndef ZXING_DECODER_RESULT_H
+#define ZXING_DECODER_RESULT_H
 
 /*
  *  DecoderResult.h
@@ -52,4 +52,4 @@ public:
 
 }
 
-#endif // __DECODER_RESULT_H__
+#endif // ZXING_DECODER_RESULT_H

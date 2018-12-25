@@ -1,5 +1,5 @@
-#ifndef __REED_SOLOMON_DECODER_H__
-#define __REED_SOLOMON_DECODER_H__
+#ifndef ZXING_REED_SOLOMON_DECODER_H
+#define ZXING_REED_SOLOMON_DECODER_H
 
 /*
  *  ReedSolomonDecoder.h
@@ -46,4 +46,4 @@ private:
 };
 }
 
-#endif // __REED_SOLOMON_DECODER_H__
+#endif // ZXING_REED_SOLOMON_DECODER_H

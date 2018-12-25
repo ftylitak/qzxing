@@ -1,5 +1,5 @@
-#ifndef __BIT_MATRIX_PARSER_H__
-#define __BIT_MATRIX_PARSER_H__
+#ifndef ZXING_MATRIX_PARSER_H
+#define ZXING_MATRIX_PARSER_H
 
 /*
  *  BitMatrixParser.h
@@ -57,4 +57,4 @@ private:
 }
 }
 
-#endif // __BIT_MATRIX_PARSER_H__
+#endif // ZXING_MATRIX_PARSER_H

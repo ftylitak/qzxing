@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __ILLEGAL_STATE_EXCEPTION_H__
-#define __ILLEGAL_STATE_EXCEPTION_H__
+#ifndef ZXING_ILLEGAL_STATE_EXCEPTION_H
+#define ZXING_ILLEGAL_STATE_EXCEPTION_H
 
 /*
  * Copyright 20011 ZXing authors
@@ -25,11 +25,11 @@ namespace zxing {
 
 class IllegalStateException : public ReaderException {
 public:
-  IllegalStateException() throw() {}
-  IllegalStateException(const char *msg) throw() : ReaderException(msg) {}
-  ~IllegalStateException() throw() {}
+  IllegalStateException() ZXING_NOEXCEPT;
+  IllegalStateException(const char *msg) ZXING_NOEXCEPT;
+  ~IllegalStateException() ZXING_NOEXCEPT;
 };
 
 }
 
-#endif // __ILLEGAL_STATE_EXCEPTION_H__
+#endif // ZXING_ILLEGAL_STATE_EXCEPTION_H

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __INVERTEDLUMINANCESOURCE_H__
-#define __INVERTEDLUMINANCESOURCE_H__
+#ifndef ZXING_INVERTEDLUMINANCESOURCE_H
+#define ZXING_INVERTEDLUMINANCESOURCE_H
 /*
  *  Copyright 2013 ZXing authors All rights reserved.
  *
@@ -45,4 +45,4 @@ public:
 
 }
 
-#endif /* INVERTEDLUMINANCESOURCE_H_ */
+#endif // ZXING_INVERTEDLUMINANCESOURCE_H

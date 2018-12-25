@@ -6,6 +6,7 @@
 #include <QtGlobal>
 #include <zxing/qrcode/decoder/Mode.h>
 #include "backward.hpp"
+#include <QDebug>
 #include <QStringList>
 
 namespace zxing{
@@ -45,7 +46,7 @@ private:
         return QString::number(item);
     }
 
-    static QString itemToString(byte item) {
+    static QString itemToString(zxing::byte item) {
         return QString::number(item);
     }
 
@@ -109,13 +110,13 @@ protected:
     }
 
     void assertDataEquals(const std::string &message,
-                            const std::vector<byte> &expected,
-                            const std::vector<byte> & received)
+                            const std::vector<zxing::byte> &expected,
+                            const std::vector<zxing::byte> & received)
     {
         if(expected.size() != received.size())
             assertTrue(false);
 
-        for (int i = 0; i < expected.size(); i++) {
+        for (size_t i = 0; i < expected.size(); i++) {
             if (expected[i] != received[i]) {
                 qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
                      arrayToString(Arrays.copyOf(received, expected.length)))*/;
@@ -125,13 +126,13 @@ protected:
     }
 
     void assertDataEquals(const std::string &message,
-                            const std::vector<byte> &expected,
-                            const ArrayRef<byte> &received)
+                            const std::vector<zxing::byte> &expected,
+                            const ArrayRef<zxing::byte> &received)
     {
-        if(expected.size() != received->size())
+        if(int(expected.size()) != received->size())
             assertTrue(false);
 
-        for (int i = 0; i < expected.size(); i++) {
+        for (size_t i = 0; i < expected.size(); i++) {
             if (expected[i] != received[i]) {
                 qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
                      arrayToString(Arrays.copyOf(received, expected.length)))*/;
@@ -141,10 +142,10 @@ protected:
     }
 
     void assertDataEquals(const std::string &message,
-                            const std::vector<byte> &expected,
+                            const std::vector<zxing::byte> &expected,
                             const ArrayRef<int> &received)
     {
-        ArrayRef<byte> received_copy(received->size());
+        ArrayRef<zxing::byte> received_copy(received->size());
         for(int i=0; i<received_copy->size(); i++)
             received_copy[i] = received[i];
 

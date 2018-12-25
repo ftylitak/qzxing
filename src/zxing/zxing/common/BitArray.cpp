@@ -41,11 +41,13 @@ BitArray::BitArray(int size_)
 
 //this could be wrong. TODO: check size value
 BitArray::BitArray(std::vector<int> other)
-    : size(other.size()), bits(other.size())
+    : size(int(other.size())), bits(int(other.size()))
 {
-    for(int i=0; i<other.size(); i++)
+    for(size_t i=0; i<other.size(); i++)
+    {
         if(other[i])
-            set(i);
+            set(int(i));
+    }
 }
 
 BitArray::~BitArray() {
@@ -116,13 +118,13 @@ void BitArray::reverse()
     int len = ((this->size-1) / 32);
     int oldBitsLen = len + 1;
     for (int i = 0; i < oldBitsLen; i++) {
-      long x = (long) bits[i];
+      long x = long(bits[i]);
       x = ((x >>  1) & 0x55555555L) | ((x & 0x55555555L) <<  1);
       x = ((x >>  2) & 0x33333333L) | ((x & 0x33333333L) <<  2);
       x = ((x >>  4) & 0x0f0f0f0fL) | ((x & 0x0f0f0f0fL) <<  4);
       x = ((x >>  8) & 0x00ff00ffL) | ((x & 0x00ff00ffL) <<  8);
       x = ((x >> 16) & 0x0000ffffL) | ((x & 0x0000ffffL) << 16);
-      newBits[len - i] = (int) x;
+      newBits[len - i] = int(x);
     }
     // now correct the int's if the bit size isn't a multiple of 32
     if (size != oldBitsLen * 32) {
@@ -156,7 +158,7 @@ namespace {
 int numberOfTrailingZeros(int i) {
     // HD, Figure 5-14
 #if defined(__clang__) || defined(__GNUC__)
-    return __builtin_ctz(i);
+    return __builtin_ctz(unsigned(i));
 #else
     int y;
     if (i == 0) return 32;
@@ -179,7 +181,7 @@ int BitArray::getNextSet(int from) {
     // mask off lesser bits first
     currentBits &= ~((1 << (from & bitsMask)) - 1);
     while (currentBits == 0) {
-        if (++bitsOffset == (int)bits->size()) {
+        if (++bitsOffset == bits->size()) {
             return size;
         }
         currentBits = bits[bitsOffset];
@@ -197,7 +199,7 @@ int BitArray::getNextUnset(int from) {
     // mask off lesser bits first
     currentBits &= ~((1 << (from & bitsMask)) - 1);
     while (currentBits == 0) {
-        if (++bitsOffset == (int)bits->size()) {
+        if (++bitsOffset == bits->size()) {
             return size;
         }
         currentBits = ~bits[bitsOffset];
@@ -241,7 +243,7 @@ void BitArray::ensureCapacity(int size)
     {
         ArrayRef<int> newBits = makeArray(size);
         //memcpy(bits, newBits->, bits->size());
-        for (size_t i=0; i<bits->size(); ++i) {
+        for (int i=0; i<bits->size(); ++i) {
             newBits[i] = bits[i];
         }
         bits = newBits;
@@ -263,8 +265,8 @@ void BitArray::xor_(const BitArray& other)
 
 void BitArray::toBytes(int bitOffset, std::vector<zxing::byte>& array, int offset, int numBytes) const
 {
-    if(array.size() < (numBytes + offset))
-        array.resize(numBytes + offset);
+    if(int(array.size()) < (numBytes + offset))
+        array.resize(size_t(numBytes + offset));
 
     for (int i = 0; i < numBytes; i++) {
         int theByte = 0;
@@ -274,7 +276,7 @@ void BitArray::toBytes(int bitOffset, std::vector<zxing::byte>& array, int offse
             }
             bitOffset++;
         }
-        array[offset + i] = (zxing::byte) theByte;
+        array[size_t(offset + i)] = zxing::byte(theByte);
     }
 }
 
@@ -282,7 +284,7 @@ const std::string BitArray::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
 
-    for (size_t i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       if ((i & 0x07) == 0) {
         result << ' ';
       }

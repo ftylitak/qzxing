@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __BIT_MATRIX_H__
-#define __BIT_MATRIX_H__
+#ifndef ZXING_BIT_MATRIX_H
+#define ZXING_BIT_MATRIX_H
 
 /*
  *  BitMatrix.h
@@ -37,17 +37,6 @@ private:
   int height;
   int rowSize;
   ArrayRef<int> bits;
-
-//#define ZX_LOG_DIGITS(digits) \
-//    ((digits == 8) ? 3 : \
-//     ((digits == 16) ? 4 : \
-//      ((digits == 32) ? 5 : \
-//       ((digits == 64) ? 6 : \
-//        ((digits == 128) ? 7 : \
-//         (-1))))))
-
-//  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
-//  static const int bitsMask = (1 << logBits) - 1;
 
 public:
   BitMatrix(int dimension);
@@ -92,4 +81,4 @@ private:
 
 }
 
-#endif // __BIT_MATRIX_H__
+#endif // ZXING_BIT_MATRIX_H

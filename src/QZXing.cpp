@@ -258,31 +258,31 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 {
     if (resultPoints->size() < 2)
         return QRectF();
-    
+
     int matrixWidth = bitMatrix->getWidth();
     int matrixHeight = bitMatrix->getHeight();
     // 1D barcode
     if (resultPoints->size() == 2) {
         WhiteRectangleDetector detector(bitMatrix);
         std::vector<Ref<ResultPoint> > resultRectPoints = detector.detect();
-        
+
         if (resultRectPoints.size() != 4)
             return QRectF();
 
-        qreal xMin = resultPoints[0]->getX();
+        qreal xMin = qreal(resultPoints[0]->getX());
         qreal xMax = xMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = resultPoints[i]->getX();
+        for (int i = 1; i < resultPoints->size(); ++i) {
+            qreal x = qreal(resultPoints[i]->getX());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)
                 xMax = x;
         }
 
-        qreal yMin = resultRectPoints[0]->getY();
+        qreal yMin = qreal(resultRectPoints[0]->getY());
         qreal yMax = yMin;
         for (unsigned int i = 1; i < resultRectPoints.size(); ++i) {
-            qreal y = resultRectPoints[i]->getY();
+            qreal y = qreal(resultRectPoints[i]->getY());
             if (y < yMin)
                 yMin = y;
             if (y > yMax)
@@ -294,13 +294,13 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
     // 2D QR code
     if (resultPoints->size() == 4) {
-        qreal xMin = resultPoints[0]->getX();
+        qreal xMin = qreal(resultPoints[0]->getX());
         qreal xMax = xMin;
-        qreal yMin = resultPoints[0]->getY();
+        qreal yMin = qreal(resultPoints[0]->getY());
         qreal yMax = yMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = resultPoints[i]->getX();
-            qreal y = resultPoints[i]->getY();
+        for (int i = 1; i < resultPoints->size(); ++i) {
+            qreal x = qreal(resultPoints[i]->getX());
+            qreal y = qreal(resultPoints[i]->getY());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)
@@ -332,7 +332,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         return "";
     }
 
-    CameraImageWrapper *ciw = NULL;
+    CameraImageWrapper *ciw = ZXING_NULLPTR;
 
     if ((maxWidth > 0) || (maxHeight > 0))
         ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
@@ -345,14 +345,14 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         Ref<GlobalHistogramBinarizer> binz( new GlobalHistogramBinarizer(imageRef) );
         Ref<BinaryBitmap> bb( new BinaryBitmap(binz) );
 
-        DecodeHints hints((int)enabledDecoders);
+        DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
         bool hasSucceded = false;
         try {
             res = decoder->decode(bb, hints);
             processingTime = t.elapsed();
             hasSucceded = true;
-        }catch(zxing::Exception &e){}
+        } catch(zxing::Exception &/*e*/){}
 
         if(!hasSucceded)
         {
@@ -440,7 +440,7 @@ QString QZXing::decodeSubImageQML(QObject *item,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
-    if(item  == NULL)
+    if(item  == ZXING_NULLPTR)
     {
         processingTime = 0;
         emit decodingFinished(false);
@@ -487,6 +487,11 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
         img = img.copy(offsetX, offsetY, width, height);
     return decodeImage(img);
 #else
+    Q_UNUSED(imageUrl);
+    Q_UNUSED(offsetX);
+    Q_UNUSED(offsetY);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
     return decodeImage(QImage());
 #endif //QZXING_QML
 }
@@ -514,10 +519,10 @@ QImage QZXing::encodeData(const QString& data,
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
-            image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
-            for(int i=0; i<bytesRef->getWidth(); i++)
-                for(int j=0; j<bytesRef->getHeight(); j++)
-                    image.setPixel(i, j, bytes[j][i] ?
+            image = QImage(int(bytesRef->getWidth()), int(bytesRef->getHeight()), QImage::Format_ARGB32);
+            for(size_t i=0; i<bytesRef->getWidth(); i++)
+                for(size_t j=0; j<bytesRef->getHeight(); j++)
+                    image.setPixel(int(i), int(j), bytes[j][i] ?
                                        qRgb(0,0,0) :
                                        qRgb(255,255,255));
 
@@ -525,7 +530,6 @@ QImage QZXing::encodeData(const QString& data,
             break;
         }
         case EncoderFormat_INVALID:
-        default:
             break;
         }
     } catch (std::exception& e) {

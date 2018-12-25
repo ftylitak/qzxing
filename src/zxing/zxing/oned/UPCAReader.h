@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __UPCA_READER_H__
-#define __UPCA_READER_H__
+#ifndef ZXING_UPCA_READER_H
+#define ZXING_UPCA_READER_H
 /*
  *  UPCAReader.h
  *  ZXing
@@ -47,4 +47,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_UPCA_READER_H
+

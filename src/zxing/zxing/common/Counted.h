@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __COUNTED_H__
-#define __COUNTED_H__
+#ifndef ZXING_COUNTED_H
+#define ZXING_COUNTED_H
 
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
@@ -137,4 +137,4 @@ public:
 
 }
 
-#endif // __COUNTED_H__
+#endif // ZXING_COUNTED_H

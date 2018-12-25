@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __DETECTOR_H__
-#define __DETECTOR_H__
+#ifndef ZXING_DETECTOR_H
+#define ZXING_DETECTOR_H
 
 /*
  *  Detector.h
@@ -91,4 +91,4 @@ class Detector: public Counted {
 }
 }
 
-#endif // __DETECTOR_H__
+#endif // ZXING_DETECTOR_H

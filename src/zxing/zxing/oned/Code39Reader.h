@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __CODE_39_READER_H__
-#define __CODE_39_READER_H__
+#ifndef ZXING_CODE_39_READER_H
+#define ZXING_CODE_39_READER_H
 /*
  *  Code39Reader.h
  *  ZXing
@@ -60,4 +60,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_CODE_39_READER_H
+

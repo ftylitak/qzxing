@@ -7,9 +7,9 @@ namespace zxing {
 
 class WriterException : public Exception {
  public:
-  WriterException() throw() {}
-  WriterException(char const* msg) throw() : Exception(msg) {}
-  ~WriterException() throw() {}
+  WriterException() ZXING_NOEXCEPT;
+  WriterException(char const* msg) ZXING_NOEXCEPT;
+  ~WriterException() ZXING_NOEXCEPT;
 };
 
 }

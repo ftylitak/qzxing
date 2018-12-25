@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __EAN_8_READER_H__
-#define __EAN_8_READER_H__
+#ifndef ZXING_EAN_8_READER_H
+#define ZXING_EAN_8_READER_H
 
 /*
  *  EAN8Reader.h
@@ -44,4 +44,5 @@ class EAN8Reader : public UPCEANReader {
 }
 }
 
-#endif
+#endif // ZXING_EAN_8_READER_H
+

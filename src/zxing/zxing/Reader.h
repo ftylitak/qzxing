@@ -1,5 +1,5 @@
-#ifndef __READER_H__
-#define __READER_H__
+#ifndef ZXING_READER_H
+#define ZXING_READER_H
 
 /*
  *  Reader.h
@@ -37,4 +37,4 @@ namespace zxing {
 
 }
 
-#endif // __READER_H__
+#endif // ZXING_READER_H

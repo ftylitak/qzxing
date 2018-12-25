@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __QR_CODE_READER_H__
-#define __QR_CODE_READER_H__
+#ifndef ZXING_QR_CODE_READER_H
+#define ZXING_QR_CODE_READER_H
 
 /*
  *  QRCodeReader.h
@@ -45,4 +45,4 @@ class QRCodeReader : public Reader {
 }
 }
 
-#endif // __QR_CODE_READER_H__
+#endif // ZXING_QR_CODE_READER_H

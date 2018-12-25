@@ -1,5 +1,5 @@
-#ifndef __CORNER_FINDER_H__
-#define __CORNER_FINDER_H__
+#ifndef ZXING_CORNER_FINDER_H
+#define ZXING_CORNER_FINDER_H
 
 /*
  *  CornerPoint.h
@@ -40,4 +40,4 @@ namespace zxing {
 	}
 }
 
-#endif // __CORNER_FINDER_H__
+#endif // ZXING_CORNER_FINDER_H

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __GLOBALHISTOGRAMBINARIZER_H__
-#define __GLOBALHISTOGRAMBINARIZER_H__
+#ifndef ZXING_GLOBALHISTOGRAMBINARIZER_H
+#define ZXING_GLOBALHISTOGRAMBINARIZER_H
 /*
  *  GlobalHistogramBinarizer.h
  *  zxing
@@ -45,4 +45,4 @@ private:
 
 }
 	
-#endif /* GLOBALHISTOGRAMBINARIZER_H_ */
+#endif /* ZXING_GLOBALHISTOGRAMBINARIZER_H */

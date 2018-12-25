@@ -1,5 +1,5 @@
-#ifndef __DATA_BLOCK_H__
-#define __DATA_BLOCK_H__
+#ifndef ZXING_DATA_BLOCK_H
+#define ZXING_DATA_BLOCK_H
 
 /*
  *  DataBlock.h
@@ -47,4 +47,4 @@ public:
 }
 }
 
-#endif // __DATA_BLOCK_H__
+#endif // ZXING_DATA_BLOCK_H

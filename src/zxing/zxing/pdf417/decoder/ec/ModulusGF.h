@@ -1,5 +1,5 @@
-#ifndef __MODULUS_GF_PDF_H__
-#define __MODULUS_GF_PDF_H__
+#ifndef ZXING_MODULUS_GF_PDF_H
+#define ZXING_MODULUS_GF_PDF_H
 /*
  * Copyright 2012 ZXing authors
  *
@@ -69,4 +69,4 @@ class ModulusGF {
 }
 }
 
-#endif /* __MODULUS_GF_PDF_H__ */
+#endif /* ZXING_MODULUS_GF_PDF_H */

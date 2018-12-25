@@ -1,5 +1,5 @@
-#ifndef __ERROR_CORRECTION_LEVEL_H__
-#define __ERROR_CORRECTION_LEVEL_H__
+#ifndef ZXING_ERROR_CORRECTION_LEVEL_H
+#define ZXING_ERROR_CORRECTION_LEVEL_H
 
 /*
  *  ErrorCorrectionLevel.h
@@ -52,4 +52,4 @@ public:
 }
 }
 
-#endif // __ERROR_CORRECTION_LEVEL_H__
+#endif // ZXING_ERROR_CORRECTION_LEVEL_H
