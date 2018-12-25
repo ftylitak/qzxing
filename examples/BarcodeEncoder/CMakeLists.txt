@@ -18,14 +18,14 @@ target_include_directories(BarcodeEncoder
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../src
 )
 
-target_compile_definitions(${PROJECT_NAME}
-  #PUBLIC QZXING_LIBRARY   #####
-  PUBLIC ZXING_ICONV_CONST
-  PUBLIC QZXING_QML
-  PUBLIC QZXING_MULTIMEDIA
-  PUBLIC DISABLE_LIBRARY_FEATURES  ####
+#target_compile_definitions(${PROJECT_NAME}
+#  #PUBLIC QZXING_LIBRARY   #####
+#  PUBLIC ZXING_ICONV_CONST
+#  PUBLIC QZXING_QML
+#  PUBLIC QZXING_MULTIMEDIA
+#  PUBLIC DISABLE_LIBRARY_FEATURES  ####
 
-  PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
-)
+#  PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
+#)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Quick qzxing)

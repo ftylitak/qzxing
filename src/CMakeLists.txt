@@ -45,7 +45,7 @@ include_directories(
 
 #set(CMAKE_BUILD_TYPE Debug)
 #add_subdirectory(zxing)
-add_library(qzxing STATIC
+add_library(${PROJECT_NAME} STATIC
 
 # root
     CameraImageWrapper.cpp
@@ -323,7 +323,7 @@ add_library(qzxing STATIC
 
     )
 
-target_link_libraries(qzxing
+target_link_libraries(${PROJECT_NAME}
     Qt5::Core
     Qt5::Widgets
     Qt5::Svg
@@ -336,7 +336,7 @@ target_link_libraries(qzxing
 file(GLOB PUBLIC_HEADER QZXing.h)
 
 # Change Global Definitions depending on how you want to use the library
-target_compile_definitions(qzxing
+target_compile_definitions(${PROJECT_NAME}
   PUBLIC QZXING_LIBRARY
   PUBLIC ZXING_ICONV_CONST
   PUBLIC QZXING_QML
@@ -345,7 +345,7 @@ target_compile_definitions(qzxing
  )
 
 # Target includes
-target_include_directories(qzxing
+target_include_directories(${PROJECT_NAME}
   PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
  #   QZXing.h
