@@ -56,7 +56,7 @@ void Exception::deleteMessage() {
 char const* Exception::copy(char const* msg) {
     char* message = ZXING_NULLPTR;
     if (msg) {
-        auto l = strlen(msg)+1;
+        size_t l = strlen(msg)+1;
         if (l) {
             message = new char[l];
             strcpy(message, msg);

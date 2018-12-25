@@ -64,7 +64,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
     }
 
     for (int i = 0; i < coefficients->size(); i++)
-      toEncode[size_t(dataBytes + numZeroCoefficients + i)] = byte(coefficients[int(i)]);
+      toEncode[size_t(dataBytes + numZeroCoefficients + i)] = zxing::byte(coefficients[int(i)]);
 }
 
 }
