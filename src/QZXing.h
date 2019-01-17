@@ -116,6 +116,8 @@ public:
     Q_INVOKABLE QString foundedFormat() const;
     Q_INVOKABLE QString charSet() const;
 
+    bool getLastDecodeOperationSucceded();
+
 public slots:
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
@@ -208,6 +210,7 @@ private:
     QString foundedFmt;
     QString charSet_;
     bool tryHarder_;
+    bool lastDecodeOperationSucceded_;
 
     /**
       * If true, the decoding operation will take place at a different thread.

@@ -37,7 +37,7 @@
 
 using namespace zxing;
 
-QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false)
+QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false), lastDecodeOperationSucceded_(false)
 {
     decoder = new MultiFormatReader();
     setDecoder(DecoderFormat_QR_CODE |
@@ -69,7 +69,7 @@ QZXing::~QZXing()
         delete decoder;
 }
 
-QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
+QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent), lastDecodeOperationSucceded_(false)
 {
     decoder = new MultiFormatReader();
     imageHandler = new ImageHandler();
@@ -178,6 +178,11 @@ QString QZXing::foundedFormat() const
 QString QZXing::charSet() const
 {
     return charSet_;
+}
+
+bool QZXing::getLastDecodeOperationSucceded()
+{
+    return lastDecodeOperationSucceded_;
 }
 
 void QZXing::setDecoder(const uint &hint)
@@ -347,40 +352,40 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
         DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
-        bool hasSucceded = false;
+        lastDecodeOperationSucceded_ = false;
         try {
             res = decoder->decode(bb, hints);
             processingTime = t.elapsed();
-            hasSucceded = true;
+            lastDecodeOperationSucceded_ = true;
         } catch(zxing::Exception &/*e*/){}
 
-        if(!hasSucceded)
+        if(!lastDecodeOperationSucceded_)
         {
             hints.setTryHarder(true);
 
             try {
                 res = decoder->decode(bb, hints);
                 processingTime = t.elapsed();
-                hasSucceded = true;
+                lastDecodeOperationSucceded_ = true;
             } catch(zxing::Exception &/*e*/) {}
 
             if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
 
-                for (int i=0; (i<3 && !hasSucceded); i++) {
+                for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
                     Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
                     bbTmp = rotatedImage;
 
                     try {
                         res = decoder->decode(rotatedImage, hints);
                         processingTime = t.elapsed();
-                        hasSucceded = true;
+                        lastDecodeOperationSucceded_ = true;
                     } catch(zxing::Exception &/*e*/) {}
                 }
             }
         }
 
-        if (hasSucceded) {
+        if (lastDecodeOperationSucceded_) {
             QString string = QString(res->getText()->getText().c_str());
             if (!string.isEmpty() && (string.length() > 0)) {
                 int fmt = res->getBarcodeFormat().value;
