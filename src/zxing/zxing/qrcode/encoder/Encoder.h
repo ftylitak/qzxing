@@ -92,10 +92,10 @@ protected:
 private:
   static int chooseMaskPattern(Ref<BitArray> bits,
                                        ErrorCorrectionLevel& ecLevel,
-                                       Ref<Version> version,
+                                       Version* version,
                                        Ref<ByteMatrix> matrix);
 
-  static Ref<Version> chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel) ;
+  static Version* chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel) ;
 
   static void appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bits);
 
@@ -106,9 +106,9 @@ private:
   static int calculateMaskPenalty(const ByteMatrix& matrix);
 
   static int calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
-                                 Ref<Version> version);
-  static bool willFit(int numInputBits, Ref<Version> version, const ErrorCorrectionLevel &ecLevel);
-  static Ref<Version> recommendVersion(ErrorCorrectionLevel &ecLevel,
+                                 Version* version);
+  static bool willFit(int numInputBits, Version* version, const ErrorCorrectionLevel &ecLevel);
+  static Version* recommendVersion(ErrorCorrectionLevel &ecLevel,
                                             Mode &mode,
                                             BitArray &headerBits,
                                             BitArray &dataBits);

@@ -37,7 +37,7 @@ private:
   int bits_;
   std::string name_;
 
-  Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, char const* name);
+  Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, const std::string &name);
 
 public:
   Mode(const Mode& mode);

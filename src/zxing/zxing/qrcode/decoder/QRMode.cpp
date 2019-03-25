@@ -51,7 +51,7 @@ Mode::Mode() :
     name_("")
 {}
 
-Mode::Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, char const* name) :
+Mode::Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, const std::string &name) :
     characterCountBitsForVersions0To9_(cbv0_9), characterCountBitsForVersions10To26_(cbv10_26),
     characterCountBitsForVersions27AndHigher_(cbv27), bits_(bits), name_(name)
 {

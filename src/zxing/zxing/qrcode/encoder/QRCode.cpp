@@ -26,7 +26,7 @@ Ref<ErrorCorrectionLevel> QRCode::getECLevel() const
     return ecLevel_ptr_;
 }
 
-Ref<Version> QRCode::getVersion() const
+Version* QRCode::getVersion() const
 {
     return version_ptr_;
 }
@@ -56,7 +56,7 @@ const std::string QRCode::toString()
         result << "null";
 
     result << "\n version: ";
-    if(!version_ptr_.empty())
+    if(version_ptr_)
     {
         std::string version_str;
         std::ostringstream convert;
@@ -89,7 +89,7 @@ void QRCode::setECLevel(Ref<ErrorCorrectionLevel> value)
     ecLevel_ptr_ = value;
 }
 
-void QRCode::setVersion(Ref<Version> version)
+void QRCode::setVersion(Version* version)
 {
     version_ptr_ = version;
 }

@@ -74,7 +74,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     BitArray dataBits;
     appendBytes(content, mode, dataBits, encoding);
 
-    Ref<Version> version;
+    Version* version;
     if (hints != ZXING_NULLPTR/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
         version = Version::getVersionForNumber(1);
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
@@ -126,7 +126,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     //return NULL;
 }
 
-bool Encoder::willFit(int numInputBits, Ref<Version> version, const ErrorCorrectionLevel &ecLevel) {
+bool Encoder::willFit(int numInputBits, Version* version, const ErrorCorrectionLevel &ecLevel) {
       // In the following comments, we use numbers of Version 7-H.
       // numBytes = 196
       int numBytes = version->getTotalCodewords();
@@ -207,7 +207,7 @@ Mode Encoder::chooseMode(const std::string& content, const std::string& encoding
 
 int Encoder::chooseMaskPattern(Ref<BitArray> bits,
                                ErrorCorrectionLevel& ecLevel,
-                               Ref<Version> version,
+                               Version* version,
                                Ref<ByteMatrix> matrix)
 {
 
@@ -225,11 +225,11 @@ int Encoder::chooseMaskPattern(Ref<BitArray> bits,
     return bestMaskPattern;
 }
 
-Ref<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel)
+Version* Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel)
 {
     // In the following comments, we use numbers of Version 7-H.
     for (int versionNum = 1; versionNum <= 40; versionNum++) {
-        Ref<Version> version = Version::getVersionForNumber(versionNum);
+        Version* version = Version::getVersionForNumber(versionNum);
         if (willFit(numInputBits, version, ecLevel)) {
             return version;
         }
@@ -583,12 +583,12 @@ void Encoder::appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bit
 }
 
 int Encoder::calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
-                                 Ref<Version> version)
+                                 Version* version)
 {
     return headerBits.getSize() + mode.getCharacterCountBits(&(*version)) + dataBits.getSize();
 }
 
-Ref<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
+Version* Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
                                           Mode &mode,
                                           BitArray &headerBits,
                                           BitArray &dataBits)
@@ -597,7 +597,7 @@ Ref<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
     // bits it takes to know version. First we take a guess at version by assuming version will be
     // the minimum, 1:
     int provisionalBitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, Version::getVersionForNumber(1));
-    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
+    Version* provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
 
     // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
     int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, provisionalVersion);

@@ -33,14 +33,14 @@ namespace datamatrix {
 class BitMatrixParser : public Counted {
 private:
   Ref<BitMatrix> bitMatrix_;
-  Ref<Version> parsedVersion_;
+  Version* parsedVersion_;
   Ref<BitMatrix> readBitMatrix_;
 
   int copyBit(size_t x, size_t y, int versionBits);
 
 public:
   BitMatrixParser(Ref<BitMatrix> bitMatrix);
-  Ref<Version> readVersion(Ref<BitMatrix> bitMatrix);
+  Version* readVersion(Ref<BitMatrix> bitMatrix);
   ArrayRef<zxing::byte> readCodewords();
   bool readModule(int row, int column, int numRows, int numColumns);
 
