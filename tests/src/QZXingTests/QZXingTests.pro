@@ -2,6 +2,8 @@ TARGET = QZXingTests
 CONFIG += console
 CONFIG -= app_bundle
 
+QT += concurrent
+
 TEMPLATE = app
 
 HEADERS += \
