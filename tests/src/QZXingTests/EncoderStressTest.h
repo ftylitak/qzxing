@@ -52,7 +52,6 @@ private:
     size_t sumOfSuccessfullTests_;
     size_t totalExecutedTests_;
 
-    static QMutex mutex;
     static QMutex printLockMutex;
 };
 

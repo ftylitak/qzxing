@@ -5,7 +5,6 @@
 namespace zxing {
 namespace tests{
 
-QMutex EncoderStressTest::mutex;
 QMutex EncoderStressTest::printLockMutex;
 
 EncoderStressTest::EncoderStressTest(): TestCase(),
@@ -116,11 +115,9 @@ void EncoderStressTest::runTest(TestRunData &testData)
                                                QSize(500, 500),
                                                testData.errorCorrectionLevel);
 
- //   mutex.lock();
     QZXing decoder(QZXing::DecoderFormat_QR_CODE);
     QString decodedData = decoder.decodeImage(generatedImage);
     bool wasDecoded = decoder.getLastDecodeOperationSucceded();
- //   mutex.unlock();
 
     testData.successful = (testData.data == decodedData);
 
