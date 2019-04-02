@@ -35,12 +35,12 @@ private:
   static bool inited;
   static bool init_tables();
 
-  int const* const values_;
-  char const* const* const names_;
+  std::vector<int> values_;
+  std::vector<std::string> names_;
 
-  CharacterSetECI(int const* values, char const* const* names);
+  CharacterSetECI(const std::vector<int> values, const std::vector<const char*> names);
 
-  static void addCharacterSet(int const* value, char const* const* encodingNames);
+  static void addCharacterSet(const std::vector<int> value, const std::vector<const char*> encodingNames);
 
 public:
   char const* name() const;
