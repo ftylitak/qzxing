@@ -357,7 +357,7 @@ Ref<ResultPointsAndTransitions> Detector::transitionsBetween(Ref<ResultPoint> fr
   int fromY = (int) from->getY();
   int toX = (int) to->getX();
   int toY = (int) to->getY();
-  bool steep = abs(toY - fromY) > abs(toX - fromX);
+  bool steep = ::abs(toY - fromY) > abs(toX - fromX);
   if (steep) {
     int temp = fromX;
     fromX = fromY;
@@ -367,8 +367,8 @@ Ref<ResultPointsAndTransitions> Detector::transitionsBetween(Ref<ResultPoint> fr
     toY = temp;
   }
 
-  int dx = abs(toX - fromX);
-  int dy = abs(toY - fromY);
+  int dx = ::abs(toX - fromX);
+  int dy = ::abs(toY - fromY);
   int error = -dx >> 1;
   int ystep = fromY < toY ? 1 : -1;
   int xstep = fromX < toX ? 1 : -1;
