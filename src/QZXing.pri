@@ -282,13 +282,24 @@ qzxing_qml {
     greaterThan(QT_VERSION, 4.7): lessThan(QT_VERSION, 5.0): QT += declarative
     greaterThan(QT_MAJOR_VERSION, 4): QT += quick
 
+    CONFIG+= plugin
+
     DEFINES += QZXING_QML
 
     HEADERS +=  \
-        $$PWD/QZXingImageProvider.h
+        $$PWD/QZXingImageProvider.h \
+        $$PWD/QZXingPlugin.h
 
     SOURCES +=  \
-        $$PWD/QZXingImageProvider.cpp
+        $$PWD/QZXingImageProvider.cpp \
+        $$PWD/QZXingPlugin.cpp
+
+    plugin.files =+ \
+        qmldir
+
+    importPath = $$[QT_INSTALL_QML]/QZXing
+    plugin.path = $${importPath}
+    target.path = $${importPath}
 }
 
 symbian {
@@ -328,6 +339,11 @@ symbian {
 	QMAKE_PKGCONFIG_INCDIR = ${prefix}/include
 
 	unix:QMAKE_CLEAN += -r pkgconfig lib$${TARGET}.prl
+    importPath = $$[QT_INSTALL_QML]/QZXing
+    target.path = $${importPath}
+    qzxing_qml {
+    INSTALLS+=plugin
+}
 }
 
 win32-msvc*{

@@ -1,0 +1,4 @@
+module QZXing
+plugin QZXing
+classname QZXingPlugin
+depends QtMultimedia 5.5
