@@ -191,6 +191,12 @@ static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureR
 
 void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& _captureRect)
 {
+    if (videoFrame.data.length() < 1) {
+        qDebug() << "QZXingFilterRunnable: Buffer is empty";
+        filter->decoding = false;
+        return;
+    }
+
     static unsigned int i = 0; i++;
 //    qDebug() << "Future: Going to process frame: " << i;
 
