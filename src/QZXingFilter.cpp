@@ -289,9 +289,9 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         pixel = image_ptr->bits();
 
         for (int y = captureRect.startY; y < captureRect.endY; y++){
-            const uint32_t *row = &yuvPtr[y*(width/2)-(width/4)];
-            int end = captureRect.startX + (captureRect.endX - captureRect.startX)/2;
-            for (int x = captureRect.startX; x < end; x++){
+            const uint32_t *row = &yuvPtr[y*(width/2)];
+            int end = captureRect.startX/2 + (captureRect.endX - captureRect.startX)/2;
+            for (int x = captureRect.startX/2; x < end; x++){
                 const uint8_t *pxl = reinterpret_cast<const uint8_t *>(&row[x]);
                 const uint8_t y0 = pxl[0];
                 const uint8_t u  = pxl[1];
@@ -323,7 +323,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         return;
     }
 
-//    image_ptr->save("/home/ftylitak/tempimage-no-crop.png");
     if (captureRect.isValid && image_ptr->size() != _captureRect.size())
         image_ptr = new QImage(image_ptr->copy(_captureRect));
 
@@ -334,8 +333,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     //qDebug() << "saving image" << i << "at:" << path << image_ptr->save(path);
 
     //QZXingImageProvider::getInstance()->storeImage(image);
-
-    image_ptr->save("/home/ftylitak/tempimage.png");
 
     decode(*image_ptr);
 
