@@ -128,7 +128,7 @@ int MaskUtil::applyMaskPenaltyRule4(const ByteMatrix& matrix)
         }
     }
     int numTotalCells = int(matrix.getHeight() * matrix.getWidth());
-    int fivePercentVariances = abs(numDarkCells * 2 - numTotalCells) * 10 / numTotalCells;
+    int fivePercentVariances = ::abs(numDarkCells * 2 - numTotalCells) * 10 / numTotalCells;
     return fivePercentVariances * N4;
 }
 

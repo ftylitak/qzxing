@@ -112,11 +112,11 @@ bool FinderPatternFinder::foundPatternCross(int* stateCount) {
   int moduleSize = (totalModuleSize << 8) / 7;
   int maxVariance = moduleSize / 2;
   // Allow less than 50% variance from 1-1-3-1-1 proportions
-  return abs(moduleSize - (stateCount[0] << 8)) < maxVariance && 
-         abs(moduleSize - (stateCount[1] << 8)) < maxVariance && 
-         abs(3.0f * moduleSize - (stateCount[2] << 8)) < 3 * maxVariance &&
-		 abs(moduleSize - (stateCount[3] << 8)) < maxVariance && 
-		 abs(moduleSize - (stateCount[4] << 8)) < maxVariance;
+  return ::abs(moduleSize - (stateCount[0] << 8)) < maxVariance &&
+         ::abs(moduleSize - (stateCount[1] << 8)) < maxVariance &&
+         ::abs(3.0f * moduleSize - (stateCount[2] << 8)) < 3 * maxVariance &&
+         ::abs(moduleSize - (stateCount[3] << 8)) < maxVariance &&
+         ::abs(moduleSize - (stateCount[4] << 8)) < maxVariance;
 }
 
 float FinderPatternFinder::crossCheckVertical(size_t startI, size_t centerJ, int maxCount, int originalStateCountTotal) {
