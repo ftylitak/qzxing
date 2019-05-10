@@ -5,6 +5,7 @@
 #include <zxing/BinaryBitmap.h>
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
+#include <zxing/ResultMetadata.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
 #include <QTime>
@@ -183,6 +184,17 @@ QString QZXing::charSet() const
 bool QZXing::getLastDecodeOperationSucceded()
 {
     return lastDecodeOperationSucceded_;
+}
+
+QVariantMap QZXing::metadataToMap(const ResultMetadata &metadata)
+{
+    QVariantMap obj;
+    for (const ResultMetadata::Key &key: metadata.keys()) {
+        QString keyName = QString::fromStdString(metadata.keyToString(key));
+        obj[keyName] = QVariant(metadata.getString(key).c_str());
+    }
+
+    return obj;
 }
 
 void QZXing::setDecoder(const uint &hint)
@@ -398,7 +410,9 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                 }
 
                 emit tagFound(string);
-                emit tagFoundAdvanced(string, foundedFmt, charSet_);
+
+                QVariantMap metadataMap = metadataToMap(res->getMetadata());
+                emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
 
                 try {
                     const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());

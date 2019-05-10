@@ -34,6 +34,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/ResultPointCallback.h \
     $$PWD/zxing/zxing/ResultPoint.h \
     $$PWD/zxing/zxing/Result.h \
+    $$PWD/zxing/zxing/ResultMetadata.h \
     $$PWD/zxing/zxing/ReaderException.h \
     $$PWD/zxing/zxing/Reader.h \
     $$PWD/zxing/zxing/NotFoundException.h \
@@ -75,6 +76,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonDecoder.h \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGFPoly.h \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGF.h \
+    $$PWD/zxing/zxing/common/ByteArray.h \
     $$PWD/zxing/zxing/datamatrix/Version.h \
     $$PWD/zxing/zxing/datamatrix/DataMatrixReader.h \
     $$PWD/zxing/zxing/datamatrix/decoder/Decoder.h \
@@ -86,6 +88,9 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/datamatrix/detector/CornerPoint.h \
     $$PWD/zxing/zxing/oned/UPCEReader.h \
     $$PWD/zxing/zxing/oned/UPCEANReader.h \
+    $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.h \
+    $$PWD/zxing/zxing/oned/UPCEANExtension2Support.h \
+    $$PWD/zxing/zxing/oned/UPCEANExtension5Support.h \
     $$PWD/zxing/zxing/oned/UPCAReader.h \
     $$PWD/zxing/zxing/oned/OneDResultPoint.h \
     $$PWD/zxing/zxing/oned/OneDReader.h \
@@ -157,6 +162,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/ResultPointCallback.cpp \
     $$PWD/zxing/zxing/ResultPoint.cpp \
     $$PWD/zxing/zxing/Result.cpp \
+    $$PWD/zxing/zxing/ResultMetadata.cpp \
     $$PWD/zxing/zxing/Reader.cpp \
     $$PWD/zxing/zxing/MultiFormatReader.cpp \
     $$PWD/zxing/zxing/LuminanceSource.cpp \
@@ -198,6 +204,9 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/datamatrix/DataMatrixReader.cpp \
     $$PWD/zxing/zxing/oned/UPCEReader.cpp \
     $$PWD/zxing/zxing/oned/UPCEANReader.cpp \
+    $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.cpp \
+    $$PWD/zxing/zxing/oned/UPCEANExtension2Support.cpp \
+    $$PWD/zxing/zxing/oned/UPCEANExtension5Support.cpp \
     $$PWD/zxing/zxing/oned/UPCAReader.cpp \
     $$PWD/zxing/zxing/oned/OneDResultPoint.cpp \
     $$PWD/zxing/zxing/oned/OneDReader.cpp \

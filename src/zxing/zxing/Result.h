@@ -26,6 +26,7 @@
 #include <zxing/common/Str.h>
 #include <zxing/common/Types.h>
 #include <zxing/ResultPoint.h>
+#include <zxing/ResultMetadata.h>
 #include <zxing/BarcodeFormat.h>
 
 namespace zxing {
@@ -37,12 +38,14 @@ private:
   ArrayRef< Ref<ResultPoint> > resultPoints_;
   BarcodeFormat format_;
   std::string charSet_;
+  ResultMetadata metadata_;
 
 public:
   Result(Ref<String> text,
          ArrayRef<zxing::byte> rawBytes,
          ArrayRef< Ref<ResultPoint> > resultPoints,
-         BarcodeFormat format, std::string charSet = "");
+         BarcodeFormat format, std::string charSet = "",
+         ResultMetadata metadata = ResultMetadata());
   ~Result();
   Ref<String> getText();
   ArrayRef<zxing::byte> getRawBytes();
@@ -50,6 +53,7 @@ public:
   ArrayRef< Ref<ResultPoint> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
   std::string getCharSet() const;
+  ResultMetadata& getMetadata();
 
   friend std::ostream& operator<<(std::ostream &out, Result& result);
 };

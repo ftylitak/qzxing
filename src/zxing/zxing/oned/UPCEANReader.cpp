@@ -153,11 +153,25 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   float left = (float) (startGuardRange[1] + startGuardRange[0]) / 2.0f;
   float right = (float) (endRange[1] + endRange[0]) / 2.0f;
   BarcodeFormat format = getBarcodeFormat();
+
   ArrayRef< Ref<ResultPoint> > resultPoints(2);
-  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, static_cast<float> (rowNumber)));
+  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, static_cast<float> (rowNumber)));
+
   Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
-  // Java extension and man stuff
+
+  try {
+      Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
+      if (extensionResult) {
+          decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
+          decodeResult->getMetadata().putAll(extensionResult->getMetadata());
+          decodeResult->getResultPoints() << extensionResult->getResultPoints();
+      }
+  } catch (NotFoundException const& /*nfe*/) {
+      // continue
+  }
+
+  // Java man stuff
   return decodeResult;
 }
 

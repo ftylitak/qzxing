@@ -30,6 +30,7 @@
 // forward declaration
 namespace zxing {
 class MultiFormatReader;
+class ResultMetadata;
 }
 class ImageHandler;
 
@@ -118,6 +119,9 @@ public:
 
     bool getLastDecodeOperationSucceded();
 
+private:
+    QVariantMap metadataToMap(const zxing::ResultMetadata& metadata);
+
 public slots:
     /**
       * The decoding function. Will try to decode the given image based on the enabled decoders.
@@ -200,6 +204,7 @@ signals:
     void tagFound(QString tag);
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet) const;
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QRectF &rect) const;
+    void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QVariantMap &metadata) const;
     void error(QString msg);
 
 private:
