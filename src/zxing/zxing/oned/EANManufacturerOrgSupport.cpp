@@ -27,6 +27,8 @@
 #include <zxing/oned/EANManufacturerOrgSupport.h>
 #include <zxing/common/Str.h>
 
+#include <cstdlib>
+
 namespace zxing {
 namespace oned {
 
@@ -146,7 +148,7 @@ static Country Countries[] {
 
 Ref<String> EANManufacturerOrgSupport::lookupCountryIdentifier(Ref<String>& productCode)
 {
-    int prefix = std::stoi(productCode->getText().substr(0, 3));
+    int prefix = std::atoi(productCode->getText().substr(0, 3).c_str());
     int size = (sizeof(Countries) / sizeof(Countries[0]));
     for (int i = 0; i < size; i++) {
         std::vector<int> range = Countries[i].range;
