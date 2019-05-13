@@ -24,10 +24,6 @@
 #include <zxing/common/BitArray.h>
 #include <zxing/NotFoundException.h>
 
-#include <array>
-#include <sstream>
-#include <iomanip>
-
 namespace zxing {
 namespace oned {
 

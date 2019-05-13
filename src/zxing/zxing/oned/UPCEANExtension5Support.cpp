@@ -23,7 +23,6 @@
 #include <zxing/Result.h>
 #include <zxing/NotFoundException.h>
 
-#include <array>
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
