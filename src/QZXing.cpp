@@ -191,7 +191,27 @@ QVariantMap QZXing::metadataToMap(const ResultMetadata &metadata)
     QVariantMap obj;
     for (const ResultMetadata::Key &key: metadata.keys()) {
         QString keyName = QString::fromStdString(metadata.keyToString(key));
-        obj[keyName] = QVariant(metadata.getString(key).c_str());
+
+        switch (key) {
+        case ResultMetadata::ORIENTATION:
+        case ResultMetadata::ISSUE_NUMBER:
+        case ResultMetadata::STRUCTURED_APPEND_SEQUENCE:
+        case ResultMetadata::STRUCTURED_APPEND_CODE_COUNT:
+        case ResultMetadata::STRUCTURED_APPEND_PARITY:
+            obj[keyName] = QVariant(metadata.getInt(key));
+            break;
+        case ResultMetadata::ERROR_CORRECTION_LEVEL:
+        case ResultMetadata::SUGGESTED_PRICE:
+        case ResultMetadata::POSSIBLE_COUNTRY:
+        case ResultMetadata::UPC_EAN_EXTENSION:
+            obj[keyName] = QVariant(metadata.getString(key).c_str());
+            break;
+
+        case ResultMetadata::OTHER:
+        case ResultMetadata::PDF417_EXTRA_METADATA:
+        case ResultMetadata::BYTE_SEGMENTS:
+            break;
+        }
     }
 
     return obj;
