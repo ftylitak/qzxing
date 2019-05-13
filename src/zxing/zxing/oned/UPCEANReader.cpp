@@ -174,7 +174,13 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
       // continue
   }
 
-  // Java man stuff
+  if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A) {
+    Ref<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
+    if (countryID) {
+      decodeResult->getMetadata().put(ResultMetadata::POSSIBLE_COUNTRY, countryID->getText());
+    }
+  }
+
   return decodeResult;
 }
 

@@ -99,6 +99,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/oned/ITFReader.h \
     $$PWD/zxing/zxing/oned/EAN13Reader.h \
     $$PWD/zxing/zxing/oned/EAN8Reader.h \
+    $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.h \
     $$PWD/zxing/zxing/oned/Code128Reader.h \
     $$PWD/zxing/zxing/oned/Code39Reader.h \
     $$PWD/zxing/zxing/oned/CodaBarReader.h \
@@ -215,6 +216,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/oned/ITFReader.cpp \
     $$PWD/zxing/zxing/oned/EAN13Reader.cpp \
     $$PWD/zxing/zxing/oned/EAN8Reader.cpp \
+    $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.cpp \
     $$PWD/zxing/zxing/oned/Code128Reader.cpp \
     $$PWD/zxing/zxing/oned/Code39Reader.cpp \
     $$PWD/zxing/zxing/oned/CodaBarReader.cpp \

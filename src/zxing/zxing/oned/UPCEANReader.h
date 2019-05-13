@@ -20,6 +20,7 @@
 
 #include <zxing/oned/OneDReader.h>
 #include <zxing/oned/UPCEANExtensionSupport.h>
+#include <zxing/oned/EANManufacturerOrgSupport.h>
 #include <zxing/common/BitArray.h>
 #include <zxing/Result.h>
 
@@ -30,7 +31,7 @@ class UPCEANReader : public OneDReader {
  private:
   std::string decodeRowStringBuffer;
   UPCEANExtensionSupport extensionReader;
-  // EANManufacturerOrgSupport eanManSupport;
+  EANManufacturerOrgSupport eanManSupport;
 
   static const int MAX_AVG_VARIANCE;
   static const int MAX_INDIVIDUAL_VARIANCE;
