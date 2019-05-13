@@ -161,15 +161,15 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
 
   try {
-      Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
-      if (extensionResult) {
-          decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
-          decodeResult->getMetadata().putAll(extensionResult->getMetadata());
+    Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
+    if (extensionResult) {
+      decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
+      decodeResult->getMetadata().putAll(extensionResult->getMetadata());
 
-          for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
-            decodeResult->getResultPoints()->push_back(resultPoint);
-          }
+      for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
+        decodeResult->getResultPoints()->push_back(resultPoint);
       }
+    }
   } catch (NotFoundException const& /*nfe*/) {
       // continue
   }
