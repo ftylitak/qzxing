@@ -165,7 +165,10 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
       if (extensionResult) {
           decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
           decodeResult->getMetadata().putAll(extensionResult->getMetadata());
-          decodeResult->getResultPoints() << extensionResult->getResultPoints();
+
+          for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
+            decodeResult->getResultPoints()->push_back(resultPoint);
+          }
       }
   } catch (NotFoundException const& /*nfe*/) {
       // continue
