@@ -23,7 +23,7 @@
 #include <zxing/BarcodeFormat.h>
 #include <zxing/ResultPointCallback.h>
 
-#include <vector>
+#include <set>
 
 namespace zxing {
 
@@ -35,7 +35,7 @@ class DecodeHints {
  private:
   DecodeHintType hints;
   Ref<ResultPointCallback> callback;
-  std::vector<int> allowedEanExtensions;
+  std::set<int> allowedEanExtensions;
 
  public:
   static const DecodeHintType AZTEC_HINT;
@@ -78,8 +78,8 @@ class DecodeHints {
   void setTryHarder(bool toset);
   bool getTryHarder() const;
 
-  void setAllowedEanExtensions(std::vector<int> toset);
-  std::vector<int> getAllowedEanExtensions() const;
+  void setAllowedEanExtensions(std::set<int> toset);
+  std::set<int> getAllowedEanExtensions() const;
 
   void setResultPointCallback(Ref<ResultPointCallback> const&);
   Ref<ResultPointCallback> getResultPointCallback() const;

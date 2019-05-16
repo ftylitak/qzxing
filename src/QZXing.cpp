@@ -112,9 +112,9 @@ bool QZXing::getTryHarder()
 }
 void QZXing::setAllowedExtensions(const QVariantList& extensions)
 {
-    std::vector<int> allowedExtensions;
+    std::set<int> allowedExtensions;
     for (const QVariant& extension: extensions) {
-        allowedExtensions.push_back(extension.toInt());
+        allowedExtensions.insert(extension.toInt());
     }
 
     allowedExtensions_ = allowedExtensions;

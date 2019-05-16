@@ -77,6 +77,7 @@ const zxing::DecodeHints DecodeHints::DEFAULT_HINT(
 
 DecodeHints::DecodeHints() {
   hints = 0;
+  allowedEanExtensions = {};
 }
 
 DecodeHints::DecodeHints(const zxing::DecodeHintType &init) {
@@ -151,11 +152,11 @@ bool DecodeHints::getTryHarder() const {
   return (hints & TRYHARDER_HINT) != 0;
 }
 
-void DecodeHints::setAllowedEanExtensions(std::vector<int> toset) {
+void DecodeHints::setAllowedEanExtensions(std::set<int> toset) {
   allowedEanExtensions = toset;
 }
 
-std::vector<int> DecodeHints::getAllowedEanExtensions() const {
+std::set<int> DecodeHints::getAllowedEanExtensions() const {
   return allowedEanExtensions;
 }
 
@@ -181,8 +182,10 @@ zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r
   if (!result.callback) {
     result.callback = r.callback;
   }
-  if (result.allowedEanExtensions.empty()) {
-      result.allowedEanExtensions = r.allowedEanExtensions;
-  }
+
+  result.allowedEanExtensions = l.allowedEanExtensions;
+  result.allowedEanExtensions.insert(r.allowedEanExtensions.begin(),
+                                     r.allowedEanExtensions.end());
+
   return result;
 }

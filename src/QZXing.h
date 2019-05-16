@@ -24,6 +24,8 @@
 #include <QImage>
 #include <QVariantList>
 
+#include <set>
+
 #if QT_VERSION >= 0x050000
     class QQmlEngine;
 #endif
@@ -220,7 +222,7 @@ private:
     QString charSet_;
     bool tryHarder_;
     bool lastDecodeOperationSucceded_;
-    std::vector<int> allowedExtensions_;
+    std::set<int> allowedExtensions_;
 
     /**
       * If true, the decoding operation will take place at a different thread.

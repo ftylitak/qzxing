@@ -177,7 +177,7 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
       // continue
   }
 
-  std::vector<int> allowedExtensions = hints.getAllowedEanExtensions();
+  std::set<int> allowedExtensions = hints.getAllowedEanExtensions();
   if (allowedExtensions.size() > 0) {
     bool valid = false;
     for (int length: allowedExtensions) {
