@@ -463,6 +463,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                 }
 
                 emit tagFound(string);
+                emit tagFoundAdvanced(string, foundedFmt, charSet_);
 
                 QVariantMap metadataMap = metadataToMap(res->getMetadata());
                 emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
