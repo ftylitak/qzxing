@@ -189,3 +189,20 @@ zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r
 
   return result;
 }
+
+zxing::DecodeHints zxing::operator & (DecodeHints const& l, DecodeHints const& r) {
+  DecodeHints result (l);
+  result.hints &= r.hints;
+  if (!result.callback) {
+    result.callback = r.callback;
+  }
+
+  std::set<int> intersect;
+  std::set_intersection(l.allowedEanExtensions.begin(), l.allowedEanExtensions.end(),
+                        r.allowedEanExtensions.begin(), r.allowedEanExtensions.end(),
+                        std::inserter(intersect, intersect.begin()));
+
+  result.allowedEanExtensions = intersect;
+
+  return result;
+}

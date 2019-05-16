@@ -422,6 +422,18 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                 lastDecodeOperationSucceded_ = true;
             } catch(zxing::Exception &/*e*/) {}
 
+            if (!lastDecodeOperationSucceded_ &&
+                    hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() ) {
+                hints.setAllowedEanExtensions(std::set<int>());
+
+                try {
+                    res = decoder->decode(bb, hints);
+                    processingTime = t.elapsed();
+                    lastDecodeOperationSucceded_ = true;
+                } catch(zxing::Exception &/*e*/) {}
+            }
+
             if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
 

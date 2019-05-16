@@ -30,6 +30,7 @@ namespace zxing {
 typedef unsigned int DecodeHintType;
 class DecodeHints;
 DecodeHints operator | (DecodeHints const&, DecodeHints const&);
+DecodeHints operator & (DecodeHints const&, DecodeHints const&);
 
 class DecodeHints {
  private:
@@ -87,6 +88,7 @@ class DecodeHints {
   DecodeHints& operator =(DecodeHints const &other);
 
   friend DecodeHints operator| (DecodeHints const&, DecodeHints const&);
+  friend DecodeHints operator& (DecodeHints const&, DecodeHints const&);
 };
 
 }
