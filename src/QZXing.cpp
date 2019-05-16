@@ -110,6 +110,25 @@ bool QZXing::getTryHarder()
 {
     return tryHarder_;
 }
+void QZXing::setAllowedExtensions(const QVariantList& extensions)
+{
+    std::vector<int> allowedExtensions;
+    for (const QVariant& extension: extensions) {
+        allowedExtensions.push_back(extension.toInt());
+    }
+
+    allowedExtensions_ = allowedExtensions;
+}
+
+QVariantList QZXing::getAllowedExtensions()
+{
+    QVariantList allowedExtensions;
+    for (const int& extension: allowedExtensions_) {
+        allowedExtensions << extension;
+    }
+
+    return allowedExtensions;
+}
 
 QString QZXing::decoderFormatToString(int fmt)
 {
@@ -383,6 +402,8 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         Ref<BinaryBitmap> bb( new BinaryBitmap(binz) );
 
         DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
+
+        hints.setAllowedEanExtensions(allowedExtensions_);
 
         lastDecodeOperationSucceded_ = false;
         try {

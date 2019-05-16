@@ -86,6 +86,7 @@ DecodeHints::DecodeHints(const zxing::DecodeHintType &init) {
 DecodeHints::DecodeHints(const DecodeHints &other) {
     hints = other.hints;
     callback = other.callback;
+    allowedEanExtensions = other.allowedEanExtensions;
 }
 
 void DecodeHints::addFormat(BarcodeFormat toadd) {
@@ -150,6 +151,14 @@ bool DecodeHints::getTryHarder() const {
   return (hints & TRYHARDER_HINT) != 0;
 }
 
+void DecodeHints::setAllowedEanExtensions(std::vector<int> toset) {
+  allowedEanExtensions = toset;
+}
+
+std::vector<int> DecodeHints::getAllowedEanExtensions() const {
+  return allowedEanExtensions;
+}
+
 void DecodeHints::setResultPointCallback(Ref<ResultPointCallback> const& _callback) {
   callback = _callback;
 }
@@ -162,6 +171,7 @@ zxing::DecodeHints &zxing::DecodeHints::operator =(const zxing::DecodeHints &oth
 {
     hints = other.hints;
     callback = other.callback;
+    allowedEanExtensions = other.allowedEanExtensions;
     return *this;
 }
 
@@ -170,6 +180,9 @@ zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r
   result.hints |= r.hints;
   if (!result.callback) {
     result.callback = r.callback;
+  }
+  if (result.allowedEanExtensions.empty()) {
+      result.allowedEanExtensions = r.allowedEanExtensions;
   }
   return result;
 }

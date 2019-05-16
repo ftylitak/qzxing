@@ -118,13 +118,14 @@ UPCEANReader::L_AND_G_PATTERNS (VECTOR_INIT(L_AND_G_PATTERNS_));
 
 UPCEANReader::UPCEANReader() {}
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
-  return decodeRow(rowNumber, row, findStartGuardPattern(row));
+Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) {
+  return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
 }
 
 Ref<Result> UPCEANReader::decodeRow(int rowNumber,
                                     Ref<BitArray> row,
-                                    Range const& startGuardRange) {
+                                    Range const& startGuardRange,
+                                    DecodeHints hints) {
   string& result = decodeRowStringBuffer;
   result.clear();
   int endStart = decodeMiddle(row, startGuardRange, result);
@@ -159,12 +160,14 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, static_cast<float> (rowNumber)));
 
   Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
+  int extensionLength = 0;
 
   try {
     Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
     if (extensionResult) {
       decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
       decodeResult->getMetadata().putAll(extensionResult->getMetadata());
+      extensionLength = extensionResult->getText()->length();
 
       for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
         decodeResult->getResultPoints()->push_back(resultPoint);
@@ -172,6 +175,20 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
     }
   } catch (NotFoundException const& /*nfe*/) {
       // continue
+  }
+
+  std::vector<int> allowedExtensions = hints.getAllowedEanExtensions();
+  if (allowedExtensions.size() > 0) {
+    bool valid = false;
+    for (int length: allowedExtensions) {
+      if (extensionLength == length) {
+        valid = true;
+        break;
+      }
+    }
+    if (!valid) {
+      throw NotFoundException();
+    }
   }
 
   if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A) {

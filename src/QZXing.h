@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QImage>
+#include <QVariantList>
 
 #if QT_VERSION >= 0x050000
     class QQmlEngine;
@@ -54,6 +55,7 @@ class
     Q_PROPERTY(int processingTime READ getProcessTimeOfLastDecoding)
     Q_PROPERTY(uint enabledDecoders READ getEnabledFormats WRITE setDecoder NOTIFY enabledFormatsChanged)
     Q_PROPERTY(bool tryHarder READ getTryHarder WRITE setTryHarder)
+    Q_PROPERTY(QVariantList allowedExtensions READ getAllowedExtensions WRITE setAllowedExtensions)
 
 public:
     /*
@@ -113,6 +115,8 @@ public:
 
     void setTryHarder(bool tryHarder);
     bool getTryHarder();
+    void setAllowedExtensions(const QVariantList& extensions);
+    QVariantList getAllowedExtensions();
     static QString decoderFormatToString(int fmt);
     Q_INVOKABLE QString foundedFormat() const;
     Q_INVOKABLE QString charSet() const;
@@ -216,6 +220,7 @@ private:
     QString charSet_;
     bool tryHarder_;
     bool lastDecodeOperationSucceded_;
+    std::vector<int> allowedExtensions_;
 
     /**
       * If true, the decoding operation will take place at a different thread.
