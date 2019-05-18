@@ -403,7 +403,9 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
         DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
-        hints.setAllowedEanExtensions(allowedExtensions_);
+        if (hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION)) {
+            hints.setAllowedEanExtensions(allowedExtensions_);
+        }
 
         lastDecodeOperationSucceded_ = false;
         try {
@@ -424,6 +426,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
             if (!lastDecodeOperationSucceded_ &&
                     hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                    !allowedExtensions_.empty() &&
                     !(hints & DecodeHints::PRODUCT_HINT).isEmpty() ) {
                 hints.setAllowedEanExtensions(std::set<int>());
 
