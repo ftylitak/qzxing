@@ -10,7 +10,6 @@ find_package(Qt5 REQUIRED Svg Quick QuickControls2)
 
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_BUILD_TYPE Debug)
-add_subdirectory(zxing)
 add_library(qzxing STATIC
 
 # root
