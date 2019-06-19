@@ -23,16 +23,20 @@
 #include <zxing/BarcodeFormat.h>
 #include <zxing/ResultPointCallback.h>
 
+#include <set>
+
 namespace zxing {
 
 typedef unsigned int DecodeHintType;
 class DecodeHints;
 DecodeHints operator | (DecodeHints const&, DecodeHints const&);
+DecodeHints operator & (DecodeHints const&, DecodeHints const&);
 
 class DecodeHints {
  private:
   DecodeHintType hints;
   Ref<ResultPointCallback> callback;
+  std::set<int> allowedEanExtensions;
 
  public:
   static const DecodeHintType AZTEC_HINT;
@@ -75,12 +79,16 @@ class DecodeHints {
   void setTryHarder(bool toset);
   bool getTryHarder() const;
 
+  void setAllowedEanExtensions(std::set<int> toset);
+  std::set<int> getAllowedEanExtensions() const;
+
   void setResultPointCallback(Ref<ResultPointCallback> const&);
   Ref<ResultPointCallback> getResultPointCallback() const;
 
   DecodeHints& operator =(DecodeHints const &other);
 
   friend DecodeHints operator| (DecodeHints const&, DecodeHints const&);
+  friend DecodeHints operator& (DecodeHints const&, DecodeHints const&);
 };
 
 }
