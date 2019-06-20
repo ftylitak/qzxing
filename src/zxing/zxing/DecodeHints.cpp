@@ -77,6 +77,7 @@ const zxing::DecodeHints DecodeHints::DEFAULT_HINT(
 
 DecodeHints::DecodeHints() {
   hints = 0;
+  allowedEanExtensions = {};
 }
 
 DecodeHints::DecodeHints(const zxing::DecodeHintType &init) {
@@ -86,6 +87,7 @@ DecodeHints::DecodeHints(const zxing::DecodeHintType &init) {
 DecodeHints::DecodeHints(const DecodeHints &other) {
     hints = other.hints;
     callback = other.callback;
+    allowedEanExtensions = other.allowedEanExtensions;
 }
 
 void DecodeHints::addFormat(BarcodeFormat toadd) {
@@ -150,6 +152,14 @@ bool DecodeHints::getTryHarder() const {
   return (hints & TRYHARDER_HINT) != 0;
 }
 
+void DecodeHints::setAllowedEanExtensions(std::set<int> toset) {
+  allowedEanExtensions = toset;
+}
+
+std::set<int> DecodeHints::getAllowedEanExtensions() const {
+  return allowedEanExtensions;
+}
+
 void DecodeHints::setResultPointCallback(Ref<ResultPointCallback> const& _callback) {
   callback = _callback;
 }
@@ -162,6 +172,7 @@ zxing::DecodeHints &zxing::DecodeHints::operator =(const zxing::DecodeHints &oth
 {
     hints = other.hints;
     callback = other.callback;
+    allowedEanExtensions = other.allowedEanExtensions;
     return *this;
 }
 
@@ -171,5 +182,27 @@ zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r
   if (!result.callback) {
     result.callback = r.callback;
   }
+
+  result.allowedEanExtensions = l.allowedEanExtensions;
+  result.allowedEanExtensions.insert(r.allowedEanExtensions.begin(),
+                                     r.allowedEanExtensions.end());
+
+  return result;
+}
+
+zxing::DecodeHints zxing::operator & (DecodeHints const& l, DecodeHints const& r) {
+  DecodeHints result (l);
+  result.hints &= r.hints;
+  if (!result.callback) {
+    result.callback = r.callback;
+  }
+
+  std::set<int> intersect;
+  std::set_intersection(l.allowedEanExtensions.begin(), l.allowedEanExtensions.end(),
+                        r.allowedEanExtensions.begin(), r.allowedEanExtensions.end(),
+                        std::inserter(intersect, intersect.begin()));
+
+  result.allowedEanExtensions = intersect;
+
   return result;
 }

@@ -118,13 +118,14 @@ UPCEANReader::L_AND_G_PATTERNS (VECTOR_INIT(L_AND_G_PATTERNS_));
 
 UPCEANReader::UPCEANReader() {}
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
-  return decodeRow(rowNumber, row, findStartGuardPattern(row));
+Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) {
+  return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
 }
 
 Ref<Result> UPCEANReader::decodeRow(int rowNumber,
                                     Ref<BitArray> row,
-                                    Range const& startGuardRange) {
+                                    Range const& startGuardRange,
+                                    DecodeHints hints) {
   string& result = decodeRowStringBuffer;
   result.clear();
   int endStart = decodeMiddle(row, startGuardRange, result);
@@ -153,11 +154,50 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   float left = (float) (startGuardRange[1] + startGuardRange[0]) / 2.0f;
   float right = (float) (endRange[1] + endRange[0]) / 2.0f;
   BarcodeFormat format = getBarcodeFormat();
+
   ArrayRef< Ref<ResultPoint> > resultPoints(2);
-  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, static_cast<float> (rowNumber)));
+  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, static_cast<float> (rowNumber)));
+
   Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
-  // Java extension and man stuff
+  int extensionLength = 0;
+
+  try {
+    Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
+    if (extensionResult) {
+      decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
+      decodeResult->getMetadata().putAll(extensionResult->getMetadata());
+      extensionLength = extensionResult->getText()->length();
+
+      for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
+        decodeResult->getResultPoints()->push_back(resultPoint);
+      }
+    }
+  } catch (NotFoundException const& /*nfe*/) {
+      // continue
+  }
+
+  std::set<int> allowedExtensions = hints.getAllowedEanExtensions();
+  if (allowedExtensions.size() > 0) {
+    bool valid = false;
+    for (int length: allowedExtensions) {
+      if (extensionLength == length) {
+        valid = true;
+        break;
+      }
+    }
+    if (!valid) {
+      throw NotFoundException();
+    }
+  }
+
+  if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A) {
+    Ref<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
+    if (countryID) {
+      decodeResult->getMetadata().put(ResultMetadata::POSSIBLE_COUNTRY, countryID->getText());
+    }
+  }
+
   return decodeResult;
 }
 

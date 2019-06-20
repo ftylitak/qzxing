@@ -22,6 +22,9 @@
 
 #include <QObject>
 #include <QImage>
+#include <QVariantList>
+
+#include <set>
 
 #if QT_VERSION >= 0x050000
     class QQmlEngine;
@@ -30,6 +33,7 @@
 // forward declaration
 namespace zxing {
 class MultiFormatReader;
+class ResultMetadata;
 }
 class ImageHandler;
 
@@ -53,6 +57,7 @@ class
     Q_PROPERTY(int processingTime READ getProcessTimeOfLastDecoding)
     Q_PROPERTY(uint enabledDecoders READ getEnabledFormats WRITE setDecoder NOTIFY enabledFormatsChanged)
     Q_PROPERTY(bool tryHarder READ getTryHarder WRITE setTryHarder)
+    Q_PROPERTY(QVariantList allowedExtensions READ getAllowedExtensions WRITE setAllowedExtensions)
 
 public:
     /*
@@ -112,11 +117,16 @@ public:
 
     void setTryHarder(bool tryHarder);
     bool getTryHarder();
+    void setAllowedExtensions(const QVariantList& extensions);
+    QVariantList getAllowedExtensions();
     static QString decoderFormatToString(int fmt);
     Q_INVOKABLE QString foundedFormat() const;
     Q_INVOKABLE QString charSet() const;
 
     bool getLastDecodeOperationSucceded();
+
+private:
+    QVariantMap metadataToMap(const zxing::ResultMetadata& metadata);
 
 public slots:
     /**
@@ -200,6 +210,7 @@ signals:
     void tagFound(QString tag);
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet) const;
     void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QRectF &rect) const;
+    void tagFoundAdvanced(const QString &tag, const QString &format, const QString &charSet, const QVariantMap &metadata) const;
     void error(QString msg);
 
 private:
@@ -211,6 +222,7 @@ private:
     QString charSet_;
     bool tryHarder_;
     bool lastDecodeOperationSucceded_;
+    std::set<int> allowedExtensions_;
 
     /**
       * If true, the decoding operation will take place at a different thread.

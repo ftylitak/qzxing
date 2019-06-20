@@ -5,6 +5,7 @@
 #include <zxing/BinaryBitmap.h>
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
+#include <zxing/ResultMetadata.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
 #include <QTime>
@@ -109,6 +110,25 @@ bool QZXing::getTryHarder()
 {
     return tryHarder_;
 }
+void QZXing::setAllowedExtensions(const QVariantList& extensions)
+{
+    std::set<int> allowedExtensions;
+    for (const QVariant& extension: extensions) {
+        allowedExtensions.insert(extension.toInt());
+    }
+
+    allowedExtensions_ = allowedExtensions;
+}
+
+QVariantList QZXing::getAllowedExtensions()
+{
+    QVariantList allowedExtensions;
+    for (const int& extension: allowedExtensions_) {
+        allowedExtensions << extension;
+    }
+
+    return allowedExtensions;
+}
 
 QString QZXing::decoderFormatToString(int fmt)
 {
@@ -183,6 +203,37 @@ QString QZXing::charSet() const
 bool QZXing::getLastDecodeOperationSucceded()
 {
     return lastDecodeOperationSucceded_;
+}
+
+QVariantMap QZXing::metadataToMap(const ResultMetadata &metadata)
+{
+    QVariantMap obj;
+    for (const ResultMetadata::Key &key: metadata.keys()) {
+        QString keyName = QString::fromStdString(metadata.keyToString(key));
+
+        switch (key) {
+        case ResultMetadata::ORIENTATION:
+        case ResultMetadata::ISSUE_NUMBER:
+        case ResultMetadata::STRUCTURED_APPEND_SEQUENCE:
+        case ResultMetadata::STRUCTURED_APPEND_CODE_COUNT:
+        case ResultMetadata::STRUCTURED_APPEND_PARITY:
+            obj[keyName] = QVariant(metadata.getInt(key));
+            break;
+        case ResultMetadata::ERROR_CORRECTION_LEVEL:
+        case ResultMetadata::SUGGESTED_PRICE:
+        case ResultMetadata::POSSIBLE_COUNTRY:
+        case ResultMetadata::UPC_EAN_EXTENSION:
+            obj[keyName] = QVariant(metadata.getString(key).c_str());
+            break;
+
+        case ResultMetadata::OTHER:
+        case ResultMetadata::PDF417_EXTRA_METADATA:
+        case ResultMetadata::BYTE_SEGMENTS:
+            break;
+        }
+    }
+
+    return obj;
 }
 
 void QZXing::setDecoder(const uint &hint)
@@ -352,6 +403,10 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
         DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
+        if (hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION)) {
+            hints.setAllowedEanExtensions(allowedExtensions_);
+        }
+
         lastDecodeOperationSucceded_ = false;
         try {
             res = decoder->decode(bb, hints);
@@ -368,6 +423,19 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                 processingTime = t.elapsed();
                 lastDecodeOperationSucceded_ = true;
             } catch(zxing::Exception &/*e*/) {}
+
+            if (!lastDecodeOperationSucceded_ &&
+                    hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                    !allowedExtensions_.empty() &&
+                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() ) {
+                hints.setAllowedEanExtensions(std::set<int>());
+
+                try {
+                    res = decoder->decode(bb, hints);
+                    processingTime = t.elapsed();
+                    lastDecodeOperationSucceded_ = true;
+                } catch(zxing::Exception &/*e*/) {}
+            }
 
             if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
@@ -399,6 +467,9 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
                 emit tagFound(string);
                 emit tagFoundAdvanced(string, foundedFmt, charSet_);
+
+                QVariantMap metadataMap = metadataToMap(res->getMetadata());
+                emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
 
                 try {
                     const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
