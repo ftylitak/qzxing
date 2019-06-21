@@ -92,7 +92,8 @@ Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row,
     // here, and convert an EAN-13 result to a UPC-A result if
     // appropriate.
     bool ean13MayBeUPCA =
-      result->getBarcodeFormat() == BarcodeFormat::EAN_13 &&
+      (result->getBarcodeFormat() == BarcodeFormat::UPC_A ||
+       result->getBarcodeFormat() == BarcodeFormat::EAN_13) &&
       result->getText()->charAt(0) == '0';
 
     // Note: doesn't match Java which uses hints
