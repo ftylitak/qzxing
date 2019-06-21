@@ -24,10 +24,24 @@ namespace {
             qBound<uchar>(0, uchar((298 * C + 516 * D + 128) >> 8), 255)
         );
     }
+
+    uchar yuvToGray2(uchar y, uchar u, uchar v)
+    {
+        double rD = y + 1.4075 * (v - 128);
+        double gD = y - 0.3455 * (u - 128) - (0.7169 * (v - 128));
+        double bD = y + 1.7790 * (u - 128);
+
+        return gray(
+            qBound<uchar>(0, (uchar)::floor(rD), 255),
+            qBound<uchar>(0, (uchar)::floor(gD), 255),
+            qBound<uchar>(0, (uchar)::floor(bD), 255)
+        );
+    }
 }
 
 QZXingFilter::QZXingFilter(QObject *parent)
     : QAbstractVideoFilter(parent)
+    , decoder(QZXing::DecoderFormat_QR_CODE)
     , decoding(false)
 {
     /// Connecting signals to handlers that will send signals to QML
@@ -246,28 +260,6 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         image_ptr = new QImage(data, width, height, QImage::Format_RGB16);
         break;
     case QVideoFrame::Format_YUV420P:
-        //fix for issues #4 and #9
-        image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
-        pixel = image_ptr->bits();
-        wh = width * height;
-        w_2 = width / 2;
-        wh_54 = wh * 5 / 4;
-
-        for (int y = captureRect.startY; y < captureRect.endY; y++) {
-            const int Y_offset = y * width;
-            const int y_2 = y / 2;
-            const int U_offset = y_2 * w_2 + wh;
-            const int V_offset = y_2 * w_2 + wh_54;
-            for (int x = captureRect.startX; x < captureRect.endX; x++) {
-                const int x_2 = x / 2;
-                const uchar Y = data[Y_offset + x];
-                const uchar U = data[U_offset + x_2];
-                const uchar V = data[V_offset + x_2];
-                *pixel = yuvToGray(Y, U, V);
-                ++pixel;
-            }
-        }
-        break;
     case QVideoFrame::Format_NV12:
         /// nv12 format, encountered on macOS
         image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
@@ -290,22 +282,29 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
                 ++pixel;
             }
         }
+
         break;
     case QVideoFrame::Format_YUYV:
         image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
         pixel = image_ptr->bits();
 
         for (int y = captureRect.startY; y < captureRect.endY; y++){
-            const uint32_t *row = &yuvPtr[y*(width/2)-(width/4)];
-            for (int x = captureRect.startX; x < captureRect.endX; x++){
+            const uint32_t *row = &yuvPtr[y*(width/2)];
+            int end = captureRect.startX/2 + (captureRect.endX - captureRect.startX)/2;
+            for (int x = captureRect.startX/2; x < end; x++){
                 const uint8_t *pxl = reinterpret_cast<const uint8_t *>(&row[x]);
                 const uint8_t y0 = pxl[0];
                 const uint8_t u  = pxl[1];
                 const uint8_t v  = pxl[3];
-                *pixel = yuvToGray(y0, u, v);
+                const uint8_t y1 = pxl[2];
+
+                *pixel = yuvToGray2(y0, u, v);
+                ++pixel;
+                *pixel = yuvToGray2(y1, u, v);
                 ++pixel;
             }
         }
+
         break;
         /// TODO: Handle (create QImages from) YUV formats.
     default:
