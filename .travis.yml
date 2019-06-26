@@ -36,8 +36,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   
 install:
-  - echo "Starting installation at: ${TRAVIS_BUILD_DIR}"
+  - echo "Starting installation..."
   - bash ${TRAVIS_BUILD_DIR}/ci/build-install-tools.sh #> /dev/null
+  - echo "Finished installation."
 
 before_script:
   - echo "Starting before_script..."
