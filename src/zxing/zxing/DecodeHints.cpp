@@ -21,6 +21,7 @@
 #include <zxing/DecodeHints.h>
 #include <zxing/common/IllegalArgumentException.h>
 #include <qglobal.h>
+#include <iterator>
 
 using zxing::Ref;
 using zxing::ResultPointCallback;

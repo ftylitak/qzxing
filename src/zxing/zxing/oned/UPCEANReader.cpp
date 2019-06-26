@@ -118,14 +118,14 @@ UPCEANReader::L_AND_G_PATTERNS (VECTOR_INIT(L_AND_G_PATTERNS_));
 
 UPCEANReader::UPCEANReader() {}
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) {
+Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
   return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
 }
 
 Ref<Result> UPCEANReader::decodeRow(int rowNumber,
                                     Ref<BitArray> row,
                                     Range const& startGuardRange,
-                                    DecodeHints hints) {
+                                    zxing::DecodeHints hints) {
   string& result = decodeRowStringBuffer;
   result.clear();
   int endStart = decodeMiddle(row, startGuardRange, result);
