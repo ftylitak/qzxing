@@ -5,6 +5,8 @@
 #参考：https://github.com/benlau/qtci
 #     https://github.com/mjscosta/qt-silent-installer
 
+echo "Starting Qt Installer..."
+
 set -e #quit on error
 
 if [ $# -lt 2 ];
@@ -131,3 +133,4 @@ chmod u+x $1
 
 $1 -v --script $SCRIPT
 
+echo "Finished Qt Installer."

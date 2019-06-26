@@ -1,5 +1,7 @@
 #Author: KangLin(kl222@126.com)
 
+echo "Starting build_env..."
+
 SOURCE_DIR="`pwd`"
 echo $SOURCE_DIR
 TOOLS_DIR=${SOURCE_DIR}/Tools
@@ -22,3 +24,5 @@ case "${BUILD_TARGERT}" in
         export QT_ROOT=${QT_DIR}/${QT_VERSION}/android_armv7
     ;;
 esac
+
+echo "Finished build_env."

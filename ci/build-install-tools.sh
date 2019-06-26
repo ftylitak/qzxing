@@ -1,6 +1,8 @@
 #!/bin/bash 
 #Author: KangLin(kl222@126.com)
 
+echo "Starting build-install-tools..."
+
 set -e
 
 SOURCE_DIR="`pwd`"
@@ -76,3 +78,5 @@ case ${BUILD_TARGERT} in
 esac
 
 cd ${SOURCE_DIR}
+
+echo "Finished build-install-tools."
