@@ -2,13 +2,9 @@
 
 version: '3.0.a.5.{build}'
 
-image:
-- Visual Studio 2015
-- Visual Studio 2017
-
 configuration:
   - release
-#  - debug
+  - debug
 
 environment:
   matrix:
