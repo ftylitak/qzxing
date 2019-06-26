@@ -32,18 +32,24 @@ env:
     - BUILD_TARGERT="android_armv7" QT_VERSION_DIR=5.9 QT_VERSION=5.9.8
 
 before_install:
-  - echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
+  - echo "Starting before_install for: TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
+  - echo "Finished before_install."
 
 install:
+  - echo "Starting installation at: ${TRAVIS_BUILD_DIR}"
   - bash ${TRAVIS_BUILD_DIR}/ci/build-install-tools.sh #> /dev/null
 
 before_script:
+  - echo "Starting before_script..."
   - source ${TRAVIS_BUILD_DIR}/ci/build_env.sh
+  - echo "Finished before_script."
 
 script:
+  - echo "Starting script..."
   - mkdir ${TRAVIS_BUILD_DIR}/build
   - cd ${TRAVIS_BUILD_DIR}/build
   - ${QT_ROOT}/bin/qmake -o Makefile CONFIG+=Release ${TRAVIS_BUILD_DIR}/src/QZXing.pro
   - make -f Makefile
+  - echo "Finished script."
