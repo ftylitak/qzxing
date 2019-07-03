@@ -57,6 +57,8 @@ ErrorCorrectionLevel& ErrorCorrectionLevel::operator=(const ErrorCorrectionLevel
     ordinal_ = other.ordinal();
     bits_ = other.bits();
     name_ = other.name();
+
+    return *this;
 }
 
 ErrorCorrectionLevel& ErrorCorrectionLevel::forBits(int bits) {
