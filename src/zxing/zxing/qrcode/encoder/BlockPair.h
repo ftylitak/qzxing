@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <zxing/common/Array.h>
+#include <zxing/common/Types.h>
 
 using namespace std;
 
@@ -24,6 +25,16 @@ public:
     ArrayRef<zxing::byte> getDataBytes() { return data_; }
 
     ArrayRef<zxing::byte> getErrorCorrectionBytes() { return errorCorrection_; }
+
+    BlockPair& operator=(const BlockPair &other) {
+        data_->release();
+        errorCorrection_->release();
+
+        data_ = other.data_;
+        errorCorrection_ = other.errorCorrection_;
+
+        return *this;
+    }
 };
 
 }

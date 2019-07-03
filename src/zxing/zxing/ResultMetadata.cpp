@@ -105,6 +105,7 @@ std::string ResultMetadata::keyToString(Key key) const
     case STRUCTURED_APPEND_CODE_COUNT:  return "STRUCTURED_APPEND_CODE_COUNT";
     case STRUCTURED_APPEND_PARITY:      return "STRUCTURED_APPEND_PARITY";
     }
+    return "UNKNOWN";
 }
 
 } // zxing

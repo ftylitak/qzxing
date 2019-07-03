@@ -58,6 +58,7 @@ public:
   int getCharacterCountBits(const Version *version) const;
   int getBits() const { return bits_; }
 
+  Mode& operator=(const Mode& other);
   bool operator==(const Mode& other);
   bool operator!=(const Mode& other);
 

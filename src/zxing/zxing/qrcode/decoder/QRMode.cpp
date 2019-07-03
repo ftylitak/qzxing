@@ -108,6 +108,17 @@ int Mode::getCharacterCountBits(const Version *version) const
     }
 }
 
+Mode& Mode::operator=(const Mode& other)
+{
+    characterCountBitsForVersions0To9_ = other.characterCountBitsForVersions0To9_;
+    characterCountBitsForVersions10To26_ = other.characterCountBitsForVersions10To26_;
+    characterCountBitsForVersions27AndHigher_ = other.characterCountBitsForVersions27AndHigher_;
+    bits_ = other.bits_;
+    name_ = other.name_;
+
+    return *this;
+}
+
 bool Mode::operator==(const Mode& other)
 {
     return ( characterCountBitsForVersions0To9_ == other.characterCountBitsForVersions0To9_
