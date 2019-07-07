@@ -95,7 +95,7 @@ ApplicationWindow
         }
 
         decoder {
-            enabledDecoders: QZXing.DecoderFormat_RSS_14 | QZXing.DecoderFormat_UPC_A //| QZXing.DecoderFormat_CODE_39 | QZXing.DecoderFormat_QR_CODE
+            enabledDecoders: QZXing.DecoderFormat_EAN_13 | QZXing.DecoderFormat_CODE_39 | QZXing.DecoderFormat_QR_CODE
 
             onTagFound: {
                 console.log(tag + " | " + decoder.foundedFormat() + " | " + decoder.charSet());
