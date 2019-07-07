@@ -85,11 +85,11 @@ private:
   /**
    * See ISO 16022:2006, Annex B, B.2
    */
-  char unrandomize255State(int randomizedBase256Codeword,
+  zxing::byte unrandomize255State(int randomizedBase256Codeword,
                            int base256CodewordPosition) {
     int pseudoRandomNumber = ((149 * base256CodewordPosition) % 255) + 1;
     int tempVariable = randomizedBase256Codeword - pseudoRandomNumber;
-    return (zxing::byte) (tempVariable >= 0 ? tempVariable : (tempVariable + 256));
+    return static_cast<zxing::byte>(tempVariable >= 0 ? tempVariable : (tempVariable + 256));
   }
 
   void append(std::ostream &ost, const char *bufIn, size_t nIn, const char *src);

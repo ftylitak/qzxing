@@ -79,7 +79,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
         version = Version::getVersionForNumber(1);
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
         if (!willFit(bitsNeeded, version, ecLevel)) {
-            throw new WriterException("Data too big for requested version");
+            throw WriterException("Data too big for requested version");
         }
     } else {
         version = recommendVersion(ecLevel, mode, headerBits, dataBits);
