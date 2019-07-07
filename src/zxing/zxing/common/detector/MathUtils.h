@@ -18,6 +18,7 @@
  */
 
 #include <cmath>
+#include <vector>
 
 namespace zxing {
 namespace common {
@@ -47,6 +48,14 @@ class MathUtils {
     int xDiff = aX - bX;
     int yDiff = aY - bY;
     return sqrt(float(xDiff * xDiff + yDiff * yDiff));
+  }
+
+  static inline int sum(std::vector<int> array) {
+    int count = 0;
+    for (int a : array) {
+      count += a;
+    }
+    return count;
   }
 };
 
