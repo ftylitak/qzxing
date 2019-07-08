@@ -62,7 +62,7 @@ class DecodeHints {
   static const DecodeHintType CHARACTER_SET;
   // static const DecodeHintType ALLOWED_LENGTHS = 1 << 29;
   // static const DecodeHintType ASSUME_CODE_39_CHECK_DIGIT = 1 << 28;
-  // static const DecodeHintType NEED_RESULT_POINT_CALLBACK = 1 << 26;
+   static const DecodeHintType NEED_RESULT_POINT_CALLBACK = 1 << 26;
   
   static const DecodeHints PRODUCT_HINT;
   static const DecodeHints ONED_HINT;
