@@ -3,6 +3,9 @@
 sudo: required
 dist: xenial
 
+services:
+  - xvfb
+
 language: cpp
 
 cache:
