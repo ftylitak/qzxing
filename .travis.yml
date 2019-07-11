@@ -1,7 +1,7 @@
 #Author: KangLin(kl222@126.com)
 
 sudo: required
-dist: trusty
+dist: xenial
 
 language: cpp
 
