@@ -37,6 +37,7 @@ env:
 before_install:
   - echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
   - export DISPLAY=:99.0
+  - sudo apt-get install -y libgl1-mesa-glx
 
 install:
   - bash ${TRAVIS_BUILD_DIR}/ci/build-install-tools.sh #> /dev/null
