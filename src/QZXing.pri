@@ -110,6 +110,29 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/oned/rss/Pair.h \
     $$PWD/zxing/zxing/oned/rss/RSS14Reader.h \
     $$PWD/zxing/zxing/oned/rss/RSSUtils.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.h \
+    $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.h \
     $$PWD/zxing/zxing/qrcode/Version.h \
     $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
     $$PWD/zxing/zxing/qrcode/FormatInformation.h \
@@ -233,6 +256,29 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/oned/rss/Pair.cpp \
     $$PWD/zxing/zxing/oned/rss/RSS14Reader.cpp \
     $$PWD/zxing/zxing/oned/rss/RSSUtils.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.cpp \
+    $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.cpp \
     $$PWD/zxing/zxing/qrcode/QRCodeReader.cpp \
     $$PWD/zxing/zxing/multi/MultipleBarcodeReader.cpp \
     $$PWD/zxing/zxing/multi/GenericMultipleBarcodeReader.cpp \
