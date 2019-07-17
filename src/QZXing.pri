@@ -104,6 +104,12 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/oned/Code39Reader.h \
     $$PWD/zxing/zxing/oned/CodaBarReader.h \
     $$PWD/zxing/zxing/oned/Code93Reader.h \
+    $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.h \
+    $$PWD/zxing/zxing/oned/rss/DataCharacter.h \
+    $$PWD/zxing/zxing/oned/rss/FinderPattern.h \
+    $$PWD/zxing/zxing/oned/rss/Pair.h \
+    $$PWD/zxing/zxing/oned/rss/RSS14Reader.h \
+    $$PWD/zxing/zxing/oned/rss/RSSUtils.h \
     $$PWD/zxing/zxing/qrcode/Version.h \
     $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
     $$PWD/zxing/zxing/qrcode/FormatInformation.h \
@@ -221,6 +227,12 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/oned/Code39Reader.cpp \
     $$PWD/zxing/zxing/oned/CodaBarReader.cpp \
     $$PWD/zxing/zxing/oned/Code93Reader.cpp \
+    $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.cpp \
+    $$PWD/zxing/zxing/oned/rss/DataCharacter.cpp \
+    $$PWD/zxing/zxing/oned/rss/FinderPattern.cpp \
+    $$PWD/zxing/zxing/oned/rss/Pair.cpp \
+    $$PWD/zxing/zxing/oned/rss/RSS14Reader.cpp \
+    $$PWD/zxing/zxing/oned/rss/RSSUtils.cpp \
     $$PWD/zxing/zxing/qrcode/QRCodeReader.cpp \
     $$PWD/zxing/zxing/multi/MultipleBarcodeReader.cpp \
     $$PWD/zxing/zxing/multi/GenericMultipleBarcodeReader.cpp \
