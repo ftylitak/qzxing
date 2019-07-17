@@ -72,6 +72,10 @@ public:
   static void recordPattern(Ref<BitArray> row,
                             int start,
                             std::vector<int>& counters);
+
+  static void recordPatternInReverse(Ref<BitArray> row,
+                                     int start,
+                                     std::vector<int>& counters);
   virtual ~OneDReader();
 };
 
