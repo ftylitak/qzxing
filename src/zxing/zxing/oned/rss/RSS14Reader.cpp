@@ -151,7 +151,7 @@ Pair RSS14Reader::decodePair(Ref<BitArray> row, bool right, int rowNumber, Decod
                     outside.getChecksumPortion() + 4 * inside.getChecksumPortion(),
                     pattern);
 
-    } catch (NotFoundException ignored) {
+    } catch (NotFoundException const& /*e*/) {
         return Pair();
     }
 }

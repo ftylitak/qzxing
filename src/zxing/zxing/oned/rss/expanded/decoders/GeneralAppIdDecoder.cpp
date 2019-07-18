@@ -394,7 +394,7 @@ DecodedChar GeneralAppIdDecoder::decodeAlphanumeric(int pos)
         c = '/';
         break;
     default:
-        throw new IllegalStateException("Decoding invalid alphanumeric value: " + sixBitValue);
+        throw IllegalStateException("Decoding invalid alphanumeric value: " + sixBitValue);
     }
     return DecodedChar(pos + 6, c);
 }

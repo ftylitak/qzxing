@@ -87,7 +87,7 @@ Ref<Result> RSSExpandedReader::decodeRow(int rowNumber, Ref<BitArray> row, Decod
     m_startFromEven = false;
     try {
         return constructResult(decodeRow2pairs(rowNumber, row));
-    } catch (NotFoundException e) {
+    } catch (NotFoundException const& /*e*/) {
         // OK
     }
 
@@ -108,7 +108,7 @@ std::vector<ExpandedPair> RSSExpandedReader::decodeRow2pairs(int rowNumber, Ref<
     while (!done) {
         try {
             m_pairs.push_back(retrieveNextPair(row, m_pairs, rowNumber));
-        } catch (NotFoundException nfe) {
+        } catch (NotFoundException const& nfe) {
             if (m_pairs.size() == 0) {
                 throw nfe;
             }
@@ -158,7 +158,7 @@ std::vector<ExpandedPair> RSSExpandedReader::checkRows(bool reverse)
     std::vector<ExpandedPair> ps;
     try {
         ps = checkRows({}, 0);
-    } catch (NotFoundException e) {
+    } catch (NotFoundException const& /*e*/) {
         // OK
     }
 
@@ -194,7 +194,7 @@ std::vector<ExpandedPair> RSSExpandedReader::checkRows(std::vector<ExpandedRow> 
             try {
                 // Recursion: try to add more rows
                 return checkRows(rs, static_cast<int>(i + 1));
-            } catch (NotFoundException e) {
+            } catch (NotFoundException const& /*e*/) {
                 // We failed, try the next candidate
             }
         }
@@ -417,7 +417,7 @@ ExpandedPair RSSExpandedReader::retrieveNextPair(Ref<BitArray> row, std::vector<
     DataCharacter rightChar;
     try {
         rightChar = decodeDataCharacter(row, pattern, isOddPattern, false);
-    } catch (NotFoundException ignored) {
+    } catch (NotFoundException const& /*e*/) {
         //rightChar = nullptr;
     }
     return ExpandedPair(leftChar, rightChar, pattern);
@@ -535,7 +535,7 @@ FinderPattern RSSExpandedReader::parseFoundFinderPattern(Ref<BitArray> row, int 
     int value;
     try {
         value = parseFinderValue(counters, FINDER_PATTERNS);
-    } catch (NotFoundException ignored) {
+    } catch (NotFoundException const& /*e*/) {
         return FinderPattern();
     }
     return FinderPattern(value, {start, end}, start, end, rowNumber);
