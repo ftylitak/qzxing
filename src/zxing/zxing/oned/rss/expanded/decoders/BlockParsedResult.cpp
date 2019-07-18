@@ -16,12 +16,6 @@ BlockParsedResult::BlockParsedResult(const DecodedInformation &information, bool
     m_decodedInformation = information;
 }
 
-BlockParsedResult::BlockParsedResult(const BlockParsedResult &other)
-{
-    m_finished = other.m_finished;
-    m_decodedInformation = other.m_decodedInformation;
-}
-
 DecodedInformation BlockParsedResult::getDecodedInformation()
 {
     return m_decodedInformation;

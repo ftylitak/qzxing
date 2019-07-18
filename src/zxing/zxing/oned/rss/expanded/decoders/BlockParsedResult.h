@@ -46,8 +46,6 @@ public:
 
     BlockParsedResult(const DecodedInformation& information, bool finished);
 
-    BlockParsedResult(const BlockParsedResult& other);
-
     DecodedInformation getDecodedInformation();
 
     bool isFinished();
