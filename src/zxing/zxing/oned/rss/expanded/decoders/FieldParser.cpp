@@ -1,5 +1,7 @@
 #include "FieldParser.h"
 
+#include <algorithm>
+
 namespace zxing {
 namespace oned {
 namespace rss {
