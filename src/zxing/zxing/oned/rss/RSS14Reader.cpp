@@ -110,7 +110,12 @@ Ref<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPair) const
 
     ArrayRef< Ref<ResultPoint> > leftPoints = leftPair.getFinderPattern().getResultPoints();
     ArrayRef< Ref<ResultPoint> > rightPoints = rightPair.getFinderPattern().getResultPoints();
-    ArrayRef< Ref<ResultPoint> > resultPoints(5);
+
+    ArrayRef< Ref<ResultPoint> > resultPoints(4);
+    resultPoints[0] = leftPoints[0];
+    resultPoints[1] = leftPoints[1];
+    resultPoints[2] = rightPoints[0];
+    resultPoints[3] = rightPoints[1];
 
     return Ref<Result>(new Result(
                            Ref<String>(new String(buffer)),

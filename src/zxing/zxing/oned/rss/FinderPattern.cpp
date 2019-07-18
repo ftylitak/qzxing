@@ -10,7 +10,7 @@ FinderPattern::FinderPattern(int value, std::vector<int> startEnd, int start, in
 {
     ArrayRef< Ref<ResultPoint> > resultPoints(2);
     resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(start, rowNumber));
-    resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(end, rowNumber));
+    resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(end, rowNumber));
     m_resultPoints = resultPoints;
 }
 
