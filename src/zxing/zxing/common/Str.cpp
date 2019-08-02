@@ -43,8 +43,8 @@ int String::size() const { return int(text_.size()); }
 
 int String::length() const { return int(text_.size()); }
 
-Ref<String> String::substring(int i) const {
-  return Ref<String>(new String(text_.substr(i)));
+Ref<String> String::substring(int i, int j) const {
+  return Ref<String>(new String(text_.substr(i, j)));
 }
 
 void String::append(const std::string &tail) {

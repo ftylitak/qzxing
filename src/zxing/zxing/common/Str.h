@@ -37,7 +37,7 @@ public:
   explicit String(const std::string &text);
   explicit String(int);
   char charAt(int) const;
-  Ref<String> substring(int) const;
+  Ref<String> substring(int, int = -1) const;
   const std::string& getText() const;
   int size() const;
   void append(std::string const& tail);
