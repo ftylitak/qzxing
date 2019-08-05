@@ -575,7 +575,8 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
 QImage QZXing::encodeData(const QString& data,
                           const EncoderFormat encoderFormat,
                           const QSize encoderImageSize,
-                          const EncodeErrorCorrectionLevel errorCorrectionLevel)
+                          const EncodeErrorCorrectionLevel errorCorrectionLevel,
+                          const bool border)
 {
     QImage image;
 
@@ -595,12 +596,23 @@ QImage QZXing::encodeData(const QString& data,
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
-            image = QImage(int(bytesRef->getWidth()), int(bytesRef->getHeight()), QImage::Format_ARGB32);
-            for(size_t i=0; i<bytesRef->getWidth(); i++)
-                for(size_t j=0; j<bytesRef->getHeight(); j++)
-                    image.setPixel(int(i), int(j), bytes[j][i] ?
-                                       qRgb(0,0,0) :
-                                       qRgb(255,255,255));
+            const int width = int(bytesRef->getWidth()) + (border ? 2 : 0);
+            const int height = int(bytesRef->getHeight()) + (border ? 2 : 0);
+            const QRgb black = qRgb(0, 0, 0);
+            const QRgb white = qRgb(255, 255, 255);
+
+            image = QImage(width, height, QImage::Format_ARGB32);
+            image.fill(white);
+
+            for (size_t i=0; i<bytesRef->getWidth(); ++i) {
+                for (size_t j=0; j<bytesRef->getHeight(); ++j) {
+                    if (bytes[j][i]) {
+                        int x = int(i) + (border ? 1 : 0);
+                        int y = int(j) + (border ? 1 : 0);
+                        image.setPixel(x, y, black);
+                    }
+                }
+            }
 
             image = image.scaled(encoderImageSize);
             break;
