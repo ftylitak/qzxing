@@ -38,14 +38,15 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
         // it could not recognize the first key-value pair provided
         QUrlQuery optionQuery("options?dummy=&" + id.mid(customSettingsIndex + 1));
 
-        QString correctionLevelString = optionQuery.queryItemValue("corretionLevel");
-        QString formatString = optionQuery.queryItemValue("format");
-        if(formatString != "qrcode")
-        {
-            qWarning() << "Format not supported: " << formatString;
-            return QImage();
+        if (optionQuery.hasQueryItem("format")) {
+            QString formatString = optionQuery.queryItemValue("format");
+            if (formatString != "qrcode") {
+                qWarning() << "Format not supported: " << formatString;
+                return QImage();
+            }
         }
 
+        QString correctionLevelString = optionQuery.queryItemValue("corretionLevel");
         if(correctionLevelString == "H")
             correctionLevel = QZXing::EncodeErrorCorrectionLevel_H;
         else if(correctionLevelString == "Q")
