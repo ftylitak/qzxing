@@ -2,6 +2,11 @@
 
 namespace zxing {
 
+Counted::Counted() :
+    count_(0)
+{
+}
+
 Counted::~Counted()
 {
 }

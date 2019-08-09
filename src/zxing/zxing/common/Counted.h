@@ -27,9 +27,7 @@ class Counted {
 private:
   unsigned int count_;
 public:
-  Counted() :
-      count_(0) {
-  }
+  Counted();
 
   virtual ~Counted();
 
