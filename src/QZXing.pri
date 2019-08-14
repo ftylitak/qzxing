@@ -209,6 +209,7 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/WriterException.cpp \
     $$PWD/zxing/zxing/aztec/AztecReader.cpp \
     $$PWD/zxing/zxing/aztec/AztecDetectorResult.cpp \
+    $$PWD/zxing/zxing/common/Counted.cpp \
     $$PWD/zxing/zxing/common/StringUtils.cpp \
     $$PWD/zxing/zxing/common/Str.cpp \
     $$PWD/zxing/zxing/common/PerspectiveTransform.cpp \

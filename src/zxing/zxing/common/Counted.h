@@ -27,28 +27,16 @@ class Counted {
 private:
   unsigned int count_;
 public:
-  Counted() :
-      count_(0) {
-  }
-  virtual ~Counted() {
-  }
-  Counted *retain() {
-    count_++;
-    return this;
-  }
-  void release() {
-    count_--;
-    if (count_ == 0) {
-      count_ = 0xDEADF001;
-      delete this;
-    }
-  }
+  Counted();
 
+  virtual ~Counted();
+
+  Counted *retain();
+
+  void release();
 
   /* return the current count for denugging purposes or similar */
-  int count() const {
-    return count_;
-  }
+  int count() const;
 };
 
 /* counting reference to reference-counted objects */
