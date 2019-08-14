@@ -19,9 +19,9 @@ namespace {
         const int D = int(U) - 128;
         const int E = int(V) - 128;
         return gray(
-            qBound<uchar>(0, uchar((298 * C + 409 * E + 128) >> 8), 255),
-            qBound<uchar>(0, uchar((298 * C - 100 * D - 208 * E + 128) >> 8), 255),
-            qBound<uchar>(0, uchar((298 * C + 516 * D + 128) >> 8), 255)
+            qBound(0, ((298 * C + 409 * E + 128) >> 8), 255),
+            qBound(0, ((298 * C - 100 * D - 208 * E + 128) >> 8), 255),
+            qBound(0, ((298 * C + 516 * D + 128) >> 8), 255)
         );
     }
 
