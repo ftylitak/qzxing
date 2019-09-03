@@ -28,7 +28,7 @@ int DataCharacter::getChecksumPortion() const
 
 String DataCharacter::toString() const
 {
-    return String(m_value + '(' + m_checksumPortion + ')');
+    return String(std::to_string(m_value) + '(' + std::to_string(m_checksumPortion) + ')');
 }
 
 bool DataCharacter::equals(const DataCharacter &other) const

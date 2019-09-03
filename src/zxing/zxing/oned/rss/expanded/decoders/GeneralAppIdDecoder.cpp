@@ -22,7 +22,7 @@ String GeneralAppIdDecoder::decodeAllCodes(String &buff, int initialPosition)
             buff.append(parsedFields.getText());
         }
         if (info.isRemaining()) {
-            remaining = String(info.getRemainingValue());
+            remaining = String(std::to_string(info.getRemainingValue()));
         } else {
             remaining = String("");
         }
