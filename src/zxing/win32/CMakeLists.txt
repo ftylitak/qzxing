@@ -4,8 +4,10 @@ SET(SOURCES
 
     zxing/iconv.h
     zxing/win_iconv.c
-    zxing/msvc/stdint.h
+)
 
-    )
+if(MSVC)
+    LIST(APPEND SOURCES zxing/msvc/stdint.h)
+endif(MSVC)
 
 target_sources(qzxing PRIVATE ${SOURCES})

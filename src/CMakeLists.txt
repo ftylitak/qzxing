@@ -11,6 +11,7 @@ SET(WIN32_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/win32/zxing)
 SET(ZXING_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/zxing)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_WARN_ON)
 
 set(SOURCES
 
@@ -39,8 +40,21 @@ endif(QZXING_USE_QML)
 
 add_library(qzxing "" ${SOURCES})
 
+if(WIN32)
+    add_subdirectory(zxing/win32)
+    if(MSVC)
+        add_definitions(-D__STDC_LIMIT_MACROS)
+    endif(MSVC)
+
+    add_definitions(-DNO_ICONV)
+endif(WIN32)
+
+if(VS_WINRT_COMPONENT)
+    add_definitions(-DNO_ICONV)
+endif(VS_WINRT_COMPONENT)
+
 add_subdirectory(zxing/bigint)
-add_subdirectory(zxing/win32)
+
 add_subdirectory(zxing/zxing)
 
 target_link_libraries(qzxing Qt5::Core Qt5::Gui)
@@ -55,7 +69,6 @@ if(QZXING_USE_QML)
         Qt5::Quick
         Qt5::QuickControls2)
 endif(QZXING_USE_QML)
-
 
 # Change Global Definitions depending on how you want to use the library
 target_compile_definitions(qzxing PUBLIC DISABLE_LIBRARY_FEATURES)
