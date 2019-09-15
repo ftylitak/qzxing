@@ -1,5 +1,5 @@
-#ifndef __ALIGNMENT_PATTERN_FINDER_H__
-#define __ALIGNMENT_PATTERN_FINDER_H__
+#ifndef ZXING_ALIGNMENT_PATTERN_FINDER_H
+#define ZXING_ALIGNMENT_PATTERN_FINDER_H
 
 /*
  *  AlignmentPatternFinder.h
@@ -65,4 +65,4 @@ private:
 }
 }
 
-#endif // __ALIGNMENT_PATTERN_FINDER_H__
+#endif // ZXING_ALIGNMENT_PATTERN_FINDER_H

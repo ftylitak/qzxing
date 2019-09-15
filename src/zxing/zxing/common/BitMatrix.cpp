@@ -111,7 +111,7 @@ void BitMatrix::setRow(int y, Ref<zxing::BitArray> row)
     }
 
     //change with memcopy
-    for(size_t i=0; i<width; i++)
+    for(int i=0; i<width; i++)
         bits[y * rowSize + i] = row->get(i);
 }
 
@@ -199,7 +199,7 @@ ArrayRef<int> BitMatrix::getEnclosingRectangle() const
                 }
                 if (x32 * 32 + 31 > right) {
                     int bit = 31;
-                    while (((unsigned)theBits >> (unsigned)bit) == 0) {
+                    while ((unsigned(theBits) >> unsigned(bit)) == 0) {
                         bit--;
                     }
                     if ((x32 * 32 + bit) > right) {

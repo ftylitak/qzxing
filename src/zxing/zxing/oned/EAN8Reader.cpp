@@ -41,8 +41,8 @@ int EAN8Reader::decodeMiddle(Ref<BitArray> row,
 
   for (int x = 0; x < 4 && rowOffset < end; x++) {
     int bestMatch = decodeDigit(row, counters, rowOffset, L_PATTERNS);
-    result.append(1, (byte) ('0' + bestMatch));
-    for (int i = 0, end = counters.size(); i < end; i++) {
+    result.append(1, zxing::byte('0' + bestMatch));
+    for (int i = 0, end = int(counters.size()); i < end; i++) {
       rowOffset += counters[i];
     }
   }
@@ -52,7 +52,7 @@ int EAN8Reader::decodeMiddle(Ref<BitArray> row,
   rowOffset = middleRange[1];
   for (int x = 0; x < 4 && rowOffset < end; x++) {
     int bestMatch = decodeDigit(row, counters, rowOffset, L_PATTERNS);
-    result.append(1, (byte) ('0' + bestMatch));
+    result.append(1, zxing::byte('0' + bestMatch));
     for (int i = 0, end = counters.size(); i < end; i++) {
       rowOffset += counters[i];
     }

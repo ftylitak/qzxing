@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __MONOCHROMERECTANGLEDETECTOR_H__
-#define __MONOCHROMERECTANGLEDETECTOR_H__
+#ifndef ZXING_MONOCHROMERECTANGLEDETECTOR_H
+#define ZXING_MONOCHROMERECTANGLEDETECTOR_H
 
 /*
  *  MonochromeRectangleDetector.h
@@ -59,4 +59,4 @@ class MonochromeRectangleDetector : public Counted {
 
 }
 
-#endif // __MONOCHROMERECTANGLEDETECTOR_H__
+#endif // ZXING_MONOCHROMERECTANGLEDETECTOR_H

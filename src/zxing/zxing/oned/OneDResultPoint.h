@@ -1,5 +1,5 @@
-#ifndef __ONED_RESULT_POINT_H__
-#define __ONED_RESULT_POINT_H__
+#ifndef ZXING_ONED_RESULT_POINT_H
+#define ZXING_ONED_RESULT_POINT_H
 /*
  *  OneDResultPoint.h
  *  ZXing
@@ -32,4 +32,5 @@ namespace zxing {
 	}
 }
 
-#endif
+#endif // ZXING_ONED_RESULT_POINT_H
+

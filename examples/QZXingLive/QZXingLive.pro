@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-CONFIG += c++11 qzxing_multimedia
+CONFIG += qzxing_multimedia
 
 CONFIG(debug, debug|release) {
     CONFIG+=qml_debug

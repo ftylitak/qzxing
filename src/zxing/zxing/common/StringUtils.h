@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __STRING_UTILS__
-#define __STRING_UTILS__
+#ifndef ZXING_STRING_UTILS_H
+#define ZXING_STRING_UTILS_H
 
 /*
  * Copyright (C) 2010-2011 ZXing authors
@@ -44,7 +44,7 @@ public:
 
   typedef std::map<DecodeHintType, std::string> Hashtable;
 
-  static std::string guessEncoding(byte *bytes, int length, Hashtable const& hints);
+  static std::string guessEncoding(zxing::byte *bytes, int length, Hashtable const& hints);
 
   static std::string intToStr(int number);
 };
@@ -52,4 +52,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_STRING_UTILS_H
+

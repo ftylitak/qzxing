@@ -1,0 +1,52 @@
+#Author: KangLin(kl222@126.com)
+
+sudo: required
+dist: xenial
+
+services:
+  - xvfb
+
+language: cpp
+
+cache:
+  - apt: true
+  - directories:
+    - Tools
+
+compiler:
+  - g++
+
+jdk: oraclejdk7
+
+os:
+  - unix
+
+addons:
+  ssh_known_hosts:
+    - github.com
+
+env:
+  matrix:
+    - BUILD_TARGERT="linux" QT_VERSION_DIR=5.13 QT_VERSION=5.13.0
+ #   - BUILD_TARGERT="android_armv7" QT_VERSION_DIR=5.13 QT_VERSION=5.13.0
+    - BUILD_TARGERT="linux" QT_VERSION_DIR=5.12 QT_VERSION=5.12.4
+ #   - BUILD_TARGERT="android_armv7" QT_VERSION_DIR=5.12 QT_VERSION=5.12.4
+    - BUILD_TARGERT="linux" QT_VERSION_DIR=5.9 QT_VERSION=5.9.8
+ #   - BUILD_TARGERT="android_armv7" QT_VERSION_DIR=5.9 QT_VERSION=5.9.8
+
+before_install:
+  - echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
+  - export DISPLAY=:99.0
+  - sudo apt-get install -y libgl1-mesa-glx libgl1-mesa-dev
+
+install:
+  - bash ${TRAVIS_BUILD_DIR}/ci/build-install-tools.sh #> /dev/null
+
+before_script:
+  - source ${TRAVIS_BUILD_DIR}/ci/build_env.sh
+
+script:
+  - mkdir ${TRAVIS_BUILD_DIR}/build
+  - cd ${TRAVIS_BUILD_DIR}/build
+  - ${QT_ROOT}/bin/qmake -o Makefile CONFIG+=Release ${TRAVIS_BUILD_DIR}/src/QZXing.pro
+  - make -f Makefile

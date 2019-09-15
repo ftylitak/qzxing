@@ -190,7 +190,7 @@ Ref<BitMatrix> LinesSampler::sample() {
   detectedCodeWords.resize(rowCount);
 
   // XXX
-  Ref<BitMatrix> grid(new BitMatrix(dimension_, detectedCodeWords.size()));
+  Ref<BitMatrix> grid(new BitMatrix(dimension_, int(detectedCodeWords.size())));
   codewordsToBitMatrix(detectedCodeWords, grid);
 
   return grid;
@@ -206,6 +206,7 @@ void LinesSampler::codewordsToBitMatrix(vector<vector<int> > &codewords, Ref<Bit
     for (int j = 0; j < (int)codewords[i].size(); j++) {
       int moduleOffset = j * MODULES_IN_SYMBOL;
       for (int k = 0; k < MODULES_IN_SYMBOL; k++) {
+        //TODO: Potential unsafe sign check of a bitwise operation.
         if ((codewords[i][j] & (1 << (MODULES_IN_SYMBOL - k - 1))) > 0) {
           matrix->set(moduleOffset + k, i);
         }
@@ -226,6 +227,7 @@ int LinesSampler::calculateClusterNumber(int codeword) {
   int barNumber = 0;
   bool blackBar = true;
   int clusterNumber = 0;
+  //TODO: Potential unsafe sign check of a bitwise operation.
   for (int i = 0; i < MODULES_IN_SYMBOL; i++) {
     if ((codeword & (1 << i)) > 0) {
       if (!blackBar) {
@@ -712,7 +714,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
     detectedCodeWords.insert(detectedCodeWords.begin() + insertLinesAt[i] + i, vector<int>(symbolsPerLine, 0));
   }
 
-  int rowCount = getValueWithMaxVotes(rowCountVotes,detectedCodeWords.size()).getVote();
+  int rowCount = getValueWithMaxVotes(rowCountVotes, int(detectedCodeWords.size())).getVote();
   // int ecLevel = getValueWithMaxVotes(ecLevelVotes);
 
 #if PDF417_DIAG && OUTPUT_EC_LEVEL

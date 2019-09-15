@@ -1,5 +1,5 @@
-#ifndef __FORMAT_EXCEPTION_H__
-#define __FORMAT_EXCEPTION_H__
+#ifndef ZXING_FORMAT_EXCEPTION_H
+#define ZXING_FORMAT_EXCEPTION_H
 
 /*
  *  FormatException.h
@@ -28,10 +28,10 @@ class FormatException : public ReaderException {
 public:
   FormatException();
   FormatException(const char *msg);
-  ~FormatException() throw();
+  ~FormatException() ZXING_NOEXCEPT;
 
   static FormatException const& getFormatInstance();
 };
 
 }
-#endif // __FORMAT_EXCEPTION_H__
+#endif // ZXING_FORMAT_EXCEPTION_H

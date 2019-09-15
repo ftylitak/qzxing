@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __MODE_H__
-#define __MODE_H__
+#ifndef ZXING_MODE_H
+#define ZXING_MODE_H
 
 /*
  *  Mode.h
@@ -37,7 +37,7 @@ private:
   int bits_;
   std::string name_;
 
-  Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, char const* name);
+  Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, const std::string &name);
 
 public:
   Mode(const Mode& mode);
@@ -58,6 +58,7 @@ public:
   int getCharacterCountBits(const Version *version) const;
   int getBits() const { return bits_; }
 
+  Mode& operator=(const Mode& other);
   bool operator==(const Mode& other);
   bool operator!=(const Mode& other);
 

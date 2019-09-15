@@ -1,9 +1,8 @@
-CONFIG += gnu++11
-QMAKE_CXXFLAGS += -std=gnu++11
-
 TARGET = QZXingTests
 CONFIG += console
 CONFIG -= app_bundle
+
+QT += concurrent
 
 TEMPLATE = app
 
@@ -18,7 +17,8 @@ HEADERS += \
     zxing/qrcode/encoder/EncoderTests.h \
     zxing/common/reedsolomon/ReedSolomonEncoderTests.h \
     zxing/common/BitArrayTests.h \
-    zxing/qrcode/encoder/BitVectorTests.h
+    zxing/qrcode/encoder/BitVectorTests.h \
+    EncoderStressTest.h
     #\backward.hpp
 
 SOURCES += main.cpp \
@@ -32,6 +32,7 @@ SOURCES += main.cpp \
     zxing/qrcode/encoder/EncoderTests.cpp \
     zxing/common/reedsolomon/ReedSolomonEncoderTests.cpp \
     zxing/common/BitArrayTests.cpp \
-    zxing/qrcode/encoder/BitVectorTests.cpp
+    zxing/qrcode/encoder/BitVectorTests.cpp \
+    EncoderStressTest.cpp
 
 include(../../../src/QZXing.pri)

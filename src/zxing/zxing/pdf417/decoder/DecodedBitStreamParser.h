@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __DECODED_BIT_STREAM_PARSER_PD_H__
-#define __DECODED_BIT_STREAM_PARSER_PD_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_PD_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_PD_H
 
 /*
  * Copyright 2010 ZXing authors All rights reserved.
@@ -81,4 +81,4 @@ class DecodedBitStreamParser {
 } /* namespace pdf417 */
 } /* namespace zxing */
 
-#endif // __DECODED_BIT_STREAM_PARSER_PD_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_PD_H

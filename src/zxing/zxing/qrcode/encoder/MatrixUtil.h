@@ -62,7 +62,7 @@ private:
 public:
     // Set all cells to -1.  -1 means that the cell is empty (not set yet).
     static void clearMatrix(ByteMatrix& matrix) {
-        matrix.clear((byte) -1);
+        matrix.clear((zxing::byte) -1);
     }
 
     // Embed basic patterns. On success, modify the matrix and return true.

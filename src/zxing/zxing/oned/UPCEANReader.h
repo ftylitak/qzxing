@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __UPC_EAN_READER_H__
-#define __UPC_EAN_READER_H__
+#ifndef ZXING_UPC_EAN_READER_H
+#define ZXING_UPC_EAN_READER_H
 
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
@@ -19,6 +19,8 @@
  */
 
 #include <zxing/oned/OneDReader.h>
+#include <zxing/oned/UPCEANExtensionSupport.h>
+#include <zxing/oned/EANManufacturerOrgSupport.h>
 #include <zxing/common/BitArray.h>
 #include <zxing/Result.h>
 
@@ -28,8 +30,8 @@ namespace oned {
 class UPCEANReader : public OneDReader {
  private:
   std::string decodeRowStringBuffer;
-  // UPCEANExtensionSupport extensionReader;
-  // EANManufacturerOrgSupport eanManSupport;
+  UPCEANExtensionSupport extensionReader;
+  EANManufacturerOrgSupport eanManSupport;
 
   static const int MAX_AVG_VARIANCE;
   static const int MAX_INDIVIDUAL_VARIANCE;
@@ -47,7 +49,7 @@ class UPCEANReader : public OneDReader {
                                 std::vector<int>& counters);
 
 
-protected:
+public:
   static const std::vector<int> START_END_PATTERN;
   static const std::vector<int> MIDDLE_PATTERN;
 
@@ -66,8 +68,8 @@ public:
                            Range const& startRange,
                            std::string& resultString) = 0;
 
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& range);
+  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints);
+  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& range, zxing::DecodeHints hints = DecodeHints());
 
   static int decodeDigit(Ref<BitArray> row,
                          std::vector<int>& counters,
@@ -85,4 +87,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_UPC_EAN_READER_H
+

@@ -187,7 +187,7 @@ vector<int> Code128Reader::findStartPattern(Ref<BitArray> row){
   vector<int> counters (6, 0);
   int patternStart = rowOffset;
   bool isWhite = false;
-  int patternLength =  counters.size();
+  int patternLength = int(counters.size());
 
   for (int i = rowOffset; i < width; i++) {
     if (row->get(i) ^ isWhite) {
@@ -273,7 +273,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   bool isNextShifted = false;
 
   string result;
-  vector<byte> rawCodes(20, 0);
+  vector<zxing::byte> rawCodes(20, 0);
 
   int lastStart = startPatternInfo[0];
   int nextStart = startPatternInfo[1];
@@ -312,7 +312,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
 
     // Advance to where the next code will to start
     lastStart = nextStart;
-    for (int i = 0, e = counters.size(); i < e; i++) {
+    for (int i = 0, e = int(counters.size()); i < e; i++) {
       nextStart += counters[i];
     }
 
@@ -329,16 +329,16 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
       case CODE_CODE_A:
         if (code < 64) {
             if (shiftUpperMode == upperMode) {
-              result.append(1,(byte) (' ' + code));
+              result.append(1,(zxing::byte) (' ' + code));
             } else {
-              result.append(1,(byte) (' ' + code + 128));
+              result.append(1,(zxing::byte) (' ' + code + 128));
             }
             shiftUpperMode = false;
         } else if (code < 96) {
             if (shiftUpperMode == upperMode) {
-              result.append(1, (byte) (code - 64));
+              result.append(1, (zxing::byte) (code - 64));
             } else {
-              result.append(1, (byte) (code + 64));
+              result.append(1, (zxing::byte) (code + 64));
             }
             shiftUpperMode = false;
         } else {
@@ -356,7 +356,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
                   result.append("]C1");
                 } else {
                   // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
-                  result.append(1, (byte) 29);
+                  result.append(1, (zxing::byte) 29);
                 }
               }
               break;
@@ -393,9 +393,9 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
       case CODE_CODE_B:
         if (code < 96) {
             if (shiftUpperMode == upperMode) {
-              result.append(1, (byte) (' ' + code));
+              result.append(1, (zxing::byte) (' ' + code));
             } else {
-              result.append(1, (byte) (' ' + code + 128));
+              result.append(1, (zxing::byte) (' ' + code + 128));
             }
             shiftUpperMode = false;
         } else {
@@ -411,7 +411,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
                   result.append("]C1");
                 } else {
                   // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
-                  result.append(1, (byte) 29);
+                  result.append(1, (zxing::byte) 29);
                 }
               }
               break;
@@ -467,7 +467,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
                   result.append("]C1");
                 } else {
                   // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
-                  result.append(1, (byte) 29);
+                  result.append(1, (zxing::byte) 29);
                 }
               }
               break;
@@ -532,7 +532,7 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   float right = lastStart + lastPatternSize / 2.0f;
 
   int rawCodesSize = rawCodes.size();
-  ArrayRef<byte> rawBytes (rawCodesSize);
+  ArrayRef<zxing::byte> rawBytes (rawCodesSize);
   for (int i = 0; i < rawCodesSize; i++) {
     rawBytes[i] = rawCodes[i];
   }

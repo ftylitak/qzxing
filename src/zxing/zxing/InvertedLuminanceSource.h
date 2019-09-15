@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __INVERTEDLUMINANCESOURCE_H__
-#define __INVERTEDLUMINANCESOURCE_H__
+#ifndef ZXING_INVERTEDLUMINANCESOURCE_H
+#define ZXING_INVERTEDLUMINANCESOURCE_H
 /*
  *  Copyright 2013 ZXing authors All rights reserved.
  *
@@ -30,8 +30,8 @@ private:
 public:
   InvertedLuminanceSource(Ref<LuminanceSource> const&);
 
-  ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
-  ArrayRef<byte> getMatrix() const;
+  ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const;
+  ArrayRef<zxing::byte> getMatrix() const;
 
   boolean isCropSupported() const;
   Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
@@ -45,4 +45,4 @@ public:
 
 }
 
-#endif /* INVERTEDLUMINANCESOURCE_H_ */
+#endif // ZXING_INVERTEDLUMINANCESOURCE_H

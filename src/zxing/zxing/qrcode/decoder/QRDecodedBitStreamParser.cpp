@@ -57,11 +57,11 @@ namespace {int GB2312_SUBSET = 1;}
 void DecodedBitStreamParser::append(std::string &result,
                                     string const& in,
                                     const char *src) {
-    append(result, (byte const*)in.c_str(), in.length(), src);
+    append(result, (zxing::byte const*)in.c_str(), in.length(), src);
 }
 
 void DecodedBitStreamParser::append(std::string &result,
-                                    const byte *bufIn,
+                                    const zxing::byte *bufIn,
                                     size_t nIn,
                                     const char *src) {
 #ifndef NO_ICONV
@@ -75,7 +75,7 @@ void DecodedBitStreamParser::append(std::string &result,
         return;
     }
 
-    const int maxOut = 4 * nIn + 1;
+    const int maxOut = 4 * int(nIn) + 1;
     char* bufOut = new char[maxOut];
 
     ICONV_CONST char *fromPtr = (ICONV_CONST char *)bufIn;
@@ -97,7 +97,7 @@ void DecodedBitStreamParser::append(std::string &result,
     }
     iconv_close(cd);
 
-    int nResult = maxOut - nTo;
+    int nResult = maxOut - int(nTo);
     bufOut[nResult] = '\0';
     result.append((const char *)bufOut);
     delete[] bufOut;
@@ -132,8 +132,8 @@ void DecodedBitStreamParser::decodeHanziSegment(Ref<BitSource> bits_,
             // In the 0xB0A1 to 0xFAFE range
             assembledTwoBytes += 0x0A6A1;
         }
-        buffer[offset] = (byte) ((assembledTwoBytes >> 8) & 0xFF);
-        buffer[offset + 1] = (byte) (assembledTwoBytes & 0xFF);
+        buffer[offset] = (zxing::byte) ((assembledTwoBytes >> 8) & 0xFF);
+        buffer[offset + 1] = (zxing::byte) (assembledTwoBytes & 0xFF);
         offset += 2;
         count--;
     }
@@ -167,8 +167,8 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
             // In the 0xE040 to 0xEBBF range
             assembledTwoBytes += 0x0C140;
         }
-        buffer[offset] = (byte)(assembledTwoBytes >> 8);
-        buffer[offset + 1] = (byte)assembledTwoBytes;
+        buffer[offset] = (zxing::byte)(assembledTwoBytes >> 8);
+        buffer[offset + 1] = (zxing::byte)assembledTwoBytes;
         offset += 2;
         count--;
     }
@@ -186,7 +186,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
                                                       string& result,
                                                       int count,
                                                       CharacterSetECI const * currentCharacterSetECI,
-                                                      ArrayRef< ArrayRef<byte> >& byteSegments,
+                                                      ArrayRef< ArrayRef<zxing::byte> >& byteSegments,
                                                       Hashtable const& hints) {
     int nBytes = count;
     BitSource& bits (*bits_);
@@ -195,10 +195,10 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
         throw FormatException();
     }
 
-    ArrayRef<byte> bytes_ (count);
+    ArrayRef<zxing::byte> bytes_ (count);
     byte* readBytes = &(*bytes_)[0];
     for (int i = 0; i < count; i++) {
-        readBytes[i] = (byte) bits.readBits(8);
+        readBytes[i] = (zxing::byte) bits.readBits(8);
     }
     string encoding;
     if (currentCharacterSetECI == 0) {
@@ -319,7 +319,7 @@ void DecodedBitStreamParser::decodeAlphanumericSegment(Ref<BitSource> bits_,
                     r << s[i++];
                 } else {
                     // In alpha mode, % should be converted to FNC1 separator 0x1D
-                    r << (byte)0x1D;
+                    r << (zxing::byte)0x1D;
                 }
             }
         }
@@ -350,7 +350,7 @@ int parseECIValue(BitSource& bits) {
 }
 
 Ref<DecoderResult>
-DecodedBitStreamParser::decode(ArrayRef<byte> bytes,
+DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes,
                                Version* version,
                                ErrorCorrectionLevel const& ecLevel,
                                Hashtable const& hints) {
@@ -358,7 +358,7 @@ DecodedBitStreamParser::decode(ArrayRef<byte> bytes,
     BitSource& bits (*bits_);
     string result;
     result.reserve(50);
-    ArrayRef< ArrayRef<byte> > byteSegments (0);
+    ArrayRef< ArrayRef<zxing::byte> > byteSegments (0);
     const CharacterSetECI* currentCharacterSetECI = 0;
     string charSet = "";
     try {

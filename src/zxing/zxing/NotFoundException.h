@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __NOT_FOUND_EXCEPTION_H__
-#define __NOT_FOUND_EXCEPTION_H__
+#ifndef ZXING_NOT_FOUND_EXCEPTION_H
+#define ZXING_NOT_FOUND_EXCEPTION_H
 
 /*
  * Copyright 20011 ZXing authors
@@ -25,11 +25,11 @@ namespace zxing {
 
 class NotFoundException : public ReaderException {
 public:
-  NotFoundException() throw() {}
-  NotFoundException(const char *msg) throw() : ReaderException(msg) {}
-  ~NotFoundException() throw() {}
+  NotFoundException() ZXING_NOEXCEPT;
+  NotFoundException(const char *msg) ZXING_NOEXCEPT;
+  ~NotFoundException() ZXING_NOEXCEPT;
 };
 
 }
 
-#endif // __NOT_FOUND_EXCEPTION_H__
+#endif // ZXING_NOT_FOUND_EXCEPTION_H

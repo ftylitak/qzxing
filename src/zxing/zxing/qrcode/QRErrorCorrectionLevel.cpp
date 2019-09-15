@@ -52,6 +52,15 @@ ErrorCorrectionLevel::operator string const& () const {
   return name_;
 }
 
+ErrorCorrectionLevel& ErrorCorrectionLevel::operator=(const ErrorCorrectionLevel &other)
+{
+    ordinal_ = other.ordinal();
+    bits_ = other.bits();
+    name_ = other.name();
+
+    return *this;
+}
+
 ErrorCorrectionLevel& ErrorCorrectionLevel::forBits(int bits) {
   if (bits < 0 || bits >= N_LEVELS) {
     throw ReaderException("Ellegal error correction level bits");

@@ -23,6 +23,6 @@
 
 using zxing::ChecksumException;
 
-ChecksumException::ChecksumException() throw() {}
-ChecksumException::ChecksumException(const char *msg) throw() : ReaderException(msg) {}
-ChecksumException::~ChecksumException() throw() {}
+ChecksumException::ChecksumException() ZXING_NOEXCEPT {}
+ChecksumException::ChecksumException(const char *msg) ZXING_NOEXCEPT : ReaderException(msg) {}
+ChecksumException::~ChecksumException() ZXING_NOEXCEPT {}

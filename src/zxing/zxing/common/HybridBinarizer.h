@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __HYBRIDBINARIZER_H__
-#define __HYBRIDBINARIZER_H__
+#ifndef ZXING_HYBRIDBINARIZER_H
+#define ZXING_HYBRIDBINARIZER_H
 /*
  *  HybridBinarizer.h
  *  zxing
@@ -42,19 +42,19 @@ namespace zxing {
   private:
     // We'll be using one-D arrays because C++ can't dynamically allocate 2D
     // arrays
-    ArrayRef<int> calculateBlackPoints(ArrayRef<byte> luminances,
+    ArrayRef<int> calculateBlackPoints(ArrayRef<zxing::byte> luminances,
                                        int subWidth,
                                        int subHeight,
                                        int width,
                                        int height);
-    void calculateThresholdForBlock(ArrayRef<byte> luminances,
+    void calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
                                     int subWidth,
                                     int subHeight,
                                     int width,
                                     int height,
                                     ArrayRef<int> blackPoints,
                                     Ref<BitMatrix> const& matrix);
-    void thresholdBlock(ArrayRef<byte>luminances,
+    void thresholdBlock(ArrayRef<zxing::byte>luminances,
                         int xoffset,
                         int yoffset,
                         int threshold,
@@ -64,4 +64,4 @@ namespace zxing {
 
 }
 
-#endif
+#endif // ZXING_HYBRIDBINARIZER_H

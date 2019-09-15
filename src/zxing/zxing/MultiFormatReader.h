@@ -1,5 +1,5 @@
-#ifndef __MULTI_FORMAT_READER_H__
-#define __MULTI_FORMAT_READER_H__
+#ifndef ZXING_MULTI_FORMAT_READER_H
+#define ZXING_MULTI_FORMAT_READER_H
 
 /*
  *  MultiFormatBarcodeReader.h
@@ -45,4 +45,5 @@ namespace zxing {
   };
 }
 
-#endif
+#endif // ZXING_MULTI_FORMAT_READER_H
+

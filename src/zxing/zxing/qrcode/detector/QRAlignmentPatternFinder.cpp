@@ -89,7 +89,7 @@ float AlignmentPatternFinder::crossCheckVertical(int startI, int centerJ, int ma
   }
 
   int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
-  if (5 * abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal) {
+  if (5 * ::abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal) {
     return nan();
   }
 
@@ -102,7 +102,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &
   float centerI = crossCheckVertical(i, (int)centerJ, 2 * stateCount[1], stateCountTotal);
   if (!isnan_z(centerI)) {
     float estimatedModuleSize = (float)(stateCount[0] + stateCount[1] + stateCount[2]) / 3.0f;
-    int max = possibleCenters_->size();
+    int max = int(possibleCenters_->size());
     for (int index = 0; index < max; index++) {
       Ref<AlignmentPattern> center((*possibleCenters_)[index]);
       // Look for about the same center and module size:

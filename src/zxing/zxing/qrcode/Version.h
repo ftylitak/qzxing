@@ -1,5 +1,5 @@
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef ZXING_VERSION_H
+#define ZXING_VERSION_H
 
 /*
  *  Version.h
@@ -53,7 +53,7 @@ public:
   ~ECBlocks();
 };
 
-class Version : public Counted {
+class Version {
 
 private:
   int versionNumber_;
@@ -66,7 +66,7 @@ private:
 public:
   static unsigned int VERSION_DECODE_INFO[];
   static int N_VERSION_DECODE_INFOS;
-  static std::vector<Ref<Version> > VERSIONS;
+  static std::vector<Version* > VERSIONS;
 
   ~Version();
   int getVersionNumber() const;
@@ -74,13 +74,13 @@ public:
   int getTotalCodewords();
   int getDimensionForVersion();
   ECBlocks &getECBlocksForLevel(const ErrorCorrectionLevel &ecLevel) const;
-  static Ref<Version> getProvisionalVersionForDimension(int dimension);
-  static Ref<Version> getVersionForNumber(int versionNumber);
-  static Ref<Version> decodeVersionInformation(unsigned int versionBits);
+  static Version* getProvisionalVersionForDimension(int dimension);
+  static Version* getVersionForNumber(int versionNumber);
+  static Version* decodeVersionInformation(unsigned int versionBits);
   Ref<BitMatrix> buildFunctionPattern();
   static int buildVersions();
 };
 }
 }
 
-#endif // __VERSION_H__
+#endif // ZXING_VERSION_H

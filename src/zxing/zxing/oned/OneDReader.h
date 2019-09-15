@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __ONED_READER_H__
-#define __ONED_READER_H__
+#ifndef ZXING_ONED_READER_H
+#define ZXING_ONED_READER_H
 
 /*
  *  OneDReader.h
@@ -72,10 +72,15 @@ public:
   static void recordPattern(Ref<BitArray> row,
                             int start,
                             std::vector<int>& counters);
+
+  static void recordPatternInReverse(Ref<BitArray> row,
+                                     int start,
+                                     std::vector<int>& counters);
   virtual ~OneDReader();
 };
 
 }
 }
 
-#endif
+#endif // ZXING_ONED_READER_H
+

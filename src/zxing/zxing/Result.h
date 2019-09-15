@@ -1,5 +1,5 @@
-#ifndef __RESULT_H__
-#define __RESULT_H__
+#ifndef ZXING_RESULT_H
+#define ZXING_RESULT_H
 
 /*
  *  Result.h
@@ -26,6 +26,7 @@
 #include <zxing/common/Str.h>
 #include <zxing/common/Types.h>
 #include <zxing/ResultPoint.h>
+#include <zxing/ResultMetadata.h>
 #include <zxing/BarcodeFormat.h>
 
 namespace zxing {
@@ -33,26 +34,29 @@ namespace zxing {
 class Result : public Counted {
 private:
   Ref<String> text_;
-  ArrayRef<byte> rawBytes_;
+  ArrayRef<zxing::byte> rawBytes_;
   ArrayRef< Ref<ResultPoint> > resultPoints_;
   BarcodeFormat format_;
   std::string charSet_;
+  ResultMetadata metadata_;
 
 public:
   Result(Ref<String> text,
-         ArrayRef<byte> rawBytes,
+         ArrayRef<zxing::byte> rawBytes,
          ArrayRef< Ref<ResultPoint> > resultPoints,
-         BarcodeFormat format, std::string charSet = "");
+         BarcodeFormat format, std::string charSet = "",
+         ResultMetadata metadata = ResultMetadata());
   ~Result();
   Ref<String> getText();
-  ArrayRef<byte> getRawBytes();
+  ArrayRef<zxing::byte> getRawBytes();
   ArrayRef< Ref<ResultPoint> > const& getResultPoints() const;
   ArrayRef< Ref<ResultPoint> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
   std::string getCharSet() const;
+  ResultMetadata& getMetadata();
 
   friend std::ostream& operator<<(std::ostream &out, Result& result);
 };
 
 }
-#endif // __RESULT_H__
+#endif // ZXING_RESULT_H

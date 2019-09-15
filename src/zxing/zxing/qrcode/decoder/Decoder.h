@@ -1,5 +1,5 @@
-#ifndef __DECODER_H__
-#define __DECODER_H__
+#ifndef ZXING_DECODER_H
+#define ZXING_DECODER_H
 
 /*
  *  Decoder.h
@@ -33,7 +33,7 @@ class Decoder {
 private:
   ReedSolomonDecoder rsDecoder_;
 
-  void correctErrors(ArrayRef<byte> bytes, int numDataCodewords);
+  void correctErrors(ArrayRef<zxing::byte> bytes, int numDataCodewords);
 
 public:
   Decoder();
@@ -43,4 +43,4 @@ public:
 }
 }
 
-#endif // __DECODER_H__
+#endif // ZXING_DECODER_H

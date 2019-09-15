@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __GREYSCALE_LUMINANCE_SOURCE__
-#define __GREYSCALE_LUMINANCE_SOURCE__
+#ifndef ZXING_GREYSCALE_LUMINANCE_SOURCE
+#define ZXING_GREYSCALE_LUMINANCE_SOURCE
 /*
  *  GreyscaleLuminanceSource.h
  *  zxing
@@ -28,18 +28,18 @@ class GreyscaleLuminanceSource : public LuminanceSource {
 
 private:
   typedef LuminanceSource Super;
-  ArrayRef<byte> greyData_;
+  ArrayRef<zxing::byte> greyData_;
   const int dataWidth_;
   const int dataHeight_;
   const int left_;
   const int top_;
 
 public:
-  GreyscaleLuminanceSource(ArrayRef<byte> greyData, int dataWidth, int dataHeight, int left,
+  GreyscaleLuminanceSource(ArrayRef<zxing::byte> greyData, int dataWidth, int dataHeight, int left,
                            int top, int width, int height);
 
-  ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const;
-  ArrayRef<byte> getMatrix() const;
+  ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const;
+  ArrayRef<zxing::byte> getMatrix() const;
 
   bool isRotateSupported() const {
     return true;
@@ -50,4 +50,4 @@ public:
 
 }
 
-#endif
+#endif // ZXING_GREYSCALE_LUMINANCE_SOURCE

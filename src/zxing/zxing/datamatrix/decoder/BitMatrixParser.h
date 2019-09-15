@@ -1,5 +1,5 @@
-#ifndef __BIT_MATRIX_PARSER_DM_H__
-#define __BIT_MATRIX_PARSER_DM_H__
+#ifndef ZXING_BIT_MATRIX_PARSER_DM_H
+#define ZXING_BIT_MATRIX_PARSER_DM_H
 
 /*
  *  BitMatrixParser.h
@@ -33,15 +33,15 @@ namespace datamatrix {
 class BitMatrixParser : public Counted {
 private:
   Ref<BitMatrix> bitMatrix_;
-  Ref<Version> parsedVersion_;
+  Version* parsedVersion_;
   Ref<BitMatrix> readBitMatrix_;
 
   int copyBit(size_t x, size_t y, int versionBits);
 
 public:
   BitMatrixParser(Ref<BitMatrix> bitMatrix);
-  Ref<Version> readVersion(Ref<BitMatrix> bitMatrix);
-  ArrayRef<byte> readCodewords();
+  Version* readVersion(Ref<BitMatrix> bitMatrix);
+  ArrayRef<zxing::byte> readCodewords();
   bool readModule(int row, int column, int numRows, int numColumns);
 
 private:
@@ -56,4 +56,4 @@ private:
 }
 }
 
-#endif // __BIT_MATRIX_PARSER_DM_H__
+#endif // ZXING_BIT_MATRIX_PARSER_DM_H

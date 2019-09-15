@@ -117,7 +117,7 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
       Ref<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
   resultPoints[1] =
       Ref<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
-  return Ref<Result>(new Result(resultString, ArrayRef<byte>(), resultPoints, BarcodeFormat::ITF));
+  return Ref<Result>(new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, BarcodeFormat::ITF));
 }
 
 /**
@@ -151,11 +151,11 @@ void ITFReader::decodeMiddle(Ref<BitArray> row,
     }
 
     int bestMatch = decodeDigit(counterBlack);
-    resultString.append(1, (byte) ('0' + bestMatch));
+    resultString.append(1, (zxing::byte) ('0' + bestMatch));
     bestMatch = decodeDigit(counterWhite);
-    resultString.append(1, (byte) ('0' + bestMatch));
+    resultString.append(1, (zxing::byte) ('0' + bestMatch));
 
-    for (int i = 0, e = counterDigitPair.size(); i < e; i++) {
+    for (int i = 0, e = int(counterDigitPair.size()); i < e; i++) {
       payloadStart += counterDigitPair[i];
     }
   }
@@ -274,7 +274,7 @@ ITFReader::Range ITFReader::findGuardPattern(Ref<BitArray> row,
                                              vector<int> const& pattern) {
   // TODO: This is very similar to implementation in UPCEANReader. Consider if they can be
   // merged to a single method.
-  int patternLength = pattern.size();
+  int patternLength = int(pattern.size());
   vector<int> counters(patternLength);
   int width = row->getSize();
   bool isWhite = false;

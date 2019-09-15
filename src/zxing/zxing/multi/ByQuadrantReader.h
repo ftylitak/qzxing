@@ -1,5 +1,5 @@
-#ifndef __BY_QUADRANT_READER_H__
-#define __BY_QUADRANT_READER_H__
+#ifndef ZXING_BY_QUADRANT_READER_H
+#define ZXING_BY_QUADRANT_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -39,4 +39,4 @@ class ByQuadrantReader : public Reader {
 }
 }
 
-#endif // __BY_QUADRANT_READER_H__
+#endif // ZXING_BY_QUADRANT_READER_H

@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#ifndef ZXING_TYPES_H
+#define ZXING_TYPES_H
 
 #include <string>
 #include <iostream>
@@ -13,4 +13,4 @@ typedef bool boolean;
 
 }
 
-#endif // __COMMON__TYPES_H__
+#endif // ZXING_TYPES_H

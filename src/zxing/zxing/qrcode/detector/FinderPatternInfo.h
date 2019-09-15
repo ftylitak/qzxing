@@ -1,5 +1,5 @@
-#ifndef __FINDER_PATTERN_INFO_H__
-#define __FINDER_PATTERN_INFO_H__
+#ifndef ZXING_FINDER_PATTERN_INFO_H
+#define ZXING_FINDER_PATTERN_INFO_H
 
 /*
  *  FinderPatternInfo.h
@@ -44,4 +44,4 @@ public:
 }
 }
 
-#endif // __FINDER_PATTERN_INFO_H__
+#endif // ZXING_FINDER_PATTERN_INFO_H

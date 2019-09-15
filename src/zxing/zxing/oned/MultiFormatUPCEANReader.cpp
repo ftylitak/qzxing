@@ -61,14 +61,14 @@ MultiFormatUPCEANReader::MultiFormatUPCEANReader(DecodeHints hints) : readers() 
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) {
   // Compute this location once and reuse it on multiple implementations
   UPCEANReader::Range startGuardPattern = UPCEANReader::findStartGuardPattern(row);
-  for (int i = 0, e = readers.size(); i < e; i++) {
+  for (int i = 0, e = int(readers.size()); i < e; i++) {
     Ref<UPCEANReader> reader = readers[i];
     Ref<Result> result;
     try {
-      result = reader->decodeRow(rowNumber, row, startGuardPattern);
+      result = reader->decodeRow(rowNumber, row, startGuardPattern, hints);
     } catch (ReaderException const& ignored) {
       (void)ignored;
       continue;
@@ -92,7 +92,8 @@ Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row,
     // here, and convert an EAN-13 result to a UPC-A result if
     // appropriate.
     bool ean13MayBeUPCA =
-      result->getBarcodeFormat() == BarcodeFormat::EAN_13 &&
+      (result->getBarcodeFormat() == BarcodeFormat::UPC_A ||
+       result->getBarcodeFormat() == BarcodeFormat::EAN_13) &&
       result->getText()->charAt(0) == '0';
 
     // Note: doesn't match Java which uses hints

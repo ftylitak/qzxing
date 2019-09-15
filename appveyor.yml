@@ -1,0 +1,102 @@
+#original author: KangLin(kl222@126.com)
+
+version: '3.0.a.5.{build}'
+
+configuration:
+  - release
+  - debug
+
+environment:
+  matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QT_ROOT: C:/Qt/5.12/msvc2017_64
+#  - QT_ROOT: C:/Qt/5.12/msvc2015
+#  - QT_ROOT: C:/Qt/5.12/mingw53_32
+  
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QT_ROOT: C:/Qt/5.9/msvc2017_64
+#  - QT_ROOT: C:/Qt/5.9/msvc2015_64
+#  - QT_ROOT: C:/Qt/5.9/msvc2015
+#  - QT_ROOT: C:/Qt/5.9/msvc2013_64
+#  - QT_ROOT: C:/Qt/5.9/mingw53_32
+  
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015  
+    QT_ROOT: C:/Qt/5.6/msvc2015_64
+#  - QT_ROOT: C:/Qt/5.6/msvc2015
+#  - QT_ROOT: C:/Qt/5.6/msvc2013_64
+#  - QT_ROOT: C:/Qt/5.6/msvc2013
+  
+init:
+
+install:
+  - for /f "delims=" %%i in ('git describe --tags') do (set BUILD_VERSION=%%i)
+  - if "%BUILD_VERSION%" == "" for /f "delims=" %%i in ('git rev-parse HEAD') do (set BUILD_VERSION=%%i) 
+  - echo BUILD_VERSION=%BUILD_VERSION%
+  - if NOT "%QT_ROOT%" == "NO" for /f "delims=" %%i in ('%QT_ROOT%/bin/qmake -query QT_VERSION') do (set QT_VERSION=%%i)
+  - echo "QT_VERSION:%QT_VERSION"
+  - if NOT "%QT_ROOT%" == "NO" for /f "delims=" %%i in ('%QT_ROOT%/bin/qmake -query QMAKE_XSPEC') do (set QMAKE_XSPEC=%%i)
+  - echo "QMAKE_XSPEC=%QMAKE_XSPEC%"
+  - set TOOLCHAIN_VERSION=""
+  - ps: >-
+        if (($env:QMAKE_XSPEC).Contains("msvc")) 
+        {
+            $env:MAKE="nmake"
+            if (($env:QT_ROOT).Contains("_64")) 
+            {
+                $env:varch="amd64"
+            }
+            else
+            {
+                $env:varch="x86"
+            }
+            if (($env:QT_ROOT).Contains("2017"))
+            {
+                $env:TOOLCHAIN_VERSION="15"
+            }
+            else 
+            {
+                if (($env:QT_ROOT).Contains("2015"))
+                {
+                    $env:TOOLCHAIN_VERSION="14"
+                }elseif (($env:QT_ROOT).Contains("2013"))
+                {
+                    $env:TOOLCHAIN_VERSION="12"
+                }
+            }
+        }
+        else
+        {
+            $env:MAKE="mingw32-make"
+            $env:PATH="C:\Qt\Tools\mingw530_32;$env:PATH"
+        }
+
+  - if NOT "%TOOLCHAIN_VERSION%"=="" if %TOOLCHAIN_VERSION% LSS 15 (call "C:/Program Files (x86)/Microsoft Visual Studio %TOOLCHAIN_VERSION%.0/VC/vcvarsall.bat" %varch%) else (call "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/Build/vcvarsall.bat" %varch%)
+  - echo "cl "
+  - cl
+
+build_script:
+  - mkdir "%APPVEYOR_BUILD_FOLDER%/build"
+  - cd "%APPVEYOR_BUILD_FOLDER%/build"
+  - call "%QT_ROOT%/bin/qmake.exe" CONFIG+=%Configuration% PREFIX="%APPVEYOR_BUILD_FOLDER%/install" "%APPVEYOR_BUILD_FOLDER%/src/QZXing.pro"
+  - call %MAKE%
+  - call %MAKE% install 
+
+test_script:
+   
+artifacts:
+  - path: install
+    name: QZXing_$(QMAKE_XSPEC)$(TOOLCHAIN_VERSION)_$(CONFIGURATION)_$(BUILD_VERSION)
+    type: zip
+
+# whitelist branches to avoid testing feature branches twice (as branch and as pull request)
+branches:
+  only:
+    - master
+
+deploy:
+  provider: GitHub
+  #token: https://github.com/settings/tokens encode token: https://ci.appveyor.com/tools/encrypt
+  auth_token:
+    secure:  #TODO: set your token
+  on:
+    appveyor_repo_tag: true        # deploy on tag push only

@@ -1,5 +1,5 @@
-#ifndef __DATA_MATRIX_READER_H__
-#define __DATA_MATRIX_READER_H__
+#ifndef ZXING_DATA_MATRIX_READER_H
+#define ZXING_DATA_MATRIX_READER_H
 
 /*
  *  DataMatrixReader.h
@@ -42,4 +42,4 @@ public:
 }
 }
 
-#endif // __DATA_MATRIX_READER_H__
+#endif // ZXING_DATA_MATRIX_READER_H

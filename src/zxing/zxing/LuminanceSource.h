@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __LUMINANCESOURCE_H__
-#define __LUMINANCESOURCE_H__
+#ifndef ZXING_LUMINANCESOURCE_H
+#define ZXING_LUMINANCESOURCE_H
 /*
  *  LuminanceSource.h
  *  zxing
@@ -40,8 +40,8 @@ class LuminanceSource : public Counted {
   int getHeight() const { return height; }
 
   // Callers take ownership of the returned memory and must call delete [] on it themselves.
-  virtual ArrayRef<byte> getRow(int y, ArrayRef<byte> row) const = 0;
-  virtual ArrayRef<byte> getMatrix() const = 0;
+  virtual ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const = 0;
+  virtual ArrayRef<zxing::byte> getMatrix() const = 0;
 
   virtual bool isCropSupported() const;
   virtual Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
@@ -59,4 +59,4 @@ class LuminanceSource : public Counted {
 
 }
 
-#endif /* LUMINANCESOURCE_H_ */
+#endif // ZXING_LUMINANCESOURCE_H

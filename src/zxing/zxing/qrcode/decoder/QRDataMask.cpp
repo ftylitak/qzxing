@@ -48,7 +48,7 @@ void DataMask::unmaskBitMatrix(BitMatrix& bits, size_t dimension) {
     for (size_t x = 0; x < dimension; x++) {
       // TODO: check why the coordinates have to be swapped
       if (isMasked(y, x)) {
-        bits.flip(x, y);
+        bits.flip(int(x), int(y));
       }
     }
   }
@@ -152,7 +152,7 @@ int DataMask::buildDataMasks() {
   DATA_MASKS.push_back(Ref<DataMask> (new DataMask101()));
   DATA_MASKS.push_back(Ref<DataMask> (new DataMask110()));
   DATA_MASKS.push_back(Ref<DataMask> (new DataMask111()));
-  return DATA_MASKS.size();
+  return int(DATA_MASKS.size());
 }
 
 }

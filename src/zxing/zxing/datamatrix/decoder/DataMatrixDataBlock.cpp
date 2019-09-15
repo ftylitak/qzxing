@@ -26,7 +26,7 @@ namespace datamatrix {
 
 using namespace std;
 
-DataBlock::DataBlock(int numDataCodewords, ArrayRef<byte> codewords) :
+DataBlock::DataBlock(int numDataCodewords, ArrayRef<zxing::byte> codewords) :
     numDataCodewords_(numDataCodewords), codewords_(codewords) {
 }
 
@@ -34,11 +34,11 @@ int DataBlock::getNumDataCodewords() {
   return numDataCodewords_;
 }
 
-ArrayRef<byte> DataBlock::getCodewords() {
+ArrayRef<zxing::byte> DataBlock::getCodewords() {
   return codewords_;
 }
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<byte> rawCodewords, Version *version) {
+std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version) {
   // Figure out the number and size of data blocks used by this version and
   // error correction level
   ECBlocks* ecBlocks = version->getECBlocks();
@@ -58,7 +58,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<byte> rawCodeword
     for (int i = 0; i < ecBlock->getCount(); i++) {
       int numDataCodewords = ecBlock->getDataCodewords();
       int numBlockCodewords = ecBlocks->getECCodewords() + numDataCodewords;
-      ArrayRef<byte> buffer(numBlockCodewords);
+      ArrayRef<zxing::byte> buffer(numBlockCodewords);
       Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
     }
@@ -67,7 +67,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<byte> rawCodeword
   // All blocks have the same amount of data, except that the last n
   // (where n may be 0) have 1 more byte. Figure out where these start.
   int shorterBlocksTotalCodewords = result[0]->codewords_->size();
-  int longerBlocksStartAt = result.size() - 1;
+  int longerBlocksStartAt = int(result.size()) - 1;
   while (longerBlocksStartAt >= 0) {
     int numCodewords = result[longerBlocksStartAt]->codewords_->size();
     if (numCodewords == shorterBlocksTotalCodewords) {

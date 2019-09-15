@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __PDF417_READER_H__
-#define __PDF417_READER_H__
+#ifndef ZXING_PDF417_READER_H
+#define ZXING_PDF417_READER_H
 
 /*
  *  PDF417Reader.h
@@ -46,4 +46,4 @@ class PDF417Reader : public Reader {
 }
 }
 
-#endif // __PDF417_READER_H__
+#endif // ZXING_PDF417_READER_H

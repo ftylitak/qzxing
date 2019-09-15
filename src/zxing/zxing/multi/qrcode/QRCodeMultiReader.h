@@ -1,5 +1,5 @@
-#ifndef __QRCODE_MULTI_READER_H__
-#define __QRCODE_MULTI_READER_H__
+#ifndef ZXING_QRCODE_MULTI_READER_H
+#define ZXING_QRCODE_MULTI_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -33,4 +33,4 @@ class QRCodeMultiReader: public zxing::qrcode::QRCodeReader, public MultipleBarc
 }
 }
 
-#endif // __QRCODE_MULTI_READER_H__
+#endif // ZXING_QRCODE_MULTI_READER_H

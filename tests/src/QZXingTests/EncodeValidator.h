@@ -17,7 +17,7 @@ class EncodeValidator : public TestCase
 {
 public:
     EncodeValidator();
-    void execute();
+    void execute() override;
 };
 
 }

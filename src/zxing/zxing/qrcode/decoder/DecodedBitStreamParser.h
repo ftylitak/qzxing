@@ -1,7 +1,7 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 
-#ifndef __DECODED_BIT_STREAM_PARSER_H__
-#define __DECODED_BIT_STREAM_PARSER_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_H
 
 /*
  *  DecodedBitStreamParser.h
@@ -51,16 +51,16 @@ private:
                                 std::string& result,
                                 int count,
                                 common::CharacterSetECI const *currentCharacterSetECI,
-                                ArrayRef<ArrayRef<byte> > &byteSegments,
+                                ArrayRef<ArrayRef<zxing::byte> > &byteSegments,
                                 Hashtable const& hints);
   static void decodeAlphanumericSegment(Ref<BitSource> bits, std::string &result, int count, bool fc1InEffect);
   static void decodeNumericSegment(Ref<BitSource> bits, std::string &result, int count);
 
-  static void append(std::string &ost, const byte *bufIn, size_t nIn, const char *src);
+  static void append(std::string &ost, const zxing::byte *bufIn, size_t nIn, const char *src);
   static void append(std::string &ost, std::string const& in, const char *src);
 
 public:
-  static Ref<DecoderResult> decode(ArrayRef<byte> bytes,
+  static Ref<DecoderResult> decode(ArrayRef<zxing::byte> bytes,
                                    Version *version,
                                    ErrorCorrectionLevel const& ecLevel,
                                    Hashtable const& hints);
@@ -69,4 +69,4 @@ public:
 }
 }
 
-#endif // __DECODED_BIT_STREAM_PARSER_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_H

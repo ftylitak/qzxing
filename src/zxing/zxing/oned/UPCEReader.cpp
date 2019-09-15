@@ -64,7 +64,7 @@ int UPCEReader::decodeMiddle(Ref<BitArray> row, Range const& startRange, string&
 
   for (int x = 0; x < 6 && rowOffset < end; x++) {
     int bestMatch = decodeDigit(row, counters, rowOffset, L_AND_G_PATTERNS);
-    result.append(1, (byte) ('0' + bestMatch % 10));
+    result.append(1, zxing::byte('0' + bestMatch % 10));
     for (int i = 0, e = counters.size(); i < e; i++) {
       rowOffset += counters[i];
     }
@@ -91,8 +91,8 @@ bool UPCEReader::determineNumSysAndCheckDigit(std::string& resultString, int lgP
   for (int numSys = 0; numSys <= 1; numSys++) {
     for (int d = 0; d < 10; d++) {
       if (lgPatternFound == NUMSYS_AND_CHECK_DIGIT_PATTERNS[numSys][d]) {
-          resultString.insert((size_t)0, (size_t)1, (byte) ('0' + numSys));
-        resultString.append(1, (byte) ('0' + d));
+          resultString.insert(size_t(0), size_t(1), zxing::byte('0' + numSys));
+        resultString.append(1, zxing::byte('0' + d));
         return true;
       }
     }

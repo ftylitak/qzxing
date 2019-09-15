@@ -38,16 +38,21 @@ Ref<GenericGF> GenericGF::AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
 Ref<GenericGF> GenericGF::MAXICODE_FIELD_64 = AZTEC_DATA_6;
   
 namespace {
-  int INITIALIZATION_THRESHOLD = 0;
+  size_t INITIALIZATION_THRESHOLD = 0;
 }
   
-GenericGF::GenericGF(int primitive_, int size_, int b)
+GenericGF::GenericGF(int primitive_, size_t size_, int b)
   : size(size_), primitive(primitive_), generatorBase(b), initialized(false) {
   if (size <= INITIALIZATION_THRESHOLD) {
     initialize();
   }
 }
-  
+
+GenericGF::~GenericGF()
+{
+    return;
+}
+
 void GenericGF::initialize() {
   expTable = std::vector<int>(size);
   logTable = std::vector<int>(size);

@@ -1,0 +1,4 @@
+extraction:
+  cpp:
+    configure:
+      command: "qmake -o Makefile CONFIG+=Release src/QZXing.pro"

@@ -5,6 +5,7 @@
 #include <zxing/BinaryBitmap.h>
 #include <zxing/MultiFormatReader.h>
 #include <zxing/DecodeHints.h>
+#include <zxing/ResultMetadata.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
 #include <QTime>
@@ -37,7 +38,7 @@
 
 using namespace zxing;
 
-QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false)
+QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false), lastDecodeOperationSucceded_(false)
 {
     decoder = new MultiFormatReader();
     setDecoder(DecoderFormat_QR_CODE |
@@ -69,7 +70,7 @@ QZXing::~QZXing()
         delete decoder;
 }
 
-QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent)
+QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(parent), lastDecodeOperationSucceded_(false)
 {
     decoder = new MultiFormatReader();
     imageHandler = new ImageHandler();
@@ -108,6 +109,25 @@ void QZXing::setTryHarder(bool tryHarder)
 bool QZXing::getTryHarder()
 {
     return tryHarder_;
+}
+void QZXing::setAllowedExtensions(const QVariantList& extensions)
+{
+    std::set<int> allowedExtensions;
+    for (const QVariant& extension: extensions) {
+        allowedExtensions.insert(extension.toInt());
+    }
+
+    allowedExtensions_ = allowedExtensions;
+}
+
+QVariantList QZXing::getAllowedExtensions()
+{
+    QVariantList allowedExtensions;
+    for (const int& extension: allowedExtensions_) {
+        allowedExtensions << extension;
+    }
+
+    return allowedExtensions;
 }
 
 QString QZXing::decoderFormatToString(int fmt)
@@ -178,6 +198,42 @@ QString QZXing::foundedFormat() const
 QString QZXing::charSet() const
 {
     return charSet_;
+}
+
+bool QZXing::getLastDecodeOperationSucceded()
+{
+    return lastDecodeOperationSucceded_;
+}
+
+QVariantMap QZXing::metadataToMap(const ResultMetadata &metadata)
+{
+    QVariantMap obj;
+    for (const ResultMetadata::Key &key: metadata.keys()) {
+        QString keyName = QString::fromStdString(metadata.keyToString(key));
+
+        switch (key) {
+        case ResultMetadata::ORIENTATION:
+        case ResultMetadata::ISSUE_NUMBER:
+        case ResultMetadata::STRUCTURED_APPEND_SEQUENCE:
+        case ResultMetadata::STRUCTURED_APPEND_CODE_COUNT:
+        case ResultMetadata::STRUCTURED_APPEND_PARITY:
+            obj[keyName] = QVariant(metadata.getInt(key));
+            break;
+        case ResultMetadata::ERROR_CORRECTION_LEVEL:
+        case ResultMetadata::SUGGESTED_PRICE:
+        case ResultMetadata::POSSIBLE_COUNTRY:
+        case ResultMetadata::UPC_EAN_EXTENSION:
+            obj[keyName] = QVariant(metadata.getString(key).c_str());
+            break;
+
+        case ResultMetadata::OTHER:
+        case ResultMetadata::PDF417_EXTRA_METADATA:
+        case ResultMetadata::BYTE_SEGMENTS:
+            break;
+        }
+    }
+
+    return obj;
 }
 
 void QZXing::setDecoder(const uint &hint)
@@ -258,31 +314,31 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 {
     if (resultPoints->size() < 2)
         return QRectF();
-    
+
     int matrixWidth = bitMatrix->getWidth();
     int matrixHeight = bitMatrix->getHeight();
     // 1D barcode
     if (resultPoints->size() == 2) {
         WhiteRectangleDetector detector(bitMatrix);
         std::vector<Ref<ResultPoint> > resultRectPoints = detector.detect();
-        
+
         if (resultRectPoints.size() != 4)
             return QRectF();
 
-        qreal xMin = resultPoints[0]->getX();
+        qreal xMin = qreal(resultPoints[0]->getX());
         qreal xMax = xMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = resultPoints[i]->getX();
+        for (int i = 1; i < resultPoints->size(); ++i) {
+            qreal x = qreal(resultPoints[i]->getX());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)
                 xMax = x;
         }
 
-        qreal yMin = resultRectPoints[0]->getY();
+        qreal yMin = qreal(resultRectPoints[0]->getY());
         qreal yMax = yMin;
         for (unsigned int i = 1; i < resultRectPoints.size(); ++i) {
-            qreal y = resultRectPoints[i]->getY();
+            qreal y = qreal(resultRectPoints[i]->getY());
             if (y < yMin)
                 yMin = y;
             if (y > yMax)
@@ -294,13 +350,13 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
     // 2D QR code
     if (resultPoints->size() == 4) {
-        qreal xMin = resultPoints[0]->getX();
+        qreal xMin = qreal(resultPoints[0]->getX());
         qreal xMax = xMin;
-        qreal yMin = resultPoints[0]->getY();
+        qreal yMin = qreal(resultPoints[0]->getY());
         qreal yMax = yMin;
-        for (unsigned int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = resultPoints[i]->getX();
-            qreal y = resultPoints[i]->getY();
+        for (int i = 1; i < resultPoints->size(); ++i) {
+            qreal x = qreal(resultPoints[i]->getX());
+            qreal y = qreal(resultPoints[i]->getY());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)
@@ -321,6 +377,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 {
     QTime t;
     t.start();
+    processingTime = -1;
     Ref<Result> res;
     emit decodingStarted();
 
@@ -331,7 +388,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         return "";
     }
 
-    CameraImageWrapper *ciw = NULL;
+    CameraImageWrapper *ciw = ZXING_NULLPTR;
 
     if ((maxWidth > 0) || (maxHeight > 0))
         ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
@@ -344,40 +401,59 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         Ref<GlobalHistogramBinarizer> binz( new GlobalHistogramBinarizer(imageRef) );
         Ref<BinaryBitmap> bb( new BinaryBitmap(binz) );
 
-        DecodeHints hints((int)enabledDecoders);
+        DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
-        bool hasSucceded = false;
+        if (hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION)) {
+            hints.setAllowedEanExtensions(allowedExtensions_);
+        }
+
+        lastDecodeOperationSucceded_ = false;
         try {
             res = decoder->decode(bb, hints);
-            hasSucceded = true;
-        }catch(zxing::Exception &e){}
+            processingTime = t.elapsed();
+            lastDecodeOperationSucceded_ = true;
+        } catch(zxing::Exception &/*e*/){}
 
-        if(!hasSucceded)
+        if(!lastDecodeOperationSucceded_)
         {
             hints.setTryHarder(true);
 
             try {
                 res = decoder->decode(bb, hints);
-                hasSucceded = true;
-            } catch(zxing::Exception &e) {}
+                processingTime = t.elapsed();
+                lastDecodeOperationSucceded_ = true;
+            } catch(zxing::Exception &/*e*/) {}
+
+            if (!lastDecodeOperationSucceded_ &&
+                    hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                    !allowedExtensions_.empty() &&
+                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() ) {
+                hints.setAllowedEanExtensions(std::set<int>());
+
+                try {
+                    res = decoder->decode(bb, hints);
+                    processingTime = t.elapsed();
+                    lastDecodeOperationSucceded_ = true;
+                } catch(zxing::Exception &/*e*/) {}
+            }
 
             if (tryHarder_ && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
 
-                for (int i=0; (i<3 && !hasSucceded); i++) {
+                for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
                     Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
                     bbTmp = rotatedImage;
 
                     try {
                         res = decoder->decode(rotatedImage, hints);
                         processingTime = t.elapsed();
-                        hasSucceded = true;
-                    } catch(zxing::Exception &e) {}
+                        lastDecodeOperationSucceded_ = true;
+                    } catch(zxing::Exception &/*e*/) {}
                 }
             }
         }
 
-        if (hasSucceded) {
+        if (lastDecodeOperationSucceded_) {
             QString string = QString(res->getText()->getText().c_str());
             if (!string.isEmpty() && (string.length() > 0)) {
                 int fmt = res->getBarcodeFormat().value;
@@ -391,6 +467,9 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
                 emit tagFound(string);
                 emit tagFoundAdvanced(string, foundedFmt, charSet_);
+
+                QVariantMap metadataMap = metadataToMap(res->getMetadata());
+                emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
 
                 try {
                     const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
@@ -437,7 +516,7 @@ QString QZXing::decodeSubImageQML(QObject *item,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
-    if(item  == NULL)
+    if(item  == ZXING_NULLPTR)
     {
         processingTime = 0;
         emit decodingFinished(false);
@@ -484,6 +563,11 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
         img = img.copy(offsetX, offsetY, width, height);
     return decodeImage(img);
 #else
+    Q_UNUSED(imageUrl);
+    Q_UNUSED(offsetX);
+    Q_UNUSED(offsetY);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
     return decodeImage(QImage());
 #endif //QZXING_QML
 }
@@ -511,10 +595,10 @@ QImage QZXing::encodeData(const QString& data,
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
-            image = QImage(bytesRef->getWidth(), bytesRef->getHeight(), QImage::Format_ARGB32);
-            for(int i=0; i<bytesRef->getWidth(); i++)
-                for(int j=0; j<bytesRef->getHeight(); j++)
-                    image.setPixel(i, j, bytes[j][i] ?
+            image = QImage(int(bytesRef->getWidth()), int(bytesRef->getHeight()), QImage::Format_ARGB32);
+            for(size_t i=0; i<bytesRef->getWidth(); i++)
+                for(size_t j=0; j<bytesRef->getHeight(); j++)
+                    image.setPixel(int(i), int(j), bytes[j][i] ?
                                        qRgb(0,0,0) :
                                        qRgb(255,255,255));
 
@@ -522,7 +606,6 @@ QImage QZXing::encodeData(const QString& data,
             break;
         }
         case EncoderFormat_INVALID:
-        default:
             break;
         }
     } catch (std::exception& e) {

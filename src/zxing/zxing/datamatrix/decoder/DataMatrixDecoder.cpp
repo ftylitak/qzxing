@@ -42,7 +42,7 @@ namespace datamatrix {
 
 Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
-void Decoder::correctErrors(ArrayRef<byte> codewordBytes, int numDataCodewords) {
+void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
   ArrayRef<int> codewordInts(numCodewords);
   for (int i = 0; i < numCodewords; i++) {
@@ -58,7 +58,7 @@ void Decoder::correctErrors(ArrayRef<byte> codewordBytes, int numDataCodewords) 
   // Copy back into array of bytes -- only need to worry about the bytes that were data
   // We don't care about errors in the error-correction codewords
   for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (byte)codewordInts[i];
+    codewordBytes[i] = (zxing::byte)codewordInts[i];
   }
 }
 
@@ -68,23 +68,23 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   Version *version = parser.readVersion(bits);
 
   // Read codewords
-  ArrayRef<byte> codewords(parser.readCodewords());
+  ArrayRef<zxing::byte> codewords(parser.readCodewords());
   // Separate into data blocks
   std::vector<Ref<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
 
-  int dataBlocksCount = dataBlocks.size();
+  int dataBlocksCount = int(dataBlocks.size());
 
   // Count total number of data bytes
   int totalBytes = 0;
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<byte> resultBytes(totalBytes);
+  ArrayRef<zxing::byte> resultBytes(totalBytes);
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
     Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<byte> codewordBytes = dataBlock->getCodewords();
+    ArrayRef<zxing::byte> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {

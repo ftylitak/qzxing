@@ -26,7 +26,7 @@ namespace zxing {
 namespace qrcode {
 
 int BitMatrixParser::copyBit(size_t x, size_t y, int versionBits) {
-  return bitMatrix_->get(x, y) ? (versionBits << 1) | 0x1 : versionBits << 1;
+  return bitMatrix_->get(int(x), int(y)) ? (versionBits << 1) | 0x1 : versionBits << 1;
 }
 
 BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) :
@@ -116,7 +116,7 @@ Version *BitMatrixParser::readVersion() {
   throw ReaderException("Could not decode version");
 }
 
-ArrayRef<byte> BitMatrixParser::readCodewords() {
+ArrayRef<zxing::byte> BitMatrixParser::readCodewords() {
   Ref<FormatInformation> formatInfo = readFormatInformation();
   Version *version = readVersion();
 
@@ -138,7 +138,7 @@ ArrayRef<byte> BitMatrixParser::readCodewords() {
   //	cout << *functionPattern << endl;
 
   bool readingUp = true;
-  ArrayRef<byte> result(version->getTotalCodewords());
+  ArrayRef<zxing::byte> result(version->getTotalCodewords());
   int resultOffset = 0;
   int currentByte = 0;
   int bitsRead = 0;
@@ -163,7 +163,7 @@ ArrayRef<byte> BitMatrixParser::readCodewords() {
           }
           // If we've made a whole byte, save it off
           if (bitsRead == 8) {
-            result[resultOffset++] = (byte)currentByte;
+            result[resultOffset++] = (zxing::byte)currentByte;
             bitsRead = 0;
             currentByte = 0;
           }

@@ -1,5 +1,5 @@
-#ifndef __PERSPECTIVE_TANSFORM_H__
-#define __PERSPECTIVE_TANSFORM_H__
+#ifndef ZXING_PERSPECTIVE_TANSFORM_H
+#define ZXING_PERSPECTIVE_TANSFORM_H
 
 /*
  *  PerspectiveTransform.h
@@ -46,4 +46,4 @@ public:
 };
 }
 
-#endif // __PERSPECTIVE_TANSFORM_H__
+#endif // ZXING_PERSPECTIVE_TANSFORM_H

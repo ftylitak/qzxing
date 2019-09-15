@@ -1,5 +1,5 @@
-#ifndef __DECODER_RESULT_H__
-#define __DECODER_RESULT_H__
+#ifndef ZXING_DECODER_RESULT_H
+#define ZXING_DECODER_RESULT_H
 
 /*
  *  DecoderResult.h
@@ -30,26 +30,26 @@ namespace zxing {
 
 class DecoderResult : public Counted {
 private:
-  ArrayRef<byte> rawBytes_;
+  ArrayRef<zxing::byte> rawBytes_;
   Ref<String> text_;
-  ArrayRef< ArrayRef<byte> > byteSegments_;
+  ArrayRef< ArrayRef<zxing::byte> > byteSegments_;
   std::string ecLevel_;
   std::string charSet_;
 
 public:
-  DecoderResult(ArrayRef<byte> rawBytes,
+  DecoderResult(ArrayRef<zxing::byte> rawBytes,
                 Ref<String> text,
-                ArrayRef< ArrayRef<byte> >& byteSegments,
+                ArrayRef< ArrayRef<zxing::byte> >& byteSegments,
                 std::string const& ecLevel,
                 std::string charSet = "");
 
-  DecoderResult(ArrayRef<byte> rawBytes, Ref<String> text);
+  DecoderResult(ArrayRef<zxing::byte> rawBytes, Ref<String> text);
 
-  ArrayRef<byte> getRawBytes();
+  ArrayRef<zxing::byte> getRawBytes();
   Ref<String> getText();
   std::string charSet();
 };
 
 }
 
-#endif // __DECODER_RESULT_H__
+#endif // ZXING_DECODER_RESULT_H

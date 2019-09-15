@@ -72,7 +72,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
 
   vector<int>& theCounters (counters);
   { // Arrays.fill(counters, 0);
-    int size = theCounters.size();
+    int size = int(theCounters.size());
     theCounters.resize(0);
     theCounters.resize(size); }
   string& result (decodeRowResult);
@@ -89,7 +89,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
     decodedChar = patternToChar(pattern);
     result.append(1, decodedChar);
     lastStart = nextStart;
-    for(int i=0, e=theCounters.size(); i < e; ++i) {
+    for(int i=0, e=int(theCounters.size()); i < e; ++i) {
       nextStart += theCounters[i];
     }
     // Read off white space
@@ -99,7 +99,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
 
   // Look for whitespace after pattern:
   int lastPatternSize = 0;
-  for (int i = 0, e = theCounters.size(); i < e; i++) {
+  for (int i = 0, e = int(theCounters.size()); i < e; i++) {
     lastPatternSize += theCounters[i];
   }
   
@@ -130,7 +130,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
   
   return Ref<Result>(new Result(
                        resultString,
-                       ArrayRef<byte>(),
+                       ArrayRef<zxing::byte>(),
                        resultPoints,
                        BarcodeFormat::CODE_93));
 }
@@ -140,14 +140,14 @@ Code93Reader::Range Code93Reader::findAsteriskPattern(Ref<BitArray> row)  {
   int rowOffset = row->getNextSet(0);
 
   { // Arrays.fill(counters, 0);
-    int size = counters.size();
+    int size = int(counters.size());
     counters.resize(0);
     counters.resize(size); }
   vector<int>& theCounters (counters);
 
   int patternStart = rowOffset;
   bool isWhite = false;
-  int patternLength = theCounters.size();
+  int patternLength = int(theCounters.size());
 
   int counterPosition = 0;
   for (int i = rowOffset; i < width; i++) {
@@ -176,9 +176,9 @@ Code93Reader::Range Code93Reader::findAsteriskPattern(Ref<BitArray> row)  {
 }
 
 int Code93Reader::toPattern(vector<int>& counters) {
-  int max = counters.size();
+  int max = int(counters.size());
   int sum = 0;
-  for(int i=0, e=counters.size(); i<e; ++i) {
+  for(int i=0, e=int(counters.size()); i<e; ++i) {
     sum += counters[i];
   }
   int pattern = 0;
@@ -212,7 +212,7 @@ char Code93Reader::patternToChar(int pattern)  {
 }
 
 Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
-  int length = encoded.length();
+  int length = int(encoded.length());
   string decoded;
   for (int i = 0; i < length; i++) {
     char c = encoded[i];
@@ -226,7 +226,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'd':
         // +A to +Z map to a to z
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (byte) (next + 32);
+          decodedChar = (zxing::byte) (next + 32);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -234,7 +234,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'a':
         // $A to $Z map to control codes SH to SB
         if (next >= 'A' && next <= 'Z') {
-          decodedChar = (byte) (next - 64);
+          decodedChar = (zxing::byte) (next - 64);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -242,9 +242,9 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'b':
         // %A to %E map to control codes ESC to US
         if (next >= 'A' && next <= 'E') {
-          decodedChar = (byte) (next - 38);
+          decodedChar = (zxing::byte) (next - 38);
         } else if (next >= 'F' && next <= 'W') {
-          decodedChar = (byte) (next - 11);
+          decodedChar = (zxing::byte) (next - 11);
         } else {
           throw FormatException::getFormatInstance();
         }
@@ -252,7 +252,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       case 'c':
         // /A to /O map to ! to , and /Z maps to :
         if (next >= 'A' && next <= 'O') {
-          decodedChar = (byte) (next - 32);
+          decodedChar = (zxing::byte) (next - 32);
         } else if (next == 'Z') {
           decodedChar = ':';
         } else {
@@ -271,7 +271,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
 }
 
 void Code93Reader::checkChecksums(string const& result) {
-  int length = result.length();
+  int length = int(result.length());
   checkOneChecksum(result, length - 2, 20);
   checkOneChecksum(result, length - 1, 15);
 }
@@ -282,7 +282,7 @@ void Code93Reader::checkOneChecksum(string const& result,
   int weight = 1;
   int total = 0;
   for (int i = checkPosition - 1; i >= 0; i--) {
-    total += weight * ALPHABET_STRING.find_first_of(result[i]);
+    total += weight * int(ALPHABET_STRING.find_first_of(result[i]));
     if (++weight > weightMax) {
       weight = 1;
     }

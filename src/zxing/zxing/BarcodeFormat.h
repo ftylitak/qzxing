@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __BARCODE_FORMAT_H__
-#define __BARCODE_FORMAT_H__
+#ifndef ZXING_BARCODE_FORMAT_H
+#define ZXING_BARCODE_FORMAT_H
 
 /*
  *  BarcodeFormat.h
@@ -58,4 +58,4 @@ public:
 
 }
 
-#endif // __BARCODE_FORMAT_H__
+#endif // ZXING_BARCODE_FORMAT_H

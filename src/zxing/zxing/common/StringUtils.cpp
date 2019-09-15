@@ -36,7 +36,7 @@ char const* const StringUtils::ISO88591 = "ISO8859-1";
 const bool StringUtils::ASSUME_SHIFT_JIS = false;
 
 string
-StringUtils::guessEncoding(byte* bytes, int length,
+StringUtils::guessEncoding(zxing::byte* bytes, int length,
                            Hashtable const& hints) {
   Hashtable::const_iterator i = hints.find(DecodeHints::CHARACTER_SET);
   if (i != hints.end()) {
@@ -65,11 +65,10 @@ StringUtils::guessEncoding(byte* bytes, int length,
   //int isoHighChars = 0;
   int isoHighOther = 0;
 
-  typedef byte byte;
   boolean utf8bom = length > 3 &&
-    bytes[0] == (byte) 0xEF &&
-    bytes[1] == (byte) 0xBB &&
-    bytes[2] == (byte) 0xBF;
+    bytes[0] == (zxing::byte) 0xEF &&
+    bytes[1] == (zxing::byte) 0xBB &&
+    bytes[2] == (zxing::byte) 0xBF;
 
   for (int i = 0;
        i < length && (canBeISO88591 || canBeShiftJIS || canBeUTF8);
