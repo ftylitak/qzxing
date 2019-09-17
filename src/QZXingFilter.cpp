@@ -103,7 +103,7 @@ QVideoFrame QZXingFilterRunnable::run(QVideoFrame * input, const QVideoSurfaceFo
     if(!input || !input->isValid())
     {
         //qDebug() << "[QZXingFilterRunnable] Invalid Input ";
-        return * input;
+        return QVideoFrame();
     }
     if(filter->isDecoding())
     {
