@@ -208,7 +208,7 @@ Or use the encoding function with the optional custom settings that are passed l
 
 | attribute name | value      | description                                   |
 | -------------- | ---------- | --------------------------------------------- |
-| corretionLevel | L, M, Q, H | the error correction level                    |
+| correctionLevel | L, M, Q, H | the error correction level                    |
 | format         | qrcode     | the encode formatter. Currently only QR Code. |
 
 the size of the image can be adjusted by using the Image.sourceWidth and Image.sourceHeight properties of Image QML element.
@@ -223,7 +223,7 @@ TextField {
 
 Image{
 	source: "image://QZXing/encode/" + inputField.text +
-					"?corretionLevel=M" +
+					"?correctionLevel=M" +
 					"&format=qrcode"
 	sourceSize.width: 320
 	sourceSize.height: 320

@@ -101,7 +101,7 @@ ApplicationWindow {
         function getImageRequestString() {
             if(mainWindow.isAdvancedOptionsEnabled) {
                 return "image://QZXing/encode/" + inputField.text +
-                            "?corretionLevel=" + errorCorrectionlevelCombo.currentText +
+                            "?correctionLevel=" + errorCorrectionlevelCombo.currentText +
                             "&format=" + formatCombo.currentText
             }
             else

@@ -28,7 +28,7 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
     QZXing::EncoderFormat format = QZXing::EncoderFormat_QR_CODE;
     QZXing::EncodeErrorCorrectionLevel correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
 
-    int customSettingsIndex = id.lastIndexOf(QRegExp("\?(corretionLevel|format)="));
+    int customSettingsIndex = id.lastIndexOf(QRegExp("\?(correctionLevel|format)="));
     if(customSettingsIndex >= 0)
     {
         int startOfDataIndex = slashIndex + 1;
@@ -46,7 +46,7 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
             }
         }
 
-        QString correctionLevelString = optionQuery.queryItemValue("corretionLevel");
+        QString correctionLevelString = optionQuery.queryItemValue("correctionLevel");
         if(correctionLevelString == "H")
             correctionLevel = QZXing::EncodeErrorCorrectionLevel_H;
         else if(correctionLevelString == "Q")
