@@ -28,7 +28,7 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
     QZXing::EncoderFormat format = QZXing::EncoderFormat_QR_CODE;
     QZXing::EncodeErrorCorrectionLevel correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
 
-    int customSettingsIndex = id.lastIndexOf(QRegExp("\?[cf]"));
+    int customSettingsIndex = id.lastIndexOf(QRegExp("\?(corretionLevel|format)="));
     if(customSettingsIndex >= 0)
     {
         int startOfDataIndex = slashIndex + 1;
