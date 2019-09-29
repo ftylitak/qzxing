@@ -190,7 +190,8 @@ public slots:
                              const EncoderFormat encoderFormat = EncoderFormat_QR_CODE,
                              const QSize encoderImageSize = QSize(240, 240),
                              const EncodeErrorCorrectionLevel errorCorrectionLevel = EncodeErrorCorrectionLevel_L,
-                             const bool border = false);
+                             const bool border = false,
+                             const bool transparent = false);
 
     /**
       * Get the prossecing time in millisecond of the last decode operation.
@@ -244,13 +245,15 @@ typedef struct QZXingEncoderConfig
     QSize imageSize;
     QZXing::EncodeErrorCorrectionLevel errorCorrectionLevel;
     bool border;
+    bool transparent;
 
     QZXingEncoderConfig(const QZXing::EncoderFormat encoderFormat_ = QZXing::EncoderFormat_QR_CODE,
                         const QSize encoderImageSize_ = QSize(240, 240),
                         const QZXing::EncodeErrorCorrectionLevel errorCorrectionLevel_ = QZXing::EncodeErrorCorrectionLevel_L,
-                        const bool border_ = false) :
+                        const bool border_ = false,
+                        const bool transparent_ = false) :
         format(encoderFormat_), imageSize(encoderImageSize_),
-        errorCorrectionLevel(errorCorrectionLevel_), border(border_) {}
+        errorCorrectionLevel(errorCorrectionLevel_), border(border_), transparent(transparent_) {}
 } QZXingEncoderConfig;
 
 #endif // QZXING_H

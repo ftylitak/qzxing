@@ -29,6 +29,7 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
     QZXing::EncoderFormat format = QZXing::EncoderFormat_QR_CODE;
     QZXing::EncodeErrorCorrectionLevel correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
     bool border = false;
+    bool transparent = false;
 
     int customSettingsIndex = id.lastIndexOf(QRegularExpression("\\?(correctionLevel|format|border)="));
     if(customSettingsIndex >= 0)
@@ -61,12 +62,16 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
         if (optionQuery.hasQueryItem("border")) {
             border = QVariant(optionQuery.queryItemValue("border")).toBool();
         }
+
+        if (optionQuery.hasQueryItem("transparent")) {
+            transparent = optionQuery.queryItemValue("transparent") == "true";
+        }
     } else
     {
         data = id.mid(slashIndex + 1);
     }
 
-    QImage result = QZXing::encodeData(data, format, requestedSize, correctionLevel, border);
+    QImage result = QZXing::encodeData(data, format, requestedSize, correctionLevel, border, transparent);
     *size = result.size();
     return result;
 }
