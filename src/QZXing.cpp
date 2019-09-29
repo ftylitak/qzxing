@@ -575,34 +575,55 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
 QImage QZXing::encodeData(const QString& data,
                           const EncoderFormat encoderFormat,
                           const QSize encoderImageSize,
-                          const EncodeErrorCorrectionLevel errorCorrectionLevel)
+                          const EncodeErrorCorrectionLevel errorCorrectionLevel,
+                          const bool border)
+{
+    return encodeData(data,
+                      QZXingEncoderConfig(encoderFormat,
+                                          encoderImageSize,
+                                          errorCorrectionLevel,
+                                          border));
+}
+
+QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encoderConfig)
 {
     QImage image;
 
     try {
-        switch (encoderFormat) {
+        switch (encoderConfig.format) {
         case EncoderFormat_QR_CODE:
         {
             Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
                         data.toStdString(),
-                        errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
+                        encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
                             qrcode::ErrorCorrectionLevel::H :
-                        (errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
+                        (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
                             qrcode::ErrorCorrectionLevel::Q :
-                        (errorCorrectionLevel == EncodeErrorCorrectionLevel_M ?
+                        (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_M ?
                              qrcode::ErrorCorrectionLevel::M :
                              qrcode::ErrorCorrectionLevel::L)));
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
-            image = QImage(int(bytesRef->getWidth()), int(bytesRef->getHeight()), QImage::Format_ARGB32);
-            for(size_t i=0; i<bytesRef->getWidth(); i++)
-                for(size_t j=0; j<bytesRef->getHeight(); j++)
-                    image.setPixel(int(i), int(j), bytes[j][i] ?
-                                       qRgb(0,0,0) :
-                                       qRgb(255,255,255));
+            const int width = int(bytesRef->getWidth()) + (encoderConfig.border ? 2 : 0);
+            const int height = int(bytesRef->getHeight()) + (encoderConfig.border ? 2 : 0);
+            const QRgb black = qRgb(0, 0, 0);
+            const QRgb white = qRgb(255, 255, 255);
 
-            image = image.scaled(encoderImageSize);
+            image = QImage(width, height, QImage::Format_ARGB32);
+            image.fill(white);
+
+            int offset = encoderConfig.border ? 1 : 0;
+
+            for (size_t i=0; i<bytesRef->getWidth(); ++i) {
+                for (size_t j=0; j<bytesRef->getHeight(); ++j) {
+                    if (bytes[j][i]) {
+                        image.setPixel(offset+int(i), offset+int(j), black);
+                    }
+                }
+            }
+
+            image = image.scaled(encoderConfig.imageSize);
             break;
         }
         case EncoderFormat_INVALID:

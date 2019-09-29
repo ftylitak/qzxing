@@ -28,8 +28,9 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
     QString data;
     QZXing::EncoderFormat format = QZXing::EncoderFormat_QR_CODE;
     QZXing::EncodeErrorCorrectionLevel correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
+    bool border = false;
 
-    int customSettingsIndex = id.lastIndexOf(QRegularExpression("\\?(correctionLevel|format)="));
+    int customSettingsIndex = id.lastIndexOf(QRegularExpression("\\?(correctionLevel|format|border)="));
     if(customSettingsIndex >= 0)
     {
         int startOfDataIndex = slashIndex + 1;
@@ -56,12 +57,16 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
             correctionLevel = QZXing::EncodeErrorCorrectionLevel_M;
         else if(correctionLevelString == "L")
             correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
+
+        if (optionQuery.hasQueryItem("border")) {
+            border = QVariant(optionQuery.queryItemValue("border")).toBool();
+        }
     } else
     {
         data = id.mid(slashIndex + 1);
     }
 
-    QImage result = QZXing::encodeData(data, format, requestedSize, correctionLevel);
+    QImage result = QZXing::encodeData(data, format, requestedSize, correctionLevel, border);
     *size = result.size();
     return result;
 }

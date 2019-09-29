@@ -10,6 +10,7 @@ ApplicationWindow {
 
     minimumWidth: formatGroupBox.width +
                   errorCorrectionlevelGroupBox.width +
+                  borderStatus.width +
                   5 * advancedOptions.spacing
 
     property bool isAdvancedOptionsEnabled: advancedSwitch.position;
@@ -75,6 +76,12 @@ ApplicationWindow {
                     model: ["L", "M", "Q", "H"]
                 }
             }
+
+            Switch {
+                id: borderStatus
+                text: "Border"
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
 
         Rectangle {
@@ -102,7 +109,8 @@ ApplicationWindow {
             if(mainWindow.isAdvancedOptionsEnabled) {
                 return "image://QZXing/encode/" + inputField.text +
                             "?correctionLevel=" + errorCorrectionlevelCombo.currentText +
-                            "&format=" + formatCombo.currentText
+                            "&format=" + formatCombo.currentText +
+                            "&border=" + borderStatus.position;
             }
             else
                 return "image://QZXing/encode/" + inputField.text;
