@@ -206,10 +206,9 @@ Image{
 
 Or use the encoding function with the optional custom settings that are passed like URL query parameters:
 
-<<<<<<< HEAD
 | attribute name  | value       | description                                   |
 | --------------- | ----------  | --------------------------------------------- |
-| border          | true, false | whether the image has a border                |
+| border          | true, false | image has border (white 1px)                  |
 | correctionLevel | L, M, Q, H  | the error correction level                    |
 | format          | qrcode      | the encode formatter. Currently only QR Code. |
 
