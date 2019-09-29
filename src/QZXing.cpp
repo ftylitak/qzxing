@@ -80,6 +80,8 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 
 #ifdef QZXING_QML
 
+#ifndef DISABLE_LIBRARY_FEATURES
+
 #if QT_VERSION >= 0x040700
 void QZXing::registerQMLTypes()
 {
@@ -98,6 +100,8 @@ void QZXing::registerQMLImageProvider(QQmlEngine& engine)
     engine.addImageProvider(QLatin1String("QZXing"), new QZXingImageProvider());
 }
 #endif //QT_VERSION >= Qt 5.0
+
+#endif // DISABLE_LIBRARY_FEATURES
 
 #endif //QZXING_QML
 
