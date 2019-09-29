@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QUrlQuery>
 #include "QZXing.h"
+#include <QRegularExpression>
 
 QZXingImageProvider::QZXingImageProvider() : QQuickImageProvider(QQuickImageProvider::Image)
 {
@@ -28,7 +29,7 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
     QZXing::EncoderFormat format = QZXing::EncoderFormat_QR_CODE;
     QZXing::EncodeErrorCorrectionLevel correctionLevel = QZXing::EncodeErrorCorrectionLevel_L;
 
-    int customSettingsIndex = id.lastIndexOf(QRegExp("\?(correctionLevel|format)="));
+    int customSettingsIndex = id.lastIndexOf(QRegularExpression("\\?(correctionLevel|format)="));
     if(customSettingsIndex >= 0)
     {
         int startOfDataIndex = slashIndex + 1;
