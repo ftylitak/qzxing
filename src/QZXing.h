@@ -36,6 +36,7 @@ class MultiFormatReader;
 class ResultMetadata;
 }
 class ImageHandler;
+struct QZXingEncoderConfig;
 
 /**
   * A class containing a very very small subset of the ZXing library.
@@ -179,6 +180,12 @@ public slots:
     /**
      * The main encoding function. Currently supports only Qr code encoding
      */
+    static QImage encodeData(const QString &data,
+                             const QZXingEncoderConfig &encoderConfig);
+
+    /**
+     * Overloaded function of encodeData.
+     */
     static QImage encodeData(const QString& data,
                              const EncoderFormat encoderFormat = EncoderFormat_QR_CODE,
                              const QSize encoderImageSize = QSize(240, 240),
@@ -230,6 +237,21 @@ private:
       */
     bool isThreaded;
 };
+
+typedef struct QZXingEncoderConfig
+{
+    QZXing::EncoderFormat format;
+    QSize imageSize;
+    QZXing::EncodeErrorCorrectionLevel errorCorrectionLevel;
+    bool border;
+
+    QZXingEncoderConfig(const QZXing::EncoderFormat encoderFormat_ = QZXing::EncoderFormat_QR_CODE,
+                        const QSize encoderImageSize_ = QSize(240, 240),
+                        const QZXing::EncodeErrorCorrectionLevel errorCorrectionLevel_ = QZXing::EncodeErrorCorrectionLevel_L,
+                        const bool border_ = false) :
+        format(encoderFormat_), imageSize(encoderImageSize_),
+        errorCorrectionLevel(errorCorrectionLevel_), border(border_) {}
+} QZXingEncoderConfig;
 
 #endif // QZXING_H
 
