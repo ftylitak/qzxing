@@ -108,7 +108,6 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/ReaderException.cpp \
     $$PWD/zxing/zxing/IllegalStateException.cpp \
     $$PWD/zxing/zxing/NotFoundException.cpp \
-    $$PWD/zxing/zxing/UnsupportedEncodingException.cpp \
     $$PWD/zxing/zxing/WriterException.cpp \
     $$PWD/zxing/zxing/common/Counted.cpp \
     $$PWD/zxing/zxing/common/StringUtils.cpp \
@@ -401,6 +400,7 @@ enable_encoder_generic {
 
     SOURCES += \
         $$PWD/zxing/zxing/EncodeHint.cpp \
+        $$PWD/zxing/zxing/UnsupportedEncodingException.cpp \
         $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
 }
 

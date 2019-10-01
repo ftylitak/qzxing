@@ -130,7 +130,7 @@ void MultiFormatReader::enableReaders(zxing::DecodeHints hints, bool allowAll)
       readers.add(new MaxiCodeReader());
     }
     */
-  #ifdef ENABLE_DECODER_QR_CODE
+  #ifdef ENABLE_DECODER_1D_BARCODES
     if ((allowAll || addOneDReader) && tryHarder) {
       readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
     }
