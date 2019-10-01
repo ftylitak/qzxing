@@ -14,7 +14,13 @@
 # limitations under the License.
 #
 
-CONFIG += qt warn_on
+CONFIG +=   qt warn_on \
+            enable_decoder_1d_barcodes \
+            enable_decoder_qr_code \
+            enable_decoder_data_matrix \
+            enable_decoder_aztec \
+            enable_decoder_pdf17 \
+            enable_encoder_qr_code
 
 DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
@@ -46,10 +52,6 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/BinaryBitmap.h \
     $$PWD/zxing/zxing/Binarizer.h \
     $$PWD/zxing/zxing/BarcodeFormat.h \
-    $$PWD/zxing/zxing/aztec/AztecReader.h \
-    $$PWD/zxing/zxing/aztec/AztecDetectorResult.h \
-    $$PWD/zxing/zxing/aztec/decoder/Decoder.h \
-    $$PWD/zxing/zxing/aztec/detector/Detector.h \
     $$PWD/zxing/zxing/common/StringUtils.h \
     $$PWD/zxing/zxing/common/Str.h \
     $$PWD/zxing/zxing/common/Point.h \
@@ -77,93 +79,9 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGFPoly.h \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGF.h \
     $$PWD/zxing/zxing/common/ByteArray.h \
-    $$PWD/zxing/zxing/datamatrix/Version.h \
-    $$PWD/zxing/zxing/datamatrix/DataMatrixReader.h \
-    $$PWD/zxing/zxing/datamatrix/decoder/Decoder.h \
-    $$PWD/zxing/zxing/datamatrix/decoder/DecodedBitStreamParser.h \
-    $$PWD/zxing/zxing/datamatrix/decoder/DataBlock.h \
-    $$PWD/zxing/zxing/datamatrix/decoder/BitMatrixParser.h \
-    $$PWD/zxing/zxing/datamatrix/detector/DetectorException.h \
-    $$PWD/zxing/zxing/datamatrix/detector/Detector.h \
-    $$PWD/zxing/zxing/datamatrix/detector/CornerPoint.h \
-    $$PWD/zxing/zxing/oned/UPCEReader.h \
-    $$PWD/zxing/zxing/oned/UPCEANReader.h \
-    $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.h \
-    $$PWD/zxing/zxing/oned/UPCEANExtension2Support.h \
-    $$PWD/zxing/zxing/oned/UPCEANExtension5Support.h \
-    $$PWD/zxing/zxing/oned/UPCAReader.h \
-    $$PWD/zxing/zxing/oned/OneDResultPoint.h \
-    $$PWD/zxing/zxing/oned/OneDReader.h \
-    $$PWD/zxing/zxing/oned/MultiFormatUPCEANReader.h \
-    $$PWD/zxing/zxing/oned/MultiFormatOneDReader.h \
-    $$PWD/zxing/zxing/oned/ITFReader.h \
-    $$PWD/zxing/zxing/oned/EAN13Reader.h \
-    $$PWD/zxing/zxing/oned/EAN8Reader.h \
-    $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.h \
-    $$PWD/zxing/zxing/oned/Code128Reader.h \
-    $$PWD/zxing/zxing/oned/Code39Reader.h \
-    $$PWD/zxing/zxing/oned/CodaBarReader.h \
-    $$PWD/zxing/zxing/oned/Code93Reader.h \
-    $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.h \
-    $$PWD/zxing/zxing/oned/rss/DataCharacter.h \
-    $$PWD/zxing/zxing/oned/rss/FinderPattern.h \
-    $$PWD/zxing/zxing/oned/rss/Pair.h \
-    $$PWD/zxing/zxing/oned/rss/RSS14Reader.h \
-    $$PWD/zxing/zxing/oned/rss/RSSUtils.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.h \
-    $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.h \
-    $$PWD/zxing/zxing/qrcode/Version.h \
-    $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
-    $$PWD/zxing/zxing/qrcode/FormatInformation.h \
-    $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h \
-    $$PWD/zxing/zxing/qrcode/decoder/Mode.h \
-    $$PWD/zxing/zxing/qrcode/decoder/Decoder.h \
-    $$PWD/zxing/zxing/qrcode/decoder/DecodedBitStreamParser.h \
-    $$PWD/zxing/zxing/qrcode/decoder/DataMask.h \
-    $$PWD/zxing/zxing/qrcode/decoder/DataBlock.h \
-    $$PWD/zxing/zxing/qrcode/decoder/BitMatrixParser.h \
-    $$PWD/zxing/zxing/qrcode/detector/FinderPatternInfo.h \
-    $$PWD/zxing/zxing/qrcode/detector/FinderPatternFinder.h \
-    $$PWD/zxing/zxing/qrcode/detector/FinderPattern.h \
-    $$PWD/zxing/zxing/qrcode/detector/Detector.h \
-    $$PWD/zxing/zxing/qrcode/detector/AlignmentPatternFinder.h \
-    $$PWD/zxing/zxing/qrcode/detector/AlignmentPattern.h \
     $$PWD/zxing/zxing/multi/MultipleBarcodeReader.h \
     $$PWD/zxing/zxing/multi/GenericMultipleBarcodeReader.h \
     $$PWD/zxing/zxing/multi/ByQuadrantReader.h \
-    $$PWD/zxing/zxing/multi/qrcode/QRCodeMultiReader.h \
-    $$PWD/zxing/zxing/multi/qrcode/detector/MultiFinderPatternFinder.h \
-    $$PWD/zxing/zxing/multi/qrcode/detector/MultiDetector.h \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ErrorCorrection.h \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusGF.h \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusPoly.h \
-    $$PWD/zxing/zxing/pdf417/decoder/BitMatrixParser.h \
-    $$PWD/zxing/zxing/pdf417/decoder/DecodedBitStreamParser.h \
-    $$PWD/zxing/zxing/pdf417/decoder/Decoder.h \
-    $$PWD/zxing/zxing/pdf417/detector/Detector.h \
-    $$PWD/zxing/zxing/pdf417/detector/LinesSampler.h \
-    $$PWD/zxing/zxing/pdf417/PDF417Reader.h \
     $$PWD/zxing/bigint/NumberlikeArray.hh \
     $$PWD/zxing/bigint/BigUnsignedInABase.hh \
     $$PWD/zxing/bigint/BigUnsigned.hh \
@@ -171,16 +89,7 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/bigint/BigIntegerLibrary.hh \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.hh \
     $$PWD/zxing/bigint/BigInteger.hh \
-    $$PWD/zxing/zxing/qrcode/encoder/BlockPair.h \
-    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.h \
-    $$PWD/zxing/zxing/qrcode/encoder/Encoder.h \
-    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.h \
-    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
-    $$PWD/zxing/zxing/qrcode/encoder/QRCode.h \
     $$PWD/zxing/zxing/WriterException.h \
-    $$PWD/zxing/zxing/EncodeHint.h \
-    $$PWD/zxing/zxing/UnsupportedEncodingException.h \
-    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
     $$PWD/zxing/zxing/common/Types.h
 
 SOURCES += $$PWD/CameraImageWrapper.cpp \
@@ -207,8 +116,6 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/NotFoundException.cpp \
     $$PWD/zxing/zxing/UnsupportedEncodingException.cpp \
     $$PWD/zxing/zxing/WriterException.cpp \
-    $$PWD/zxing/zxing/aztec/AztecReader.cpp \
-    $$PWD/zxing/zxing/aztec/AztecDetectorResult.cpp \
     $$PWD/zxing/zxing/common/Counted.cpp \
     $$PWD/zxing/zxing/common/StringUtils.cpp \
     $$PWD/zxing/zxing/common/Str.cpp \
@@ -232,107 +139,273 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonDecoder.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGFPoly.cpp \
     $$PWD/zxing/zxing/common/reedsolomon/GenericGF.cpp \
-    $$PWD/zxing/zxing/datamatrix/DataMatrixReader.cpp \
-    $$PWD/zxing/zxing/oned/UPCEReader.cpp \
-    $$PWD/zxing/zxing/oned/UPCEANReader.cpp \
-    $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.cpp \
-    $$PWD/zxing/zxing/oned/UPCEANExtension2Support.cpp \
-    $$PWD/zxing/zxing/oned/UPCEANExtension5Support.cpp \
-    $$PWD/zxing/zxing/oned/UPCAReader.cpp \
-    $$PWD/zxing/zxing/oned/OneDResultPoint.cpp \
-    $$PWD/zxing/zxing/oned/OneDReader.cpp \
-    $$PWD/zxing/zxing/oned/MultiFormatUPCEANReader.cpp \
-    $$PWD/zxing/zxing/oned/MultiFormatOneDReader.cpp \
-    $$PWD/zxing/zxing/oned/ITFReader.cpp \
-    $$PWD/zxing/zxing/oned/EAN13Reader.cpp \
-    $$PWD/zxing/zxing/oned/EAN8Reader.cpp \
-    $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.cpp \
-    $$PWD/zxing/zxing/oned/Code128Reader.cpp \
-    $$PWD/zxing/zxing/oned/Code39Reader.cpp \
-    $$PWD/zxing/zxing/oned/CodaBarReader.cpp \
-    $$PWD/zxing/zxing/oned/Code93Reader.cpp \
-    $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.cpp \
-    $$PWD/zxing/zxing/oned/rss/DataCharacter.cpp \
-    $$PWD/zxing/zxing/oned/rss/FinderPattern.cpp \
-    $$PWD/zxing/zxing/oned/rss/Pair.cpp \
-    $$PWD/zxing/zxing/oned/rss/RSS14Reader.cpp \
-    $$PWD/zxing/zxing/oned/rss/RSSUtils.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.cpp \
-    $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.cpp \
-    $$PWD/zxing/zxing/qrcode/QRCodeReader.cpp \
     $$PWD/zxing/zxing/multi/MultipleBarcodeReader.cpp \
     $$PWD/zxing/zxing/multi/GenericMultipleBarcodeReader.cpp \
     $$PWD/zxing/zxing/multi/ByQuadrantReader.cpp \
-    $$PWD/zxing/zxing/multi/qrcode/QRCodeMultiReader.cpp \
-    $$PWD/zxing/zxing/multi/qrcode/detector/MultiFinderPatternFinder.cpp \
-    $$PWD/zxing/zxing/multi/qrcode/detector/MultiDetector.cpp \
-    $$PWD/zxing/zxing/aztec/decoder/AztecDecoder.cpp \
-    $$PWD/zxing/zxing/aztec/detector/AztecDetector.cpp \
-    $$PWD/zxing/zxing/datamatrix/DataMatrixVersion.cpp \
-    $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDecoder.cpp \
-    $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixBitMatrixParser.cpp \
-    $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDataBlock.cpp \
-    $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDecodedBitStreamParser.cpp \
-    $$PWD/zxing/zxing/datamatrix/detector/DataMatrixCornerPoint.cpp \
-    $$PWD/zxing/zxing/datamatrix/detector/DataMatrixDetector.cpp \
-    $$PWD/zxing/zxing/datamatrix/detector/DataMatrixDetectorException.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRBitMatrixParser.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRDataBlock.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRDataMask.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRDecodedBitStreamParser.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRDecoder.cpp \
-    $$PWD/zxing/zxing/qrcode/decoder/QRMode.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPattern.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPatternFinder.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRDetector.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRFinderPattern.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRFinderPatternFinder.cpp \
-    $$PWD/zxing/zxing/qrcode/detector/QRFinderPatternInfo.cpp \
-    $$PWD/zxing/zxing/qrcode/QRVersion.cpp \
-    $$PWD/zxing/zxing/qrcode/QRFormatInformation.cpp \
-    $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ErrorCorrection.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusGF.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusPoly.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/PDF417BitMatrixParser.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/PDF417DecodedBitStreamParser.cpp \
-    $$PWD/zxing/zxing/pdf417/decoder/PDF417Decoder.cpp \
-    $$PWD/zxing/zxing/pdf417/detector/PDF417Detector.cpp \
-    $$PWD/zxing/zxing/pdf417/detector/LinesSampler.cpp \
-    $$PWD/zxing/zxing/pdf417/PDF417Reader.cpp \
     $$PWD/zxing/bigint/BigUnsignedInABase.cc \
     $$PWD/zxing/bigint/BigUnsigned.cc \
     $$PWD/zxing/bigint/BigIntegerUtils.cc \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
     $$PWD/zxing/bigint/BigInteger.cc \
-    $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/QREncoder.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
-    $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp \
-    $$PWD/zxing/zxing/EncodeHint.cpp \
-    $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
+
+enable_encoder_generic {
+    DEFINES += ENABLE_ENCODER_GENERIC
+
+    HEADERS += \
+        $$PWD/zxing/zxing/EncodeHint.h \
+        $$PWD/zxing/zxing/UnsupportedEncodingException.h \
+        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
+
+    SOURCES += \
+        $$PWD/zxing/zxing/EncodeHint.cpp \
+        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
+}
+
+enable_decoder_1d_barcodes {
+    DEFINES += ENABLE_DECODER_1D_BARCODES
+
+    HEADERS += \
+        $$PWD/zxing/zxing/oned/UPCEReader.h \
+        $$PWD/zxing/zxing/oned/UPCEANReader.h \
+        $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.h \
+        $$PWD/zxing/zxing/oned/UPCEANExtension2Support.h \
+        $$PWD/zxing/zxing/oned/UPCEANExtension5Support.h \
+        $$PWD/zxing/zxing/oned/UPCAReader.h \
+        $$PWD/zxing/zxing/oned/OneDResultPoint.h \
+        $$PWD/zxing/zxing/oned/OneDReader.h \
+        $$PWD/zxing/zxing/oned/MultiFormatUPCEANReader.h \
+        $$PWD/zxing/zxing/oned/MultiFormatOneDReader.h \
+        $$PWD/zxing/zxing/oned/ITFReader.h \
+        $$PWD/zxing/zxing/oned/EAN13Reader.h \
+        $$PWD/zxing/zxing/oned/EAN8Reader.h \
+        $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.h \
+        $$PWD/zxing/zxing/oned/Code128Reader.h \
+        $$PWD/zxing/zxing/oned/Code39Reader.h \
+        $$PWD/zxing/zxing/oned/CodaBarReader.h \
+        $$PWD/zxing/zxing/oned/Code93Reader.h \
+        $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.h \
+        $$PWD/zxing/zxing/oned/rss/DataCharacter.h \
+        $$PWD/zxing/zxing/oned/rss/FinderPattern.h \
+        $$PWD/zxing/zxing/oned/rss/Pair.h \
+        $$PWD/zxing/zxing/oned/rss/RSS14Reader.h \
+        $$PWD/zxing/zxing/oned/rss/RSSUtils.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.h \
+        $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/oned/UPCEReader.cpp \
+        $$PWD/zxing/zxing/oned/UPCEANReader.cpp \
+        $$PWD/zxing/zxing/oned/UPCEANExtensionSupport.cpp \
+        $$PWD/zxing/zxing/oned/UPCEANExtension2Support.cpp \
+        $$PWD/zxing/zxing/oned/UPCEANExtension5Support.cpp \
+        $$PWD/zxing/zxing/oned/UPCAReader.cpp \
+        $$PWD/zxing/zxing/oned/OneDResultPoint.cpp \
+        $$PWD/zxing/zxing/oned/OneDReader.cpp \
+        $$PWD/zxing/zxing/oned/MultiFormatUPCEANReader.cpp \
+        $$PWD/zxing/zxing/oned/MultiFormatOneDReader.cpp \
+        $$PWD/zxing/zxing/oned/ITFReader.cpp \
+        $$PWD/zxing/zxing/oned/EAN13Reader.cpp \
+        $$PWD/zxing/zxing/oned/EAN8Reader.cpp \
+        $$PWD/zxing/zxing/oned/EANManufacturerOrgSupport.cpp \
+        $$PWD/zxing/zxing/oned/Code128Reader.cpp \
+        $$PWD/zxing/zxing/oned/Code39Reader.cpp \
+        $$PWD/zxing/zxing/oned/CodaBarReader.cpp \
+        $$PWD/zxing/zxing/oned/Code93Reader.cpp \
+        $$PWD/zxing/zxing/oned/rss/AbstractRSSReader.cpp \
+        $$PWD/zxing/zxing/oned/rss/DataCharacter.cpp \
+        $$PWD/zxing/zxing/oned/rss/FinderPattern.cpp \
+        $$PWD/zxing/zxing/oned/rss/Pair.cpp \
+        $$PWD/zxing/zxing/oned/rss/RSS14Reader.cpp \
+        $$PWD/zxing/zxing/oned/rss/RSSUtils.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/BitArrayBuilder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/ExpandedPair.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/ExpandedRow.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/RSSExpandedReader.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AbstractExpandedDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01AndOtherAIs.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01decoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01weightDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0x1xDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013x0xDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01320xDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01392xDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI01393xDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AI013103decoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/AnyAIDecoder.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/BlockParsedResult.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/CurrentParsingState.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedChar.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedInformation.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedNumeric.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/DecodedObject.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/FieldParser.cpp \
+        $$PWD/zxing/zxing/oned/rss/expanded/decoders/GeneralAppIdDecoder.cpp
+}
+
+enable_decoder_qr_code {
+    DEFINES += ENABLE_DECODER_QR_CODE
+
+    CONFIG += enable_generic_qrcode
+
+    HEADERS += \
+        $$PWD/zxing/zxing/qrcode/decoder/Mode.h \
+        $$PWD/zxing/zxing/qrcode/decoder/Decoder.h \
+        $$PWD/zxing/zxing/qrcode/decoder/DecodedBitStreamParser.h \
+        $$PWD/zxing/zxing/qrcode/decoder/DataMask.h \
+        $$PWD/zxing/zxing/qrcode/decoder/DataBlock.h \
+        $$PWD/zxing/zxing/qrcode/decoder/BitMatrixParser.h \
+        $$PWD/zxing/zxing/qrcode/detector/FinderPatternInfo.h \
+        $$PWD/zxing/zxing/qrcode/detector/FinderPatternFinder.h \
+        $$PWD/zxing/zxing/qrcode/detector/FinderPattern.h \
+        $$PWD/zxing/zxing/qrcode/detector/Detector.h \
+        $$PWD/zxing/zxing/qrcode/detector/AlignmentPatternFinder.h \
+        $$PWD/zxing/zxing/qrcode/detector/AlignmentPattern.h \
+        $$PWD/zxing/zxing/multi/qrcode/QRCodeMultiReader.h \
+        $$PWD/zxing/zxing/multi/qrcode/detector/MultiFinderPatternFinder.h \
+        $$PWD/zxing/zxing/multi/qrcode/detector/MultiDetector.h \
+
+
+    SOURCES += \
+        $$PWD/zxing/zxing/qrcode/decoder/QRBitMatrixParser.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRDataBlock.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRDataMask.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRDecodedBitStreamParser.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRDecoder.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRMode.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPattern.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPatternFinder.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRDetector.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRFinderPattern.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRFinderPatternFinder.cpp \
+        $$PWD/zxing/zxing/qrcode/detector/QRFinderPatternInfo.cpp \
+        $$PWD/zxing/zxing/qrcode/QRCodeReader.cpp \
+        $$PWD/zxing/zxing/multi/qrcode/QRCodeMultiReader.cpp \
+        $$PWD/zxing/zxing/multi/qrcode/detector/MultiFinderPatternFinder.cpp \
+        $$PWD/zxing/zxing/multi/qrcode/detector/MultiDetector.cpp
+}
+
+enable_encoder_qr_code {
+    DEFINES += ENABLE_ENCODER_QR_CODE
+
+    CONFIG += enable_generic_qrcode
+
+    HEADERS += \
+        $$PWD/zxing/zxing/qrcode/encoder/BlockPair.h \
+        $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.h \
+        $$PWD/zxing/zxing/qrcode/encoder/Encoder.h \
+        $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.h \
+        $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.h \
+        $$PWD/zxing/zxing/qrcode/encoder/QRCode.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/qrcode/encoder/ByteMatrix.cpp \
+        $$PWD/zxing/zxing/qrcode/encoder/QREncoder.cpp \
+        $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
+        $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
+        $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp
+}
+
+enable_generic_qrcode {
+    HEADERS += \
+        $$PWD/zxing/zxing/qrcode/Version.h \
+        $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
+        $$PWD/zxing/zxing/qrcode/FormatInformation.h \
+        $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/qrcode/QRVersion.cpp \
+        $$PWD/zxing/zxing/qrcode/QRFormatInformation.cpp \
+        $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp
+}
+
+enable_decoder_data_matrix {
+    DEFINES += ENABLE_DECODER_DATA_MATRIX
+
+    HEADERS += \
+        $$PWD/zxing/zxing/datamatrix/Version.h \
+        $$PWD/zxing/zxing/datamatrix/DataMatrixReader.h \
+        $$PWD/zxing/zxing/datamatrix/decoder/Decoder.h \
+        $$PWD/zxing/zxing/datamatrix/decoder/DecodedBitStreamParser.h \
+        $$PWD/zxing/zxing/datamatrix/decoder/DataBlock.h \
+        $$PWD/zxing/zxing/datamatrix/decoder/BitMatrixParser.h \
+        $$PWD/zxing/zxing/datamatrix/detector/DetectorException.h \
+        $$PWD/zxing/zxing/datamatrix/detector/Detector.h \
+        $$PWD/zxing/zxing/datamatrix/detector/CornerPoint.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/datamatrix/DataMatrixReader.cpp \
+        $$PWD/zxing/zxing/datamatrix/DataMatrixVersion.cpp \
+        $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDecoder.cpp \
+        $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixBitMatrixParser.cpp \
+        $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDataBlock.cpp \
+        $$PWD/zxing/zxing/datamatrix/decoder/DataMatrixDecodedBitStreamParser.cpp \
+        $$PWD/zxing/zxing/datamatrix/detector/DataMatrixCornerPoint.cpp \
+        $$PWD/zxing/zxing/datamatrix/detector/DataMatrixDetector.cpp \
+        $$PWD/zxing/zxing/datamatrix/detector/DataMatrixDetectorException.cpp
+}
+
+enable_decoder_aztec {
+    DEFINES += ENABLE_DECODER_AZTEC
+
+    HEADERS += \
+        $$PWD/zxing/zxing/aztec/AztecReader.h \
+        $$PWD/zxing/zxing/aztec/AztecDetectorResult.h \
+        $$PWD/zxing/zxing/aztec/decoder/Decoder.h \
+        $$PWD/zxing/zxing/aztec/detector/Detector.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/aztec/AztecReader.cpp \
+        $$PWD/zxing/zxing/aztec/AztecDetectorResult.cpp \
+        $$PWD/zxing/zxing/aztec/decoder/AztecDecoder.cpp \
+        $$PWD/zxing/zxing/aztec/detector/AztecDetector.cpp
+}
+
+enable_decoder_pdf17 {
+    DEFINES += ENABLE_DECODER_PDF17
+
+    HEADERS += \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ErrorCorrection.h \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusGF.h \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusPoly.h \
+        $$PWD/zxing/zxing/pdf417/decoder/BitMatrixParser.h \
+        $$PWD/zxing/zxing/pdf417/decoder/DecodedBitStreamParser.h \
+        $$PWD/zxing/zxing/pdf417/decoder/Decoder.h \
+        $$PWD/zxing/zxing/pdf417/detector/Detector.h \
+        $$PWD/zxing/zxing/pdf417/detector/LinesSampler.h \
+        $$PWD/zxing/zxing/pdf417/PDF417Reader.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ErrorCorrection.cpp \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusGF.cpp \
+        $$PWD/zxing/zxing/pdf417/decoder/ec/ModulusPoly.cpp \
+        $$PWD/zxing/zxing/pdf417/decoder/PDF417BitMatrixParser.cpp \
+        $$PWD/zxing/zxing/pdf417/decoder/PDF417DecodedBitStreamParser.cpp \
+        $$PWD/zxing/zxing/pdf417/decoder/PDF417Decoder.cpp \
+        $$PWD/zxing/zxing/pdf417/detector/PDF417Detector.cpp \
+        $$PWD/zxing/zxing/pdf417/detector/LinesSampler.cpp \
+        $$PWD/zxing/zxing/pdf417/PDF417Reader.cpp
+}
 
 qzxing_multimedia {
     QT += multimedia
