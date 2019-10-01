@@ -142,19 +142,6 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/bigint/BigIntegerAlgorithms.cc \
     $$PWD/zxing/bigint/BigInteger.cc \
 
-enable_encoder_generic {
-    DEFINES += ENABLE_ENCODER_GENERIC
-
-    HEADERS += \
-        $$PWD/zxing/zxing/EncodeHint.h \
-        $$PWD/zxing/zxing/UnsupportedEncodingException.h \
-        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
-
-    SOURCES += \
-        $$PWD/zxing/zxing/EncodeHint.cpp \
-        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
-}
-
 enable_decoder_1d_barcodes {
     DEFINES += ENABLE_DECODER_1D_BARCODES
 
@@ -302,7 +289,8 @@ enable_decoder_qr_code {
 enable_encoder_qr_code {
     DEFINES += ENABLE_ENCODER_QR_CODE
 
-    CONFIG += enable_generic_qrcode
+    CONFIG += enable_generic_qrcode \
+              enable_encoder_generic
 
     HEADERS += \
         $$PWD/zxing/zxing/qrcode/encoder/BlockPair.h \
@@ -318,19 +306,6 @@ enable_encoder_qr_code {
         $$PWD/zxing/zxing/qrcode/encoder/MaskUtil.cpp \
         $$PWD/zxing/zxing/qrcode/encoder/MatrixUtil.cpp \
         $$PWD/zxing/zxing/qrcode/encoder/QRCode.cpp
-}
-
-enable_generic_qrcode {
-    HEADERS += \
-        $$PWD/zxing/zxing/qrcode/Version.h \
-        $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
-        $$PWD/zxing/zxing/qrcode/FormatInformation.h \
-        $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h
-
-    SOURCES += \
-        $$PWD/zxing/zxing/qrcode/QRVersion.cpp \
-        $$PWD/zxing/zxing/qrcode/QRFormatInformation.cpp \
-        $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp
 }
 
 enable_decoder_data_matrix {
@@ -399,6 +374,34 @@ enable_decoder_pdf17 {
         $$PWD/zxing/zxing/pdf417/detector/PDF417Detector.cpp \
         $$PWD/zxing/zxing/pdf417/detector/LinesSampler.cpp \
         $$PWD/zxing/zxing/pdf417/PDF417Reader.cpp
+}
+
+enable_generic_qrcode {
+    CONFIG += enable_encoder_generic
+
+    HEADERS += \
+        $$PWD/zxing/zxing/qrcode/Version.h \
+        $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
+        $$PWD/zxing/zxing/qrcode/FormatInformation.h \
+        $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h
+
+    SOURCES += \
+        $$PWD/zxing/zxing/qrcode/QRVersion.cpp \
+        $$PWD/zxing/zxing/qrcode/QRFormatInformation.cpp \
+        $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp
+}
+
+enable_encoder_generic {
+    DEFINES += ENABLE_ENCODER_GENERIC
+
+    HEADERS += \
+        $$PWD/zxing/zxing/EncodeHint.h \
+        $$PWD/zxing/zxing/UnsupportedEncodingException.h \
+        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.h \
+
+    SOURCES += \
+        $$PWD/zxing/zxing/EncodeHint.cpp \
+        $$PWD/zxing/zxing/common/reedsolomon/ReedSolomonEncoder.cpp
 }
 
 qzxing_multimedia {
