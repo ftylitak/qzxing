@@ -41,6 +41,7 @@ namespace zxing {
     Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
     Ref<Result> decodeWithState(Ref<BinaryBitmap> image);
     void setHints(DecodeHints hints);
+    void enableReaders(DecodeHints hints, bool allowAll = false);
     ~MultiFormatReader();
   };
 }

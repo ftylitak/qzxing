@@ -1,6 +1,11 @@
 TEMPLATE = app
 
-CONFIG += qzxing_multimedia
+CONFIG += qzxing_multimedia \
+          enable_decoder_1d_barcodes \
+          enable_decoder_qr_code \
+          enable_decoder_data_matrix \
+          enable_decoder_aztec \
+          enable_decoder_pdf17
 
 CONFIG(debug, debug|release) {
     CONFIG+=qml_debug
@@ -22,7 +27,7 @@ RESOURCES += qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
-include(../../src/QZXing.pri)
+include(../../src/QZXing-components.pri)
 
 # Default rules for deployment.
 include(deployment.pri)
