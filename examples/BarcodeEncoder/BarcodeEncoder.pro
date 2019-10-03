@@ -28,4 +28,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-include(../../src/QZXing.pri)
+CONFIG += enable_encoder_qr_code
+
+include(../../src/QZXing-components.pri)
