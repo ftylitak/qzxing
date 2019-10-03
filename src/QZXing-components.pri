@@ -249,7 +249,6 @@ enable_decoder_qr_code {
     CONFIG += enable_generic_qrcode
 
     HEADERS += \
-        $$PWD/zxing/zxing/qrcode/decoder/Mode.h \
         $$PWD/zxing/zxing/qrcode/decoder/Decoder.h \
         $$PWD/zxing/zxing/qrcode/decoder/DecodedBitStreamParser.h \
         $$PWD/zxing/zxing/qrcode/decoder/DataMask.h \
@@ -272,7 +271,6 @@ enable_decoder_qr_code {
         $$PWD/zxing/zxing/qrcode/decoder/QRDataMask.cpp \
         $$PWD/zxing/zxing/qrcode/decoder/QRDecodedBitStreamParser.cpp \
         $$PWD/zxing/zxing/qrcode/decoder/QRDecoder.cpp \
-        $$PWD/zxing/zxing/qrcode/decoder/QRMode.cpp \
         $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPattern.cpp \
         $$PWD/zxing/zxing/qrcode/detector/QRAlignmentPatternFinder.cpp \
         $$PWD/zxing/zxing/qrcode/detector/QRDetector.cpp \
@@ -382,12 +380,14 @@ enable_generic_qrcode {
         $$PWD/zxing/zxing/qrcode/Version.h \
         $$PWD/zxing/zxing/qrcode/QRCodeReader.h \
         $$PWD/zxing/zxing/qrcode/FormatInformation.h \
-        $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h
+        $$PWD/zxing/zxing/qrcode/ErrorCorrectionLevel.h \
+        $$PWD/zxing/zxing/qrcode/decoder/Mode.h
 
     SOURCES += \
         $$PWD/zxing/zxing/qrcode/QRVersion.cpp \
         $$PWD/zxing/zxing/qrcode/QRFormatInformation.cpp \
-        $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp
+        $$PWD/zxing/zxing/qrcode/QRErrorCorrectionLevel.cpp \
+        $$PWD/zxing/zxing/qrcode/decoder/QRMode.cpp \
 }
 
 enable_encoder_generic {
