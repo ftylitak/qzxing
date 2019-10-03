@@ -116,24 +116,6 @@ ApplicationWindow {
                     }
                 }
             }
-
-//            Rectangle {
-//                height: colorPick.height + 6
-//                width: colorPick.width + 6
-//                border.width: 1
-//                border.color: "#bdbebf"
-//                Button {
-//                    id: colorPick
-//                    anchors.centerIn: parent
-//                    width: borderStatus.height /2
-//                    height: borderStatus.height /2
-//                    background: Rectangle {
-//                        color: barcodeRectangle.color
-//                    }
-
-//                    onClicked: colorDialog.visible = true
-//                }
-//            }
         }
 
         Rectangle {
