@@ -203,6 +203,35 @@ static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureR
     return image_ptr;
 }
 
+static void YUV_NV21_TO_RGB(uchar* argb, const uchar* yuv, int width, int height) {
+    int frameSize = width * height;
+
+    int ii = 0;
+    int ij = 0;
+    int di = +1;
+    int dj = +1;
+
+    int a = 0;
+    for (int i = 0, ci = ii; i < height; ++i, ci += di) {
+        for (int j = 0, cj = ij; j < width; ++j, cj += dj) {
+            int y = (0xff & ((int) yuv[ci * width + cj]));
+            int v = (0xff & ((int) yuv[frameSize + (ci >> 1) * width + (cj & ~1) + 0]));
+            int u = (0xff & ((int) yuv[frameSize + (ci >> 1) * width + (cj & ~1) + 1]));
+            y = y < 16 ? 16 : y;
+
+            int r = (int) (1.164f * (y - 16) + 1.596f * (v - 128));
+            int g = (int) (1.164f * (y - 16) - 0.813f * (v - 128) - 0.391f * (u - 128));
+            int b = (int) (1.164f * (y - 16) + 2.018f * (u - 128));
+
+            r = r < 0 ? 0 : (r > 255 ? 255 : r);
+            g = g < 0 ? 0 : (g > 255 ? 255 : g);
+            b = b < 0 ? 0 : (b > 255 ? 255 : b);
+
+            argb[a++] = 0xff000000 | (r << 16) | (g << 8) | b;
+        }
+    }
+}
+
 void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame, const QRect& _captureRect)
 {
     if (videoFrame.data.length() < 1) {
@@ -266,26 +295,7 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     case QVideoFrame::Format_NV12:
         /// nv12 format, encountered on macOS
         image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
-        pixel = image_ptr->bits();
-        wh = width * height;
-        w_2 = width / 2;
-        wh_54 = wh * 5 / 4;
-
-        for (int y = captureRect.startY; y < captureRect.endY; y++) {
-            const int Y_offset = y * width;
-            const int y_2 = y / 2;
-            const int U_offset = y_2 * w_2 + wh;
-            const int V_offset = y_2 * w_2 + wh_54;
-            for (int x = captureRect.startX; x < captureRect.endX; x++) {
-                const int x_2 = x / 2;
-                const uchar Y = data[Y_offset + x];
-                const uchar U = data[U_offset + x_2];
-                const uchar V = data[V_offset + x_2];
-                *pixel = yuvToGray(Y, U, V);
-                ++pixel;
-            }
-        }
-
+        YUV_NV21_TO_RGB((uchar*) image_ptr->bits(), (const uchar*) yuvPtr, width, height);
         break;
     case QVideoFrame::Format_YUYV:
         image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
