@@ -43,7 +43,7 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeEngine>
 
-#include <QZXing.h>
+#include "QZXing.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <QtOpenGL/QGLWidget>

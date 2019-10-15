@@ -1,7 +1,7 @@
 #ifndef ENCODERSTRESSTEST_H
 #define ENCODERSTRESSTEST_H
 
-#include <QZXing.h>
+#include "QZXing.h"
 #include <memory>
 #include <vector>
 #include <map>

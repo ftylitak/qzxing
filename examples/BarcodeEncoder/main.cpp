@@ -1,6 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QZXing.h>
+#include "QZXing.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,7 +1,7 @@
 #ifndef TESTCASE_H
 #define TESTCASE_H
 
-#include <QZXing.h>
+#include "QZXing.h"
 #include <zxing/Exception.h>
 #include <QtGlobal>
 #include <zxing/qrcode/decoder/Mode.h>

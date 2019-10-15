@@ -11,7 +11,7 @@
 #endif
 #include "droparea.h"
 
-#include <QZXing.h>
+#include "QZXing.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {

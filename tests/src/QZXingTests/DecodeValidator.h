@@ -2,7 +2,7 @@
 #define DECODEVALIDATOR_H
 
 #include "ValidationStats.h"
-#include <QZXing.h>
+#include "QZXing.h"
 #include <memory>
 #include <vector>
 #include <map>
