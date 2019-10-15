@@ -21,7 +21,7 @@
 #include <QAbstractVideoFilter>
 #include <QDebug>
 #include <QFuture>
-#include <QZXing.h>
+#include "QZXing.h"
 
 ///
 /// References:

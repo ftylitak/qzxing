@@ -97,7 +97,7 @@ Follows simple code snippets that brefly show the use of the library. For more d
 ### C++/Qt 
 
 ```cpp
-#include <QZXing.h>
+#include "QZXing.h"
 
 int main() 
 {
@@ -114,7 +114,7 @@ int main()
 First register QZXing type to the QML engine.
 
 ```cpp
-#include <QZXing.h>
+#include "QZXing.h"
 
 int main() 
 {
@@ -166,7 +166,7 @@ Use the encoding function with its default settings:
 * Error Correction Level: Low (L)
 
 ```cpp
-#include <QZXing.h>
+#include "QZXing.h"
 
 int main() 
 {

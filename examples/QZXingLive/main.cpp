@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #include <Qt>
-#include <QZXing.h>
+#include "QZXing.h"
 #include "application.h"
 
 int main(int argc, char *argv[])
