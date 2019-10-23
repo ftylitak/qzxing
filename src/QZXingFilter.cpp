@@ -292,6 +292,29 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
         image_ptr = new QImage(data, width, height, QImage::Format_RGB16);
         break;
     case QVideoFrame::Format_YUV420P:
+        /// Format_YUV420P format, encountered on raspberry pi
+        image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
+        pixel = image_ptr->bits();
+        wh = width * height;
+        w_2 = width / 2;
+        wh_54 = wh * 5 / 4;
+
+        for (int y = captureRect.startY; y < captureRect.endY; y++) {
+            const int Y_offset = y * width;
+            const int y_2 = y / 2;
+            const int U_offset = y_2 * w_2 + wh;
+            const int V_offset = y_2 * w_2 + wh_54;
+            for (int x = captureRect.startX; x < captureRect.endX; x++) {
+                const int x_2 = x / 2;
+                const uchar Y = data[Y_offset + x];
+                const uchar U = data[U_offset + x_2];
+                const uchar V = data[V_offset + x_2];
+                *pixel = yuvToGray(Y, U, V);
+                ++pixel;
+            }
+        }
+
+        break;
     case QVideoFrame::Format_NV12:
         /// nv12 format, encountered on macOS
         image_ptr = new QImage(captureRect.targetWidth, captureRect.targetHeight, QImage::Format_Grayscale8);
