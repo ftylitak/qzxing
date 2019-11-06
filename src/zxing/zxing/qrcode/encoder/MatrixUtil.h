@@ -38,20 +38,20 @@ private:
     // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
     static void embedDarkDotAtLeftBottomCorner(ByteMatrix& matrix);
 
-    static void embedHorizontalSeparationPattern(int xStart,
-                                                 int yStart,
+    static void embedHorizontalSeparationPattern(size_t xStart,
+                                                 size_t yStart,
                                                  ByteMatrix& matrix);
 
-    static void embedVerticalSeparationPattern(int xStart,
-                                               int yStart,
+    static void embedVerticalSeparationPattern(size_t xStart,
+                                               size_t yStart,
                                                ByteMatrix& matrix);
 
     // Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
     // almost identical, since we cannot write a function that takes 2D arrays in different sizes in
     // C/C++. We should live with the fact.
-    static void embedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix& matrix);
+    static void embedPositionAdjustmentPattern(size_t xStart, size_t yStart, ByteMatrix& matrix);
 
-    static void embedPositionDetectionPattern(int xStart, int yStart, ByteMatrix& matrix);
+    static void embedPositionDetectionPattern(size_t xStart, size_t yStart, ByteMatrix& matrix);
 
     // Embed position detection patterns and surrounding vertical/horizontal separators.
     static void embedPositionDetectionPatternsAndSeparators(ByteMatrix& matrix);

@@ -6,7 +6,6 @@ namespace zxing {
 namespace qrcode {
 
 QRCode::QRCode() :
-    mode_(),
     ecLevel_ptr_(NULL),
     version_ptr_(NULL),
     maskPattern_(-1),
@@ -41,7 +40,7 @@ Ref<ByteMatrix> QRCode::getMatrix() const
     return matrix_ptr_;
 }
 
-const std::string QRCode::toString()
+std::string QRCode::toString() const
 {
     std::stringstream result;
     result << "<<";

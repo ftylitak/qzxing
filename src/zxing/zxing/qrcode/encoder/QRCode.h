@@ -31,7 +31,7 @@ public:
   Version* getVersion() const;
   int getMaskPattern() const;
   Ref<ByteMatrix> getMatrix() const;
-  const std::string toString();
+  std::string toString() const;
   void setMode(const Mode &value);
   void setECLevel(Ref<ErrorCorrectionLevel> value);
   void setVersion(Version* version);

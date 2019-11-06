@@ -12,6 +12,7 @@
 #include "MatrixUtil.h"
 #include <string>
 #include "zxing/common/StringUtils.h"
+#include <QDebug>
 
 namespace zxing {
 namespace qrcode {
@@ -46,7 +47,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
 {
     // Determine what character encoding has been specified by the caller, if any
     std::string encoding = hints == ZXING_NULLPTR ? "" : hints->getCharacterSet();
-    if (encoding == "")
+    if (encoding.empty())
         encoding = DEFAULT_BYTE_MODE_ENCODING;
 
     // Pick an encoding mode appropriate for the content. Note that this will not attempt to use
@@ -76,7 +77,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
 
     Version* version;
     if (hints != ZXING_NULLPTR/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
-        version = Version::getVersionForNumber(1);
+        version = Version::getVersionForNumber(1); //should version number be passed as argument?
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
         if (!willFit(bitsNeeded, version, ecLevel)) {
             throw WriterException("Data too big for requested version");
@@ -84,6 +85,8 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     } else {
         version = recommendVersion(ecLevel, mode, headerBits, dataBits);
     }
+
+    qDebug() << version->getVersionNumber() << ": " << content.size();
 
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
@@ -103,7 +106,7 @@ Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ec
     Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
                                                   version->getTotalCodewords(),
                                                   numDataBytes,
-                                                  int(ecBlocks.getECBlocks().size())));
+                                                  int(ecBlocks.numBlocks())));
 
     Ref<QRCode> qrCode(new QRCode);
 
@@ -265,7 +268,7 @@ void Encoder::terminateBits(int numDataBytes, BitArray& bits)
     // If we have more space, we'll fill the space with padding patterns defined in 8.4.9 (p.24).
     int bitSizeInBytes = bits.getSizeInBytes();
     int numPaddingBytes = numDataBytes - bitSizeInBytes;
-    for (int i = 0; i < numPaddingBytes; i++) {
+    for (int i = 0; i < numPaddingBytes; ++i) {
         bits.appendBits((i & 0x01) == 0 ? 0xEC : 0x11, 8);
     }
     if (bits.getSize() != capacity) {
@@ -322,10 +325,10 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
         throw WriterException("Total bytes mismatch");
     }
 
-    if (numDataBytesInBlock.size() < 1 )
+    if (numDataBytesInBlock.empty())
         numDataBytesInBlock.resize(1);
 
-    if (numECBytesInBlock.size() < 1 )
+    if (numECBytesInBlock.empty())
         numECBytesInBlock.resize(1);
 
     if (blockID < numRsBlocksInGroup1) {
@@ -366,7 +369,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // Since, we know the number of reedsolmon blocks, we can initialize the vector with the number.
     std::vector< BlockPair > blocks;
 
-    for (int i = 0; i < numRSBlocks; i++) {
+    for (int i = 0; i < numRSBlocks; ++i) {
         std::vector<int> numDataBytesInBlock;
         std::vector<int> numEcBytesInBlock;
         getNumDataBytesAndNumECBytesForBlockID(
@@ -391,7 +394,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     BitArray* result = new BitArray;
 
     // First, place data blocks.
-    for (int i = 0; i < maxNumDataBytes; i++) {
+    for (int i = 0; i < maxNumDataBytes; ++i) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
             ArrayRef<zxing::byte> dataBytes = it->getDataBytes();
             if (i < dataBytes.array_->size()) {
@@ -400,7 +403,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         }
     }
     // Then, place error correction blocks.
-    for (int i = 0; i < maxNumEcBytes; i++) {
+    for (int i = 0; i < maxNumEcBytes; ++i) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
             ArrayRef<zxing::byte> ecBytes = it->getErrorCorrectionBytes();
             if (i < ecBytes.array_->size()) {
@@ -585,7 +588,7 @@ void Encoder::appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bit
 int Encoder::calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
                                  Version* version)
 {
-    return headerBits.getSize() + mode.getCharacterCountBits(&(*version)) + dataBits.getSize();
+    return headerBits.getSize() + mode.getCharacterCountBits(version) + dataBits.getSize();
 }
 
 Version* Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
