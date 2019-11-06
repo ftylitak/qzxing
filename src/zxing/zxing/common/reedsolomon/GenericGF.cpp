@@ -59,7 +59,7 @@ void GenericGF::initialize() {
     
   int x = 1;
     
-  for (int i = 0; i < size; i++) {
+  for (size_t i = 0; i < size; i++) {
     expTable[i] = x;
     x <<= 1; // x = x * 2; we're assuming the generator alpha is 2
     if (x >= size) {
@@ -67,8 +67,8 @@ void GenericGF::initialize() {
       x &= size-1;
     }
   }
-  for (int i = 0; i < size-1; i++) {
-    logTable[expTable[i]] = i;
+  for (size_t i = 0; i < size-1; i++) {
+    logTable.at(expTable.at(i)) = i;
   }
   //logTable[0] == 0 but this should never be used
   ArrayRef<int> coefficients_zero(1);
@@ -148,7 +148,7 @@ int GenericGF::multiply(int a, int b) {
   return expTable[(logTable[a] + logTable[b]) % (size - 1)];
   }
     
-int GenericGF::getSize() {
+size_t GenericGF::getSize() {
   return size;
 }
 

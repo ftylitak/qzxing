@@ -35,7 +35,7 @@ public:
                          int width = 0, int height = 0);
 
 public slots:
-    void save(QObject *item, const QString &path,
+    void save(QObject *imageObj, const QString &path,
               const int offsetX = 0, const int offsetY = 0,
               const int width = 0, const int height = 0);
 private:

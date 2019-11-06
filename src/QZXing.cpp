@@ -340,7 +340,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
         qreal yMin = qreal(resultRectPoints[0]->getY());
         qreal yMax = yMin;
-        for (unsigned int i = 1; i < resultRectPoints.size(); ++i) {
+        for (size_t i = 1; i < resultRectPoints.size(); ++i) {
             qreal y = qreal(resultRectPoints[i]->getY());
             if (y < yMin)
                 yMin = y;
@@ -549,7 +549,7 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
         if (imagePath.startsWith("/"))
             imagePath = imagePath.right(imagePath.length() - 1);
         QQmlEngine *engine = QQmlEngine::contextForObject(this)->engine();
-        QQuickImageProvider *imageProvider = static_cast<QQuickImageProvider *>(engine->imageProvider(imageUrl.host()));
+        QQuickImageProvider *imageProvider = dynamic_cast<QQuickImageProvider *>(engine->imageProvider(imageUrl.host()));
         QSize imgSize;
         img = imageProvider->requestImage(imagePath, &imgSize, QSize());
     } else {

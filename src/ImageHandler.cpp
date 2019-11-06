@@ -81,8 +81,8 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
 
     if (offsetX || offsetY || width || height)
         return img.copy(offsetX, offsetY, width, height);
-    else
-        return img;
+
+    return img;
 }
 
 void ImageHandler::save(QObject *imageObj, const QString &path,

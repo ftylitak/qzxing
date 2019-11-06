@@ -57,7 +57,7 @@ LuminanceSource::operator std::string() const {
   for (int y = 0; y < getHeight(); y++) {
     row = getRow(y, row);
     for (int x = 0; x < getWidth(); x++) {
-      int luminance = row[x] & 0xFF;
+      int luminance = row[x];// & 0xFF;
       char c;
       if (luminance < 0x40) {
         c = '#';

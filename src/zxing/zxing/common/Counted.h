@@ -25,7 +25,7 @@ namespace zxing {
 /* base class for reference-counted objects */
 class Counted {
 private:
-  unsigned int count_;
+  size_t count_;
 public:
   Counted();
 
@@ -36,7 +36,7 @@ public:
   void release();
 
   /* return the current count for denugging purposes or similar */
-  int count() const;
+  size_t count() const;
 };
 
 /* counting reference to reference-counted objects */

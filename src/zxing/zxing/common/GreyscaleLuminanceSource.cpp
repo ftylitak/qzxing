@@ -58,16 +58,15 @@ ArrayRef<zxing::byte> GreyscaleLuminanceSource::getRow(int y, ArrayRef<zxing::by
 }
 
 ArrayRef<zxing::byte> GreyscaleLuminanceSource::getMatrix() const {
-  if (left_ == 0 && top_ == 0 && dataWidth_ == getWidth() && dataHeight_ == getHeight()) {
+  if (left_ == 0 && top_ == 0 && dataWidth_ == getWidth() && dataHeight_ == getHeight())
     return greyData_;
-  } else {
-    int size = getWidth() * getHeight();
-    ArrayRef<zxing::byte> result (size);
-    for (int row = 0; row < getHeight(); row++) {
-      memcpy(&result[row * getWidth()], &greyData_[(top_ + row) * dataWidth_ + left_], getWidth());
-    }
-    return result;
+
+  int size = getWidth() * getHeight();
+  ArrayRef<zxing::byte> result (size);
+  for (int row = 0; row < getHeight(); row++) {
+    memcpy(&result[row * getWidth()], &greyData_[(top_ + row) * dataWidth_ + left_], getWidth());
   }
+  return result;
 }
 
 Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {
@@ -81,3 +80,4 @@ Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {
 }
 
 }
+

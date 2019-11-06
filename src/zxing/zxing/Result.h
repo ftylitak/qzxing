@@ -44,7 +44,7 @@ public:
   Result(Ref<String> text,
          ArrayRef<zxing::byte> rawBytes,
          ArrayRef< Ref<ResultPoint> > resultPoints,
-         BarcodeFormat format, std::string charSet = "",
+         BarcodeFormat format, const std::string &charSet = "",
          ResultMetadata metadata = ResultMetadata());
   ~Result();
   Ref<String> getText();

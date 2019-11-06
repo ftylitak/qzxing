@@ -35,7 +35,7 @@ namespace zxing {
 Result::Result(Ref<String> text,
                ArrayRef<zxing::byte> rawBytes,
                ArrayRef< Ref<ResultPoint> > resultPoints,
-               BarcodeFormat format, std::string charSet,
+               BarcodeFormat format, const std::string &charSet,
                ResultMetadata metadata) :
   text_(text), rawBytes_(rawBytes), resultPoints_(resultPoints), format_(format), charSet_(charSet), metadata_(metadata) {
 }

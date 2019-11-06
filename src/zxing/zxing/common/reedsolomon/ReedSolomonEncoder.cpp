@@ -51,7 +51,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
     ArrayRef<int> infoCoefficients(dataBytes);
 
     //to-do optimize the following loop
-    for(int i=0; i< dataBytes; i++)
+    for(size_t i=0; i< dataBytes; i++)
         infoCoefficients[i] = toEncode[size_t(i)];
 
     Ref<GenericGFPoly> info(new GenericGFPoly(field_, infoCoefficients));
@@ -64,7 +64,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
     }
 
     for (int i = 0; i < coefficients->size(); i++)
-      toEncode[size_t(dataBytes + numZeroCoefficients + i)] = zxing::byte(coefficients[int(i)]);
+      toEncode[size_t(dataBytes + numZeroCoefficients + i)] = zxing::byte(coefficients[i]);
 }
 
 }

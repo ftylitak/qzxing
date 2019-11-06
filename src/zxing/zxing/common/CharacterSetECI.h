@@ -40,7 +40,7 @@ private:
 
   CharacterSetECI(const std::vector<int> values, const std::vector<const char*> names);
 
-  static void addCharacterSet(const std::vector<int> value, const std::vector<const char*> encodingNames);
+  static void addCharacterSet(const std::vector<int> &value, const std::vector<const char*> &encodingNames);
 
 public:
   char const* name() const;

@@ -47,6 +47,7 @@ private:
 public:
   ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks);
   ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks1, ECB *ecBlocks2);
+  int numBlocks() const;
   int getECCodewordsPerBloc();
   int getTotalECCodewords();
   std::vector<ECB*>& getECBlocks();

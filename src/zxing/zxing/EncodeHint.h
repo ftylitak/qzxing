@@ -33,7 +33,7 @@ private:
 public:
     EncodeHint();
 
-    const std::string getCharacterSet() const { return characterSet_; }
+    std::string getCharacterSet() const { return characterSet_; }
     const zxing::qrcode::ErrorCorrectionLevel* getErrorCorrectionLevel() { return errorCorrectionLevel_; }
 
     void setCharacterSet(const std::string& characterSet) { characterSet_ = characterSet; }

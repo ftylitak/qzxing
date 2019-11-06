@@ -40,7 +40,7 @@ public:
   virtual float getX() const;
   virtual float getY() const;
 
-  bool equals(Ref<ResultPoint> other);
+  bool equals(const Ref<ResultPoint> &other);
 
   static void orderBestPatterns(std::vector<Ref<ResultPoint> > &patterns);
   static float distance(Ref<ResultPoint> point1, Ref<ResultPoint> point2);

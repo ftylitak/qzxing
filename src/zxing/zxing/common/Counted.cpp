@@ -26,7 +26,7 @@ void Counted::release()
     }
 }
 
-int Counted::count() const
+size_t Counted::count() const
 {
     return count_;
 }

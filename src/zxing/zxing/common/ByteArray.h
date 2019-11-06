@@ -27,15 +27,15 @@ namespace zxing {
 /**
  * ByteArray is an extension of std::vector<unsigned char>.
  */
-class ByteArray : public std::vector<uint8_t>
+class ByteArray : public std::vector<zxing::byte>
 {
 public:
     ByteArray() {}
-    ByteArray(std::initializer_list<uint8_t> list) : std::vector<uint8_t>(list) {}
-    explicit ByteArray(int len) : std::vector<uint8_t>(len, 0) {}
+    ByteArray(std::initializer_list<zxing::byte> list) : std::vector<zxing::byte>(list) {}
+    explicit ByteArray(int len) : std::vector<zxing::byte>(len, 0) {}
     int length() const { return static_cast<int>(size()); }
-    const zxing::byte* bytePtr() const { return reinterpret_cast<const zxing::byte*>(data()); }
-    zxing::byte* bytePtr() { return reinterpret_cast<zxing::byte*>(data()); }
+    const zxing::byte* bytePtr() const { return data(); }
+    zxing::byte* bytePtr() { return data(); }
 };
 
 }

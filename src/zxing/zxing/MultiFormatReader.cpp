@@ -63,7 +63,7 @@ Ref<Result> MultiFormatReader::decode(Ref<BinaryBitmap> image, DecodeHints hints
 
 Ref<Result> MultiFormatReader::decodeWithState(Ref<BinaryBitmap> image) {
   // Make sure to set up the default state so we don't crash
-  if (readers_.size() == 0) {
+  if (readers_.empty()) {
     setHints(DecodeHints::DEFAULT_HINT);
   }
   return decodeInternal(image);
@@ -75,7 +75,7 @@ void MultiFormatReader::setHints(DecodeHints hints) {
 
   enableReaders(hints, false);
 
-  if (readers_.size() == 0)
+  if (readers_.empty())
       enableReaders(hints, true);
 }
 
@@ -138,7 +138,7 @@ void MultiFormatReader::enableReaders(zxing::DecodeHints hints, bool allowAll)
 }
 
 Ref<Result> MultiFormatReader::decodeInternal(Ref<BinaryBitmap> image) {
-  for (unsigned int i = 0; i < readers_.size(); i++) {
+  for (size_t i = 0; i < readers_.size(); i++) {
     try {
       return readers_[i]->decode(image, hints_);
     } catch (ReaderException const& re) {

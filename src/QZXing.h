@@ -114,7 +114,7 @@ public:
 #endif //QT_VERSION >= Qt 4.7
 
 #if  QT_VERSION >= 0x050000
-    static void registerQMLImageProvider(QQmlEngine& view);
+    static void registerQMLImageProvider(QQmlEngine& engine);
 #endif //QT_VERSION >= Qt 5.0
 
 #endif //QZXING_QML

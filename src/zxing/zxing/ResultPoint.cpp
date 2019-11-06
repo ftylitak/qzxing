@@ -42,7 +42,7 @@ float ResultPoint::getY() const {
   return posY_;
 }
 
-bool ResultPoint::equals(Ref<ResultPoint> other) {
+bool ResultPoint::equals(const Ref<ResultPoint> &other) {
   return posX_ == other->getX() && posY_ == other->getY();
 }
 

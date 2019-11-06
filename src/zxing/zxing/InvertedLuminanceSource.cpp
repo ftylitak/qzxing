@@ -31,7 +31,7 @@ ArrayRef<zxing::byte> InvertedLuminanceSource::getRow(int y, ArrayRef<zxing::byt
   row = delegate->getRow(y, row);
   int width = getWidth();
   for (int i = 0; i < width; i++) {
-    row[i] = (zxing::byte) (255 - (row[i] & 0xFF));
+    row[i] = 0xFF - row[i];
   }
   return row;
 }
@@ -41,7 +41,7 @@ ArrayRef<zxing::byte> InvertedLuminanceSource::getMatrix() const {
   int length = getWidth() * getHeight();
   ArrayRef<zxing::byte> invertedMatrix(length);
   for (int i = 0; i < length; i++) {
-    invertedMatrix[i] = (zxing::byte) (255 - (matrix[i] & 0xFF));
+    invertedMatrix[i] = 0xFF - matrix[i];
   }
   return invertedMatrix;
 }

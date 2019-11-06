@@ -16,12 +16,10 @@
  */
 
 #include <zxing/common/CharacterSetECI.h>
-#include <zxing/common/IllegalArgumentException.h>
 #include <zxing/FormatException.h>
 #include <cstdlib>
 
 using std::string;
-using zxing::IllegalArgumentException;
 
 namespace zxing {
 namespace common {
@@ -89,7 +87,7 @@ int CharacterSetECI::getValue() const {
   return values_[0];
 }
 
-void CharacterSetECI::addCharacterSet(const std::vector<int> values, const std::vector<const char*> names) {
+void CharacterSetECI::addCharacterSet(const std::vector<int> &values, const std::vector<const char *> &names) {
   CharacterSetECI* charSet = new CharacterSetECI(values, names);
   for(size_t i=0; i<values.size(); i++) {
     VALUE_TO_ECI[values[i]] = charSet;

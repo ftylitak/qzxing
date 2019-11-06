@@ -280,7 +280,7 @@ void BitArray::toBytes(int bitOffset, std::vector<zxing::byte>& array, int offse
     }
 }
 
-const std::string BitArray::toString() const
+std::string BitArray::toString() const
 {
     std::stringstream result;// = new StringBuilder(2 * width * height + 2);
 

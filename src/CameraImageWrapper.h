@@ -45,7 +45,7 @@ public:
     Ref<LuminanceSource> invert() const;
     Ref<LuminanceSource> rotateCounterClockwise() const;
 
-    inline zxing::byte gray(unsigned int r, unsigned int g, unsigned int b);
+    inline zxing::byte gray(const unsigned int r, const unsigned int g, const unsigned int b);
   
 private:
     ArrayRef<zxing::byte> getRowP(int y, ArrayRef<zxing::byte> row) const;

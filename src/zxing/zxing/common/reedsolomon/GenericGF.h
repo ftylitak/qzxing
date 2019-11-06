@@ -58,7 +58,7 @@ namespace zxing {
     
     Ref<GenericGFPoly> getZero();
     Ref<GenericGFPoly> getOne();
-    int getSize();
+    size_t getSize();
     int getGeneratorBase();
     Ref<GenericGFPoly> buildMonomial(int degree, int coefficient);
     

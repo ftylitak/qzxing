@@ -76,7 +76,7 @@ public:
 
     void toBytes(int bitOffset, std::vector<zxing::byte>& array, int offset, int numBytes) const;
 
-    const std::string toString() const;
+    std::string toString() const;
 
     static ArrayRef<int> makeArray(int size) {
         return ArrayRef<int>((size + 31) / 32);

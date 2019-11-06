@@ -44,12 +44,22 @@ int ECB::getDataCodewords() {
 }
 
 ECBlocks::ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks) :
-    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_(1, ecBlocks) {
+    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_() {
+    ecBlocks_.push_back(ecBlocks);
 }
 
 ECBlocks::ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks1, ECB *ecBlocks2) :
-    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_(1, ecBlocks1) {
+    ecCodewordsPerBloc_(ecCodewordsPerBloc), ecBlocks_() {
+  ecBlocks_.push_back(ecBlocks1);
   ecBlocks_.push_back(ecBlocks2);
+}
+
+int ECBlocks::numBlocks() const
+{
+    int sumSizeOfBlocks = 0;
+    for (size_t i=0; i<ecBlocks_.size(); ++i)
+        sumSizeOfBlocks += ecBlocks_[i]->getCount();
+    return sumSizeOfBlocks;
 }
 
 int ECBlocks::getECCodewordsPerBloc()
@@ -59,7 +69,7 @@ int ECBlocks::getECCodewordsPerBloc()
 
 int ECBlocks::getTotalECCodewords()
 {
-    return ecCodewordsPerBloc_ * int(ecBlocks_.size());
+    return ecCodewordsPerBloc_ * numBlocks();//int(ecBlocks_.size());
 }
 
 std::vector<ECB*>& ECBlocks::getECBlocks() {
