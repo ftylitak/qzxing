@@ -13,6 +13,7 @@
 #include <string>
 #include "zxing/common/StringUtils.h"
 #include <QDebug>
+#include <QString>
 
 namespace zxing {
 namespace qrcode {
@@ -38,12 +39,12 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
             + MaskUtil::applyMaskPenaltyRule4(matrix);
 }
 
-Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel)
+Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel)
 {
     return encode(content, ecLevel, ZXING_NULLPTR);
 }
 
-Ref<QRCode> Encoder::encode(const std::string& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
+Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
     std::string encoding = hints == ZXING_NULLPTR ? "" : hints->getCharacterSet();
@@ -148,7 +149,7 @@ bool Encoder::willFit(int numInputBits, Version* version, const ErrorCorrectionL
    */
 int Encoder::getAlphanumericCode(int code)
 {
-    if (code < ALPHANUMERIC_TABLE_SIZE) {
+    if (code > 0 && code < ALPHANUMERIC_TABLE_SIZE) {
         return ALPHANUMERIC_TABLE[code];
     }
     return -1;
@@ -158,7 +159,7 @@ int Encoder::getAlphanumericCode(int code)
    * Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
    * if it is Shift_JIS, and the input is only double-byte Kanji, then we return {@link Mode#KANJI}.
    */
-Mode Encoder::chooseMode(const std::string& content, const std::string& encoding)
+Mode Encoder::chooseMode(const std::wstring& content, const std::string& encoding)
 {
     if (encoding == "Shift_JIS") 
 	{
@@ -169,7 +170,7 @@ Mode Encoder::chooseMode(const std::string& content, const std::string& encoding
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
     for (size_t i = 0; i < content.size(); i++) {
-        char c = content.at(i);
+        wchar_t c = content.at(i);
         if (c >= '0' && c <= '9') {
             hasNumeric = true;
         } else if (getAlphanumericCode(c) != -1) {
@@ -446,8 +447,6 @@ void Encoder::appendModeInfo(const Mode& mode, BitArray& bits)
     bits.appendBits(mode.getBits(), 4);
 }
 
-
-
 /**
    * Append length info. On success, store the result in "bits".
    */
@@ -467,7 +466,7 @@ void Encoder::appendLengthInfo(int numLetters, const Version& version, const Mod
 /**
    * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
    */
-void Encoder::appendBytes(const std::string& content,
+void Encoder::appendBytes(const std::wstring& content,
                           Mode& mode,
                           BitArray& bits,
                           const std::string& encoding)
@@ -487,7 +486,7 @@ void Encoder::appendBytes(const std::string& content,
     }
 }
 
-void Encoder::appendNumericBytes( const std::string& content, BitArray& bits)
+void Encoder::appendNumericBytes( const std::wstring& content, BitArray& bits)
 {
     size_t length = content.size();
     size_t i = 0;
@@ -512,7 +511,7 @@ void Encoder::appendNumericBytes( const std::string& content, BitArray& bits)
     }
 }
 
-void Encoder::appendAlphanumericBytes(const std::string& content, BitArray& bits)
+void Encoder::appendAlphanumericBytes(const std::wstring& content, BitArray& bits)
 {
     size_t length = content.length();
     size_t i = 0;
@@ -537,22 +536,18 @@ void Encoder::appendAlphanumericBytes(const std::string& content, BitArray& bits
     }
 }
 
-void Encoder::append8BitBytes(const std::string& content, BitArray& bits, const std::string& /*encoding*/)
+void Encoder::append8BitBytes(const std::wstring& content, BitArray& bits, const std::string& /*encoding*/)
 {
-    // For now we will suppose that all the encoding has been handled by std::string class.
-    //    byte[] bytes;
-    //    try {
-    //        bytes = content.getBytes(encoding);
-    //    } catch (UnsupportedEncodingException uee) {
-    //        throw WriterException(uee);
-    //    }
+    //TODO: find a pure C++ solution instead of Qt-specific
+    QString str = QString::fromStdWString(content);
+    QByteArray array = str.toUtf8();
 
-    for (size_t i=0; i<content.size(); i++) {
-        bits.appendBits(content.at(i), 8);
+    for (size_t i=0; i<array.size(); i++) {
+        bits.appendBits(array.at(i), 8);
     }
 }
 
-void Encoder::appendKanjiBytes(const std::string& content, BitArray& bits)
+void Encoder::appendKanjiBytes(const std::wstring& content, BitArray& bits)
 {
     // For now we will suppose that all the encoding has been handled by std::string class.
     //    try {

@@ -601,7 +601,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
         case EncoderFormat_QR_CODE:
         {
             Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
-                        data.toStdString(),
+                        data.toStdWString(),
                         encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
                             qrcode::ErrorCorrectionLevel::H :
                         (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
