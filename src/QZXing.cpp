@@ -21,17 +21,17 @@
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #endif // ENABLE_ENCODER_QR_CODE
 
+#ifdef QZXING_MULTIMEDIA
+#include "QZXingFilter.h"
+#endif //QZXING_MULTIMEDIA
+
+#ifdef QZXING_QML
 #if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
 #include <QtDeclarative>
 #elif QT_VERSION >= 0x050000
 #include <QtQml/qqml.h>
 #endif
 
-#ifdef QZXING_MULTIMEDIA
-#include "QZXingFilter.h"
-#endif //QZXING_MULTIMEDIA
-
-#ifdef QZXING_QML
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQuickImageProvider>
