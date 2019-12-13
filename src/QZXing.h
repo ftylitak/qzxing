@@ -101,10 +101,10 @@ public:
         EncodeErrorCorrectionLevel_H
     };
 
-    QZXing(QObject *parent = nullptr);
+    QZXing(QObject *parent = Q_NULLPTR);
     ~QZXing();
 
-    QZXing(DecoderFormat decodeHints, QObject *parent = nullptr);
+    QZXing(DecoderFormat decodeHints, QObject *parent = Q_NULLPTR);
 
 #ifdef QZXING_QML
 
