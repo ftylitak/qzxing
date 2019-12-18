@@ -18,7 +18,6 @@
 #define QZXING_H
 
 #include "QZXing_global.h"
-#include "zxing/ZXing.h"
 
 #include <QObject>
 #include <QImage>
@@ -102,10 +101,10 @@ public:
         EncodeErrorCorrectionLevel_H
     };
 
-    QZXing(QObject *parent = ZXING_NULLPTR);
+    QZXing(QObject *parent = Q_NULLPTR);
     ~QZXing();
 
-    QZXing(DecoderFormat decodeHints, QObject *parent = ZXING_NULLPTR);
+    QZXing(DecoderFormat decodeHints, QObject *parent = Q_NULLPTR);
 
 #ifdef QZXING_QML
 
