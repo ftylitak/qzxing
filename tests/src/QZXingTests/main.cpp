@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     else
     {
         DecodeValidator decodeValidator;
-        decodeValidator.executeTests("../../resources/");
+        decodeValidator.executeTests("../../resources/resources/");
 
         zxing::tests::EncodeValidator encodeValidator;
         encodeValidator.execute();
