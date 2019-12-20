@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QImage>
 #include <QVariantList>
+#include <QElapsedTimer>
 
 #include <set>
 

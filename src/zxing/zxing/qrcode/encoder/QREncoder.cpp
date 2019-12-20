@@ -161,11 +161,11 @@ int Encoder::getAlphanumericCode(int code)
    */
 Mode Encoder::chooseMode(const std::wstring& content, const std::string& encoding)
 {
-    if (encoding == "Shift_JIS") 
-	{
+    if (encoding == "Shift_JIS")
+    {
         std::cout << "DEBUG: Shift_JIS detected...be aware!" << std::endl;
         return Mode::BYTE;
-	}
+    }
 
     bool hasNumeric = false;
     bool hasAlphanumeric = false;
@@ -542,7 +542,7 @@ void Encoder::append8BitBytes(const std::wstring& content, BitArray& bits, const
     QString str = QString::fromStdWString(content);
     QByteArray array = str.toUtf8();
 
-    for (size_t i=0; i<array.size(); i++) {
+    for (auto i=0; i<array.size(); i++) {
         bits.appendBits(array.at(i), 8);
     }
 }

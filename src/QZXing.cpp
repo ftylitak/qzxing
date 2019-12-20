@@ -378,7 +378,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
 QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    QTime t;
+    QElapsedTimer t;
     t.start();
     processingTime = -1;
     Ref<Result> res;
