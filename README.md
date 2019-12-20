@@ -37,6 +37,7 @@ Supports barcode decoding for the following types:
         1. [C++/Qt](#howToEncodingCPP)
         1. [Qt Quick](#howToEncodingQtQuick)
 	1. [Encoded text format Information](#howToEncodingFormatExamples)
+1. [Unit test dependency](#unitTestDependency)
 1. [Contact](#contact)
 
 <a name="howToInclude"></a>
@@ -237,6 +238,15 @@ Image{
 Here is a list of contents that have been encoded and tested to be recognizable by the Android ZXing decoding application: 
 [QR Code encoding wiki page](https://github.com/ftylitak/qzxing/wiki/QR-Code-encoding)
 
+<a name="unitTestDependency"></a>
+# Unit test dependency
+In order to run Unit tests in /test folder, the git submodule containing the test resoucres needs to be initialized and/or updated:
+
+```bash
+cd qzxing
+git submodule update --init --recursive
+```
+
 <a name="contact"></a>
 # Contact 
-In case of bug reports or feature requests feel free to open an [issue](https://github.com/ftylitak/qzxing/issues). 
+In case of bug reports or feature requests feel free to open an [issue](https://github.com/ftylitak/qzxing/issues).
