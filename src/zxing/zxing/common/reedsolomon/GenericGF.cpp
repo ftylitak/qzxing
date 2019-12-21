@@ -36,11 +36,11 @@ Ref<GenericGF> GenericGF::QR_CODE_FIELD_256(new GenericGF(0x011D, 256, 0));
 Ref<GenericGF> GenericGF::DATA_MATRIX_FIELD_256(new GenericGF(0x012D, 256, 1));
 Ref<GenericGF> GenericGF::AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
 Ref<GenericGF> GenericGF::MAXICODE_FIELD_64 = AZTEC_DATA_6;
-  
+
 namespace {
   size_t INITIALIZATION_THRESHOLD = 0;
 }
-  
+
 GenericGF::GenericGF(int primitive_, size_t size_, int b)
   : size(size_), primitive(primitive_), generatorBase(b), initialized(false) {
   if (size <= INITIALIZATION_THRESHOLD) {
@@ -56,9 +56,9 @@ GenericGF::~GenericGF()
 void GenericGF::initialize() {
   expTable = std::vector<int>(size);
   logTable = std::vector<int>(size);
-    
-  int x = 1;
-    
+
+  size_t x = 1;
+
   for (size_t i = 0; i < size; i++) {
     expTable[i] = x;
     x <<= 1; // x = x * 2; we're assuming the generator alpha is 2
@@ -81,26 +81,26 @@ void GenericGF::initialize() {
   one = Ref<GenericGFPoly>(new GenericGFPoly(this, coefficients_one));
   initialized = true;
 }
-  
+
 void GenericGF::checkInit() {
   if (!initialized) {
     initialize();
   }
 }
-  
+
 Ref<GenericGFPoly> GenericGF::getZero() {
   checkInit();
   return zero;
 }
-  
+
 Ref<GenericGFPoly> GenericGF::getOne() {
   checkInit();
   return one;
 }
-  
+
 Ref<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficient) {
   checkInit();
-    
+
   if (degree < 0) {
     throw IllegalArgumentException("Degree must be non-negative");
   }
@@ -109,19 +109,19 @@ Ref<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficient) {
   }
   ArrayRef<int> coefficients(degree + 1);
   coefficients[0] = coefficient;
-    
+
   return Ref<GenericGFPoly>(new GenericGFPoly(this, coefficients));
 }
-  
+
 int GenericGF::addOrSubtract(int a, int b) {
   return a ^ b;
 }
-  
+
 int GenericGF::exp(int a) {
   checkInit();
   return expTable[a];
 }
-  
+
 int GenericGF::log(int a) {
   checkInit();
   if (a == 0) {
@@ -129,7 +129,7 @@ int GenericGF::log(int a) {
   }
   return logTable[a];
 }
-  
+
 int GenericGF::inverse(int a) {
   checkInit();
   if (a == 0) {
@@ -137,17 +137,17 @@ int GenericGF::inverse(int a) {
   }
   return expTable[size - logTable[a] - 1];
 }
-  
+
 int GenericGF::multiply(int a, int b) {
   checkInit();
-    
+
   if (a == 0 || b == 0) {
     return 0;
   }
-    
+
   return expTable[(logTable[a] + logTable[b]) % (size - 1)];
   }
-    
+
 size_t GenericGF::getSize() {
   return size;
 }

@@ -138,7 +138,7 @@ ArrayRef<int> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLoc
   }
   ArrayRef<int> result(new Array<int>(numErrors));
   int e = 0;
-  for (int i = 1; i < field->getSize() && e < numErrors; i++) {
+  for (size_t i = 1; i < field->getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
       result[e] = field->inverse(i);
       e++;
