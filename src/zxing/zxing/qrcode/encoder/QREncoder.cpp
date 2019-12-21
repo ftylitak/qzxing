@@ -542,7 +542,7 @@ void Encoder::append8BitBytes(const std::wstring& content, BitArray& bits, const
     QString str = QString::fromStdWString(content);
     QByteArray array = str.toUtf8();
 
-    for (auto i=0; i<array.size(); i++) {
+    for (int i=0; i<array.size(); i++) {
         bits.appendBits(array.at(i), 8);
     }
 }
