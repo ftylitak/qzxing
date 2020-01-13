@@ -72,7 +72,9 @@ QImage QZXingImageProvider::requestImage(const QString &id, QSize *size, const Q
 
     QZXingEncoderConfig encoderConfig(format, requestedSize, correctionLevel, border, transparent);
 
-    QImage result = QZXing::encodeData(data, encoderConfig);
+    QString dataTemp(QUrl::fromPercentEncoding(data.toUtf8()));
+
+    QImage result = QZXing::encodeData(dataTemp, encoderConfig);
     *size = result.size();
     return result;
 }

@@ -595,15 +595,13 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 {
     QImage image;
 
-    QString dataTemp(QUrl::fromPercentEncoding(data.toUtf8()));
-
     try {
         switch (encoderConfig.format) {
 #ifdef ENABLE_ENCODER_QR_CODE
         case EncoderFormat_QR_CODE:
         {
             Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
-                        dataTemp.toStdWString(),
+                        data.toStdWString(),
                         encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
                             qrcode::ErrorCorrectionLevel::H :
                         (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
