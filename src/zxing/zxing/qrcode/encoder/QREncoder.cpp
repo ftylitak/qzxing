@@ -87,8 +87,6 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
         version = recommendVersion(ecLevel, mode, headerBits, dataBits);
     }
 
-    qDebug() << version->getVersionNumber() << ": " << content.size();
-
     BitArray headerAndDataBits;
     headerAndDataBits.appendBitArray(headerBits);
     // Find "length" of main segment and write it

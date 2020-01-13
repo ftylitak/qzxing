@@ -31,11 +31,19 @@ ApplicationWindow {
             fill: parent
             margins: 10
         }
-        TextField {
+
+        TextArea {
             id: inputField
             Layout.fillWidth: true
             selectByMouse: true
             text: "Hello world!"
+
+            Rectangle{
+                anchors.fill: parent
+                border.color: "#656565"
+                border.width: 1
+                color: "transparent"
+            }
         }
 
         Row {
