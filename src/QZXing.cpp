@@ -417,42 +417,33 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             lastDecodeOperationSucceded_ = true;
         } catch(zxing::Exception &/*e*/){}
 
-        if(!lastDecodeOperationSucceded_)
+        if(!lastDecodeOperationSucceded_ && tryHarder_)
         {
             hints.setTryHarder(true);
+            if(hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                    !allowedExtensions_.empty() &&
+                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() )
+                hints.setAllowedEanExtensions(std::set<int>());
 
             try {
                 res = decoder->decode(bb, hints);
                 processingTime = t.elapsed();
                 lastDecodeOperationSucceded_ = true;
             } catch(zxing::Exception &/*e*/) {}
+        }
 
-            if (!lastDecodeOperationSucceded_ &&
-                    hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
-                    !allowedExtensions_.empty() &&
-                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() ) {
-                hints.setAllowedEanExtensions(std::set<int>());
+        if (!lastDecodeOperationSucceded_&& tryHarder_ && bb->isRotateSupported()) {
+            Ref<BinaryBitmap> bbTmp = bb;
+
+            for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
+                Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
+                bbTmp = rotatedImage;
 
                 try {
-                    res = decoder->decode(bb, hints);
+                    res = decoder->decode(rotatedImage, hints);
                     processingTime = t.elapsed();
                     lastDecodeOperationSucceded_ = true;
                 } catch(zxing::Exception &/*e*/) {}
-            }
-
-            if (tryHarder_ && bb->isRotateSupported()) {
-                Ref<BinaryBitmap> bbTmp = bb;
-
-                for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
-                    Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
-                    bbTmp = rotatedImage;
-
-                    try {
-                        res = decoder->decode(rotatedImage, hints);
-                        processingTime = t.elapsed();
-                        lastDecodeOperationSucceded_ = true;
-                    } catch(zxing::Exception &/*e*/) {}
-                }
             }
         }
 
@@ -604,11 +595,11 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
                         data.toStdWString(),
                         encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
                             qrcode::ErrorCorrectionLevel::H :
-                        (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
-                            qrcode::ErrorCorrectionLevel::Q :
-                        (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_M ?
-                             qrcode::ErrorCorrectionLevel::M :
-                             qrcode::ErrorCorrectionLevel::L)));
+                            (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_Q ?
+                                 qrcode::ErrorCorrectionLevel::Q :
+                                 (encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_M ?
+                                      qrcode::ErrorCorrectionLevel::M :
+                                      qrcode::ErrorCorrectionLevel::L)));
 
             Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
