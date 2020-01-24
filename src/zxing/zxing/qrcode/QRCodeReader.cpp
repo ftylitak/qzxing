@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#include <zxing/NotFoundException.h>
 #include <zxing/qrcode/QRCodeReader.h>
 #include <zxing/qrcode/detector/Detector.h>
 
@@ -31,8 +32,33 @@ namespace zxing {
 
         QRCodeReader::QRCodeReader() :decoder_() {
         }
+
         //TODO : see if any of the other files in the qrcode tree need tryHarder
-        Ref<Result> QRCodeReader::decode(Ref<BinaryBitmap> image, DecodeHints hints) {
+        Ref<Result> QRCodeReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
+        {
+            try {
+              return doDecode(image, hints);
+            } catch (zxing::Exception & nfe) {
+              // std::cerr << "trying harder" << std::endl;
+              bool tryHarder = hints.getTryHarder();
+              if (tryHarder && image->isRotateSupported()) {
+                  for (int i=0; i<3; ++i) {
+                      Ref<BinaryBitmap> rotatedImage(image->rotateCounterClockwise());
+
+                      try {
+                          return doDecode(rotatedImage, hints);
+                      } catch(zxing::Exception &/*e*/) {}
+                  }
+                  throw nfe;
+              } else {
+                // std::cerr << "tried harder nfe" << std::endl;
+                throw nfe;
+              }
+            }
+        }
+
+        Ref<Result> QRCodeReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints)
+        {
             Detector detector(image->getBlackMatrix());
             Ref<DetectorResult> detectorResult(detector.detect(hints));
             ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());

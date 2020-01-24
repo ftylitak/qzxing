@@ -8,9 +8,9 @@
 
 #define LOG_OUTPUT_DIVIDER  "##############################################"
 #define LOG_SECTOR_TITLE(a)    '\n' << LOG_OUTPUT_DIVIDER\
-                               << '\n' << a\
-                               << '\n' << LOG_OUTPUT_DIVIDER\
-                               << '\n'
+    << '\n' << a\
+    << '\n' << LOG_OUTPUT_DIVIDER\
+    << '\n'
 
 DecodeValidator::DecodeValidator() : decoder(), decoderCorrelationMap(), testResults()
 {
@@ -57,6 +57,13 @@ std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(Q
 
     QString result = decoder.decodeImage(imageToDecode);
     result.replace("\r\n","\n");
+
+    if(result == "") {
+        decoder.setTryHarder(true);
+        result = decoder.decodeImage(imageToDecode);
+        result.replace("\r\n","\n");
+        decoder.setTryHarder(false);
+    }
 
     stats_->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
     stats_->setOperationSuccess(result != "");

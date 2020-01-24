@@ -35,6 +35,7 @@ private:
 public:
   DataMatrixReader();
   virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  virtual Ref<Result> doDecode(Ref<BinaryBitmap> image, DecodeHints hints);
   virtual ~DataMatrixReader();
 
 };

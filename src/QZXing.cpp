@@ -432,21 +432,6 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             } catch(zxing::Exception &/*e*/) {}
         }
 
-        if (!lastDecodeOperationSucceded_&& tryHarder_ && bb->isRotateSupported()) {
-            Ref<BinaryBitmap> bbTmp = bb;
-
-            for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
-                Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
-                bbTmp = rotatedImage;
-
-                try {
-                    res = decoder->decode(rotatedImage, hints);
-                    processingTime = t.elapsed();
-                    lastDecodeOperationSucceded_ = true;
-                } catch(zxing::Exception &/*e*/) {}
-            }
-        }
-
         if (lastDecodeOperationSucceded_) {
             QString string = QString(res->getText()->getText().c_str());
             if (!string.isEmpty() && (string.length() > 0)) {
