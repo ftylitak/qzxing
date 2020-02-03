@@ -69,6 +69,8 @@ protected:
   bool crossCheckDiagonal(int startI, int centerJ, int maxCount, int originalStateCountTotal) const;
   int *getCrossCheckStateCount() const;
 
+  static double squaredDistance(Ref<FinderPattern> a, Ref<FinderPattern> b);
+
 public:
   static float distance(Ref<ResultPoint> p1, Ref<ResultPoint> p2);
   FinderPatternFinder(Ref<BitMatrix> image, Ref<ResultPointCallback>const&);
