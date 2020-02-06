@@ -26,11 +26,15 @@ SET(SOURCES
      MultiFormatReader.cpp
      MultiFormatReader.h
      NotFoundException.h
+     NotFoundException.cpp
      Reader.cpp
      Reader.h
      ReaderException.h
+     ReaderException.cpp
      Result.cpp
      Result.h
+     ResultMetadata.cpp
+     ResultMetadata.h
      ResultIO.cpp
      ResultPoint.cpp
      ResultPoint.h
@@ -68,6 +72,7 @@ SET(COMMON_DIR
     common/CharacterSetECI.cpp
     common/CharacterSetECI.h
     common/Counted.h
+    common/Counted.cpp
     common/DecoderResult.cpp
     common/DecoderResult.h
     common/DetectorResult.cpp
