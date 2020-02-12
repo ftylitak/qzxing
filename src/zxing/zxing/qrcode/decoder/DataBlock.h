@@ -38,7 +38,7 @@ private:
 
 public:
   static std::vector<Ref<DataBlock> >
-  getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version, ErrorCorrectionLevel &ecLevel);
+  getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Ref<Version>version, ErrorCorrectionLevel &ecLevel);
 
   int getNumDataCodewords();
   ArrayRef<zxing::byte> getCodewords();

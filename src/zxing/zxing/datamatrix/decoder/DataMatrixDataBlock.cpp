@@ -38,7 +38,7 @@ ArrayRef<zxing::byte> DataBlock::getCodewords() {
   return codewords_;
 }
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version) {
+std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Ref<Version>version) {
   // Figure out the number and size of data blocks used by this version and
   // error correction level
   ECBlocks* ecBlocks = version->getECBlocks();

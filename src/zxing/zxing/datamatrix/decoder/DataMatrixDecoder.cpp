@@ -65,7 +65,7 @@ void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCode
 Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   // Construct a parser and read version, error-correction level
   BitMatrixParser parser(bits);
-  Version *version = parser.readVersion(bits);
+  Ref<Version>version = parser.readVersion(bits);
 
   // Read codewords
   ArrayRef<zxing::byte> codewords(parser.readCodewords());

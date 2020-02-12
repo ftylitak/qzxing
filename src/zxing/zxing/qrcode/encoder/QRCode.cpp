@@ -25,7 +25,7 @@ Ref<ErrorCorrectionLevel> QRCode::getECLevel() const
     return ecLevel_ptr_;
 }
 
-Version* QRCode::getVersion() const
+Ref<Version> QRCode::getVersion() const
 {
     return version_ptr_;
 }
@@ -88,7 +88,7 @@ void QRCode::setECLevel(Ref<ErrorCorrectionLevel> value)
     ecLevel_ptr_ = value;
 }
 
-void QRCode::setVersion(Version* version)
+void QRCode::setVersion(Ref<Version> version)
 {
     version_ptr_ = version;
 }

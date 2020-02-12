@@ -42,7 +42,7 @@ BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) : bitMatrix_(NULL),
   readBitMatrix_ = new BitMatrix(bitMatrix_->getWidth(), bitMatrix_->getHeight());
 }
 
-Version* BitMatrixParser::readVersion(Ref<BitMatrix> bitMatrix) {
+Ref<Version> BitMatrixParser::readVersion(Ref<BitMatrix> bitMatrix) {
   if (parsedVersion_ != 0) {
     return parsedVersion_;
   }
@@ -50,7 +50,7 @@ Version* BitMatrixParser::readVersion(Ref<BitMatrix> bitMatrix) {
   int numRows = bitMatrix->getHeight();
   int numColumns = bitMatrix->getWidth();
 
-  Version* version = parsedVersion_->getVersionForDimensions(numRows, numColumns);
+  Ref<Version> version = parsedVersion_->getVersionForDimensions(numRows, numColumns);
   if (version != 0) {
     return version;
   }

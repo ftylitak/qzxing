@@ -74,7 +74,7 @@ Ref<FormatInformation> BitMatrixParser::readFormatInformation() {
   throw ReaderException("Could not decode format information");
 }
 
-Version *BitMatrixParser::readVersion() {
+Ref<Version>BitMatrixParser::readVersion() {
   if (parsedVersion_ != 0) {
     return parsedVersion_;
   }
@@ -118,7 +118,7 @@ Version *BitMatrixParser::readVersion() {
 
 ArrayRef<zxing::byte> BitMatrixParser::readCodewords() {
   Ref<FormatInformation> formatInfo = readFormatInformation();
-  Version *version = readVersion();
+  Ref<Version>version = readVersion();
 
 
   // Get the data mask for the format used in this QR Code. This will exclude

@@ -351,7 +351,7 @@ int parseECIValue(BitSource& bits) {
 
 Ref<DecoderResult>
 DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes,
-                               Version* version,
+                               Ref<Version> version,
                                ErrorCorrectionLevel const& ecLevel,
                                Hashtable const& hints) {
     Ref<BitSource> bits_ (new BitSource(bytes));

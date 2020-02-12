@@ -80,7 +80,7 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
     throw zxing::ReaderException("bad module size");
   }
   int dimension = computeDimension(topLeft, topRight, bottomLeft, moduleSize);
-  Version *provisionalVersion = Version::getProvisionalVersionForDimension(dimension);
+  Ref<Version>provisionalVersion = Version::getProvisionalVersionForDimension(dimension);
   int modulesBetweenFPCenters = provisionalVersion->getDimensionForVersion() - 7;
 
   Ref<AlignmentPattern> alignmentPattern;

@@ -137,19 +137,19 @@ void EncoderTests::testAppendLengthInfo()
 {
     BitArray bits;
     EncoderHack::appendLengthInfo(1,  // 1 letter (1/1).
-                                  *Version::getVersionForNumber(1),
+                                  Version::getVersionForNumber(1),
                                   Mode::NUMERIC,
                                   bits);
     assertEquals(" ........ .X", bits.toString());  // 10 bits.
     bits = BitArray();
     EncoderHack::appendLengthInfo(2,  // 2 letters (2/1).
-                                  *Version::getVersionForNumber(10),
+                                  Version::getVersionForNumber(10),
                                   Mode::ALPHANUMERIC,
                                   bits);
     assertEquals(" ........ .X.", bits.toString());  // 11 bits.
     bits = BitArray();
     EncoderHack::appendLengthInfo(255,  // 255 letter (255/1).
-                                  *Version::getVersionForNumber(27),
+                                  Version::getVersionForNumber(27),
                                   Mode::BYTE,
                                   bits);
     assertEquals(" ........ XXXXXXXX", bits.toString());  // 16 bits.

@@ -55,7 +55,7 @@ public:
   static Mode HANZI;
 
   static Mode& forBits(int bits);
-  int getCharacterCountBits(const Version *version) const;
+  int getCharacterCountBits(const Ref<Version>version) const;
   int getBits() const { return bits_; }
 
   Mode& operator=(const Mode& other);

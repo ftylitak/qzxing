@@ -96,7 +96,7 @@ Mode& Mode::forBits(int bits) {
     }
 }
 
-int Mode::getCharacterCountBits(const Version *version) const
+int Mode::getCharacterCountBits(const Ref<Version>version) const
 {
     int number = version->getVersionNumber();
     if (number <= 9) {

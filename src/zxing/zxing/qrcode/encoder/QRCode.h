@@ -17,7 +17,7 @@ private:
 
   Mode mode_;
   Ref<ErrorCorrectionLevel> ecLevel_ptr_;
-  Version* version_ptr_;
+  Ref<Version> version_ptr_;
   int maskPattern_;
   Ref<ByteMatrix> matrix_ptr_;
 
@@ -28,13 +28,13 @@ public:
   ~QRCode();
   Mode getMode() const;
   Ref<ErrorCorrectionLevel> getECLevel() const;
-  Version* getVersion() const;
+  Ref<Version> getVersion() const;
   int getMaskPattern() const;
   Ref<ByteMatrix> getMatrix() const;
   std::string toString() const;
   void setMode(const Mode &value);
   void setECLevel(Ref<ErrorCorrectionLevel> value);
-  void setVersion(Version* version);
+  void setVersion(Ref<Version> version);
   void setMaskPattern(int value);
   void setMatrix(Ref<ByteMatrix> value);
 

@@ -69,7 +69,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
 
   // std::cerr << *bits << std::endl;
 
-  Version *version = parser.readVersion();
+  Ref<Version>version = parser.readVersion();
   ErrorCorrectionLevel &ecLevel = parser.readFormatInformation()->getErrorCorrectionLevel();
 
 

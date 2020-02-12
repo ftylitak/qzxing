@@ -39,7 +39,7 @@ ArrayRef<zxing::byte> DataBlock::getCodewords() {
 }
 
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version,
+std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Ref<Version>version,
     ErrorCorrectionLevel &ecLevel) {
 
 

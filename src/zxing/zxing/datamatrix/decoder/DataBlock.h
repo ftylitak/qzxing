@@ -37,7 +37,7 @@ private:
   DataBlock(int numDataCodewords, ArrayRef<zxing::byte> codewords);
 
 public:  
-  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Version *version);
+  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Ref<Version>version);
 
   int getNumDataCodewords();
   ArrayRef<zxing::byte> getCodewords();

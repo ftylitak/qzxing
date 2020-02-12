@@ -61,7 +61,7 @@ private:
 
 public:
   static Ref<DecoderResult> decode(ArrayRef<zxing::byte> bytes,
-                                   Version *version,
+                                   Ref<Version>version,
                                    ErrorCorrectionLevel const& ecLevel,
                                    Hashtable const& hints);
 };

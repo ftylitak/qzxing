@@ -33,7 +33,7 @@ namespace qrcode {
 class BitMatrixParser : public Counted {
 private:
   Ref<BitMatrix> bitMatrix_;
-  Version *parsedVersion_;
+  Ref<Version>parsedVersion_;
   Ref<FormatInformation> parsedFormatInfo_;
   bool mirror_;
 
@@ -42,7 +42,7 @@ private:
 public:
   BitMatrixParser(Ref<BitMatrix> bitMatrix);
   Ref<FormatInformation> readFormatInformation();
-  Version *readVersion();
+  Ref<Version>readVersion();
   ArrayRef<zxing::byte> readCodewords();
   void remask();
   void setMirror(boolean mirror);

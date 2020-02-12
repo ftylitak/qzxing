@@ -64,7 +64,7 @@ private:
 		  int dataRegionSizeColumns, ECBlocks *ecBlocks);
 
 public:
-  static std::vector<Version*> VERSIONS;
+  static std::vector<Ref<Version>> VERSIONS;
   
   ~Version();
   int getVersionNumber() const;
@@ -75,7 +75,7 @@ public:
   int getTotalCodewords() const;
   ECBlocks* getECBlocks() const;
   static int  buildVersions();  
-  Version *getVersionForDimensions(int numRows, int numColumns);
+  Ref<Version>getVersionForDimensions(int numRows, int numColumns);
   
 private:
   Version(const Version&);

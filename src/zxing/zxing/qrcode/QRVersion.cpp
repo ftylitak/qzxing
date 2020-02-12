@@ -88,7 +88,7 @@ unsigned int Version::VERSION_DECODE_INFO[] = { 0x07C94, 0x085BC, 0x09A99, 0x0A4
     0x27541, 0x28C69
                                               };
 int Version::N_VERSION_DECODE_INFOS = 34;
-vector<Version*> Version::VERSIONS;
+vector<Ref<Version>> Version::VERSIONS;
 static int N_VERSIONS = Version::buildVersions();
 
 int Version::getVersionNumber() const {
@@ -111,7 +111,7 @@ ECBlocks& Version::getECBlocksForLevel(const ErrorCorrectionLevel &ecLevel) cons
   return *ecBlocks_[ecLevel.ordinal()];
 }
 
-Version* Version::getProvisionalVersionForDimension(int dimension) {
+Ref<Version> Version::getProvisionalVersionForDimension(int dimension) {
   if (dimension % 4 != 1) {
     throw FormatException();
   }
@@ -123,7 +123,7 @@ Version* Version::getProvisionalVersionForDimension(int dimension) {
   }
 }
 
-Version* Version::getVersionForNumber(int versionNumber) {
+Ref<Version> Version::getVersionForNumber(int versionNumber) {
   if (versionNumber < 1 || versionNumber > N_VERSIONS) {
     throw ReaderException("versionNumber must be between 1 and 40");
   }
@@ -156,7 +156,7 @@ Version::~Version() {
   }
 }
 
-Version* Version::decodeVersionInformation(unsigned int versionBits) {
+Ref<Version> Version::decodeVersionInformation(unsigned int versionBits) {
   int bestDifference = numeric_limits<int>::max();
   size_t bestVersion = 0;
   for (int i = 0; i < N_VERSION_DECODE_INFOS; i++) {
@@ -179,7 +179,7 @@ Version* Version::decodeVersionInformation(unsigned int versionBits) {
     return getVersionForNumber(int(bestVersion));
   }
   // If we didn't find a close enough match, fail
-  return NULL;
+  return Ref<Version>();
 }
 
 Ref<BitMatrix> Version::buildFunctionPattern() {
@@ -235,62 +235,62 @@ static vector<int> *intArray(size_t n...) {
 }
 
 int Version::buildVersions() {
-  VERSIONS.push_back(new Version(1, intArray(0),
+  VERSIONS.push_back(Ref<Version>( new Version(1, intArray(0),
                                   new ECBlocks(7, new ECB(1, 19)),
                                   new ECBlocks(10, new ECB(1, 16)),
                                   new ECBlocks(13, new ECB(1, 13)),
-                                  new ECBlocks(17, new ECB(1, 9))));
-  VERSIONS.push_back(new Version(2, intArray(2, 6, 18),
+                                  new ECBlocks(17, new ECB(1, 9)))));
+  VERSIONS.push_back(Ref<Version>( new Version(2, intArray(2, 6, 18),
                                   new ECBlocks(10, new ECB(1, 34)),
                                   new ECBlocks(16, new ECB(1, 28)),
                                   new ECBlocks(22, new ECB(1, 22)),
-                                  new ECBlocks(28, new ECB(1, 16))));
-  VERSIONS.push_back(new Version(3, intArray(2, 6, 22),
+                                  new ECBlocks(28, new ECB(1, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(3, intArray(2, 6, 22),
                                   new ECBlocks(15, new ECB(1, 55)),
                                   new ECBlocks(26, new ECB(1, 44)),
                                   new ECBlocks(18, new ECB(2, 17)),
-                                  new ECBlocks(22, new ECB(2, 13))));
-  VERSIONS.push_back(new Version(4, intArray(2, 6, 26),
+                                  new ECBlocks(22, new ECB(2, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(4, intArray(2, 6, 26),
                                   new ECBlocks(20, new ECB(1, 80)),
                                   new ECBlocks(18, new ECB(2, 32)),
                                   new ECBlocks(26, new ECB(2, 24)),
-                                  new ECBlocks(16, new ECB(4, 9))));
-  VERSIONS.push_back(new Version(5, intArray(2, 6, 30),
+                                  new ECBlocks(16, new ECB(4, 9)))));
+  VERSIONS.push_back(Ref<Version>( new Version(5, intArray(2, 6, 30),
                                   new ECBlocks(26, new ECB(1, 108)),
                                   new ECBlocks(24, new ECB(2, 43)),
                                   new ECBlocks(18, new ECB(2, 15),
                                                new ECB(2, 16)),
                                   new ECBlocks(22, new ECB(2, 11),
-                                               new ECB(2, 12))));
-  VERSIONS.push_back(new Version(6, intArray(2, 6, 34),
+                                               new ECB(2, 12)))));
+  VERSIONS.push_back(Ref<Version>( new Version(6, intArray(2, 6, 34),
                                   new ECBlocks(18, new ECB(2, 68)),
                                   new ECBlocks(16, new ECB(4, 27)),
                                   new ECBlocks(24, new ECB(4, 19)),
-                                  new ECBlocks(28, new ECB(4, 15))));
-  VERSIONS.push_back(new Version(7, intArray(3, 6, 22, 38),
+                                  new ECBlocks(28, new ECB(4, 15)))));
+  VERSIONS.push_back(Ref<Version>( new Version(7, intArray(3, 6, 22, 38),
                                   new ECBlocks(20, new ECB(2, 78)),
                                   new ECBlocks(18, new ECB(4, 31)),
                                   new ECBlocks(18, new ECB(2, 14),
                                                new ECB(4, 15)),
                                   new ECBlocks(26, new ECB(4, 13),
-                                               new ECB(1, 14))));
-  VERSIONS.push_back(new Version(8, intArray(3, 6, 24, 42),
+                                               new ECB(1, 14)))));
+  VERSIONS.push_back(Ref<Version>( new Version(8, intArray(3, 6, 24, 42),
                                   new ECBlocks(24, new ECB(2, 97)),
                                   new ECBlocks(22, new ECB(2, 38),
                                                new ECB(2, 39)),
                                   new ECBlocks(22, new ECB(4, 18),
                                                new ECB(2, 19)),
                                   new ECBlocks(26, new ECB(4, 14),
-                                               new ECB(2, 15))));
-  VERSIONS.push_back(new Version(9, intArray(3, 6, 26, 46),
+                                               new ECB(2, 15)))));
+  VERSIONS.push_back(Ref<Version>( new Version(9, intArray(3, 6, 26, 46),
                                   new ECBlocks(30, new ECB(2, 116)),
                                   new ECBlocks(22, new ECB(3, 36),
                                                new ECB(2, 37)),
                                   new ECBlocks(20, new ECB(4, 16),
                                                new ECB(4, 17)),
                                   new ECBlocks(24, new ECB(4, 12),
-                                               new ECB(4, 13))));
-  VERSIONS.push_back(new Version(10, intArray(3, 6, 28, 50),
+                                               new ECB(4, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(10, intArray(3, 6, 28, 50),
                                   new ECBlocks(18, new ECB(2, 68),
                                                new ECB(2, 69)),
                                   new ECBlocks(26, new ECB(4, 43),
@@ -298,16 +298,16 @@ int Version::buildVersions() {
                                   new ECBlocks(24, new ECB(6, 19),
                                                new ECB(2, 20)),
                                   new ECBlocks(28, new ECB(6, 15),
-                                               new ECB(2, 16))));
-  VERSIONS.push_back(new Version(11, intArray(3, 6, 30, 54),
+                                               new ECB(2, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(11, intArray(3, 6, 30, 54),
                                   new ECBlocks(20, new ECB(4, 81)),
                                   new ECBlocks(30, new ECB(1, 50),
                                                new ECB(4, 51)),
                                   new ECBlocks(28, new ECB(4, 22),
                                                new ECB(4, 23)),
                                   new ECBlocks(24, new ECB(3, 12),
-                                               new ECB(8, 13))));
-  VERSIONS.push_back(new Version(12, intArray(3, 6, 32, 58),
+                                               new ECB(8, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(12, intArray(3, 6, 32, 58),
                                   new ECBlocks(24, new ECB(2, 92),
                                                new ECB(2, 93)),
                                   new ECBlocks(22, new ECB(6, 36),
@@ -315,16 +315,16 @@ int Version::buildVersions() {
                                   new ECBlocks(26, new ECB(4, 20),
                                                new ECB(6, 21)),
                                   new ECBlocks(28, new ECB(7, 14),
-                                               new ECB(4, 15))));
-  VERSIONS.push_back(new Version(13, intArray(3, 6, 34, 62),
+                                               new ECB(4, 15)))));
+  VERSIONS.push_back(Ref<Version>( new Version(13, intArray(3, 6, 34, 62),
                                   new ECBlocks(26, new ECB(4, 107)),
                                   new ECBlocks(22, new ECB(8, 37),
                                                new ECB(1, 38)),
                                   new ECBlocks(24, new ECB(8, 20),
                                                new ECB(4, 21)),
                                   new ECBlocks(22, new ECB(12, 11),
-                                               new ECB(4, 12))));
-  VERSIONS.push_back(new Version(14, intArray(4, 6, 26, 46, 66),
+                                               new ECB(4, 12)))));
+  VERSIONS.push_back(Ref<Version>( new Version(14, intArray(4, 6, 26, 46, 66),
                                   new ECBlocks(30, new ECB(3, 115),
                                                new ECB(1, 116)),
                                   new ECBlocks(24, new ECB(4, 40),
@@ -332,8 +332,8 @@ int Version::buildVersions() {
                                   new ECBlocks(20, new ECB(11, 16),
                                                new ECB(5, 17)),
                                   new ECBlocks(24, new ECB(11, 12),
-                                               new ECB(5, 13))));
-  VERSIONS.push_back(new Version(15, intArray(4, 6, 26, 48, 70),
+                                               new ECB(5, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(15, intArray(4, 6, 26, 48, 70),
                                   new ECBlocks(22, new ECB(5, 87),
                                                new ECB(1, 88)),
                                   new ECBlocks(24, new ECB(5, 41),
@@ -341,8 +341,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(5, 24),
                                                new ECB(7, 25)),
                                   new ECBlocks(24, new ECB(11, 12),
-                                               new ECB(7, 13))));
-  VERSIONS.push_back(new Version(16, intArray(4, 6, 26, 50, 74),
+                                               new ECB(7, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(16, intArray(4, 6, 26, 50, 74),
                                   new ECBlocks(24, new ECB(5, 98),
                                                new ECB(1, 99)),
                                   new ECBlocks(28, new ECB(7, 45),
@@ -350,8 +350,8 @@ int Version::buildVersions() {
                                   new ECBlocks(24, new ECB(15, 19),
                                                new ECB(2, 20)),
                                   new ECBlocks(30, new ECB(3, 15),
-                                               new ECB(13, 16))));
-  VERSIONS.push_back(new Version(17, intArray(4, 6, 30, 54, 78),
+                                               new ECB(13, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(17, intArray(4, 6, 30, 54, 78),
                                   new ECBlocks(28, new ECB(1, 107),
                                                new ECB(5, 108)),
                                   new ECBlocks(28, new ECB(10, 46),
@@ -359,8 +359,8 @@ int Version::buildVersions() {
                                   new ECBlocks(28, new ECB(1, 22),
                                                new ECB(15, 23)),
                                   new ECBlocks(28, new ECB(2, 14),
-                                               new ECB(17, 15))));
-  VERSIONS.push_back(new Version(18, intArray(4, 6, 30, 56, 82),
+                                               new ECB(17, 15)))));
+  VERSIONS.push_back(Ref<Version>( new Version(18, intArray(4, 6, 30, 56, 82),
                                   new ECBlocks(30, new ECB(5, 120),
                                                new ECB(1, 121)),
                                   new ECBlocks(26, new ECB(9, 43),
@@ -368,8 +368,8 @@ int Version::buildVersions() {
                                   new ECBlocks(28, new ECB(17, 22),
                                                new ECB(1, 23)),
                                   new ECBlocks(28, new ECB(2, 14),
-                                               new ECB(19, 15))));
-  VERSIONS.push_back(new Version(19, intArray(4, 6, 30, 58, 86),
+                                               new ECB(19, 15)))));
+  VERSIONS.push_back(Ref<Version>( new Version(19, intArray(4, 6, 30, 58, 86),
                                   new ECBlocks(28, new ECB(3, 113),
                                                new ECB(4, 114)),
                                   new ECBlocks(26, new ECB(3, 44),
@@ -377,8 +377,8 @@ int Version::buildVersions() {
                                   new ECBlocks(26, new ECB(17, 21),
                                                new ECB(4, 22)),
                                   new ECBlocks(26, new ECB(9, 13),
-                                               new ECB(16, 14))));
-  VERSIONS.push_back(new Version(20, intArray(4, 6, 34, 62, 90),
+                                               new ECB(16, 14)))));
+  VERSIONS.push_back(Ref<Version>( new Version(20, intArray(4, 6, 34, 62, 90),
                                   new ECBlocks(28, new ECB(3, 107),
                                                new ECB(5, 108)),
                                   new ECBlocks(26, new ECB(3, 41),
@@ -386,23 +386,23 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(15, 24),
                                                new ECB(5, 25)),
                                   new ECBlocks(28, new ECB(15, 15),
-                                               new ECB(10, 16))));
-  VERSIONS.push_back(new Version(21, intArray(5, 6, 28, 50, 72, 94),
+                                               new ECB(10, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(21, intArray(5, 6, 28, 50, 72, 94),
                                   new ECBlocks(28, new ECB(4, 116),
                                                new ECB(4, 117)),
                                   new ECBlocks(26, new ECB(17, 42)),
                                   new ECBlocks(28, new ECB(17, 22),
                                                new ECB(6, 23)),
                                   new ECBlocks(30, new ECB(19, 16),
-                                               new ECB(6, 17))));
-  VERSIONS.push_back(new Version(22, intArray(5, 6, 26, 50, 74, 98),
+                                               new ECB(6, 17)))));
+  VERSIONS.push_back(Ref<Version>( new Version(22, intArray(5, 6, 26, 50, 74, 98),
                                   new ECBlocks(28, new ECB(2, 111),
                                                new ECB(7, 112)),
                                   new ECBlocks(28, new ECB(17, 46)),
                                   new ECBlocks(30, new ECB(7, 24),
                                                new ECB(16, 25)),
-                                  new ECBlocks(24, new ECB(34, 13))));
-  VERSIONS.push_back(new Version(23, intArray(5, 6, 30, 54, 78, 102),
+                                  new ECBlocks(24, new ECB(34, 13)))));
+  VERSIONS.push_back(Ref<Version>( new Version(23, intArray(5, 6, 30, 54, 78, 102),
                                   new ECBlocks(30, new ECB(4, 121),
                                                new ECB(5, 122)),
                                   new ECBlocks(28, new ECB(4, 47),
@@ -410,8 +410,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(11, 24),
                                                new ECB(14, 25)),
                                   new ECBlocks(30, new ECB(16, 15),
-                                               new ECB(14, 16))));
-  VERSIONS.push_back(new Version(24, intArray(5, 6, 28, 54, 80, 106),
+                                               new ECB(14, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(24, intArray(5, 6, 28, 54, 80, 106),
                                   new ECBlocks(30, new ECB(6, 117),
                                                new ECB(4, 118)),
                                   new ECBlocks(28, new ECB(6, 45),
@@ -419,8 +419,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(11, 24),
                                                new ECB(16, 25)),
                                   new ECBlocks(30, new ECB(30, 16),
-                                               new ECB(2, 17))));
-  VERSIONS.push_back(new Version(25, intArray(5, 6, 32, 58, 84, 110),
+                                               new ECB(2, 17)))));
+  VERSIONS.push_back(Ref<Version>( new Version(25, intArray(5, 6, 32, 58, 84, 110),
                                   new ECBlocks(26, new ECB(8, 106),
                                                new ECB(4, 107)),
                                   new ECBlocks(28, new ECB(8, 47),
@@ -428,8 +428,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(7, 24),
                                                new ECB(22, 25)),
                                   new ECBlocks(30, new ECB(22, 15),
-                                               new ECB(13, 16))));
-  VERSIONS.push_back(new Version(26, intArray(5, 6, 30, 58, 86, 114),
+                                               new ECB(13, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(26, intArray(5, 6, 30, 58, 86, 114),
                                   new ECBlocks(28, new ECB(10, 114),
                                                new ECB(2, 115)),
                                   new ECBlocks(28, new ECB(19, 46),
@@ -437,8 +437,8 @@ int Version::buildVersions() {
                                   new ECBlocks(28, new ECB(28, 22),
                                                new ECB(6, 23)),
                                   new ECBlocks(30, new ECB(33, 16),
-                                               new ECB(4, 17))));
-  VERSIONS.push_back(new Version(27, intArray(5, 6, 34, 62, 90, 118),
+                                               new ECB(4, 17)))));
+  VERSIONS.push_back(Ref<Version>( new Version(27, intArray(5, 6, 34, 62, 90, 118),
                                   new ECBlocks(30, new ECB(8, 122),
                                                new ECB(4, 123)),
                                   new ECBlocks(28, new ECB(22, 45),
@@ -446,8 +446,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(8, 23),
                                                new ECB(26, 24)),
                                   new ECBlocks(30, new ECB(12, 15),
-                                               new ECB(28, 16))));
-  VERSIONS.push_back(new Version(28, intArray(6, 6, 26, 50, 74, 98, 122),
+                                               new ECB(28, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(28, intArray(6, 6, 26, 50, 74, 98, 122),
                                   new ECBlocks(30, new ECB(3, 117),
                                                new ECB(10, 118)),
                                   new ECBlocks(28, new ECB(3, 45),
@@ -455,8 +455,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(4, 24),
                                                new ECB(31, 25)),
                                   new ECBlocks(30, new ECB(11, 15),
-                                               new ECB(31, 16))));
-  VERSIONS.push_back(new Version(29, intArray(6, 6, 30, 54, 78, 102, 126),
+                                               new ECB(31, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(29, intArray(6, 6, 30, 54, 78, 102, 126),
                                   new ECBlocks(30, new ECB(7, 116),
                                                new ECB(7, 117)),
                                   new ECBlocks(28, new ECB(21, 45),
@@ -464,8 +464,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(1, 23),
                                                new ECB(37, 24)),
                                   new ECBlocks(30, new ECB(19, 15),
-                                               new ECB(26, 16))));
-  VERSIONS.push_back(new Version(30, intArray(6, 6, 26, 52, 78, 104, 130),
+                                               new ECB(26, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(30, intArray(6, 6, 26, 52, 78, 104, 130),
                                   new ECBlocks(30, new ECB(5, 115),
                                                new ECB(10, 116)),
                                   new ECBlocks(28, new ECB(19, 47),
@@ -473,8 +473,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(15, 24),
                                                new ECB(25, 25)),
                                   new ECBlocks(30, new ECB(23, 15),
-                                               new ECB(25, 16))));
-  VERSIONS.push_back(new Version(31, intArray(6, 6, 30, 56, 82, 108, 134),
+                                               new ECB(25, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(31, intArray(6, 6, 30, 56, 82, 108, 134),
                                   new ECBlocks(30, new ECB(13, 115),
                                                new ECB(3, 116)),
                                   new ECBlocks(28, new ECB(2, 46),
@@ -482,16 +482,16 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(42, 24),
                                                new ECB(1, 25)),
                                   new ECBlocks(30, new ECB(23, 15),
-                                               new ECB(28, 16))));
-  VERSIONS.push_back(new Version(32, intArray(6, 6, 34, 60, 86, 112, 138),
+                                               new ECB(28, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(32, intArray(6, 6, 34, 60, 86, 112, 138),
                                   new ECBlocks(30, new ECB(17, 115)),
                                   new ECBlocks(28, new ECB(10, 46),
                                                new ECB(23, 47)),
                                   new ECBlocks(30, new ECB(10, 24),
                                                new ECB(35, 25)),
                                   new ECBlocks(30, new ECB(19, 15),
-                                               new ECB(35, 16))));
-  VERSIONS.push_back(new Version(33, intArray(6, 6, 30, 58, 86, 114, 142),
+                                               new ECB(35, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(33, intArray(6, 6, 30, 58, 86, 114, 142),
                                   new ECBlocks(30, new ECB(17, 115),
                                                new ECB(1, 116)),
                                   new ECBlocks(28, new ECB(14, 46),
@@ -499,8 +499,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(29, 24),
                                                new ECB(19, 25)),
                                   new ECBlocks(30, new ECB(11, 15),
-                                               new ECB(46, 16))));
-  VERSIONS.push_back(new Version(34, intArray(6, 6, 34, 62, 90, 118, 146),
+                                               new ECB(46, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(34, intArray(6, 6, 34, 62, 90, 118, 146),
                                   new ECBlocks(30, new ECB(13, 115),
                                                new ECB(6, 116)),
                                   new ECBlocks(28, new ECB(14, 46),
@@ -508,8 +508,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(44, 24),
                                                new ECB(7, 25)),
                                   new ECBlocks(30, new ECB(59, 16),
-                                               new ECB(1, 17))));
-  VERSIONS.push_back(new Version(35, intArray(7, 6, 30, 54, 78,
+                                               new ECB(1, 17)))));
+  VERSIONS.push_back(Ref<Version>( new Version(35, intArray(7, 6, 30, 54, 78,
                                   102, 126, 150),
                                   new ECBlocks(30, new ECB(12, 121),
                                                new ECB(7, 122)),
@@ -518,8 +518,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(39, 24),
                                                new ECB(14, 25)),
                                   new ECBlocks(30, new ECB(22, 15),
-                                               new ECB(41, 16))));
-  VERSIONS.push_back(new Version(36, intArray(7, 6, 24, 50, 76,
+                                               new ECB(41, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(36, intArray(7, 6, 24, 50, 76,
                                   102, 128, 154),
                                   new ECBlocks(30, new ECB(6, 121),
                                                new ECB(14, 122)),
@@ -528,8 +528,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(46, 24),
                                                new ECB(10, 25)),
                                   new ECBlocks(30, new ECB(2, 15),
-                                               new ECB(64, 16))));
-  VERSIONS.push_back(new Version(37, intArray(7, 6, 28, 54, 80,
+                                               new ECB(64, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(37, intArray(7, 6, 28, 54, 80,
                                   106, 132, 158),
                                   new ECBlocks(30, new ECB(17, 122),
                                                new ECB(4, 123)),
@@ -538,8 +538,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(49, 24),
                                                new ECB(10, 25)),
                                   new ECBlocks(30, new ECB(24, 15),
-                                               new ECB(46, 16))));
-  VERSIONS.push_back(new Version(38, intArray(7, 6, 32, 58, 84,
+                                               new ECB(46, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(38, intArray(7, 6, 32, 58, 84,
                                   110, 136, 162),
                                   new ECBlocks(30, new ECB(4, 122),
                                                new ECB(18, 123)),
@@ -548,8 +548,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(48, 24),
                                                new ECB(14, 25)),
                                   new ECBlocks(30, new ECB(42, 15),
-                                               new ECB(32, 16))));
-  VERSIONS.push_back(new Version(39, intArray(7, 6, 26, 54, 82,
+                                               new ECB(32, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(39, intArray(7, 6, 26, 54, 82,
                                   110, 138, 166),
                                   new ECBlocks(30, new ECB(20, 117),
                                                new ECB(4, 118)),
@@ -558,8 +558,8 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(43, 24),
                                                new ECB(22, 25)),
                                   new ECBlocks(30, new ECB(10, 15),
-                                               new ECB(67, 16))));
-  VERSIONS.push_back(new Version(40, intArray(7, 6, 30, 58, 86,
+                                               new ECB(67, 16)))));
+  VERSIONS.push_back(Ref<Version>( new Version(40, intArray(7, 6, 30, 58, 86,
                                   114, 142, 170),
                                   new ECBlocks(30, new ECB(19, 118),
                                                new ECB(6, 119)),
@@ -568,7 +568,7 @@ int Version::buildVersions() {
                                   new ECBlocks(30, new ECB(34, 24),
                                                new ECB(34, 25)),
                                   new ECBlocks(30, new ECB(20, 15),
-                                               new ECB(61, 16))));
+                                               new ECB(61, 16)))));
   return int(VERSIONS.size());
 }
 
