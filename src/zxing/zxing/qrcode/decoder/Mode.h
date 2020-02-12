@@ -21,9 +21,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
 #include <zxing/qrcode/Version.h>
-#include <zxing/common/Counted.h>
 
 namespace zxing {
 namespace qrcode {
@@ -55,7 +53,7 @@ public:
   static Mode HANZI;
 
   static Mode& forBits(int bits);
-  int getCharacterCountBits(const Ref<Version>version) const;
+  int getCharacterCountBits(Ref<Version>version) const;
   int getBits() const { return bits_; }
 
   Mode& operator=(const Mode& other);
