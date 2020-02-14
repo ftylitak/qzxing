@@ -48,13 +48,11 @@ namespace {
    * Start/end guard pattern.
    */
   const int START_END_PATTERN_[] = {1, 1, 1};
-  const int START_END_PATTERN_LEN = LEN(START_END_PATTERN_);
 
   /**
    * Pattern marking the middle of a UPC/EAN pattern, separating the two halves.
    */
   const int MIDDLE_PATTERN_[] = {1, 1, 1, 1, 1};
-  const int MIDDLE_PATTERN_LEN = LEN(MIDDLE_PATTERN_);
 
   /**
    * "Odd", or "L" patterns used to encode UPC/EAN digits.
@@ -71,7 +69,6 @@ namespace {
     {1, 2, 1, 3}, // 8
     {3, 1, 1, 2}  // 9
   };
-  const int L_PATTERNS_LEN = LEN(L_PATTERNS_);
 
   /**
    * As above but also including the "even", or "G" patterns used to encode UPC/EAN digits.
@@ -98,7 +95,6 @@ namespace {
     {3, 1, 2, 1}, // 18 reversed 8
     {2, 1, 1, 3}  // 19 reversed 9
   };
-  const int L_AND_G_PATTERNS_LEN = LEN(L_AND_G_PATTERNS_);
 }
 
 const int UPCEANReader::MAX_AVG_VARIANCE = (int)(PATTERN_MATCH_RESULT_SCALE_FACTOR * 0.48f);
