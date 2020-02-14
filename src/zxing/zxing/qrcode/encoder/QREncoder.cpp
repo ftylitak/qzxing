@@ -416,6 +416,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         message += " and ";
         message += zxing::common::StringUtils::intToStr(result->getSizeInBytes());
         message += " differ.";
+        delete result;
         throw WriterException(message.c_str());
     }
 

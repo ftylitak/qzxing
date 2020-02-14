@@ -404,6 +404,7 @@ void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringst
     // Have seen this particular error in the wild, such as at
     // http://www.bcgen.com/demo/IDAutomationStreamingDataMatrix.aspx?MODE=3&D=Fred&PFMT=3&PT=F&X=0.3&O=0&LM=0.2
     if (bits->available() < 8) {
+      delete [] bytes;
       throw FormatException("byteSegments");
     }
     bytes[i] = unrandomize255State(bits->readBits(8), codewordPosition++);
