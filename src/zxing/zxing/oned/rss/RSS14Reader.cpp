@@ -47,9 +47,9 @@ Ref<Result> RSS14Reader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints
     addOrTally(m_possibleRightPairs, rightPair);
     row->reverse();
 
-    for (Pair left : m_possibleLeftPairs) {
+    for (Pair &left : m_possibleLeftPairs) {
         if (left.getCount() > 1) {
-            for (Pair right : m_possibleRightPairs) {
+            for (Pair &right : m_possibleRightPairs) {
                 if (right.getCount() > 1 && checkChecksum(left, right)) {
                     return constructResult(left, right);
                 }

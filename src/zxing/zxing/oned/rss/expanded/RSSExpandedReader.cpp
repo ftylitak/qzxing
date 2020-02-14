@@ -263,9 +263,9 @@ void RSSExpandedReader::removePartialRows()
     for (size_t i = 0; i < m_rows.size(); i++) {
         if (m_rows[i].getPairs().size() != m_pairs.size()) {
             bool allFound = true;
-            for (ExpandedPair p : m_rows[i].getPairs()) {
+            for (ExpandedPair &p : m_rows[i].getPairs()) {
                 bool found = false;
-                for (ExpandedPair pp : m_pairs) {
+                for (ExpandedPair &pp : m_pairs) {
                     if (p.equals(pp))
                     {
                         found = true;
@@ -290,9 +290,9 @@ bool RSSExpandedReader::isPartialRow(std::vector<ExpandedPair>& pairs, std::vect
 {
     for (ExpandedRow r : rows) {
         bool allFound = true;
-        for (ExpandedPair p : pairs) {
+        for (ExpandedPair &p : pairs) {
             bool found = false;
-            for (ExpandedPair pp : r.getPairs()) {
+            for (ExpandedPair &pp : r.getPairs()) {
                 if (p.equals(pp)) {
                     found = true;
                     break;
