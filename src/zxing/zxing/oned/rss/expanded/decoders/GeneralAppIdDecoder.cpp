@@ -394,7 +394,10 @@ DecodedChar GeneralAppIdDecoder::decodeAlphanumeric(int pos)
         c = '/';
         break;
     default:
-        throw IllegalStateException("Decoding invalid alphanumeric value: " + sixBitValue);
+    {
+        auto msg = "Decoding invalid alphanumeric value: " + std::to_string(sixBitValue);
+        throw IllegalStateException(msg.c_str());
+    }
     }
     return DecodedChar(pos + 6, c);
 }
