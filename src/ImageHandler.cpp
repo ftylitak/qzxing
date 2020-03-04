@@ -51,7 +51,8 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         qApp->processEvents();
         QThread::yieldCurrentThread();
     }
-    img = result->image();
+    if (result)
+        img = result->image();
 #else // QT_VERSION >= 0x050000
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
