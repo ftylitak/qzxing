@@ -1,4 +1,5 @@
 #include "DataCharacter.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -28,7 +29,7 @@ int DataCharacter::getChecksumPortion() const
 
 String DataCharacter::toString() const
 {
-    return String(std::to_string(m_value) + '(' + std::to_string(m_checksumPortion) + ')');
+    return String(common::StringUtils::intToStr(m_value) + '(' + common::StringUtils::intToStr(m_checksumPortion) + ')');
 }
 
 bool DataCharacter::equals(const DataCharacter &other) const

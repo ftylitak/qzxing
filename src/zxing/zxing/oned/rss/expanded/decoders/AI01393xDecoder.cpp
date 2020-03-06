@@ -3,6 +3,7 @@
 #include "DecodedInformation.h"
 #include <zxing/FormatException.h>
 #include <zxing/NotFoundException.h>
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -28,7 +29,7 @@ String AI01393xDecoder::parseInformation()
             getGeneralDecoder().extractNumericValueFromBitArray(HEADER_SIZE + GTIN_SIZE, LAST_DIGIT_SIZE);
 
     buf.append("(393");
-    buf.append(std::to_string(lastAIdigit));
+    buf.append(common::StringUtils::intToStr(lastAIdigit));
     buf.append(')');
 
     int firstThreeDigits = getGeneralDecoder().extractNumericValueFromBitArray(
@@ -39,7 +40,7 @@ String AI01393xDecoder::parseInformation()
     if (firstThreeDigits / 10 == 0) {
         buf.append('0');
     }
-    buf.append(std::to_string(firstThreeDigits));
+    buf.append(common::StringUtils::intToStr(firstThreeDigits));
 
     String stub("");
 

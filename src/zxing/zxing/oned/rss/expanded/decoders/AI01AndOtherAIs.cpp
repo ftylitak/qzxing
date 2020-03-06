@@ -1,4 +1,5 @@
 #include "AI01AndOtherAIs.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -16,7 +17,7 @@ String AI01AndOtherAIs::parseInformation()
 
     int initialGtinPosition = buff.length();
     int firstGtinDigit = getGeneralDecoder().extractNumericValueFromBitArray(HEADER_SIZE, 4);
-    buff.append(std::to_string(firstGtinDigit));
+    buff.append(common::StringUtils::intToStr(firstGtinDigit));
 
     encodeCompressedGtinWithoutAI(buff, HEADER_SIZE + 4, initialGtinPosition);
 

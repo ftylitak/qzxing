@@ -1,4 +1,5 @@
 #include "AI01weightDecoder.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -24,7 +25,7 @@ void AI01weightDecoder::encodeCompressedWeight(String &buf, int currentPos, int 
         }
         currentDivisor /= 10;
     }
-    buf.append(std::to_string(weightNumeric));
+    buf.append(common::StringUtils::intToStr(weightNumeric));
 }
 
 }

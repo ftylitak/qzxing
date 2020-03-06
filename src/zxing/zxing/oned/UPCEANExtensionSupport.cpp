@@ -31,7 +31,7 @@ static const std::vector<int> EXTENSION_START_PATTERN = { 1, 1, 2 };
 
 Ref<Result> UPCEANExtensionSupport::decodeRow(int rowNumber, Ref<BitArray> row, int rowOffset)
 {
-    auto extStartRange = UPCEANReader::findGuardPattern(row, rowOffset, false, EXTENSION_START_PATTERN);
+    UPCEANReader::Range extStartRange = UPCEANReader::findGuardPattern(row, rowOffset, false, EXTENSION_START_PATTERN);
 
     try {
         return UPCEANExtension5Support::decodeRow(rowNumber, row, extStartRange[0], extStartRange[1]);

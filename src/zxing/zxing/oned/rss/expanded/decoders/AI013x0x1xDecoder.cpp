@@ -1,4 +1,5 @@
 #include "AI013x0x1xDecoder.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -45,22 +46,22 @@ void AI013x0x1xDecoder::encodeCompressedDate(String &buf, int currentPos)
     if (year / 10 == 0) {
         buf.append('0');
     }
-    buf.append(std::to_string(year));
+    buf.append(common::StringUtils::intToStr(year));
     if (month / 10 == 0) {
         buf.append('0');
     }
-    buf.append(std::to_string(month));
+    buf.append(common::StringUtils::intToStr(month));
     if (day / 10 == 0) {
         buf.append('0');
     }
-    buf.append(std::to_string(day));
+    buf.append(common::StringUtils::intToStr(day));
 }
 
 void AI013x0x1xDecoder::addWeightCode(String &buf, int weight)
 {
     buf.append('(');
     buf.append(m_firstAIdigits.getText());
-    buf.append(std::to_string(weight / 100000));
+    buf.append(common::StringUtils::intToStr(weight / 100000));
     buf.append(')');
 }
 

@@ -1,4 +1,5 @@
 #include "AI01decoder.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -29,7 +30,7 @@ void AI01decoder::encodeCompressedGtinWithoutAI(String &buf, int currentPos, int
         if (currentBlock / 10 == 0) {
             buf.append("0");
         }
-        buf.append(std::to_string(currentBlock));
+        buf.append(common::StringUtils::intToStr(currentBlock));
     }
 
     appendCheckDigit(buf, initialBufferPosition);
@@ -48,7 +49,7 @@ void AI01decoder::appendCheckDigit(String &buf, int currentPos)
         checkDigit = 0;
     }
 
-    buf.append(std::to_string(checkDigit));
+    buf.append(common::StringUtils::intToStr(checkDigit));
 }
 
 

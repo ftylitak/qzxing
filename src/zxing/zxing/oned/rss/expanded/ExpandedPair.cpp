@@ -1,4 +1,5 @@
 #include "ExpandedPair.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -43,7 +44,7 @@ String ExpandedPair::toString() const
 {
     return String(String("[ ").getText() + m_leftChar.toString().getText() + String(" , ").getText() +
                   m_rightChar.toString().getText() + " : " +
-                  (m_finderPattern.getValue() != 0 ? "null" : std::to_string(m_finderPattern.getValue())) + " ]");
+                  (m_finderPattern.getValue() != 0 ? "null" : common::StringUtils::intToStr(m_finderPattern.getValue())) + " ]");
 }
 
 bool ExpandedPair::equals(const ExpandedPair &other) const

@@ -34,6 +34,17 @@ private:
 protected:
   static const int INTEGER_MATH_SHIFT = 8;
 
+  static int patternMatchVariance(std::vector<int>& counters,
+                                  std::vector<int> const& pattern,
+                                  int maxIndividualVariance);
+  static int patternMatchVariance(std::vector<int>& counters,
+                                  int const pattern[],
+                                  int maxIndividualVariance);
+
+protected:
+  static const int PATTERN_MATCH_RESULT_SCALE_FACTOR = 1 << INTEGER_MATH_SHIFT;
+
+public:
   struct Range {
   private:
     int data[2];
@@ -50,18 +61,6 @@ protected:
       return data[index];
     }
   };
-
-  static int patternMatchVariance(std::vector<int>& counters,
-                                  std::vector<int> const& pattern,
-                                  int maxIndividualVariance);
-  static int patternMatchVariance(std::vector<int>& counters,
-                                  int const pattern[],
-                                  int maxIndividualVariance);
-
-protected:
-  static const int PATTERN_MATCH_RESULT_SCALE_FACTOR = 1 << INTEGER_MATH_SHIFT;
-
-public:
 
   virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
 

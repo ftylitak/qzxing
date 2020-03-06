@@ -47,7 +47,7 @@ bool ExpandedRow::isEquivalent(std::vector<ExpandedPair> otherPairs) const
 String ExpandedRow::toString()
 {
     String result("{ ");
-    for (const auto &i : m_pairs) {
+    for (const ExpandedPair &i : m_pairs) {
         result.append(i.toString().getText());
     }
     result.append(" }");

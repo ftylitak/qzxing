@@ -1,4 +1,5 @@
 #include "AI01392xDecoder.h"
+#include <zxing/common/StringUtils.h>
 
 namespace zxing {
 namespace oned {
@@ -23,7 +24,7 @@ String AI01392xDecoder::parseInformation()
     int lastAIdigit =
             getGeneralDecoder().extractNumericValueFromBitArray(HEADER_SIZE + GTIN_SIZE, LAST_DIGIT_SIZE);
     buf.append("(392");
-    buf.append(std::to_string(lastAIdigit));
+    buf.append(common::StringUtils::intToStr(lastAIdigit));
     buf.append(')');
 
     String stub("");

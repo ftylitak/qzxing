@@ -52,12 +52,12 @@ struct ResultMetadata::StringValue : public Value
 
 int ResultMetadata::getInt(Key key, int fallbackValue) const
 {
-    auto it = _contents.find(key);
+    std::map<Key, std::shared_ptr<Value>>::const_iterator it = _contents.find(key);
     return it != _contents.end() ? it->second->toInteger(fallbackValue) : fallbackValue;
 }
 
 std::string ResultMetadata::getString(Key key) const {
-    auto it = _contents.find(key);
+    std::map<Key, std::shared_ptr<Value>>::const_iterator it = _contents.find(key);
     return it != _contents.end() ? it->second->toString() : std::string();
 }
 
@@ -76,7 +76,7 @@ void ResultMetadata::putAll(const ResultMetadata& other) {
 std::list<ResultMetadata::Key> ResultMetadata::keys() const
 {
     std::list<Key> keys;
-    for(auto it = _contents.begin(); it != _contents.end(); ++it) {
+    for(std::map<Key, std::shared_ptr<Value>>::const_iterator it = _contents.begin(); it != _contents.end(); ++it) {
         keys.push_back(it->first);
     }
 
