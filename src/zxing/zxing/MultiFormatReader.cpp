@@ -18,7 +18,6 @@
 #include <zxing/MultiFormatReader.h>
 #include <zxing/ReaderException.h>
 #include <zxing/ZXing.h>
-#include <QDebug>
 
 #ifdef ENABLE_DECODER_AZTEC
     #include <zxing/aztec/AztecReader.h>
@@ -97,57 +96,45 @@ void MultiFormatReader::enableReaders(zxing::DecodeHints hints, bool allowAll)
       hints.containsFormat(BarcodeFormat::RSS_14) ||
       hints.containsFormat(BarcodeFormat::RSS_EXPANDED);
 
-    if ((allowAll || addOneDReader) && !tryHarder) {
   #ifdef ENABLE_DECODER_1D_BARCODES
+    if ((allowAll || addOneDReader) && !tryHarder) {
       readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
-  #else
-      qWarning("Failed to enable 1D Barcodes because they are disabled on compile time.");
-  #endif
     }
+  #endif
 
-    if (allowAll || hints.containsFormat(BarcodeFormat::QR_CODE)) {
   #ifdef ENABLE_DECODER_QR_CODE
+    if (allowAll || hints.containsFormat(BarcodeFormat::QR_CODE)) {
       readers_.push_back(Ref<Reader>(new zxing::qrcode::QRCodeReader()));
-  #else
-      qWarning("Failed to enable BarcodeFormat::QR_CODE format because it is disabled on compile time.");
-  #endif
     }
+  #endif
 
-    if (allowAll || hints.containsFormat(BarcodeFormat::DATA_MATRIX)) {
   #ifdef ENABLE_DECODER_DATA_MATRIX
+    if (allowAll || hints.containsFormat(BarcodeFormat::DATA_MATRIX)) {
       readers_.push_back(Ref<Reader>(new zxing::datamatrix::DataMatrixReader()));
-  #else
-      qWarning("Failed to enable BarcodeFormat::DATA_MATRIX format because it is disabled on compile time.");
-  #endif
     }
+  #endif
 
-    if (allowAll || hints.containsFormat(BarcodeFormat::AZTEC)) {
   #ifdef ENABLE_DECODER_AZTEC
+    if (allowAll || hints.containsFormat(BarcodeFormat::AZTEC)) {
       readers_.push_back(Ref<Reader>(new zxing::aztec::AztecReader()));
-  #else
-      qWarning("Failed to enable BarcodeFormat::AZTEC format because it is disabled on compile time.");
-  #endif
     }
+  #endif
 
-    if (allowAll || hints.containsFormat(BarcodeFormat::PDF_417)) {
   #ifdef ENABLE_DECODER_PDF17
+    if (allowAll || hints.containsFormat(BarcodeFormat::PDF_417)) {
       readers_.push_back(Ref<Reader>(new zxing::pdf417::PDF417Reader()));
-  #else
-    qWarning("Failed to enable BarcodeFormat::PDF_417 format because it is disabled on compile time.");
-  #endif
     }
+  #endif
     /*
     if (hints.contains(BarcodeFormat.MAXICODE)) {
       readers.add(new MaxiCodeReader());
     }
     */
-    if ((allowAll || addOneDReader) && tryHarder) {
   #ifdef ENABLE_DECODER_1D_BARCODES
+    if ((allowAll || addOneDReader) && tryHarder) {
       readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
-  #else
-     qWarning("Failed to enable 1D Barcodes because they are disabled on compile time.");
-  #endif
     }
+  #endif
 }
 
 Ref<Result> MultiFormatReader::decodeInternal(Ref<BinaryBitmap> image) {
