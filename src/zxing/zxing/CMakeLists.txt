@@ -18,6 +18,7 @@ SET(SOURCES
      Exception.h
      FormatException.cpp
      FormatException.h
+     IllegalStateException.cpp
      IllegalStateException.h
      InvertedLuminanceSource.cpp
      InvertedLuminanceSource.h
@@ -26,11 +27,15 @@ SET(SOURCES
      MultiFormatReader.cpp
      MultiFormatReader.h
      NotFoundException.h
+     NotFoundException.cpp
      Reader.cpp
      Reader.h
      ReaderException.h
+     ReaderException.cpp
      Result.cpp
      Result.h
+     ResultMetadata.cpp
+     ResultMetadata.h
      ResultIO.cpp
      ResultPoint.cpp
      ResultPoint.h
@@ -68,6 +73,7 @@ SET(COMMON_DIR
     common/CharacterSetECI.cpp
     common/CharacterSetECI.h
     common/Counted.h
+    common/Counted.cpp
     common/DecoderResult.cpp
     common/DecoderResult.h
     common/DetectorResult.cpp
@@ -159,34 +165,102 @@ SET(MULTI_DIR
 
 SET(ONED_DIR
 
-    oned/CodaBarReader.cpp
-    oned/CodaBarReader.h
-    oned/Code128Reader.cpp
-    oned/Code128Reader.h
-    oned/Code39Reader.cpp
-    oned/Code39Reader.h
-    oned/Code93Reader.cpp
-    oned/Code93Reader.h
-    oned/EAN13Reader.cpp
-    oned/EAN13Reader.h
-    oned/EAN8Reader.cpp
-    oned/EAN8Reader.h
-    oned/ITFReader.cpp
-    oned/ITFReader.h
-    oned/MultiFormatOneDReader.cpp
-    oned/MultiFormatOneDReader.h
-    oned/MultiFormatUPCEANReader.cpp
-    oned/MultiFormatUPCEANReader.h
-    oned/OneDReader.cpp
-    oned/OneDReader.h
-    oned/OneDResultPoint.cpp
-    oned/OneDResultPoint.h
-    oned/UPCAReader.cpp
-    oned/UPCAReader.h
-    oned/UPCEANReader.cpp
-    oned/UPCEANReader.h
-    oned/UPCEReader.cpp
     oned/UPCEReader.h
+    oned/UPCEANReader.h
+    oned/UPCEANExtensionSupport.h
+    oned/UPCEANExtension2Support.h
+    oned/UPCEANExtension5Support.h
+    oned/UPCAReader.h
+    oned/OneDResultPoint.h
+    oned/OneDReader.h
+    oned/MultiFormatUPCEANReader.h
+    oned/MultiFormatOneDReader.h
+    oned/ITFReader.h
+    oned/EAN13Reader.h
+    oned/EAN8Reader.h
+    oned/EANManufacturerOrgSupport.h
+    oned/Code128Reader.h
+    oned/Code39Reader.h
+    oned/CodaBarReader.h
+    oned/Code93Reader.h
+    oned/rss/AbstractRSSReader.h
+    oned/rss/DataCharacter.h
+    oned/rss/FinderPattern.h
+    oned/rss/Pair.h
+    oned/rss/RSS14Reader.h
+    oned/rss/RSSUtils.h
+    oned/rss/expanded/decoders/AbstractExpandedDecoder.h
+    oned/rss/expanded/decoders/AI013103decoder.h
+    oned/rss/expanded/decoders/AI01320xDecoder.h
+    oned/rss/expanded/decoders/AI01392xDecoder.h
+    oned/rss/expanded/decoders/AI01393xDecoder.h
+    oned/rss/expanded/decoders/AI013x0x1xDecoder.h
+    oned/rss/expanded/decoders/AI013x0xDecoder.h
+    oned/rss/expanded/decoders/AI01AndOtherAIs.h
+    oned/rss/expanded/decoders/AI01decoder.h
+    oned/rss/expanded/decoders/AI01weightDecoder.h
+    oned/rss/expanded/decoders/AnyAIDecoder.h
+    oned/rss/expanded/decoders/BlockParsedResult.h
+    oned/rss/expanded/decoders/CurrentParsingState.h
+    oned/rss/expanded/decoders/DecodedChar.h
+    oned/rss/expanded/decoders/DecodedInformation.h
+    oned/rss/expanded/decoders/DecodedNumeric.h
+    oned/rss/expanded/decoders/DecodedObject.h
+    oned/rss/expanded/decoders/FieldParser.h
+    oned/rss/expanded/decoders/GeneralAppIdDecoder.h
+    oned/rss/expanded/BitArrayBuilder.h
+    oned/rss/expanded/ExpandedPair.h
+    oned/rss/expanded/ExpandedRow.h
+    oned/rss/expanded/RSSExpandedReader.h
+
+    oned/UPCEReader.cpp
+    oned/UPCEANReader.cpp
+    oned/UPCEANExtensionSupport.cpp
+    oned/UPCEANExtension2Support.cpp
+    oned/UPCEANExtension5Support.cpp
+    oned/UPCAReader.cpp
+    oned/OneDResultPoint.cpp
+    oned/OneDReader.cpp
+    oned/MultiFormatUPCEANReader.cpp
+    oned/MultiFormatOneDReader.cpp
+    oned/ITFReader.cpp
+    oned/EAN13Reader.cpp
+    oned/EAN8Reader.cpp
+    oned/EANManufacturerOrgSupport.cpp
+    oned/Code128Reader.cpp
+    oned/Code39Reader.cpp
+    oned/CodaBarReader.cpp
+    oned/Code93Reader.cpp
+    oned/rss/AbstractRSSReader.cpp
+    oned/rss/DataCharacter.cpp
+    oned/rss/FinderPattern.cpp
+    oned/rss/Pair.cpp
+    oned/rss/RSS14Reader.cpp
+    oned/rss/RSSUtils.cpp
+    oned/rss/expanded/BitArrayBuilder.cpp
+    oned/rss/expanded/ExpandedPair.cpp
+    oned/rss/expanded/ExpandedRow.cpp
+    oned/rss/expanded/RSSExpandedReader.cpp
+    oned/rss/expanded/decoders/AbstractExpandedDecoder.cpp
+    oned/rss/expanded/decoders/AI01AndOtherAIs.cpp
+    oned/rss/expanded/decoders/AI01decoder.cpp
+    oned/rss/expanded/decoders/AI01weightDecoder.cpp
+    oned/rss/expanded/decoders/AI013x0x1xDecoder.cpp
+    oned/rss/expanded/decoders/AI013x0xDecoder.cpp
+    oned/rss/expanded/decoders/AI01320xDecoder.cpp
+    oned/rss/expanded/decoders/AI01392xDecoder.cpp
+    oned/rss/expanded/decoders/AI01393xDecoder.cpp
+    oned/rss/expanded/decoders/AI013103decoder.cpp
+    oned/rss/expanded/decoders/AnyAIDecoder.cpp
+    oned/rss/expanded/decoders/BlockParsedResult.cpp
+    oned/rss/expanded/decoders/CurrentParsingState.cpp
+    oned/rss/expanded/decoders/DecodedChar.cpp
+    oned/rss/expanded/decoders/DecodedInformation.cpp
+    oned/rss/expanded/decoders/DecodedNumeric.cpp
+    oned/rss/expanded/decoders/DecodedObject.cpp
+    oned/rss/expanded/decoders/FieldParser.cpp
+    oned/rss/expanded/decoders/GeneralAppIdDecoder.cpp
+
 
     )
 
