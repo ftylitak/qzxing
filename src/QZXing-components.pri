@@ -458,7 +458,7 @@ symbian {
     DEFINES += NOFMAXL
 
 	# Installation
-	headers.files = qzxing.h QZXing_global.h
+	headers.files = $$PWD/QZXing.h $$PWD/QZXing_global.h
 	headers.path = $$PREFIX/include
 	target.path = $$PREFIX/lib
 	INSTALLS += headers target
