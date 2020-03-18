@@ -36,22 +36,24 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
     QTime timer;
     timer.start();
     QSharedPointer<QQuickItemGrabResult> result = item->grabToImage();
-    pendingGrabbersLocker.lockForWrite();
-    pendingGrabbers << result.data();
-    pendingGrabbersLocker.unlock();
-
-    connect(result.data(), &QQuickItemGrabResult::ready, this, &ImageHandler::imageGrabberReady);
-    while (timer.elapsed() < 1000) {
-        pendingGrabbersLocker.lockForRead();
-        if (!pendingGrabbers.contains(result.data())) {
-            pendingGrabbersLocker.unlock();
-            break;
-        }
+    if (result) {
+        pendingGrabbersLocker.lockForWrite();
+        pendingGrabbers << result.data();
         pendingGrabbersLocker.unlock();
-        qApp->processEvents();
-        QThread::yieldCurrentThread();
+
+        connect(result.data(), &QQuickItemGrabResult::ready, this, &ImageHandler::imageGrabberReady);
+        while (timer.elapsed() < 1000) {
+            pendingGrabbersLocker.lockForRead();
+            if (!pendingGrabbers.contains(result.data())) {
+                pendingGrabbersLocker.unlock();
+                break;
+            }
+            pendingGrabbersLocker.unlock();
+            qApp->processEvents();
+            QThread::yieldCurrentThread();
+        }
+        img = result->image();
     }
-    img = result->image();
 #else // QT_VERSION >= 0x050000
     QGraphicsObject *item = qobject_cast<QGraphicsObject*>(imageObj);
 
