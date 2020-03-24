@@ -512,11 +512,16 @@ Ref<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const& hints) {
     }
   }
 
-  if(this->possibleCenters_.size() < 3) {
+  if(possibleCenters_.size() < 3) {
     throw zxing::ReaderException("no possible centers found");
   }
 
   vector< Ref <FinderPattern> > patternInfo = selectBestPatterns();
+
+  if(patternInfo.size() != 3) {
+    throw zxing::ReaderException("no pattern info found");
+  }
+
   vector< Ref <ResultPoint> > patternInfoResPoints;
 
   for(size_t i=0; i<patternInfo.size(); i++)

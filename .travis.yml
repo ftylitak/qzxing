@@ -1,6 +1,6 @@
 #Author: KangLin(kl222@126.com)
 
-sudo: required
+#sudo: required
 dist: xenial
 
 services:
@@ -18,15 +18,12 @@ compiler:
 
 jdk: oraclejdk7
 
-os:
-  - unix
-
 addons:
   ssh_known_hosts:
     - github.com
 
 env:
-  matrix:
+  jobs:
     - BUILD_TARGERT="linux" QT_VERSION_DIR=5.13 QT_VERSION=5.13.0
  #   - BUILD_TARGERT="android_armv7" QT_VERSION_DIR=5.13 QT_VERSION=5.13.0
     - BUILD_TARGERT="linux" QT_VERSION_DIR=5.12 QT_VERSION=5.12.4
