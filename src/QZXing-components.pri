@@ -449,9 +449,9 @@ symbian {
 !symbian {
     isEmpty(PREFIX) {
         maemo5 {
-            target.path = /opt/usr/lib
+            PREFIX = /opt/usr
         } else {
-            target.path = /usr/lib
+            PREFIX = /usr
         }
     }
 
