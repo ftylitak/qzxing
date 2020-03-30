@@ -39,7 +39,7 @@ public:
   int getDataCodewords();
 };
 
-class ECBlocks {
+class ECBlocks : public Counted {
 private:
   int ecCodewordsPerBloc_;
   std::vector<Ref<ECB>> ecBlocks_;
@@ -59,7 +59,7 @@ class Version : public Counted {
 private:
   int versionNumber_;
   std::vector<int> &alignmentPatternCenters_;
-  std::vector<ECBlocks*> ecBlocks_;
+  std::vector<Ref<ECBlocks>> ecBlocks_;
   int totalCodewords_;
   Version(int versionNumber, std::vector<int> *alignmentPatternCenters, ECBlocks *ecBlocks1, ECBlocks *ecBlocks2,
           ECBlocks *ecBlocks3, ECBlocks *ecBlocks4);
@@ -67,19 +67,20 @@ private:
 public:
   static unsigned int VERSION_DECODE_INFO[];
   static int N_VERSION_DECODE_INFOS;
-  static std::vector<Ref<Version> > VERSIONS;
+  static bool isInitialized;
+  static Ref<Version> VERSIONS[];
+  static size_t N_VERSIONS;
 
   ~Version();
   int getVersionNumber() const;
   std::vector<int> &getAlignmentPatternCenters();
   int getTotalCodewords();
   int getDimensionForVersion();
-  ECBlocks &getECBlocksForLevel(const ErrorCorrectionLevel &ecLevel) const;
+  Ref<ECBlocks> getECBlocksForLevel(const ErrorCorrectionLevel &ecLevel) const;
   static Ref<Version> getProvisionalVersionForDimension(int dimension);
   static Ref<Version> getVersionForNumber(int versionNumber);
   static Ref<Version> decodeVersionInformation(unsigned int versionBits);
   Ref<BitMatrix> buildFunctionPattern();
-  static int buildVersions();
 };
 }
 }

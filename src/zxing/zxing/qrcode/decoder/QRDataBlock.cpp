@@ -45,12 +45,12 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawC
 
   // Figure out the number and size of data blocks used by this version and
   // error correction level
-  ECBlocks &ecBlocks = version->getECBlocksForLevel(ecLevel);
+  Ref<ECBlocks> ecBlocks = version->getECBlocksForLevel(ecLevel);
 
 
   // First count the total number of data blocks
-  int totalBlocks = ecBlocks.numBlocks();
-  vector<Ref<ECB>> ecBlockArray = ecBlocks.getECBlocks();
+  int totalBlocks = ecBlocks->numBlocks();
+  vector<Ref<ECB>> ecBlockArray = ecBlocks->getECBlocks();
 
   // Now establish DataBlocks of the appropriate size and number of data codewords
   std::vector<Ref<DataBlock> > result(totalBlocks);
@@ -59,7 +59,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawC
     ECB *ecBlock = ecBlockArray[j];
     for (int i = 0; i < ecBlock->getCount(); i++) {
       int numDataCodewords = ecBlock->getDataCodewords();
-      int numBlockCodewords = ecBlocks.getECCodewordsPerBloc() + numDataCodewords;
+      int numBlockCodewords = ecBlocks->getECCodewordsPerBloc() + numDataCodewords;
       ArrayRef<zxing::byte> buffer(numBlockCodewords);
       Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
@@ -82,7 +82,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawC
   }
   longerBlocksStartAt++;
 
-  int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.getECCodewordsPerBloc();
+  int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks->getECCodewordsPerBloc();
   // The last elements of result may be 1 element longer;
   // first fill out as many elements as all of them have
   int rawCodewordsOffset = 0;

@@ -72,7 +72,7 @@ protected:
    * Interleave "bits" with corresponding error correction bytes. On success, store the result in
    * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
    */
-  static BitArray* interleaveWithECBytes(const BitArray& bits,
+  static Ref<BitArray> interleaveWithECBytes(const BitArray& bits,
                                         int numTotalBytes,
                                         int numDataBytes,
                                         int numRSBlocks);

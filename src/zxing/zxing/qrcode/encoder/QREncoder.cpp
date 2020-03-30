@@ -95,8 +95,8 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
     // Put data together into the overall payload
     headerAndDataBits.appendBitArray(dataBits);
 
-    zxing::qrcode::ECBlocks &ecBlocks = version->getECBlocksForLevel(ecLevel);
-    int numDataBytes = version->getTotalCodewords() - ecBlocks.getTotalECCodewords();
+    Ref<zxing::qrcode::ECBlocks> ecBlocks = version->getECBlocksForLevel(ecLevel);
+    int numDataBytes = version->getTotalCodewords() - ecBlocks->getTotalECCodewords();
 
     // Terminate the bits properly.
     terminateBits(numDataBytes, headerAndDataBits);
@@ -105,7 +105,7 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
     Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
                                                   version->getTotalCodewords(),
                                                   numDataBytes,
-                                                  int(ecBlocks.numBlocks())));
+                                                  int(ecBlocks->numBlocks())));
 
     Ref<QRCode> qrCode(new QRCode);
 
@@ -133,8 +133,8 @@ bool Encoder::willFit(int numInputBits, Ref<Version> version, const ErrorCorrect
       // numBytes = 196
       int numBytes = version->getTotalCodewords();
       // getNumECBytes = 130
-      ECBlocks& ecBlocks = version->getECBlocksForLevel(ecLevel);
-      int numEcBytes = ecBlocks.getTotalECCodewords();
+      Ref<ECBlocks> ecBlocks = version->getECBlocksForLevel(ecLevel);
+      int numEcBytes = ecBlocks->getTotalECCodewords();
       // getNumDataBytes = 196 - 130 = 66
       int numDataBytes = numBytes - numEcBytes;
       int totalInputBytes = (numInputBits + 7) / 8;
@@ -343,7 +343,7 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
    * Interleave "bits" with corresponding error correction bytes. On success, store the result in
    * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
    */
-BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
+Ref<BitArray> Encoder::interleaveWithECBytes(const BitArray& bits,
                                          int numTotalBytes,
                                          int numDataBytes,
                                          int numRSBlocks)
@@ -390,7 +390,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         throw WriterException("Data bytes does not match offset");
     }
 
-    BitArray* result = new BitArray;
+    Ref<BitArray> result(new BitArray);
 
     // First, place data blocks.
     for (int i = 0; i < maxNumDataBytes; ++i) {
@@ -416,7 +416,6 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         message += " and ";
         message += zxing::common::StringUtils::intToStr(result->getSizeInBytes());
         message += " differ.";
-        delete result;
         throw WriterException(message.c_str());
     }
 
