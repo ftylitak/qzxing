@@ -152,6 +152,17 @@ public:
     return *this;
   }
 
+  bool operator==(const ArrayRef &other) {
+      if(array_ == other.array_) return true;
+
+      if(!array_ || !(other.array_) || array_->size() != other.array_->size() ) return false;
+
+      for(size_t i=0; i<array_->size(); ++i)
+          if((*array_)[i] != (*other.array_)[i]) return false;
+
+      return true;
+  }
+
   Array<T>& operator*() const {
     return *array_;
   }

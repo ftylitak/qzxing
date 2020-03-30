@@ -8,9 +8,9 @@
 
 #define LOG_OUTPUT_DIVIDER  "##############################################"
 #define LOG_SECTOR_TITLE(a)    '\n' << LOG_OUTPUT_DIVIDER\
-                               << '\n' << a\
-                               << '\n' << LOG_OUTPUT_DIVIDER\
-                               << '\n'
+    << '\n' << a\
+    << '\n' << LOG_OUTPUT_DIVIDER\
+    << '\n'
 
 DecodeValidator::DecodeValidator() : decoder(), decoderCorrelationMap(), testResults()
 {
@@ -167,10 +167,9 @@ void DecodeValidator::decodeAllImagesInForderWithValidator(QZXing::DecoderFormat
     QDirIterator dirIt(folderPath, QDirIterator::NoIteratorFlags);
 
     while (dirIt.hasNext()) {
-        dirIt.next();
-        QFileInfo fileInfo(dirIt.filePath());
+        QFileInfo fileInfo(dirIt.next());
         if (fileInfo.isFile() && fileInfo.suffix() != "txt") {
-            QString imagePath = dirIt.filePath();
+            QString imagePath = fileInfo.absoluteFilePath();
             QString expectedOutputTextFile = fileInfo.absoluteDir().absolutePath() + "/" + fileInfo.baseName() + ".txt";
 
             testResults[enabledDecoder].push_back(testDecodeWithExpectedOutput(enabledDecoder, imagePath, expectedOutputTextFile));

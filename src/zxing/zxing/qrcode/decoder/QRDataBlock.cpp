@@ -50,7 +50,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(ArrayRef<zxing::byte> rawC
 
   // First count the total number of data blocks
   int totalBlocks = ecBlocks.numBlocks();
-  vector<ECB*> ecBlockArray = ecBlocks.getECBlocks();
+  vector<Ref<ECB>> ecBlockArray = ecBlocks.getECBlocks();
 
   // Now establish DataBlocks of the appropriate size and number of data codewords
   std::vector<Ref<DataBlock> > result(totalBlocks);

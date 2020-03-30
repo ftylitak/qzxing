@@ -29,7 +29,7 @@
 namespace zxing {
 namespace qrcode {
 
-class ECB {
+class ECB : public Counted {
 private:
   int count_;
   int dataCodewords_;
@@ -42,14 +42,15 @@ public:
 class ECBlocks {
 private:
   int ecCodewordsPerBloc_;
-  std::vector<ECB*> ecBlocks_;
+  std::vector<Ref<ECB>> ecBlocks_;
 public:
-  ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks);
-  ECBlocks(int ecCodewordsPerBloc, ECB *ecBlocks1, ECB *ecBlocks2);
+  ECBlocks(int ecCodewordsPerBloc, Ref<ECB> ecBlocks);
+  ECBlocks(int ecCodewordsPerBloc, Ref<ECB> ecBlocks1, Ref<ECB> ecBlocks2);
   int numBlocks() const;
   int getECCodewordsPerBloc();
   int getTotalECCodewords();
-  std::vector<ECB*>& getECBlocks();
+  std::vector<Ref<ECB>>& getECBlocks();
+
   ~ECBlocks();
 };
 

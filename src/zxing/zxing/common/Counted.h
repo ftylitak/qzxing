@@ -74,6 +74,11 @@ public:
     }
     object_ = o;
   }
+
+  const T* get() const {
+      return object_;
+  }
+
   Ref& operator=(const Ref &other) {
     reset(other.object_);
     return *this;
