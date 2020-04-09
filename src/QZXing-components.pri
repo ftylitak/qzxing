@@ -449,16 +449,16 @@ symbian {
 !symbian {
     isEmpty(PREFIX) {
         maemo5 {
-            target.path = /opt/usr/lib
+            PREFIX = /opt/usr
         } else {
-            target.path = /usr/lib
+            PREFIX = /usr
         }
     }
 
     DEFINES += NOFMAXL
 
 	# Installation
-	headers.files = qzxing.h QZXing_global.h
+	headers.files = $$PWD/QZXing.h $$PWD/QZXing_global.h
 	headers.path = $$PREFIX/include
 	target.path = $$PREFIX/lib
 	INSTALLS += headers target
