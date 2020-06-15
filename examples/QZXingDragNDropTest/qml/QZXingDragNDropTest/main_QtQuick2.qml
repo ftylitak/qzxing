@@ -147,6 +147,8 @@ Rectangle {
     QZXing{
         id: decoder
         //enabledDecoders: QZXing.DecoderFormat_QR_CODE
+        //tryHarderType: QZXing.TryHarderBehaviour_Rotate //| QZXing.TryHarderBehaviour_ThoroughScanning
+        imageSourceFilter: QZXing.SourceFilter_ImageNormal | QZXing.SourceFilter_ImageInverted
 
         onTagFound: {
             log.add("Tag found: " +tag+ ", milliseconds: " + processingTime)

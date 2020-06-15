@@ -58,8 +58,12 @@ class
 
     Q_OBJECT
     Q_ENUMS(DecoderFormat)
+    Q_ENUMS(TryHarderBehaviour)
+    Q_ENUMS(SourceFilter)
     Q_PROPERTY(int processingTime READ getProcessTimeOfLastDecoding)
     Q_PROPERTY(uint enabledDecoders READ getEnabledFormats WRITE setDecoder NOTIFY enabledFormatsChanged)
+    Q_PROPERTY(uint tryHarderType READ getTryHarderBehaviour WRITE setTryHarderBehaviour)
+    Q_PROPERTY(uint imageSourceFilter READ getSourceFilterType WRITE setSourceFilterType)
     Q_PROPERTY(bool tryHarder READ getTryHarder WRITE setTryHarder)
     Q_PROPERTY(QVariantList allowedExtensions READ getAllowedExtensions WRITE setAllowedExtensions)
 
@@ -89,6 +93,18 @@ public:
         DecoderFormat_CODE_128_GS1 = 1 << 18
     } ;
     typedef unsigned int DecoderFormatType;
+
+    enum TryHarderBehaviour {
+        TryHarderBehaviour_ThoroughScanning = 1 << 1,
+        TryHarderBehaviour_Rotate = 1 << 2
+    };
+    typedef unsigned int TryHarderBehaviourType;
+
+    enum SourceFilter {
+        SourceFilter_ImageNormal = 1 << 1,
+        SourceFilter_ImageInverted = 1 << 2
+    };
+    typedef unsigned int SourceFilterType;
 
     enum EncoderFormat {
         EncoderFormat_INVALID,
@@ -121,6 +137,10 @@ public:
 
     void setTryHarder(bool tryHarder);
     bool getTryHarder();
+    void setTryHarderBehaviour(TryHarderBehaviourType tryHarderBehaviour);
+    TryHarderBehaviourType getTryHarderBehaviour();
+    void setSourceFilterType(SourceFilterType sourceFilter);
+    SourceFilterType getSourceFilterType();
     void setAllowedExtensions(const QVariantList& extensions);
     QVariantList getAllowedExtensions();
     static QString decoderFormatToString(int fmt);
@@ -230,6 +250,8 @@ signals:
 private:
     zxing::MultiFormatReader *decoder;
     DecoderFormatType enabledDecoders;
+    TryHarderBehaviourType tryHarderType;
+    SourceFilterType imageSourceFilter;
     ImageHandler *imageHandler;
     int processingTime;
     QString foundedFmt;

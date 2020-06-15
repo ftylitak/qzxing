@@ -7,6 +7,7 @@
 #include <zxing/DecodeHints.h>
 #include <zxing/ResultMetadata.h>
 #include <zxing/common/detector/WhiteRectangleDetector.h>
+#include <zxing/InvertedLuminanceSource.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
 #include <QTime>
@@ -61,6 +62,12 @@ QZXing::QZXing(QObject *parent) : QObject(parent), tryHarder_(false), lastDecode
                DecoderFormat_CODABAR |
                DecoderFormat_ITF |
                DecoderFormat_Aztec);
+
+    setTryHarderBehaviour(TryHarderBehaviour_Rotate |
+                          TryHarderBehaviour_ThoroughScanning);
+
+    setSourceFilterType(SourceFilter_ImageNormal);
+
     imageHandler = new ImageHandler();
 }
 
@@ -112,6 +119,26 @@ void QZXing::setTryHarder(bool tryHarder)
 bool QZXing::getTryHarder()
 {
     return tryHarder_;
+}
+
+void QZXing::setTryHarderBehaviour(QZXing::TryHarderBehaviourType tryHarderBehaviour)
+{
+    tryHarderType = tryHarderBehaviour;
+}
+
+QZXing::TryHarderBehaviourType QZXing::getTryHarderBehaviour()
+{
+    return tryHarderType;
+}
+
+void QZXing::setSourceFilterType(QZXing::SourceFilterType sourceFilter)
+{
+    imageSourceFilter = sourceFilter;
+}
+
+QZXing::SourceFilterType QZXing::getSourceFilterType()
+{
+    return imageSourceFilter;
 }
 void QZXing::setAllowedExtensions(const QVariantList& extensions)
 {
@@ -378,6 +405,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
 QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
+    qDebug() << "Start decoding";
     QElapsedTimer t;
     t.start();
     processingTime = -1;
@@ -388,6 +416,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     {
         emit decodingFinished(false);
         processingTime = t.elapsed();
+        qDebug() << "End decoding 1";
         return "";
     }
 
@@ -399,89 +428,107 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         ciw = CameraImageWrapper::Factory(image, 999, 999, true);
 
     QString errorMessage = "Unknown";
-    try {
-        Ref<LuminanceSource> imageRef(ciw);
-        Ref<GlobalHistogramBinarizer> binz( new GlobalHistogramBinarizer(imageRef) );
-        Ref<BinaryBitmap> bb( new BinaryBitmap(binz) );
 
-        DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
+    Ref<LuminanceSource> imageRefOriginal = Ref<LuminanceSource>(ciw);
+    Ref<LuminanceSource> imageRef = imageRefOriginal;
+    Ref<GlobalHistogramBinarizer> binz;
+    Ref<BinaryBitmap> bb;
 
-        if (hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION)) {
-            hints.setAllowedEanExtensions(allowedExtensions_);
-        }
+    size_t numberOfIterations = 0;
+    numberOfIterations += (int)(imageSourceFilter & SourceFilter_ImageNormal);
+    numberOfIterations += (int)(imageSourceFilter & SourceFilter_ImageInverted);
 
-        lastDecodeOperationSucceded_ = false;
+    for(size_t i=0; i<numberOfIterations; ++i){
         try {
-            res = decoder->decode(bb, hints);
-            processingTime = t.elapsed();
-            lastDecodeOperationSucceded_ = true;
-        } catch(zxing::Exception &/*e*/){}
+            if((numberOfIterations == 1 && (imageSourceFilter & SourceFilter_ImageInverted)) || i == 1)
+                imageRef = Ref<LuminanceSource>((LuminanceSource*)(new InvertedLuminanceSource(imageRefOriginal)));
+            binz = Ref<GlobalHistogramBinarizer>( new GlobalHistogramBinarizer(imageRef) );
+            bb = Ref<BinaryBitmap>( new BinaryBitmap(binz) );
 
-        if(!lastDecodeOperationSucceded_ && tryHarder_)
-        {
-            hints.setTryHarder(true);
-            if(hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
-                    !allowedExtensions_.empty() &&
-                    !(hints & DecodeHints::PRODUCT_HINT).isEmpty() )
-                hints.setAllowedEanExtensions(std::set<int>());
+            DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
+            if (hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION)) {
+                hints.setAllowedEanExtensions(allowedExtensions_);
+            }
+
+            lastDecodeOperationSucceded_ = false;
             try {
                 res = decoder->decode(bb, hints);
                 processingTime = t.elapsed();
                 lastDecodeOperationSucceded_ = true;
-            } catch(zxing::Exception &/*e*/) {}
-        }
+                break;
+            } catch(zxing::Exception &/*e*/){}
 
-        if (!lastDecodeOperationSucceded_&& tryHarder_ && bb->isRotateSupported()) {
-            Ref<BinaryBitmap> bbTmp = bb;
-
-            for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
-                Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
-                bbTmp = rotatedImage;
+            if(!lastDecodeOperationSucceded_ && tryHarder_ && (tryHarderType & TryHarderBehaviour_ThoroughScanning))
+            {
+                hints.setTryHarder(true);
+                if(hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
+                        !allowedExtensions_.empty() &&
+                        !(hints & DecodeHints::PRODUCT_HINT).isEmpty() )
+                    hints.setAllowedEanExtensions(std::set<int>());
 
                 try {
-                    res = decoder->decode(rotatedImage, hints);
+                    res = decoder->decode(bb, hints);
                     processingTime = t.elapsed();
                     lastDecodeOperationSucceded_ = true;
+                    break;
                 } catch(zxing::Exception &/*e*/) {}
             }
-        }
 
-        if (lastDecodeOperationSucceded_) {
-            QString string = QString(res->getText()->getText().c_str());
-            if (!string.isEmpty() && (string.length() > 0)) {
-                int fmt = res->getBarcodeFormat().value;
-                foundedFmt = decoderFormatToString(1<<fmt);
-                charSet_ = QString::fromStdString(res->getCharSet());
-                if (!charSet_.isEmpty()) {
-                    QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
-                    if (codec)
-                        string = codec->toUnicode(res->getText()->getText().c_str());
+            if (!lastDecodeOperationSucceded_&& tryHarder_ && (tryHarderType & TryHarderBehaviour_Rotate) && bb->isRotateSupported()) {
+                Ref<BinaryBitmap> bbTmp = bb;
+
+                for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
+                    Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
+                    bbTmp = rotatedImage;
+
+                    try {
+                        res = decoder->decode(rotatedImage, hints);
+                        processingTime = t.elapsed();
+                        lastDecodeOperationSucceded_ = true;
+                        break;
+                    } catch(zxing::Exception &/*e*/) {}
                 }
-
-                emit tagFound(string);
-                emit tagFoundAdvanced(string, foundedFmt, charSet_);
-
-                QVariantMap metadataMap = metadataToMap(res->getMetadata());
-                emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
-
-                try {
-                    const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
-                    emit tagFoundAdvanced(string, foundedFmt, charSet_, rect);
-                }catch(zxing::Exception &/*e*/){}
             }
-            emit decodingFinished(true);
-            return string;
+        }
+        catch(zxing::Exception &e)
+        {
+            errorMessage = QString(e.what());
         }
     }
-    catch(zxing::Exception &e)
-    {
-        errorMessage = QString(e.what());
+
+    if (lastDecodeOperationSucceded_) {
+        QString string = QString(res->getText()->getText().c_str());
+        if (!string.isEmpty() && (string.length() > 0)) {
+            int fmt = res->getBarcodeFormat().value;
+            foundedFmt = decoderFormatToString(1<<fmt);
+            charSet_ = QString::fromStdString(res->getCharSet());
+            if (!charSet_.isEmpty()) {
+                QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());
+                if (codec)
+                    string = codec->toUnicode(res->getText()->getText().c_str());
+            }
+
+            emit tagFound(string);
+            emit tagFoundAdvanced(string, foundedFmt, charSet_);
+
+            QVariantMap metadataMap = metadataToMap(res->getMetadata());
+            emit tagFoundAdvanced(string, foundedFmt, charSet_, metadataMap);
+
+            try {
+                const QRectF rect = getTagRect(res->getResultPoints(), binz->getBlackMatrix());
+                emit tagFoundAdvanced(string, foundedFmt, charSet_, rect);
+            }catch(zxing::Exception &/*e*/){}
+        }
+        emit decodingFinished(true);
+        qDebug() << "End decoding 2";
+        return string;
     }
 
     emit error(errorMessage);
     emit decodingFinished(false);
     processingTime = t.elapsed();
+    qDebug() << "End decoding 3";
     return "";
 }
 
