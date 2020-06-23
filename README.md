@@ -104,7 +104,15 @@ int main()
 {
 	QImage imageToDecode("file.png");
 	QZXing decoder;
+        //mandatory settings
 	decoder.setDecoder( DecoderFormat_QR_CODE | DecoderFormat_EAN_13 );
+
+        //optional settings
+        //decoder.setSourceFilterType(QZXing::SourceFilter_ImageNormal | QZXing::SourceFilter_ImageInverted);
+        decoder.setSourceFilterType(QZXing::SourceFilter_ImageNormal);
+        decoder.setTryHarderBehaviour(QZXing::TryHarderBehaviour_ThoroughScanning | QZXing::TryHarderBehaviour_Rotate);
+
+        //trigger decode
 	QString result = decoder.decodeImage(imageToDecode);
 }
 ```
@@ -143,6 +151,13 @@ QZXing{
 	id: decoder
 
 	enabledDecoders: QZXing.DecoderFormat_QR_CODE
+
+        /////////////
+        //optional
+        tryHarderType: QZXing.TryHarderBehaviour_ThoroughScanning | QZXing.TryHarderBehaviour_Rotate
+
+        imageSourceFilter: QZXing.SourceFilter_ImageNormal //| QZXing.SourceFilter_ImageInverted
+        /////////////
 
 	onDecodingStarted: console.log("Decoding of image started...")
 
