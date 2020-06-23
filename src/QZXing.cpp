@@ -86,6 +86,7 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
     imageHandler = new ImageHandler();
 
     setDecoder(decodeHints);
+    setSourceFilterType(SourceFilter_ImageNormal);
 }
 
 #ifdef QZXING_QML
@@ -435,13 +436,19 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     Ref<BinaryBitmap> bb;
 
     size_t numberOfIterations = 0;
-    numberOfIterations += (int)(imageSourceFilter & SourceFilter_ImageNormal);
-    numberOfIterations += (int)(imageSourceFilter & SourceFilter_ImageInverted);
+    if (imageSourceFilter & SourceFilter_ImageNormal)
+        numberOfIterations++;
+    if (imageSourceFilter & SourceFilter_ImageInverted)
+        numberOfIterations++;
+
+    //qDebug() << "Iterations: "<< numberOfIterations << ", sourceFilter: " << imageSourceFilter;
 
     for(size_t i=0; i<numberOfIterations; ++i){
         try {
-            if((numberOfIterations == 1 && (imageSourceFilter & SourceFilter_ImageInverted)) || i == 1)
+            if((numberOfIterations == 1 && (imageSourceFilter & SourceFilter_ImageInverted)) || i == 1) {
+                //qDebug() << "Selecting Inverted Luminance source";
                 imageRef = Ref<LuminanceSource>((LuminanceSource*)(new InvertedLuminanceSource(imageRefOriginal)));
+            }
             binz = Ref<GlobalHistogramBinarizer>( new GlobalHistogramBinarizer(imageRef) );
             bb = Ref<BinaryBitmap>( new BinaryBitmap(binz) );
 
@@ -453,14 +460,18 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
             lastDecodeOperationSucceded_ = false;
             try {
+                //qDebug() << "Decoding phase 1: started";
                 res = decoder->decode(bb, hints);
                 processingTime = t.elapsed();
                 lastDecodeOperationSucceded_ = true;
                 break;
-            } catch(zxing::Exception &/*e*/){}
+            } catch(zxing::Exception &/*e*/){
+                //qDebug() << "Decoding phase 1: failed";
+            }
 
             if(!lastDecodeOperationSucceded_ && tryHarder_ && (tryHarderType & TryHarderBehaviour_ThoroughScanning))
             {
+                //qDebug() << "Decoding phase 2, thorought scan: starting";
                 hints.setTryHarder(true);
                 if(hints.containsFormat(BarcodeFormat::UPC_EAN_EXTENSION) &&
                         !allowedExtensions_.empty() &&
@@ -472,12 +483,17 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                     processingTime = t.elapsed();
                     lastDecodeOperationSucceded_ = true;
                     break;
-                } catch(zxing::Exception &/*e*/) {}
+                } catch(zxing::Exception &/*e*/) {
+                    //qDebug() << "Decoding phase 2, thorought scan: failed";
+                }
             }
 
             if (!lastDecodeOperationSucceded_&& tryHarder_ && (tryHarderType & TryHarderBehaviour_Rotate) && bb->isRotateSupported()) {
                 Ref<BinaryBitmap> bbTmp = bb;
 
+                //qDebug() << "Decoding phase 2, rotate: starting";
+
+                hints.setTryHarder(true);
                 for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
                     Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
                     bbTmp = rotatedImage;
@@ -487,17 +503,21 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                         processingTime = t.elapsed();
                         lastDecodeOperationSucceded_ = true;
                         break;
-                    } catch(zxing::Exception &/*e*/) {}
+                    } catch(zxing::Exception &/*e*/) {
+                        //qDebug() << "Decoding phase 2, rotate: failed";
+                    }
                 }
             }
         }
         catch(zxing::Exception &e)
         {
             errorMessage = QString(e.what());
+            //qDebug() << "Decoding failed: " << errorMessage;
         }
     }
 
     if (lastDecodeOperationSucceded_) {
+        //qDebug() << "Decoding succeeded.";
         QString string = QString(res->getText()->getText().c_str());
         if (!string.isEmpty() && (string.length() > 0)) {
             int fmt = res->getBarcodeFormat().value;
