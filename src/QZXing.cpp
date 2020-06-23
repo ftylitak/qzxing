@@ -406,7 +406,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
 QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    qDebug() << "Start decoding";
+    //qDebug() << "Start decoding";
     QElapsedTimer t;
     t.start();
     processingTime = -1;
@@ -417,7 +417,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     {
         emit decodingFinished(false);
         processingTime = t.elapsed();
-        qDebug() << "End decoding 1";
+        //qDebug() << "End decoding 1";
         return "";
     }
 
@@ -541,14 +541,14 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             }catch(zxing::Exception &/*e*/){}
         }
         emit decodingFinished(true);
-        qDebug() << "End decoding 2";
+        //qDebug() << "End decoding 2";
         return string;
     }
 
     emit error(errorMessage);
     emit decodingFinished(false);
     processingTime = t.elapsed();
-    qDebug() << "End decoding 3";
+    //qDebug() << "End decoding 3";
     return "";
 }
 
