@@ -41,6 +41,7 @@ SET(SOURCES
     ${ZXING_DIR}/ResultPointCallback.h
     ${ZXING_DIR}/UnsupportedEncodingException.h
     ${ZXING_DIR}/WriterException.h
+    ${ZXING_DIR}/WriterException.cpp
     ${ZXING_DIR}/ZXing.h
 
     )
