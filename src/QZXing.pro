@@ -24,6 +24,7 @@ CONFIG += \
           #staticlib
           #qzxing_qml
           #qzxing_multimedia
+          #enable_iconv
 
 VERSION = 2.3
 
