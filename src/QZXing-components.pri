@@ -16,9 +16,8 @@
 
 CONFIG +=   qt warn_on
 
-DEFINES += QZXING_LIBRARY \
-        ZXING_ICONV_CONST \
-        DISABLE_LIBRARY_FEATURES
+DEFINES += ZXING_ICONV_CONST \
+    DISABLE_LIBRARY_FEATURES
 		 
 INCLUDEPATH  += $$PWD \
                 $$PWD/zxing
@@ -391,7 +390,8 @@ enable_generic_qrcode {
 }
 
 enable_encoder_generic {
-    DEFINES += ENABLE_ENCODER_GENERIC
+    DEFINES *= ENABLE_ENCODER_GENERIC
+    PC_EXPORT_DEFINES *= -DENABLE_ENCODER_GENERIC
 
     HEADERS += \
         $$PWD/zxing/zxing/EncodeHint.h \
@@ -410,7 +410,7 @@ qzxing_multimedia {
     CONFIG += qzxing_qml
 
     DEFINES += QZXING_MULTIMEDIA
-	PRL_EXPORT_DEFINES += QZXING_MULTIMEDIA
+    PRL_EXPORT_DEFINES += QZXING_MULTIMEDIA
 
     HEADERS += \
         $$PWD/QZXingFilter.h
@@ -424,7 +424,8 @@ qzxing_qml {
     greaterThan(QT_MAJOR_VERSION, 4): QT += quick
 
     DEFINES += QZXING_QML
-	PRL_EXPORT_DEFINES += QZXING_QML
+    PRL_EXPORT_DEFINES += QZXING_QML
+    PC_EXPORT_DEFINES *= -DQZXING_QML
 
     HEADERS +=  \
         $$PWD/QZXingImageProvider.h
@@ -457,19 +458,20 @@ symbian {
 
     DEFINES += NOFMAXL
 
-	# Installation
-	headers.files = $$PWD/QZXing.h $$PWD/QZXing_global.h
-	headers.path = $$PREFIX/include
-	target.path = $$PREFIX/lib
-	INSTALLS += headers target
+    # Installation
+    headers.files = $$PWD/QZXing.h $$PWD/QZXing_global.h
+    headers.path = $$PREFIX/include
+    target.path = $$PREFIX/lib
+    INSTALLS += headers target
 
-	# pkg-config support
-	CONFIG += create_pc create_prl no_install_prl
-	QMAKE_PKGCONFIG_DESTDIR = pkgconfig
-	QMAKE_PKGCONFIG_LIBDIR = ${prefix}/lib
-	QMAKE_PKGCONFIG_INCDIR = ${prefix}/include
+    # pkg-config support
+    CONFIG += create_pc create_prl no_install_prl
+    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    QMAKE_PKGCONFIG_LIBDIR = ${prefix}/lib
+    QMAKE_PKGCONFIG_INCDIR = ${prefix}/include
+    QMAKE_PKGCONFIG_CFLAGS = $$PC_EXPORT_DEFINES
 
-	unix:QMAKE_CLEAN += -r pkgconfig lib$${TARGET}.prl
+    unix: QMAKE_CLEAN += -r pkgconfig lib$${TARGET}.prl
 }
 
 win32-msvc* {
