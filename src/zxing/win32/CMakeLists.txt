@@ -5,7 +5,7 @@ SET(SOURCES
 )
 
 if(MSVC)
-    LIST(APPEND SOURCES ${WIN32_DIR}/zxing/msvc/stdint.h)
+    LIST(APPEND SOURCES ${WIN32_DIR}/msvc/stdint.h)
 endif(MSVC)
 
 target_sources(qzxing PRIVATE ${SOURCES})
