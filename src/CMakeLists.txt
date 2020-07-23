@@ -33,6 +33,13 @@ ENDIF()
 message("BUILD_VERSION:${BUILD_VERSION}")
 set(VERSION ${BUILD_VERSION})
 
+# Open qt compile tools
+SET(CMAKE_AUTOUIC ON)
+SET(CMAKE_AUTOMOC ON)
+SET(CMAKE_AUTORCC ON)
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+SET(CMAKE_VERBOSE_MAKEFILE ON)
+
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
@@ -50,7 +57,7 @@ SET(BIGINT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/zxing/bigint)
 SET(WIN32_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/win32/zxing)
 SET(ZXING_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/zxing)
 
-#SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs")
+SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs")
 
 set(INSTALL_HEADER_FILES
     QZXing.h
@@ -79,13 +86,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     QZXING_LIBRARY ZXING_ICONV_CONST)
 
-# Open qt compile tools
-SET(CMAKE_AUTOUIC ON)
-SET(CMAKE_AUTOMOC ON)
-SET(CMAKE_AUTORCC ON)
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-SET(CMAKE_VERBOSE_MAKEFILE ON)
-
 # Need qt components
 SET(QT_COMPONENTS Core Gui)
 
@@ -100,7 +100,7 @@ endif(QZXING_MULTIMEDIA)
 option(QZXING_USE_QML "Use qml" ${QZXING_USE_QML})
 if(QZXING_USE_QML)
     target_sources(${PROJECT_NAME} PRIVATE QZXingImageProvider.cpp QZXingImageProvider.h)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC QZXING_QML)
+    LIST(APPEND EXPORT_DEFINES QZXING_QML)
     LIST(APPEND QT_COMPONENTS Quick)
     SET(QZXING_ENABLE_ENCODER ON)
 endif(QZXING_USE_QML)
@@ -119,8 +119,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${QT_LIBRARIES})
 
 option(QZXING_ENABLE_ENCODER "Enable encoder" ${QZXING_ENABLE_ENCODER})
 if(QZXING_ENABLE_ENCODER)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC
-        ENABLE_ENCODER_GENERIC)
+    LIST(APPEND EXPORT_DEFINES ENABLE_ENCODER_GENERIC)
 endif()
 
 if(MSVC)
@@ -159,6 +158,9 @@ target_include_directories(${PROJECT_NAME}
         zxing/bigint
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
+
+# Export defines by configure_file
+target_compile_definitions(${PROJECT_NAME} PUBLIC ${EXPORT_DEFINES})
 
 if(ANDROID)
     # Install target
@@ -212,3 +214,11 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+
+# Install configure file
+foreach(ed ${EXPORT_DEFINES})
+    set(PC_EXPORT_DEFINES "${PC_EXPORT_DEFINES} -D${ed}")
+endforeach()
+configure_file(QZXing.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
