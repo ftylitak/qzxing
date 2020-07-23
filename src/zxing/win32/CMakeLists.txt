@@ -8,4 +8,4 @@ if(MSVC)
     LIST(APPEND SOURCES ${WIN32_DIR}/msvc/stdint.h)
 endif(MSVC)
 
-target_sources(qzxing PRIVATE ${SOURCES})
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
