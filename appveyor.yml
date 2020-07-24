@@ -1,30 +1,24 @@
-#original author: KangLin(kl222@126.com)
+#original author: Kang Lin(kl222@126.com)
 
 version: '3.0.a.5.{build}'
 
 configuration:
-  - release
-  - debug
+  - Release
+  - Debug
 
 environment:
   matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATORS: "Visual Studio 14 2015"
+    QT_ROOT: C:/Qt/5.6/msvc2015
+
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATORS: "Visual Studio 14 2015 Win64"
+    QT_ROOT: C:/Qt/5.9/msvc2015_64
+
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATORS: "Visual Studio 15 2017 Win64"
     QT_ROOT: C:/Qt/5.12/msvc2017_64
-#  - QT_ROOT: C:/Qt/5.12/msvc2015
-#  - QT_ROOT: C:/Qt/5.12/mingw53_32
-  
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QT_ROOT: C:/Qt/5.9/msvc2017_64
-#  - QT_ROOT: C:/Qt/5.9/msvc2015_64
-#  - QT_ROOT: C:/Qt/5.9/msvc2015
-#  - QT_ROOT: C:/Qt/5.9/msvc2013_64
-#  - QT_ROOT: C:/Qt/5.9/mingw53_32
-  
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015  
-    QT_ROOT: C:/Qt/5.6/msvc2015_64
-#  - QT_ROOT: C:/Qt/5.6/msvc2015
-#  - QT_ROOT: C:/Qt/5.6/msvc2013_64
-#  - QT_ROOT: C:/Qt/5.6/msvc2013
   
 init:
 
@@ -75,17 +69,25 @@ install:
   - cl
 
 build_script:
-  - mkdir "%APPVEYOR_BUILD_FOLDER%/build"
-  - cd "%APPVEYOR_BUILD_FOLDER%/build"
-  - call "%QT_ROOT%/bin/qmake.exe" CONFIG+=%Configuration% PREFIX="%APPVEYOR_BUILD_FOLDER%/install" "%APPVEYOR_BUILD_FOLDER%/src/QZXing.pro"
+  # Test qmake
+  - mkdir "%APPVEYOR_BUILD_FOLDER%/build_qmake"
+  - cd "%APPVEYOR_BUILD_FOLDER%/build_qmake"
+  - call "%QT_ROOT%/bin/qmake.exe" CONFIG+=%Configuration% PREFIX="%APPVEYOR_BUILD_FOLDER%/install_qmake" "%APPVEYOR_BUILD_FOLDER%/src"
   - call %MAKE%
-  - call %MAKE% install 
+  - call %MAKE% install
+
+  # Test cmake
+  - mkdir "%APPVEYOR_BUILD_FOLDER%/build_cmake"
+  - cd "%APPVEYOR_BUILD_FOLDER%/build_cmake"
+  - cmake.exe -G"%GENERATORS%" -DCMAKE_INSTALL_PREFIX="%APPVEYOR_BUILD_FOLDER%/install_cmake" -DQt5_DIR="%QT_ROOT%/lib/cmake/Qt5" "%APPVEYOR_BUILD_FOLDER%/src"
+  - cmake --build . --config %Configuration%
+  - cmake --build . --config %Configuration% --target install
 
 test_script:
    
 artifacts:
-  - path: install
-    name: QZXing_$(QMAKE_XSPEC)$(TOOLCHAIN_VERSION)_$(CONFIGURATION)_$(BUILD_VERSION)
+  - path: install_qmake
+    name: QZXing_$(QMAKE_XSPEC)$(TOOLCHAIN_VERSION)_$(CONFIGURATION)_Qt$(QT_VERSION)_$(BUILD_VERSION)
     type: zip
 
 # whitelist branches to avoid testing feature branches twice (as branch and as pull request)

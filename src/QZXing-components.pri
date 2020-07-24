@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-CONFIG +=   qt warn_on
+CONFIG += qt warn_on
 
 DEFINES += ZXING_ICONV_CONST \
     DISABLE_LIBRARY_FEATURES

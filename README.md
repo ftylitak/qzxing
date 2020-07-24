@@ -46,18 +46,66 @@ Supports barcode decoding for the following types:
 The project can be used in two ways:
 <a name="embedInSourceCode"></a>
 ## Embed the source code. 
+- qmake project
+
 Copy source code folder of QZXing to the root of your project. Add the following line to your .pro file. For more information see [here](https://github.com/ftylitak/qzxing/wiki/Using-the-QZXing-through-the-source-code).
 
 ```qmake
 include(QZXing/QZXing.pri)
 ```
+
+- cmake project
+
+Download source code of QZXing to QZXing_DIR. Add the following line to your CMakeLists.txt file.
+
+```cmake
+add_subdirectory(${QZXing_DIR}/src ${CMAKE_BINARY_DIR}/QZXing)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC QZXing)
+```
+
 <a name="externalLibrary"></a>
 ## Compile the project as an external library
-Open QZXing project (QZXing.pro) and compile. If it is needed to compile as static library, uncomment the following line in the .pro file.
+- Qtcreator
+  + qmake project
+
+    Open QZXing project (QZXing.pro) and compile. If it is needed to compile as static library, uncomment the following line in the .pro file.
 
 ```qmake
 CONFIG += staticlib
 ```
+
+  + cmake project 
+
+    Open CMakeLists and compile. If it is needed to compile as static library, add the folloing parameter.
+	
+```bash
+-DBUILD_SHARED_LIBS=OFF
+```
+
+- Comand line
+  + qmake
+  
+```bash
+cd ${QZXing_DIR}
+mkdir build
+cd build
+qmake ../src # Configure
+make         # Compile
+make install # Install
+```
+  
+  + cmake
+
+```bash
+cd ${QZXing_DIR}
+mkdir build
+cd build
+cmake ../src                      # Configure
+cmake --build .                   # Compile
+cmake --build . --target install  # Install 
+```
+
 <a name="controlDependencies"></a>
 ## Control dependencies 
 Project file config tags are now introduced to be able to control the dependencies of the library accoring to the needs.
@@ -72,20 +120,35 @@ Warning! The initial default configuration till 20/03/2017 was including qzxing_
 
 <a name="controlDependenciesCoreQML"></a>
 ### QZXing (core + QML) 
-If an application is going to use QML functionality, it is now possible to add the dependency to it. This can be done by adding the folloing line to the .pro file of its project:
+If an application is going to use QML functionality, it is now possible to add the dependency to it. 
+- qmake. This can be done by adding the folloing line to the .pro file of its project:
 	
 ```qmake
 CONFIG += qzxing_qml
 ```
 
+- cmake. It can be used by adding the folloing line to parameter of cmake:
+
+```cmake
+-DQZXING_QML=ON
+```
+
 <a name="controlDependenciesCoreQMLQZXingFilter"></a>
 ### QZXing + QZXingFilter 
 QZXing includes QZXingFilter, a QAbstractVideoFilter implementation to provide a mean of providing live feed to the decoding library. It automatically includes QML implementation as well.
-This option requires "multimedia" Qt module this is why it is considered as a separate configuration. It can be used by adding the folloing line to the .pro file of a project:
+This option requires "multimedia" Qt module this is why it is considered as a separate configuration. 
+- qmake. It can be used by adding the folloing line to the .pro file of a project:
 
 ```qmake
 CONFIG += qzxing_multimedia
 ```
+
+- cmake. It can be used by adding the folloing line to parameter of cmake:
+
+```cmake
+-DQZXING_MULTIMEDIA=ON
+```
+
 <a name="howTo"></a>	
 # How to use 
 
