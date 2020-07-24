@@ -2,6 +2,14 @@
 
 cmake_minimum_required(VERSION 3.2)
 
+if(POLICY CMP0100)
+    cmake_policy(SET CMP0100 NEW)
+endif()
+
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
 project(QZXing)
 
 # TODO: Modify the version to the correct version
