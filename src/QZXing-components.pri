@@ -462,14 +462,17 @@ symbian {
     headers.files = $$PWD/QZXing.h $$PWD/QZXing_global.h
     headers.path = $$PREFIX/include
     target.path = $$PREFIX/lib
-    INSTALLS += headers target
+    INSTALLS *= headers target
 
     # pkg-config support
-    CONFIG += create_pc create_prl no_install_prl
+    CONFIG *= create_pc
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
     QMAKE_PKGCONFIG_LIBDIR = ${prefix}/lib
     QMAKE_PKGCONFIG_INCDIR = ${prefix}/include
     QMAKE_PKGCONFIG_CFLAGS = $$PC_EXPORT_DEFINES
+
+    # create prl
+    CONFIG *= create_prl
 
     unix: QMAKE_CLEAN += -r pkgconfig lib$${TARGET}.prl
 }
