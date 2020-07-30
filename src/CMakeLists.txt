@@ -223,7 +223,7 @@ write_basic_package_version_file(
 install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-# Install configure file
+# Install pkg-config configure file
 foreach(ed ${EXPORT_DEFINES})
     set(PC_EXPORT_DEFINES "${PC_EXPORT_DEFINES} -D${ed}")
 endforeach()
