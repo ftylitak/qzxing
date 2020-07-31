@@ -1,6 +1,6 @@
 # Author: Kang Lin (kl222@126.com)
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8.12)
 
 if(POLICY CMP0100)
     cmake_policy(SET CMP0100 NEW)
