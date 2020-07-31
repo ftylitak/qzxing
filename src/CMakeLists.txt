@@ -67,6 +67,10 @@ SET(ZXING_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/zxing)
 
 SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs")
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 set(INSTALL_HEADER_FILES
     QZXing.h
     QZXing_global.h
