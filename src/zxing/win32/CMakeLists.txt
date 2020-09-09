@@ -1,7 +1,7 @@
 SET(SOURCES
 
-    ${WIN32_DIR}/zxing/iconv.h
-    ${WIN32_DIR}/zxing/win_iconv.c
+    ${WIN32_DIR}/iconv.h
+    ${WIN32_DIR}/win_iconv.c
 )
 
 if(MSVC)
