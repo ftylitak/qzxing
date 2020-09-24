@@ -52,24 +52,9 @@ include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
 
-# Record the files that will need to be deleted
-CONFIGURE_FILE(
-    "cmake_uninstall.cmake.in"
-    "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-# Create delete target
-ADD_CUSTOM_TARGET(uninstall
-    "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
-
 SET(BIGINT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/zxing/bigint)
 SET(WIN32_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/win32/zxing)
 SET(ZXING_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/zxing)
-
-SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs")
-
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-endif()
 
 set(INSTALL_HEADER_FILES
     QZXing.h
@@ -173,6 +158,15 @@ target_include_directories(${PROJECT_NAME}
 
 # Export defines by configure_file
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${EXPORT_DEFINES})
+
+# Install
+
+# Install runtime target
+add_custom_target(install-runtime
+  COMMAND
+     "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=Runtime 
+     -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_install.cmake"
+)
 
 if(ANDROID)
     # Install target

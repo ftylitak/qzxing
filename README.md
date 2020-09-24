@@ -101,9 +101,14 @@ make install # Install
 cd ${QZXing_DIR}
 mkdir build
 cd build
-cmake ../src                      # Configure
-cmake --build .                   # Compile
-cmake --build . --target install  # Install 
+# Configure
+cmake ..
+# Compile
+cmake --build .
+# Install
+cmake --build . --target install         # Install develop library
+# or
+cmake --build . --target install-runtime # Install runtime library
 ```
 
 <a name="controlDependencies"></a>
