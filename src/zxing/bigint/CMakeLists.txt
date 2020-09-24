@@ -13,4 +13,4 @@ SET(SOURCES
      ${BIGINT_DIR}/NumberlikeArray.hh
     )
 
-target_sources(qzxing PRIVATE ${SOURCES})
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})

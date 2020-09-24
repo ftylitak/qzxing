@@ -46,6 +46,7 @@ SET(SOURCES
 
     )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DECODER_AZTEC)
 SET(AZTEC_DIR
 
     ${ZXING_DIR}/aztec/AztecDetectorResult.cpp
@@ -118,6 +119,7 @@ SET(COMMON_DIR
 
     )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DECODER_DATA_MATRIX)
 SET(DATAMATRIX_DIR
 
     ${ZXING_DIR}/datamatrix/DataMatrixReader.cpp
@@ -162,6 +164,7 @@ SET(MULTI_DIR
 
     )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DECODER_1D_BARCODES)
 SET(ONED_DIR
 
     ${ZXING_DIR}/oned/UPCEReader.h
@@ -263,6 +266,7 @@ SET(ONED_DIR
 
     )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DECODER_PDF17)
 SET(PDF417_DIR
 
     ${ZXING_DIR}/pdf417/PDF417Reader.cpp
@@ -289,6 +293,8 @@ SET(PDF417_DIR
 
     )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    ENABLE_DECODER_QR_CODE ENABLE_ENCODER_QR_CODE)
 SET(QRCODE_DIR
 
     ${ZXING_DIR}/qrcode/ErrorCorrectionLevel.h
@@ -340,7 +346,7 @@ SET(QRCODE_DIR
 
     )
 
-target_sources(qzxing PRIVATE
+target_sources(${PROJECT_NAME} PRIVATE
     ${SOURCES}
     ${AZTEC_DIR}
     ${COMMON_DIR}

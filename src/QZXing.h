@@ -52,7 +52,7 @@ struct QZXingEncoderConfig;
   */
 class
         #ifndef DISABLE_LIBRARY_FEATURES
-        QZXINGSHARED_EXPORT
+               QZXINGSHARED_EXPORT
         #endif
         QZXing : public QObject {
 

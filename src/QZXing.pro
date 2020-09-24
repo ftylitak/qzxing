@@ -24,12 +24,15 @@ CONFIG += \
           #staticlib
           #qzxing_qml
           #qzxing_multimedia
+          #enable_iconv
 
 VERSION = 2.3
 
 TARGET = QZXing
 TEMPLATE = lib
 
-DEFINES -= DISABLE_LIBRARY_FEATURES
+DEFINES *= QZXING_LIBRARY
 
 include(QZXing-components.pri)
+
+DEFINES -= DISABLE_LIBRARY_FEATURES
