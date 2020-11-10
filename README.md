@@ -170,6 +170,14 @@ QZXing{
 <a name="howToEncoding"></a>
 ## Encoding operation 
 
+To begin with, make sure the Encoder feature is enabled. If __QZXing.pri__ is used, then the feature is already enabled. If your project uses __QZXing-compoents.pri__ instead, do add the following CONFIG in your .pro file:
+
+```pro
+CONFIG += enable_encoder_qr_code
+
+include(QZXing/QZXing-components.pri)
+```
+
 <a name="howToEncodingCPP"></a>
 ### C++/Qt 
 
@@ -203,6 +211,15 @@ QImage barcode = QZXing::encodeData(data, QZXing::EncoderFormat_QR_CODE,
 ### Qt Quick 
 
 The encoding function can be easily used in QML through QZXing's Image Provider: "image://QZXing/encode/<data_to_be_encoded>". As with the C++ example, it can either be used with the default settings or with custom settings. 
+
+First register the custom Image Provider in the __main.cpp__:
+
+```cpp
+QQmlApplicationEngine engine;
+
+QZXing::registerQMLTypes();
+QZXing::registerQMLImageProvider(engine);
+```
 
 Default settings:
 
