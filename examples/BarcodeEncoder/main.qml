@@ -1,7 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
-import QtQuick.Dialogs 1.3
+//import QtQuick.Dialogs 1.3
+import Qt.labs.platform 1.1
 
 ApplicationWindow {
     id: mainWindow
@@ -140,8 +141,8 @@ ApplicationWindow {
             Image{
                 id:resultImage
                 anchors.centerIn: parent
-                sourceSize.width: barcodeRectangle.imageWidth
-                sourceSize.height: barcodeRectangle.imageWidth
+                sourceSize.width: 200
+                sourceSize.height: 200
 
                 source: mainLayout.getImageRequestString()
                 cache: false;
