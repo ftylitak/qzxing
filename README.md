@@ -309,7 +309,7 @@ cd qzxing
 git submodule update --init --recursive
 ```
 
-<a name="#qt6limitations"></a>
+<a name="qt6limitations"></a>
 
 # Qt 6 limitations
 
