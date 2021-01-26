@@ -98,10 +98,10 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 #if QT_VERSION >= 0x040700
 void QZXing::registerQMLTypes()
 {
-    qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
+    qmlRegisterType<QZXing>("QZXing", 3, 1, "QZXing");
 
 #ifdef QZXING_MULTIMEDIA
-    qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
+    qmlRegisterType<QZXingFilter>("QZXing", 3, 1, "QZXingFilter");
 #endif //QZXING_MULTIMEDIA
 
 }

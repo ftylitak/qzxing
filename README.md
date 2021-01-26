@@ -159,7 +159,7 @@ int main()
 The in the QML file
 
 ```qml
-import QZXing 2.3
+import QZXing 3.1
 
 function decode(preview) {
 	imageToDecode.source = preview
@@ -250,7 +250,7 @@ QZXing::registerQMLImageProvider(engine);
 Default settings:
 
 ```qml
-import QZXing 2.3
+import QZXing 3.1
 
 TextField {
 	id: inputField
@@ -275,7 +275,7 @@ Or use the encoding function with the optional custom settings that are passed l
 the size of the image can be adjusted by using the Image.sourceWidth and Image.sourceHeight properties of Image QML element.
 
 ```qml
-import QZXing 2.3
+import QZXing 3.1
 
 TextField {
 	id: inputField
