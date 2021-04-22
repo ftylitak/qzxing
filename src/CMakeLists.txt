@@ -24,9 +24,15 @@ set(SOURCES
     QZXing_global.h
     )
 
+SET(INSTALL_HEADERS
+    QZXing.h
+    QZXing_global.h
+    )
+
 if(QZXING_MULTIMEDIA)
 
     LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    LIST(APPEND INSTALL_HEADERS QZXingFilter.h)
     add_definitions(-DQZXING_MULTIMEDIA)
 
     SET(QZXING_USE_QML ON)
@@ -35,6 +41,7 @@ endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
     LIST(APPEND SOURCES QZXingImageProvider.cpp QZXingImageProvider.h)
+    LIST(APPEND INSTALL_HEADERS QZXingImageProvider.h)
     add_definitions(-DQZXING_QML)
 endif(QZXING_USE_QML)
 
@@ -85,3 +92,6 @@ target_include_directories(qzxing
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
+# Install files
+install(TARGETS qzxing DESTINATION lib)
+install(FILES ${INSTALL_HEADERS} DESTINATION include/qzxing)
