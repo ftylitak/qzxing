@@ -93,5 +93,6 @@ target_include_directories(qzxing
 )
 
 # Install files
-install(TARGETS qzxing DESTINATION lib)
+install(TARGETS qzxing EXPORT qzxing-config DESTINATION lib)
 install(FILES ${INSTALL_HEADERS} DESTINATION include/qzxing)
+install(EXPORT qzxing-config DESTINATION lib/cmake/qzxing)
