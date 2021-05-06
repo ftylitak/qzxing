@@ -265,12 +265,13 @@ Image{
 
 Or use the encoding function with the optional custom settings that are passed like URL query parameters:
 
-| attribute name  | value       | description                                   |
-| --------------- | ----------- | --------------------------------------------- |
-| border          | true, false | image has border (white 1px)                  |
-| correctionLevel | L, M, Q, H  | the error correction level                    |
-| format          | qrcode      | the encode formatter. Currently only QR Code. |
-| transparent     | true, false | whether the black pixels are transparent      |
+| attribute name  | value       | description                                               |
+| --------------- | ----------- | --------------------------------------------------------- |
+| border          | true, false | image has border (white 1px)                              |
+| correctionLevel | L, M, Q, H  | the error correction level                                |
+| format          | qrcode      | the encode formatter. Currently only QR Code.             |
+| transparent     | true, false | whether the black pixels are transparent                  |
+| explicitSize    | int         | if provided, it will be the size of the Qr rectangle      |
 
 the size of the image can be adjusted by using the Image.sourceWidth and Image.sourceHeight properties of Image QML element.
 
