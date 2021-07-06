@@ -38,6 +38,10 @@ if(QZXING_USE_QML)
     add_definitions(-DQZXING_QML)
 endif(QZXING_USE_QML)
 
+if(QZXING_USE_ENCODER)
+    add_definitions(-DENABLE_ENCODER_GENERIC -DENABLE_ENCODER_QR_CODE)
+endif(QZXING_USE_ENCODER)
+
 add_library(qzxing "" ${SOURCES})
 
 if(WIN32)
@@ -61,6 +65,7 @@ target_link_libraries(qzxing Qt5::Core Qt5::Gui)
 
 if(QZXING_MULTIMEDIA)
     target_link_libraries(qzxing Qt5::Multimedia)
+    target_compile_definitions(qzxing PUBLIC -DQZXING_MULTIMEDIA)
 endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
@@ -68,7 +73,12 @@ if(QZXING_USE_QML)
         Qt5::Svg
         Qt5::Quick
         Qt5::QuickControls2)
+    target_compile_definitions(qzxing PUBLIC -DQZXING_QML)
 endif(QZXING_USE_QML)
+
+if(QZXING_USE_ENCODER)
+    target_compile_definitions(qzxing PUBLIC -DENABLE_ENCODER_GENERIC -DENABLE_ENCODER_QR_CODE)
+endif(QZXING_USE_ENCODER)
 
 # Change Global Definitions depending on how you want to use the library
 target_compile_definitions(qzxing PUBLIC DISABLE_LIBRARY_FEATURES)
