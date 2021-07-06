@@ -53,6 +53,10 @@ if(WIN32)
     add_definitions(-DNO_ICONV)
 endif(WIN32)
 
+if(ANDROID)
+    add_definitions(-DNO_ICONV)
+endif()
+
 if(VS_WINRT_COMPONENT)
     add_definitions(-DNO_ICONV)
 endif(VS_WINRT_COMPONENT)
