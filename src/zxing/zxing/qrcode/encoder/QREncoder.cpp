@@ -39,12 +39,12 @@ int Encoder::calculateMaskPenalty(const ByteMatrix& matrix)
             + MaskUtil::applyMaskPenaltyRule4(matrix);
 }
 
-Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel)
+QSharedPointer<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel)
 {
     return encode(content, ecLevel, ZXING_NULLPTR);
 }
 
-Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
+QSharedPointer<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &ecLevel, const EncodeHint* hints)
 {
     // Determine what character encoding has been specified by the caller, if any
     std::string encoding = hints == ZXING_NULLPTR ? "" : hints->getCharacterSet();
@@ -76,7 +76,7 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
     BitArray dataBits;
     appendBytes(content, mode, dataBits, encoding);
 
-    Ref<Version> version;
+    QSharedPointer<Version> version;
     if (hints != ZXING_NULLPTR/* && hints->containsKey(EncodeHintType.QR_VERSION)*/) {
         version = Version::getVersionForNumber(1); //should version number be passed as argument?
         int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, version);
@@ -102,20 +102,20 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
     terminateBits(numDataBytes, headerAndDataBits);
 
     // Interleave data bits with error correction code.
-    Ref<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
+    QSharedPointer<BitArray> finalBits(interleaveWithECBytes(headerAndDataBits,
                                                   version->getTotalCodewords(),
                                                   numDataBytes,
                                                   int(ecBlocks.numBlocks())));
 
-    Ref<QRCode> qrCode(new QRCode);
+    QSharedPointer<QRCode> qrCode(new QRCode);
 
-    qrCode->setECLevel(Ref<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ecLevel)));
+    qrCode->setECLevel(QSharedPointer<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ecLevel)));
     qrCode->setMode(mode);
     qrCode->setVersion(version);
 
     //  Choose the mask pattern and set to "qrCode".
     int dimension = version->getDimensionForVersion();
-    Ref<ByteMatrix> matrix(new ByteMatrix(size_t(dimension), size_t(dimension)));
+    QSharedPointer<ByteMatrix> matrix(new ByteMatrix(size_t(dimension), size_t(dimension)));
     int maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
     qrCode->setMaskPattern(maskPattern);
 
@@ -128,7 +128,7 @@ Ref<QRCode> Encoder::encode(const std::wstring& content, ErrorCorrectionLevel &e
     //return NULL;
 }
 
-bool Encoder::willFit(int numInputBits, Ref<Version> version, const ErrorCorrectionLevel &ecLevel) {
+bool Encoder::willFit(int numInputBits, QSharedPointer<Version> version, const ErrorCorrectionLevel &ecLevel) {
       // In the following comments, we use numbers of Version 7-H.
       // numBytes = 196
       int numBytes = version->getTotalCodewords();
@@ -207,10 +207,10 @@ Mode Encoder::chooseMode(const std::wstring& content, const std::string& encodin
 //    return true;
 //}
 
-int Encoder::chooseMaskPattern(Ref<BitArray> bits,
+int Encoder::chooseMaskPattern(QSharedPointer<BitArray> bits,
                                ErrorCorrectionLevel& ecLevel,
-                               Ref<Version> version,
-                               Ref<ByteMatrix> matrix)
+                               QSharedPointer<Version> version,
+                               QSharedPointer<ByteMatrix> matrix)
 {
 
     int minPenalty = std::numeric_limits<int>::max();  // Lower penalty is better.
@@ -227,11 +227,11 @@ int Encoder::chooseMaskPattern(Ref<BitArray> bits,
     return bestMaskPattern;
 }
 
-Ref<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel)
+QSharedPointer<Version> Encoder::chooseVersion(int numInputBits, const ErrorCorrectionLevel &ecLevel)
 {
     // In the following comments, we use numbers of Version 7-H.
     for (int versionNum = 1; versionNum <= 40; versionNum++) {
-        Ref<Version> version = Version::getVersionForNumber(versionNum);
+        QSharedPointer<Version> version = Version::getVersionForNumber(versionNum);
         if (willFit(numInputBits, version, ecLevel)) {
             return version;
         }
@@ -449,7 +449,7 @@ void Encoder::appendModeInfo(const Mode& mode, BitArray& bits)
 /**
    * Append length info. On success, store the result in "bits".
    */
-void Encoder::appendLengthInfo(int numLetters, const Ref<Version> version, const Mode& mode, BitArray& bits)
+void Encoder::appendLengthInfo(int numLetters, const QSharedPointer<Version> version, const Mode& mode, BitArray& bits)
 {
     int numBits = mode.getCharacterCountBits(version);
     if (numLetters >= (1 << numBits)) {
@@ -580,12 +580,12 @@ void Encoder::appendECI(const zxing::common::CharacterSetECI& eci, BitArray& bit
 }
 
 int Encoder::calculateBitsNeeded(const Mode &mode, const BitArray &headerBits, const BitArray &dataBits, const
-                                 Ref<Version> version)
+                                 QSharedPointer<Version> version)
 {
     return headerBits.getSize() + mode.getCharacterCountBits(version) + dataBits.getSize();
 }
 
-Ref<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
+QSharedPointer<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
                                           Mode &mode,
                                           BitArray &headerBits,
                                           BitArray &dataBits)
@@ -594,7 +594,7 @@ Ref<Version> Encoder::recommendVersion(ErrorCorrectionLevel &ecLevel,
     // bits it takes to know version. First we take a guess at version by assuming version will be
     // the minimum, 1:
     int provisionalBitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, Version::getVersionForNumber(1));
-    Ref<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
+    QSharedPointer<Version> provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
 
     // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
     int bitsNeeded = calculateBitsNeeded(mode, headerBits, dataBits, provisionalVersion);

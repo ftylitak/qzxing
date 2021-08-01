@@ -34,16 +34,16 @@ public:
     static CameraImageWrapper* Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
     
     QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > getOriginalImage();
-    Ref<GreyscaleLuminanceSource> getDelegate() { return delegate; }
+    QSharedPointer<GreyscaleLuminanceSource> getDelegate() { return delegate; }
 
     QSharedPointer<std::vector<zxing::byte>> getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const;
     QSharedPointer<std::vector<zxing::byte>> getMatrix() const;
 
     bool isCropSupported() const;
-    Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
+    QSharedPointer<LuminanceSource> crop(int left, int top, int width, int height) const;
     bool isRotateSupported() const;
-    Ref<LuminanceSource> invert() const;
-    Ref<LuminanceSource> rotateCounterClockwise() const;
+    QSharedPointer<LuminanceSource> invert() const;
+    QSharedPointer<LuminanceSource> rotateCounterClockwise() const;
 
     inline zxing::byte gray(const unsigned int r, const unsigned int g, const unsigned int b);
   
@@ -52,7 +52,7 @@ private:
     QSharedPointer<std::vector<zxing::byte>> getMatrixP() const;
     void updateImageAsGrayscale(const QImage &origin);
 
-    Ref<GreyscaleLuminanceSource> delegate;
+    QSharedPointer<GreyscaleLuminanceSource> delegate;
     QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>> imageBytesPerRow;
     QSharedPointer<std::vector<zxing::byte>> imageBytes;
 

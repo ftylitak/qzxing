@@ -37,11 +37,11 @@ bool AlignmentPattern::aboutEquals(float moduleSize, float i, float j) const {
   return false;
 }
 
-Ref<AlignmentPattern> AlignmentPattern::combineEstimate(float i, float j, float newModuleSize) const {
+QSharedPointer<AlignmentPattern> AlignmentPattern::combineEstimate(float i, float j, float newModuleSize) const {
   float combinedX = (getX() + j) / 2.0f;
   float combinedY = (getY() + i) / 2.0f;
   float combinedModuleSize = (estimatedModuleSize_ + newModuleSize) / 2.0f;
-  Ref<AlignmentPattern> result
+  QSharedPointer<AlignmentPattern> result
       (new AlignmentPattern(combinedX, combinedY, combinedModuleSize));
   return result;
 }

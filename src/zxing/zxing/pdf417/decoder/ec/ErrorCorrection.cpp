@@ -48,7 +48,7 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
                              int numECCodewords,
                              QSharedPointer<std::vector<int>> erasures)
 {
-  Ref<ModulusPoly> poly (new ModulusPoly(field_, received));
+  QSharedPointer<ModulusPoly> poly (new ModulusPoly(field_, received));
   QSharedPointer<std::vector<int>> S( new std::vector<int>(numECCodewords));
   bool error = false;
   for (int i = numECCodewords; i > 0; i--) {
@@ -61,24 +61,24 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
 
   if (error) {
 
-    Ref<ModulusPoly> knownErrors = field_.getOne();
+    QSharedPointer<ModulusPoly> knownErrors = field_.getOne();
     for (int i=0;i<erasures->size();i++) {
       int b = field_.exp(received->size() - 1 - erasures[i]);
       // Add (1 - bx) term:
       QSharedPointer<std::vector<int>> one_minus_b_x(new std::vector<int>(2));
       one_minus_b_x[1]=field_.subtract(0,b);
       one_minus_b_x[0]=1;
-      Ref<ModulusPoly> term (new ModulusPoly(field_,one_minus_b_x));
+      QSharedPointer<ModulusPoly> term (new ModulusPoly(field_,one_minus_b_x));
       knownErrors = knownErrors->multiply(term);
     }
 
-    Ref<ModulusPoly> syndrome (new ModulusPoly(field_, S));
+    QSharedPointer<ModulusPoly> syndrome (new ModulusPoly(field_, S));
     //syndrome = syndrome.multiply(knownErrors);
 
-    vector<Ref<ModulusPoly> > sigmaOmega (
+    vector<QSharedPointer<ModulusPoly> > sigmaOmega (
         runEuclideanAlgorithm(field_.buildMonomial(numECCodewords, 1), syndrome, numECCodewords));
-    Ref<ModulusPoly> sigma = sigmaOmega[0];
-    Ref<ModulusPoly> omega = sigmaOmega[1];
+    QSharedPointer<ModulusPoly> sigma = sigmaOmega[0];
+    QSharedPointer<ModulusPoly> omega = sigmaOmega[1];
 
     //sigma = sigma.multiply(knownErrors);
 
@@ -103,24 +103,24 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
   }
 }
 
-vector<Ref<ModulusPoly> >  ErrorCorrection::runEuclideanAlgorithm(Ref<ModulusPoly> a, Ref<ModulusPoly> b, int R)
+vector<QSharedPointer<ModulusPoly> >  ErrorCorrection::runEuclideanAlgorithm(QSharedPointer<ModulusPoly> a, QSharedPointer<ModulusPoly> b, int R)
 {
   // Assume a's degree is >= b's
   if (a->getDegree() < b->getDegree()) {
-    Ref<ModulusPoly> temp = a;
+    QSharedPointer<ModulusPoly> temp = a;
     a = b;
     b = temp;
   }
 
-  Ref<ModulusPoly> rLast ( a);
-  Ref<ModulusPoly> r ( b);
-  Ref<ModulusPoly> tLast ( field_.getZero());
-  Ref<ModulusPoly> t ( field_.getOne());
+  QSharedPointer<ModulusPoly> rLast ( a);
+  QSharedPointer<ModulusPoly> r ( b);
+  QSharedPointer<ModulusPoly> tLast ( field_.getZero());
+  QSharedPointer<ModulusPoly> t ( field_.getOne());
 
   // Run Euclidean algorithm until r's degree is less than R/2
   while (r->getDegree() >= R / 2) {
-    Ref<ModulusPoly> rLastLast (rLast);
-    Ref<ModulusPoly> tLastLast (tLast);
+    QSharedPointer<ModulusPoly> rLastLast (rLast);
+    QSharedPointer<ModulusPoly> tLastLast (tLast);
     rLast = r;
     tLast = t;
 
@@ -130,7 +130,7 @@ vector<Ref<ModulusPoly> >  ErrorCorrection::runEuclideanAlgorithm(Ref<ModulusPol
       throw ReedSolomonException("Euclidean algorithm already terminated?");
     }
     r = rLastLast;
-    Ref<ModulusPoly> q (field_.getZero());
+    QSharedPointer<ModulusPoly> q (field_.getZero());
     int denominatorLeadingTerm = rLast->getCoefficient(rLast->getDegree());
     int dltInverse = field_.inverse(denominatorLeadingTerm);
     while (r->getDegree() >= rLast->getDegree() && !r->isZero()) {
@@ -149,15 +149,15 @@ vector<Ref<ModulusPoly> >  ErrorCorrection::runEuclideanAlgorithm(Ref<ModulusPol
   }
 
   int inverse = field_.inverse(sigmaTildeAtZero);
-  Ref<ModulusPoly> sigma (t->multiply(inverse));
-  Ref<ModulusPoly> omega (r->multiply(inverse));
-	vector<Ref<ModulusPoly> > v(2);
+  QSharedPointer<ModulusPoly> sigma (t->multiply(inverse));
+  QSharedPointer<ModulusPoly> omega (r->multiply(inverse));
+	vector<QSharedPointer<ModulusPoly> > v(2);
 	v[0] = sigma;
 	v[1] = omega;
   return v;
 }
 
-QSharedPointer<std::vector<int>> ErrorCorrection::findErrorLocations(Ref<ModulusPoly> errorLocator)  {
+QSharedPointer<std::vector<int>> ErrorCorrection::findErrorLocations(QSharedPointer<ModulusPoly> errorLocator)  {
   // This is a direct application of Chien's search
   int numErrors = errorLocator->getDegree();
   QSharedPointer<std::vector<int>> result( new std::vector<int>(numErrors));
@@ -188,8 +188,8 @@ QSharedPointer<std::vector<int>> ErrorCorrection::findErrorLocations(Ref<Modulus
   return result;
 }
 
-QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(Ref<ModulusPoly> errorEvaluator,
-                                                   Ref<ModulusPoly> errorLocator,
+QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(QSharedPointer<ModulusPoly> errorEvaluator,
+                                                   QSharedPointer<ModulusPoly> errorLocator,
                                                    QSharedPointer<std::vector<int>> errorLocations) {
 	int i;
   int errorLocatorDegree = errorLocator->getDegree();
@@ -198,7 +198,7 @@ QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(Ref<Modulu
     formalDerivativeCoefficients[errorLocatorDegree - i] =
         field_.multiply(i, errorLocator->getCoefficient(i));
   }
-  Ref<ModulusPoly> formalDerivative (new ModulusPoly(field_, formalDerivativeCoefficients));
+  QSharedPointer<ModulusPoly> formalDerivative (new ModulusPoly(field_, formalDerivativeCoefficients));
 
   // This is directly applying Forney's Formula
   int s = errorLocations->size();

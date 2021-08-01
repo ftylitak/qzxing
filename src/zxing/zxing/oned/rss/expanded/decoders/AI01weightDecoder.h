@@ -46,7 +46,7 @@ class AI01weightDecoder : public AI01decoder
 {
 
 public:
-    AI01weightDecoder(Ref<BitArray> information);
+    AI01weightDecoder(QSharedPointer<BitArray> information);
 
     void encodeCompressedWeight(String &buf, int currentPos, int weightSize);
 

@@ -95,7 +95,7 @@ int GenericGFPoly::evaluateAt(int a) {
   return result;
 }
   
-Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other) {
+QSharedPointer<GenericGFPoly> GenericGFPoly::addOrSubtract(QSharedPointer<zxing::GenericGFPoly> other) {
   if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
@@ -103,7 +103,7 @@ Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other)
     return other;
   }
   if (other->isZero()) {
-    return Ref<GenericGFPoly>(this);
+    return QSharedPointer<GenericGFPoly>(this);
   }
     
   QSharedPointer<std::vector<int>> smallerCoefficients = coefficients_;
@@ -126,10 +126,10 @@ Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other)
                                           largerCoefficients[i]);
   }
     
-  return Ref<GenericGFPoly>(new GenericGFPoly(field_, sumDiff));
+  return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, sumDiff));
 }
   
-Ref<GenericGFPoly> GenericGFPoly::multiply(Ref<zxing::GenericGFPoly> other) {
+QSharedPointer<GenericGFPoly> GenericGFPoly::multiply(QSharedPointer<zxing::GenericGFPoly> other) {
   if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
@@ -153,25 +153,25 @@ Ref<GenericGFPoly> GenericGFPoly::multiply(Ref<zxing::GenericGFPoly> other) {
     }
   }
     
-  return Ref<GenericGFPoly>(new GenericGFPoly(field_, product));
+  return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, product));
 }
   
-Ref<GenericGFPoly> GenericGFPoly::multiply(int scalar) {
+QSharedPointer<GenericGFPoly> GenericGFPoly::multiply(int scalar) {
   if (scalar == 0) {
     return field_->getZero();
   }
   if (scalar == 1) {
-    return Ref<GenericGFPoly>(this);
+    return QSharedPointer<GenericGFPoly>(this);
   }
   int size = coefficients_->size();
   QSharedPointer<std::vector<int>> product(size);
   for (int i = 0; i < size; i++) {
     product[i] = field_->multiply(coefficients_[i], scalar);
   }
-  return Ref<GenericGFPoly>(new GenericGFPoly(field_, product));
+  return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, product));
 }
   
-Ref<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int coefficient) {
+QSharedPointer<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int coefficient) {
   if (degree < 0) {
     throw IllegalArgumentException("degree must not be less then 0");
   }
@@ -183,10 +183,10 @@ Ref<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int coefficient
   for (int i = 0; i < size; i++) {
     product[i] = field_->multiply(coefficients_[i], coefficient);
   }
-  return Ref<GenericGFPoly>(new GenericGFPoly(field_, product));
+  return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, product));
 }
   
-std::vector<Ref<GenericGFPoly>> GenericGFPoly::divide(Ref<GenericGFPoly> other) {
+std::vector<QSharedPointer<GenericGFPoly>> GenericGFPoly::divide(QSharedPointer<GenericGFPoly> other) {
   if (!(field_ == other->field_)) {
     throw IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
   }
@@ -194,8 +194,8 @@ std::vector<Ref<GenericGFPoly>> GenericGFPoly::divide(Ref<GenericGFPoly> other) 
     throw IllegalArgumentException("divide by 0");
   }
     
-  Ref<GenericGFPoly> quotient = field_->getZero();
-  Ref<GenericGFPoly> remainder = Ref<GenericGFPoly>(this);
+  QSharedPointer<GenericGFPoly> quotient = field_->getZero();
+  QSharedPointer<GenericGFPoly> remainder = QSharedPointer<GenericGFPoly>(this);
     
   int denominatorLeadingTerm = other->getCoefficient(other->getDegree());
   int inverseDenominatorLeadingTerm = field_->inverse(denominatorLeadingTerm);
@@ -204,14 +204,14 @@ std::vector<Ref<GenericGFPoly>> GenericGFPoly::divide(Ref<GenericGFPoly> other) 
     int degreeDifference = remainder->getDegree() - other->getDegree();
     int scale = field_->multiply(remainder->getCoefficient(remainder->getDegree()),
                                  inverseDenominatorLeadingTerm);
-    Ref<GenericGFPoly> term = other->multiplyByMonomial(degreeDifference, scale);
-    Ref<GenericGFPoly> iterationQuotiont = field_->buildMonomial(degreeDifference,
+    QSharedPointer<GenericGFPoly> term = other->multiplyByMonomial(degreeDifference, scale);
+    QSharedPointer<GenericGFPoly> iterationQuotiont = field_->buildMonomial(degreeDifference,
                                                                  scale);
     quotient = quotient->addOrSubtract(iterationQuotiont);
     remainder = remainder->addOrSubtract(term);
   }
     
-  std::vector<Ref<GenericGFPoly> > returnValue;
+  std::vector<QSharedPointer<GenericGFPoly> > returnValue;
   returnValue.push_back(quotient);
   returnValue.push_back(remainder);
   return returnValue;

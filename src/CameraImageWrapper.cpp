@@ -71,7 +71,7 @@ CameraImageWrapper::CameraImageWrapper(const QImage &sourceImage) : LuminanceSou
 {
     updateImageAsGrayscale( sourceImage );
 
-    delegate = Ref<GreyscaleLuminanceSource>(
+    delegate = QSharedPointer<GreyscaleLuminanceSource>(
                 new GreyscaleLuminanceSource(getMatrixP(), sourceImage.width(), sourceImage.height(),0, 0, sourceImage.width(), sourceImage.height()));
 }
 
@@ -130,7 +130,7 @@ bool CameraImageWrapper::isCropSupported() const
         return LuminanceSource::isCropSupported();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
+QSharedPointer<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
 {
     if(delegate)
         return delegate->crop(left, top, width, height);
@@ -146,7 +146,7 @@ bool CameraImageWrapper::isRotateSupported() const
         return LuminanceSource::isRotateSupported();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::invert() const
+QSharedPointer<LuminanceSource> CameraImageWrapper::invert() const
 {
     if(delegate)
         return delegate->invert();
@@ -154,7 +154,7 @@ Ref<LuminanceSource> CameraImageWrapper::invert() const
         return LuminanceSource::invert();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
+QSharedPointer<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
 {
     if(delegate)
         return delegate->rotateCounterClockwise();

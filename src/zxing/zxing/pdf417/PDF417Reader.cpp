@@ -28,9 +28,9 @@ using zxing::pdf417::detector::Detector;
 using zxing::BinaryBitmap;
 using zxing::DecodeHints;
 
-Ref<Result> PDF417Reader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
+QSharedPointer<Result> PDF417Reader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints)
 {
-  Ref<DecoderResult> decoderResult;
+  QSharedPointer<DecoderResult> decoderResult;
   /* 2012-05-30 hfn C++ DecodeHintType does not yet know a type "PURE_BARCODE", */
   /* therefore skip this for now, todo: may be add this type later */
   /*
@@ -41,12 +41,12 @@ Ref<Result> PDF417Reader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
     } else {
   */
   Detector detector(image);
-  Ref<DetectorResult> detectorResult = detector.detect(hints); /* 2012-09-17 hints ("try_harder") */
-  QSharedPointer<std::vector<Ref<ResultPoint>>> points(detectorResult->getPoints());
+  QSharedPointer<DetectorResult> detectorResult = detector.detect(hints); /* 2012-09-17 hints ("try_harder") */
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> points(detectorResult->getPoints());
 
   if (!hints.isEmpty())
   {
-    Ref<ResultPointCallback> rpcb = hints.getResultPointCallback();
+    QSharedPointer<ResultPointCallback> rpcb = hints.getResultPointCallback();
     /* .get(DecodeHintType.NEED_RESULT_POINT_CALLBACK); */
     if (rpcb != NULL)
     {
@@ -60,7 +60,7 @@ Ref<Result> PDF417Reader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
   /*
     }
   */
-  Ref<Result> r(new Result(decoderResult->getText(), decoderResult->getRawBytes(), points,
+  QSharedPointer<Result> r(new Result(decoderResult->getText(), decoderResult->getRawBytes(), points,
                            BarcodeFormat::PDF_417));
   return r;
 }
@@ -70,7 +70,7 @@ void PDF417Reader::reset()
   // do nothing
 }
 
-Ref<BitMatrix> PDF417Reader::extractPureBits(Ref<BitMatrix> image)
+QSharedPointer<BitMatrix> PDF417Reader::extractPureBits(QSharedPointer<BitMatrix> image)
 {
   QSharedPointer<std::vector<int>> leftTopBlack = image->getTopLeftOnBit();
   QSharedPointer<std::vector<int>> rightBottomBlack = image->getBottomRightOnBit();
@@ -101,7 +101,7 @@ Ref<BitMatrix> PDF417Reader::extractPureBits(Ref<BitMatrix> image)
   left += nudge;
 
   // Now just read off the bits
-  Ref<BitMatrix> bits(new BitMatrix(matrixWidth, matrixHeight));
+  QSharedPointer<BitMatrix> bits(new BitMatrix(matrixWidth, matrixHeight));
   for (int y = 0; y < matrixHeight; y++)
   {
     int iOffset = top + y * nModuleSize;
@@ -116,7 +116,7 @@ Ref<BitMatrix> PDF417Reader::extractPureBits(Ref<BitMatrix> image)
   return bits;
 }
 
-int PDF417Reader::moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, Ref<BitMatrix> image)
+int PDF417Reader::moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, QSharedPointer<BitMatrix> image)
 {
   int x = leftTopBlack[0];
   int y = leftTopBlack[1];
@@ -139,7 +139,7 @@ int PDF417Reader::moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, Ref<
   return moduleSize;
 }
 
-int PDF417Reader::findPatternStart(int x, int y, Ref<BitMatrix> image)
+int PDF417Reader::findPatternStart(int x, int y, QSharedPointer<BitMatrix> image)
 {
   int width = image->getWidth();
   int start = x;
@@ -163,7 +163,7 @@ int PDF417Reader::findPatternStart(int x, int y, Ref<BitMatrix> image)
   return start;
 }
 
-int PDF417Reader::findPatternEnd(int x, int y, Ref<BitMatrix> image)
+int PDF417Reader::findPatternEnd(int x, int y, QSharedPointer<BitMatrix> image)
 {
   int width = image->getWidth();
   int end = width - 1;

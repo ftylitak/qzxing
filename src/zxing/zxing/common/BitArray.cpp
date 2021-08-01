@@ -145,7 +145,7 @@ void BitArray::reverse()
     bits = newBits;
 }
 
-BitArray::Reverse::Reverse(Ref<BitArray> array_) : array(array_) {
+BitArray::Reverse::Reverse(QSharedPointer<BitArray> array_) : array(array_) {
     array->reverse();
 }
 

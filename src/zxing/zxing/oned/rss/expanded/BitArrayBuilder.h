@@ -44,7 +44,7 @@ class BitArrayBuilder
 {
 
 public:
-    static Ref<BitArray> buildBitArray(std::vector<ExpandedPair> pairs);
+    static QSharedPointer<BitArray> buildBitArray(std::vector<ExpandedPair> pairs);
 };
 
 }

@@ -27,7 +27,7 @@
 namespace zxing {
 namespace common {
 
-class CharacterSetECI : public Counted {
+class CharacterSetECI  {
 private:
   static std::map<int, CharacterSetECI*> VALUE_TO_ECI;
   static std::map<std::string, CharacterSetECI*> NAME_TO_ECI;

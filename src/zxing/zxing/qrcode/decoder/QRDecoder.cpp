@@ -70,21 +70,21 @@ namespace zxing
       }
     }
 
-    Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits)
+    QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits)
     {
       // Construct a parser and read version, error-correction level
       BitMatrixParser parser(bits);
 
       // std::cerr << *bits << std::endl;
 
-      Ref<Version> version = parser.readVersion();
+      QSharedPointer<Version> version = parser.readVersion();
       ErrorCorrectionLevel &ecLevel = parser.readFormatInformation()->getErrorCorrectionLevel();
 
       // Read codewords
       QSharedPointer<std::vector<zxing::byte>> codewords(parser.readCodewords());
 
       // Separate into data blocks
-      std::vector<Ref<DataBlock>> dataBlocks(DataBlock::getDataBlocks(codewords, version, ecLevel));
+      std::vector<QSharedPointer<DataBlock>> dataBlocks(DataBlock::getDataBlocks(codewords, version, ecLevel));
 
       // Count total number of data bytes
       int totalBytes = 0;
@@ -98,7 +98,7 @@ namespace zxing
       // Error-correct and copy data blocks together into a stream of bytes
       for (size_t j = 0; j < dataBlocks.size(); j++)
       {
-        Ref<DataBlock> dataBlock(dataBlocks[j]);
+        QSharedPointer<DataBlock> dataBlock(dataBlocks[j]);
         QSharedPointer<std::vector<zxing::byte>> codewordBytes = dataBlock->getCodewords();
         int numDataCodewords = dataBlock->getNumDataCodewords();
         correctErrors(codewordBytes, numDataCodewords);

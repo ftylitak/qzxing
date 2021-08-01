@@ -73,20 +73,20 @@ const int Detector::STOP_PATTERN_LENGTH = sizeof(STOP_PATTERN) / sizeof(int);
 const int Detector::STOP_PATTERN_REVERSE[] = {1, 2, 1, 1, 1, 3, 1, 1, 7};
 const int Detector::STOP_PATTERN_REVERSE_LENGTH = sizeof(STOP_PATTERN_REVERSE) / sizeof(int);
 
-Detector::Detector(Ref<BinaryBitmap> image) : image_(image) {}
+Detector::Detector(QSharedPointer<BinaryBitmap> image) : image_(image) {}
 
-Ref<DetectorResult> Detector::detect() {
+QSharedPointer<DetectorResult> Detector::detect() {
   return detect(DecodeHints());
 }
 
-Ref<DetectorResult> Detector::detect(DecodeHints const& hints) {
+QSharedPointer<DetectorResult> Detector::detect(DecodeHints const& hints) {
   (void)hints;
   // Fetch the 1 bit matrix once up front.
-  Ref<BitMatrix> matrix = image_->getBlackMatrix();
+  QSharedPointer<BitMatrix> matrix = image_->getBlackMatrix();
 
   // Try to find the vertices assuming the image is upright.
   const int rowStep = 8;
-  QSharedPointer<std::vector<Ref<ResultPoint>> > vertices (findVertices(matrix, rowStep));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > vertices (findVertices(matrix, rowStep));
   if (!vertices) {
     // Maybe the image is rotated 180 degrees?
     vertices = findVertices180(matrix, rowStep);
@@ -116,15 +116,15 @@ Ref<DetectorResult> Detector::detect(DecodeHints const& hints) {
                                          vertices[13], vertices[15], moduleWidth), dimension);
 
   // Deskew and sample lines from image.
-  Ref<BitMatrix> linesMatrix = sampleLines(vertices, dimension, yDimension);
-  Ref<BitMatrix> linesGrid(LinesSampler(linesMatrix, dimension).sample());
+  QSharedPointer<BitMatrix> linesMatrix = sampleLines(vertices, dimension, yDimension);
+  QSharedPointer<BitMatrix> linesGrid(LinesSampler(linesMatrix, dimension).sample());
 
-  QSharedPointer<std::vector<Ref<ResultPoint>> > points(4);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points(4);
   points[0] = vertices[5];
   points[1] = vertices[4];
   points[2] = vertices[6];
   points[3] = vertices[7];
-  return Ref<DetectorResult>(new DetectorResult(linesGrid, points));
+  return QSharedPointer<DetectorResult>(new DetectorResult(linesGrid, points));
 }
 
 /**
@@ -143,12 +143,12 @@ Ref<DetectorResult> Detector::detect(DecodeHints const& hints) {
  *           vertices[6] x, y top right codeword area
  *           vertices[7] x, y bottom right codeword area
  */
-QSharedPointer<std::vector<Ref<ResultPoint>> > Detector::findVertices(Ref<BitMatrix> matrix, int rowStep)
+QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > Detector::findVertices(QSharedPointer<BitMatrix> matrix, int rowStep)
 {
   const int height = matrix->getHeight();
   const int width = matrix->getWidth();
   
-  QSharedPointer<std::vector<Ref<ResultPoint>> > result(16);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > result(16);
   bool found = false;
 
   QSharedPointer<std::vector<int>> counters(new std::vector<int>(START_PATTERN_LENGTH));
@@ -210,15 +210,15 @@ QSharedPointer<std::vector<Ref<ResultPoint>> > Detector::findVertices(Ref<BitMat
     }
   }
 
-  return found ? result : QSharedPointer<std::vector<Ref<ResultPoint>> >();
+  return found ? result : QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >();
 }
 
-QSharedPointer<std::vector<Ref<ResultPoint>> > Detector::findVertices180(Ref<BitMatrix> matrix, int rowStep) {
+QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > Detector::findVertices180(QSharedPointer<BitMatrix> matrix, int rowStep) {
   const int height = matrix->getHeight();
   const int width = matrix->getWidth();
   const int halfWidth = width >> 1;
   
-  QSharedPointer<std::vector<Ref<ResultPoint>> > result(16);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > result(16);
   bool found = false;
   
   QSharedPointer<std::vector<int>> counters = new std::vector<int>(START_PATTERN_REVERSE_LENGTH);
@@ -282,7 +282,7 @@ QSharedPointer<std::vector<Ref<ResultPoint>> > Detector::findVertices180(Ref<Bit
     }
   }
 
-  return found ? result : QSharedPointer<std::vector<Ref<ResultPoint>> >();
+  return found ? result : QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >();
 }
 
 /**
@@ -295,7 +295,7 @@ QSharedPointer<std::vector<Ref<ResultPoint>> > Detector::findVertices180(Ref<Bit
  * @param counters array of counters, as long as pattern, to re-use
  * @return start/end horizontal offset of guard pattern, as an array of two ints.
  */
-QSharedPointer<std::vector<int>> Detector::findGuardPattern(Ref<BitMatrix> matrix,
+QSharedPointer<std::vector<int>> Detector::findGuardPattern(QSharedPointer<BitMatrix> matrix,
                                          int column,
                                          int row,
                                          int width,
@@ -405,8 +405,8 @@ int Detector::patternMatchVariance(QSharedPointer<std::vector<int>>& counters,
  *           vertices[15] x,y final bottom right codeword area
  * @param upsideDown true if rotated by 180 degree.
  */
-void Detector::correctVertices(Ref<BitMatrix> matrix,
-                               QSharedPointer<std::vector<Ref<ResultPoint>> >& vertices,
+void Detector::correctVertices(QSharedPointer<BitMatrix> matrix,
+                               QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >& vertices,
                                bool upsideDown)
 {
   bool isLowLeft = abs(vertices[4]->getY() - vertices[5]->getY()) < 20.0;
@@ -441,16 +441,16 @@ void Detector::correctVertices(Ref<BitMatrix> matrix,
  * @param lenPattern length of the pattern.
  * @param rowStep +1 if corner should be exceeded towards the bottom, -1 towards the top.
  */
-void Detector::findWideBarTopBottom(Ref<BitMatrix> matrix,
-                                    QSharedPointer<std::vector<Ref<ResultPoint>> > &vertices,
+void Detector::findWideBarTopBottom(QSharedPointer<BitMatrix> matrix,
+                                    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > &vertices,
                                     int offsetVertice,
                                     int startWideBar,
                                     int lenWideBar,
                                     int lenPattern,
                                     int rowStep)
 {
-  Ref<ResultPoint> verticeStart(vertices[offsetVertice]);
-  Ref<ResultPoint> verticeEnd(vertices[offsetVertice + 4]);
+  QSharedPointer<ResultPoint> verticeStart(vertices[offsetVertice]);
+  QSharedPointer<ResultPoint> verticeEnd(vertices[offsetVertice + 4]);
 
   // Start horizontally at the middle of the bar.
   int endWideBar = startWideBar + lenWideBar;
@@ -512,11 +512,11 @@ void Detector::findWideBarTopBottom(Ref<BitMatrix> matrix,
  * @return Returns true when the result is valid and lies inside the matrix. Otherwise throws an
  * exception.
  **/
-void Detector::findCrossingPoint(QSharedPointer<std::vector<Ref<ResultPoint>> >& vertices,
+void Detector::findCrossingPoint(QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >& vertices,
                                  int idxResult,
                                  int idxLineA1, int idxLineA2,
                                  int idxLineB1, int idxLineB2,
-                                 Ref<BitMatrix>& matrix)
+                                 QSharedPointer<BitMatrix>& matrix)
 {
   Point p1(vertices[idxLineA1]->getX(), vertices[idxLineA1]->getY());
   Point p2(vertices[idxLineA2]->getX(), vertices[idxLineA2]->getY());
@@ -535,7 +535,7 @@ void Detector::findCrossingPoint(QSharedPointer<std::vector<Ref<ResultPoint>> >&
     throw NotFoundException("PDF:Detector: crossing points out of region!");
   }
 
-  vertices[idxResult] = Ref<ResultPoint>(new ResultPoint(result.x, result.y));
+  vertices[idxResult] = QSharedPointer<ResultPoint>(new ResultPoint(result.x, result.y));
 }
 
 /**
@@ -575,7 +575,7 @@ Point Detector::intersection(Line a, Line b) {
  *           vertices[7] x, y bottom right codeword area
  * @return the module size.
  */
-float Detector::computeModuleWidth(QSharedPointer<std::vector<Ref<ResultPoint>> >& vertices) {
+float Detector::computeModuleWidth(QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >& vertices) {
   float pixels1 = ResultPoint::distance(vertices[0], vertices[4]);
   float pixels2 = ResultPoint::distance(vertices[1], vertices[5]);
   float moduleWidth1 = (pixels1 + pixels2) / (17 * 2.0f);
@@ -596,10 +596,10 @@ float Detector::computeModuleWidth(QSharedPointer<std::vector<Ref<ResultPoint>> 
  * @param moduleWidth estimated module size
  * @return the number of modules in a row.
  */
-int Detector::computeDimension(Ref<ResultPoint> const& topLeft,
-                               Ref<ResultPoint> const& topRight,
-                               Ref<ResultPoint> const& bottomLeft,
-                               Ref<ResultPoint> const& bottomRight,
+int Detector::computeDimension(QSharedPointer<ResultPoint> const& topLeft,
+                               QSharedPointer<ResultPoint> const& topRight,
+                               QSharedPointer<ResultPoint> const& bottomLeft,
+                               QSharedPointer<ResultPoint> const& bottomRight,
                                float moduleWidth)
 {
   int topRowDimension = MathUtils::round(ResultPoint::distance(topLeft, topRight) / moduleWidth);
@@ -619,10 +619,10 @@ int Detector::computeDimension(Ref<ResultPoint> const& topLeft,
  * @param moduleWidth estimated module size
  * @return the number of modules in a row.
  */
-int Detector::computeYDimension(Ref<ResultPoint> const& topLeft,
-                                Ref<ResultPoint> const& topRight,
-                                Ref<ResultPoint> const& bottomLeft,
-                                Ref<ResultPoint> const& bottomRight,
+int Detector::computeYDimension(QSharedPointer<ResultPoint> const& topLeft,
+                                QSharedPointer<ResultPoint> const& topRight,
+                                QSharedPointer<ResultPoint> const& bottomLeft,
+                                QSharedPointer<ResultPoint> const& bottomRight,
                                 float moduleWidth)
 {
   int leftColumnDimension =
@@ -640,12 +640,12 @@ int Detector::computeYDimension(Ref<ResultPoint> const& topLeft,
  * @param yDimension y dimension
  * @return an over-sampled BitMatrix.
  */
-Ref<BitMatrix> Detector::sampleLines(QSharedPointer<std::vector<Ref<ResultPoint>> > const& vertices,
+QSharedPointer<BitMatrix> Detector::sampleLines(QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > const& vertices,
                                      int dimensionY,
                                      int dimension) {
   const int sampleDimensionX = dimension * 8;
   const int sampleDimensionY = dimensionY * 4;
-  Ref<PerspectiveTransform> transform(
+  QSharedPointer<PerspectiveTransform> transform(
       PerspectiveTransform::quadrilateralToQuadrilateral(
           0.0f, 0.0f,
           (float)sampleDimensionX, 0.0f,
@@ -656,7 +656,7 @@ Ref<BitMatrix> Detector::sampleLines(QSharedPointer<std::vector<Ref<ResultPoint>
           vertices[13]->getX(), vertices[13]->getY(),
           vertices[15]->getX(), vertices[15]->getY()));
 
-  Ref<BitMatrix> linesMatrix = GridSampler::getInstance().sampleGrid(
+  QSharedPointer<BitMatrix> linesMatrix = GridSampler::getInstance().sampleGrid(
       image_->getBlackMatrix(), sampleDimensionX, sampleDimensionY, transform);
 
 

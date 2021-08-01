@@ -4,7 +4,7 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-Ref<BitArray> BitArrayBuilder::buildBitArray(std::vector<ExpandedPair> pairs)
+QSharedPointer<BitArray> BitArrayBuilder::buildBitArray(std::vector<ExpandedPair> pairs)
 {
     int charNumber = static_cast<int>(pairs.size() * 2) - 1;
     if (pairs[pairs.size() - 1].getRightChar().getValue() == 0) {
@@ -13,7 +13,7 @@ Ref<BitArray> BitArrayBuilder::buildBitArray(std::vector<ExpandedPair> pairs)
 
     int size = 12 * charNumber;
 
-    Ref<BitArray> binary(new BitArray(int(size)));
+    QSharedPointer<BitArray> binary(new BitArray(int(size)));
     int accPos = 0;
 
     ExpandedPair firstPair = pairs[0];

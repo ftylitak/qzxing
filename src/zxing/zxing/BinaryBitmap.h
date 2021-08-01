@@ -27,28 +27,28 @@
 
 namespace zxing {
 	
-	class BinaryBitmap : public Counted {
+	class BinaryBitmap  {
 	private:
-		Ref<Binarizer> binarizer_;
+		QSharedPointer<Binarizer> binarizer_;
 		
 	public:
-		BinaryBitmap(Ref<Binarizer> binarizer);
+		BinaryBitmap(QSharedPointer<Binarizer> binarizer);
 		virtual ~BinaryBitmap();
 		
-		Ref<BitArray> getBlackRow(int y, Ref<BitArray> row);
-		Ref<BitMatrix> getBlackMatrix();
+		QSharedPointer<BitArray> getBlackRow(int y, QSharedPointer<BitArray> row);
+		QSharedPointer<BitMatrix> getBlackMatrix();
 		
-		Ref<LuminanceSource> getLuminanceSource() const;
+		QSharedPointer<LuminanceSource> getLuminanceSource() const;
 
 		int getWidth() const;
 		int getHeight() const;
 
 		bool isRotateSupported() const;
-		Ref<BinaryBitmap> rotateCounterClockwise();
-        Ref<BinaryBitmap> rotateCounterClockwise45();
+		QSharedPointer<BinaryBitmap> rotateCounterClockwise();
+        QSharedPointer<BinaryBitmap> rotateCounterClockwise45();
 
 		bool isCropSupported() const;
-		Ref<BinaryBitmap> crop(int left, int top, int width, int height);
+		QSharedPointer<BinaryBitmap> crop(int left, int top, int width, int height);
 	};
 	
 }

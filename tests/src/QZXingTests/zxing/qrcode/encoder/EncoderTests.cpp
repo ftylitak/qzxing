@@ -93,7 +93,7 @@ void EncoderTests::testChooseMode()
 
 void EncoderTests::testEncode()
 {
-    Ref<QRCode> qrCode = Encoder::encode(L"ABCDEF", ErrorCorrectionLevel::H);
+    QSharedPointer<QRCode> qrCode = Encoder::encode(L"ABCDEF", ErrorCorrectionLevel::H);
     const std::string expected =
             "<<\n"
             " mode: ALPHANUMERIC\n"

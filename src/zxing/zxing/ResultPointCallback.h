@@ -26,7 +26,7 @@ namespace zxing {
 
 class ResultPoint;
 
-class ResultPointCallback : public Counted {
+class ResultPointCallback  {
 protected:
   ResultPointCallback() {}
 public:

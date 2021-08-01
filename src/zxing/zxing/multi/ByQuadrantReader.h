@@ -32,8 +32,8 @@ class ByQuadrantReader : public Reader {
   public:
     ByQuadrantReader(Reader& delegate);
     virtual ~ByQuadrantReader();
-    virtual Ref<Result> decode(Ref<BinaryBitmap> image);
-    virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+    virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image);
+    virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }

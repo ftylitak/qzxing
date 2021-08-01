@@ -29,7 +29,7 @@ int BitMatrixParser::copyBit(size_t x, size_t y, int versionBits) {
   return bitMatrix_->get(int(x), int(y)) ? (versionBits << 1) | 0x1 : versionBits << 1;
 }
 
-BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) :
+BitMatrixParser::BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix) :
     bitMatrix_(bitMatrix), parsedVersion_(0), parsedFormatInfo_() {
   size_t dimension = bitMatrix->getHeight();
   if ((dimension < 21) || (dimension & 0x03) != 1) {
@@ -37,7 +37,7 @@ BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) :
   }
 }
 
-Ref<FormatInformation> BitMatrixParser::readFormatInformation() {
+QSharedPointer<FormatInformation> BitMatrixParser::readFormatInformation() {
   if (parsedFormatInfo_ != 0) {
     return parsedFormatInfo_;
   }
@@ -74,7 +74,7 @@ Ref<FormatInformation> BitMatrixParser::readFormatInformation() {
   throw ReaderException("Could not decode format information");
 }
 
-Ref<Version>BitMatrixParser::readVersion() {
+QSharedPointer<Version>BitMatrixParser::readVersion() {
   if (parsedVersion_ != 0) {
     return parsedVersion_;
   }
@@ -117,8 +117,8 @@ Ref<Version>BitMatrixParser::readVersion() {
 }
 
 QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
-  Ref<FormatInformation> formatInfo = readFormatInformation();
-  Ref<Version>version = readVersion();
+  QSharedPointer<FormatInformation> formatInfo = readFormatInformation();
+  QSharedPointer<Version>version = readVersion();
 
 
   // Get the data mask for the format used in this QR Code. This will exclude
@@ -132,7 +132,7 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
   //		cerr << *bitMatrix_ << endl;
   //	cerr << version->getTotalCodewords() << endl;
 
-  Ref<BitMatrix> functionPattern = version->buildFunctionPattern();
+  QSharedPointer<BitMatrix> functionPattern = version->buildFunctionPattern();
 
 
   //	cout << *functionPattern << endl;

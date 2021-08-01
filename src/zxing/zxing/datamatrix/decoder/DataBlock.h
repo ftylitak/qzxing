@@ -29,7 +29,7 @@
 namespace zxing {
 namespace datamatrix {
 
-class DataBlock : public Counted {
+class DataBlock  {
 private:
   int numDataCodewords_;
   QSharedPointer<std::vector<zxing::byte>> codewords_;
@@ -37,7 +37,7 @@ private:
   DataBlock(int numDataCodewords, QSharedPointer<std::vector<zxing::byte>> codewords);
 
 public:  
-  static std::vector<Ref<DataBlock> > getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, Ref<Version>version);
+  static std::vector<QSharedPointer<DataBlock> > getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, QSharedPointer<Version>version);
 
   int getNumDataCodewords();
   QSharedPointer<std::vector<zxing::byte>> getCodewords();

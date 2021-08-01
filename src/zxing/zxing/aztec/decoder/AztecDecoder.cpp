@@ -146,13 +146,13 @@ Decoder::Decoder()
   // nothing
 }
 
-Ref<DecoderResult> Decoder::decode(Ref<zxing::aztec::AztecDetectorResult> detectorResult)
+QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<zxing::aztec::AztecDetectorResult> detectorResult)
 {
   ddata_ = detectorResult;
 
   // std::printf("getting bits\n");
 
-  Ref<BitMatrix> matrix = detectorResult->getBits();
+  QSharedPointer<BitMatrix> matrix = detectorResult->getBits();
 
   if (!ddata_->isCompact())
   {
@@ -161,13 +161,13 @@ Ref<DecoderResult> Decoder::decode(Ref<zxing::aztec::AztecDetectorResult> detect
   }
 
   // std::printf("extracting bits\n");
-  Ref<BitArray> rawbits = extractBits(matrix);
+  QSharedPointer<BitArray> rawbits = extractBits(matrix);
 
   // std::printf("correcting bits\n");
-  Ref<BitArray> aCorrectedBits = correctBits(rawbits);
+  QSharedPointer<BitArray> aCorrectedBits = correctBits(rawbits);
 
   // std::printf("decoding bits\n");
-  Ref<String> result = getEncodedData(aCorrectedBits);
+  QSharedPointer<String> result = getEncodedData(aCorrectedBits);
 
   // std::printf("constructing array\n");
   QSharedPointer<std::vector<zxing::byte>> arrayOut(aCorrectedBits->getSize());
@@ -178,10 +178,10 @@ Ref<DecoderResult> Decoder::decode(Ref<zxing::aztec::AztecDetectorResult> detect
 
   // std::printf("returning\n");
 
-  return Ref<DecoderResult>(new DecoderResult(arrayOut, result));
+  return QSharedPointer<DecoderResult>(new DecoderResult(arrayOut, result));
 }
 
-Ref<String> Decoder::getEncodedData(Ref<zxing::BitArray> correctedBits)
+QSharedPointer<String> Decoder::getEncodedData(QSharedPointer<zxing::BitArray> correctedBits)
 {
   int endIndex = codewordSize_ * ddata_->getNBDatablocks() - invertedBitCount_;
   if (endIndex > (int)correctedBits->getSize())
@@ -306,15 +306,15 @@ Ref<String> Decoder::getEncodedData(Ref<zxing::BitArray> correctedBits)
     }
   }
 
-  return Ref<String>(new String(result));
+  return QSharedPointer<String>(new String(result));
 }
 
-Ref<BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits)
+QSharedPointer<BitArray> Decoder::correctBits(QSharedPointer<zxing::BitArray> rawbits)
 {
   //return rawbits;
   // std::printf("decoding stuff:%d datablocks in %d layers\n", ddata_->getNBDatablocks(), ddata_->getNBLayers());
 
-  Ref<GenericGF> gf = GenericGF::AZTEC_DATA_6;
+  QSharedPointer<GenericGF> gf = GenericGF::AZTEC_DATA_6;
 
   if (ddata_->getNBLayers() <= 2)
   {
@@ -391,7 +391,7 @@ Ref<BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits)
   offset = 0;
   invertedBitCount_ = 0;
 
-  Ref<BitArray> correctedBits(new BitArray(numDataCodewords * codewordSize_));
+  QSharedPointer<BitArray> correctedBits(new BitArray(numDataCodewords * codewordSize_));
   for (int i = 0; i < numDataCodewords; i++)
   {
 
@@ -441,7 +441,7 @@ Ref<BitArray> Decoder::correctBits(Ref<zxing::BitArray> rawbits)
   return correctedBits;
 }
 
-Ref<BitArray> Decoder::extractBits(Ref<zxing::BitMatrix> matrix)
+QSharedPointer<BitArray> Decoder::extractBits(QSharedPointer<zxing::BitMatrix> matrix)
 {
   std::vector<bool> rawbits;
 
@@ -496,7 +496,7 @@ Ref<BitArray> Decoder::extractBits(Ref<zxing::BitMatrix> matrix)
     size -= 4;
   }
 
-  Ref<BitArray> returnValue(new BitArray(int(rawbits.size())));
+  QSharedPointer<BitArray> returnValue(new BitArray(int(rawbits.size())));
   for (int i = 0; i < (int)rawbits.size(); i++)
   {
     if (rawbits[i])
@@ -506,10 +506,10 @@ Ref<BitArray> Decoder::extractBits(Ref<zxing::BitMatrix> matrix)
   return returnValue;
 }
 
-Ref<BitMatrix> Decoder::removeDashedLines(Ref<zxing::BitMatrix> matrix)
+QSharedPointer<BitMatrix> Decoder::removeDashedLines(QSharedPointer<zxing::BitMatrix> matrix)
 {
   int nbDashed = 1 + 2 * ((matrix->getWidth() - 1) / 2 / 16);
-  Ref<BitMatrix> newMatrix(new BitMatrix(matrix->getWidth() - nbDashed, matrix->getHeight() - nbDashed));
+  QSharedPointer<BitMatrix> newMatrix(new BitMatrix(matrix->getWidth() - nbDashed, matrix->getHeight() - nbDashed));
 
   int nx = 0;
 
@@ -541,7 +541,7 @@ Ref<BitMatrix> Decoder::removeDashedLines(Ref<zxing::BitMatrix> matrix)
   return newMatrix;
 }
 
-int Decoder::readCode(Ref<zxing::BitArray> rawbits, int startIndex, int length)
+int Decoder::readCode(QSharedPointer<zxing::BitArray> rawbits, int startIndex, int length)
 {
   int res = 0;
 

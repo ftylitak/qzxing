@@ -50,7 +50,7 @@ class GeneralAppIdDecoder
 {
 
 public:
-    GeneralAppIdDecoder(Ref<BitArray> information);
+    GeneralAppIdDecoder(QSharedPointer<BitArray> information);
 
     String decodeAllCodes(String &buff, int initialPosition);
 
@@ -60,7 +60,7 @@ public:
 
     int extractNumericValueFromBitArray(int pos, int bits);
 
-    static int extractNumericValueFromBitArray(Ref<BitArray> information, int pos, int bits);
+    static int extractNumericValueFromBitArray(QSharedPointer<BitArray> information, int pos, int bits);
 
     DecodedInformation decodeGeneralPurposeField(int pos, String &remaining);
 
@@ -87,7 +87,7 @@ public:
     bool isNumericToAlphaNumericLatch(int pos);
 
 private:
-    Ref<BitArray> m_information;
+    QSharedPointer<BitArray> m_information;
     CurrentParsingState m_current;
     String m_buffer;
 

@@ -44,15 +44,15 @@ class ModulusGF {
   private:
 	QSharedPointer<std::vector<int>> expTable_;
 	QSharedPointer<std::vector<int>> logTable_;
-	Ref<ModulusPoly> zero_;
-	Ref<ModulusPoly> one_;
+	QSharedPointer<ModulusPoly> zero_;
+	QSharedPointer<ModulusPoly> one_;
 	int modulus_;
 
   public:
 	ModulusGF(int modulus, int generator);
-	Ref<ModulusPoly> getZero();
-	Ref<ModulusPoly> getOne();
-	Ref<ModulusPoly> buildMonomial(int degree, int coefficient);
+	QSharedPointer<ModulusPoly> getZero();
+	QSharedPointer<ModulusPoly> getOne();
+	QSharedPointer<ModulusPoly> buildMonomial(int degree, int coefficient);
 
 	int add(int a, int b);
 	int subtract(int a, int b);

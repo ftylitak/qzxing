@@ -28,25 +28,25 @@
 
 namespace zxing {
 
-class DecoderResult : public Counted {
+class DecoderResult  {
 private:
   QSharedPointer<std::vector<zxing::byte>> rawBytes_;
-  Ref<String> text_;
+  QSharedPointer<String> text_;
   QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> > byteSegments_;
   std::string ecLevel_;
   std::string charSet_;
 
 public:
   DecoderResult(QSharedPointer<std::vector<zxing::byte>> rawBytes,
-                Ref<String> text,
+                QSharedPointer<String> text,
                 QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> >& byteSegments,
                 std::string const& ecLevel,
                 std::string charSet = "");
 
-  DecoderResult(QSharedPointer<std::vector<zxing::byte>> rawBytes, Ref<String> text);
+  DecoderResult(QSharedPointer<std::vector<zxing::byte>> rawBytes, QSharedPointer<String> text);
 
   QSharedPointer<std::vector<zxing::byte>> getRawBytes();
-  Ref<String> getText();
+  QSharedPointer<String> getText();
   std::string charSet();
 };
 

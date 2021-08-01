@@ -63,7 +63,7 @@ bool FinderPattern::aboutEquals(float moduleSize, float i, float j) const
   return false;
 }
 
-Ref<FinderPattern> FinderPattern::combineEstimate(float i, float j, float newModuleSize) const
+QSharedPointer<FinderPattern> FinderPattern::combineEstimate(float i, float j, float newModuleSize) const
 {
   // fprintf(stderr, "ce %f %f %f\n", i, j, newModuleSize);
 
@@ -71,5 +71,5 @@ Ref<FinderPattern> FinderPattern::combineEstimate(float i, float j, float newMod
   float combinedX = (count_ * getX() + j) / combinedCount;
   float combinedY = (count_ * getY() + i) / combinedCount;
   float combinedModuleSize = (count_ * getEstimatedModuleSize() + newModuleSize) / combinedCount;
-  return Ref<FinderPattern>(new FinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount));
+  return QSharedPointer<FinderPattern>(new FinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount));
 }

@@ -245,12 +245,12 @@ std::set<int> DecodeHints::getAllowedEanExtensions() const
   return allowedEanExtensions;
 }
 
-void DecodeHints::setResultPointCallback(Ref<ResultPointCallback> const &_callback)
+void DecodeHints::setResultPointCallback(QSharedPointer<ResultPointCallback> const &_callback)
 {
   callback = _callback;
 }
 
-Ref<ResultPointCallback> DecodeHints::getResultPointCallback() const
+QSharedPointer<ResultPointCallback> DecodeHints::getResultPointCallback() const
 {
   return callback;
 }

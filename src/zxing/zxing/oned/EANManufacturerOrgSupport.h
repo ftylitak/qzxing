@@ -32,7 +32,7 @@ namespace oned {
 class EANManufacturerOrgSupport
 {
 public:
-    static Ref<String> lookupCountryIdentifier(Ref<String> &productCode);
+    static QSharedPointer<String> lookupCountryIdentifier(QSharedPointer<String> &productCode);
 };
 
 }

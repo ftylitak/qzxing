@@ -109,7 +109,7 @@ float AlignmentPatternFinder::crossCheckVertical(int startI, int centerJ, int ma
   return foundPatternCross(stateCount) ? centerFromEnd(stateCount, i) : nan();
 }
 
-Ref<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &stateCount, int i, int j)
+QSharedPointer<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &stateCount, int i, int j)
 {
   int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
   float centerJ = centerFromEnd(stateCount, j);
@@ -120,7 +120,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &
     int max = int(possibleCenters_->size());
     for (int index = 0; index < max; index++)
     {
-      Ref<AlignmentPattern> center((*possibleCenters_)[index]);
+      QSharedPointer<AlignmentPattern> center((*possibleCenters_)[index]);
       // Look for about the same center and module size:
       if (center->aboutEquals(estimatedModuleSize, centerI, centerJ))
       {
@@ -136,13 +136,13 @@ Ref<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(vector<int> &
       callback_->foundPossibleResultPoint(*tmp);
     }
   }
-  Ref<AlignmentPattern> result;
+  QSharedPointer<AlignmentPattern> result;
   return result;
 }
 
-AlignmentPatternFinder::AlignmentPatternFinder(Ref<BitMatrix> image, int startX, int startY, int width,
+AlignmentPatternFinder::AlignmentPatternFinder(QSharedPointer<BitMatrix> image, int startX, int startY, int width,
                                                int height, float moduleSize,
-                                               Ref<ResultPointCallback> const &callback) : image_(image), possibleCenters_(new vector<AlignmentPattern *>()), startX_(startX), startY_(startY),
+                                               QSharedPointer<ResultPointCallback> const &callback) : image_(image), possibleCenters_(new vector<AlignmentPattern *>()), startX_(startX), startY_(startY),
                                                                                            width_(width), height_(height), moduleSize_(moduleSize), callback_(callback)
 {
 }
@@ -157,11 +157,11 @@ AlignmentPatternFinder::~AlignmentPatternFinder()
   delete possibleCenters_;
 }
 
-Ref<AlignmentPattern> AlignmentPatternFinder::find()
+QSharedPointer<AlignmentPattern> AlignmentPatternFinder::find()
 {
   int maxJ = startX_ + width_;
   int middleI = startY_ + (height_ >> 1);
-  //      Ref<BitArray> luminanceRow(new BitArray(width_));
+  //      QSharedPointer<BitArray> luminanceRow(new BitArray(width_));
   // We are looking for black/white/black modules in 1:1:1 ratio;
   // this tracks the number of black/white/black modules seen so far
   vector<int> stateCount(3, 0);
@@ -197,7 +197,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::find()
           { // A winner?
             if (foundPatternCross(stateCount))
             { // Yes
-              Ref<AlignmentPattern> confirmed(handlePossibleCenter(stateCount, i, j));
+              QSharedPointer<AlignmentPattern> confirmed(handlePossibleCenter(stateCount, i, j));
               if (confirmed != 0)
               {
                 return confirmed;
@@ -226,7 +226,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::find()
     }
     if (foundPatternCross(stateCount))
     {
-      Ref<AlignmentPattern> confirmed(handlePossibleCenter(stateCount, i, maxJ));
+      QSharedPointer<AlignmentPattern> confirmed(handlePossibleCenter(stateCount, i, maxJ));
       if (confirmed != 0)
       {
         return confirmed;
@@ -238,7 +238,7 @@ Ref<AlignmentPattern> AlignmentPatternFinder::find()
   // any guess at all, return it.
   if (possibleCenters_->size() > 0)
   {
-    Ref<AlignmentPattern> center((*possibleCenters_)[0]);
+    QSharedPointer<AlignmentPattern> center((*possibleCenters_)[0]);
     return center;
   }
 

@@ -26,9 +26,9 @@ namespace multi {
 
 class MultiDetector : public zxing::qrcode::Detector {
   public:
-    MultiDetector(Ref<BitMatrix> image);
+    MultiDetector(QSharedPointer<BitMatrix> image);
     virtual ~MultiDetector();
-    virtual std::vector<Ref<DetectorResult> > detectMulti(DecodeHints hints);
+    virtual std::vector<QSharedPointer<DetectorResult> > detectMulti(DecodeHints hints);
 };
 
 }

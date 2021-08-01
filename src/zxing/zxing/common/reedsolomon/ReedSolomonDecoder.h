@@ -33,16 +33,16 @@ class GenericGF;
 
 class ReedSolomonDecoder {
 private:
-  Ref<GenericGF> field;
+  QSharedPointer<GenericGF> field;
 public:
-  ReedSolomonDecoder(Ref<GenericGF> fld);
+  ReedSolomonDecoder(QSharedPointer<GenericGF> fld);
   ~ReedSolomonDecoder();
   void decode(QSharedPointer<std::vector<int>> received, int twoS);
-  std::vector<Ref<GenericGFPoly> > runEuclideanAlgorithm(Ref<GenericGFPoly> a, Ref<GenericGFPoly> b, int R);
+  std::vector<QSharedPointer<GenericGFPoly> > runEuclideanAlgorithm(QSharedPointer<GenericGFPoly> a, QSharedPointer<GenericGFPoly> b, int R);
 
 private:
-  QSharedPointer<std::vector<int>> findErrorLocations(Ref<GenericGFPoly> errorLocator);
-  QSharedPointer<std::vector<int>> findErrorMagnitudes(Ref<GenericGFPoly> errorEvaluator, QSharedPointer<std::vector<int>> errorLocations);
+  QSharedPointer<std::vector<int>> findErrorLocations(QSharedPointer<GenericGFPoly> errorLocator);
+  QSharedPointer<std::vector<int>> findErrorMagnitudes(QSharedPointer<GenericGFPoly> errorEvaluator, QSharedPointer<std::vector<int>> errorLocations);
 };
 }
 

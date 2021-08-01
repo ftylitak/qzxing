@@ -114,13 +114,13 @@ const vector<int const *>
 
 UPCEANReader::UPCEANReader() {}
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints)
+QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints)
 {
   return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
 }
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber,
-                                    Ref<BitArray> row,
+QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber,
+                                    QSharedPointer<BitArray> row,
                                     Range const &startGuardRange,
                                     zxing::DecodeHints hints)
 {
@@ -146,7 +146,7 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
     throw FormatException();
   }
 
-  Ref<String> resultString(new String(result));
+  QSharedPointer<String> resultString(new String(result));
   if (!checkChecksum(resultString))
   {
     throw ChecksumException();
@@ -156,23 +156,23 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   float right = (float)(endRange[1] + endRange[0]) / 2.0f;
   BarcodeFormat format = getBarcodeFormat();
 
-  QSharedPointer<std::vector<Ref<ResultPoint>>> resultPoints(2);
-  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, static_cast<float>(rowNumber)));
-  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, static_cast<float>(rowNumber)));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(2);
+  resultPoints[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(left, static_cast<float>(rowNumber)));
+  resultPoints[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(right, static_cast<float>(rowNumber)));
 
-  Ref<Result> decodeResult(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, format));
+  QSharedPointer<Result> decodeResult(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, format));
   int extensionLength = 0;
 
   try
   {
-    Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
+    QSharedPointer<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
     if (extensionResult)
     {
       decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
       decodeResult->getMetadata().putAll(extensionResult->getMetadata());
       extensionLength = extensionResult->getText()->length();
 
-      for (const Ref<ResultPoint> &resultPoint : extensionResult->getResultPoints()->values())
+      for (const QSharedPointer<ResultPoint> &resultPoint : extensionResult->getResultPoints()->values())
       {
         decodeResult->getResultPoints()->push_back(resultPoint);
       }
@@ -203,7 +203,7 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
 
   if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A)
   {
-    Ref<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
+    QSharedPointer<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
     if (countryID)
     {
       decodeResult->getMetadata().put(ResultMetadata::POSSIBLE_COUNTRY, countryID->getText());
@@ -213,7 +213,7 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   return decodeResult;
 }
 
-UPCEANReader::Range UPCEANReader::findStartGuardPattern(Ref<BitArray> row)
+UPCEANReader::Range UPCEANReader::findStartGuardPattern(QSharedPointer<BitArray> row)
 {
   bool foundStart = false;
   Range startRange;
@@ -242,7 +242,7 @@ UPCEANReader::Range UPCEANReader::findStartGuardPattern(Ref<BitArray> row)
   return startRange;
 }
 
-UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
+UPCEANReader::Range UPCEANReader::findGuardPattern(QSharedPointer<BitArray> row,
                                                    int rowOffset,
                                                    bool whiteFirst,
                                                    vector<int> const &pattern)
@@ -251,7 +251,7 @@ UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
   return findGuardPattern(row, rowOffset, whiteFirst, pattern, counters);
 }
 
-UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
+UPCEANReader::Range UPCEANReader::findGuardPattern(QSharedPointer<BitArray> row,
                                                    int rowOffset,
                                                    bool whiteFirst,
                                                    vector<int> const &pattern,
@@ -307,12 +307,12 @@ UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
   throw NotFoundException();
 }
 
-UPCEANReader::Range UPCEANReader::decodeEnd(Ref<BitArray> row, int endStart)
+UPCEANReader::Range UPCEANReader::decodeEnd(QSharedPointer<BitArray> row, int endStart)
 {
   return findGuardPattern(row, endStart, false, START_END_PATTERN);
 }
 
-int UPCEANReader::decodeDigit(Ref<BitArray> row,
+int UPCEANReader::decodeDigit(QSharedPointer<BitArray> row,
                               vector<int> &counters,
                               int rowOffset,
                               vector<int const *> const &patterns)
@@ -344,7 +344,7 @@ int UPCEANReader::decodeDigit(Ref<BitArray> row,
 /**
  * @return {@link #checkStandardUPCEANChecksum(String)}
  */
-bool UPCEANReader::checkChecksum(Ref<String> const &s)
+bool UPCEANReader::checkChecksum(QSharedPointer<String> const &s)
 {
   return checkStandardUPCEANChecksum(s);
 }
@@ -356,7 +356,7 @@ bool UPCEANReader::checkChecksum(Ref<String> const &s)
  * @param s string of digits to check
  * @return true iff string of digits passes the UPC/EAN checksum algorithm
  */
-bool UPCEANReader::checkStandardUPCEANChecksum(Ref<String> const &s_)
+bool UPCEANReader::checkStandardUPCEANChecksum(QSharedPointer<String> const &s_)
 {
   std::string const &s(s_->getText());
   int length = int(s.length());

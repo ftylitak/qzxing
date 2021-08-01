@@ -59,27 +59,27 @@ private:
   /**
    * See ISO 16022:2006, 5.2.3 and Annex C, Table C.2
    */
-  int decodeAsciiSegment(Ref<BitSource> bits, std::ostringstream &result, std::ostringstream &resultTrailer);
+  int decodeAsciiSegment(QSharedPointer<BitSource> bits, std::ostringstream &result, std::ostringstream &resultTrailer);
   /**
    * See ISO 16022:2006, 5.2.5 and Annex C, Table C.1
    */
-  void decodeC40Segment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeC40Segment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.6 and Annex C, Table C.2
    */
-  void decodeTextSegment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeTextSegment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.7
    */
-  void decodeAnsiX12Segment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeAnsiX12Segment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.8 and Annex C Table C.3
    */
-  void decodeEdifactSegment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeEdifactSegment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.9 and Annex B, B.2
    */
-  void decodeBase256Segment(Ref<BitSource> bits, std::ostringstream &result, std::vector<zxing::byte> byteSegments);
+  void decodeBase256Segment(QSharedPointer<BitSource> bits, std::ostringstream &result, std::vector<zxing::byte> byteSegments);
 
   void parseTwoBytes(int firstByte, int secondByte, int* result);
   /**
@@ -96,7 +96,7 @@ private:
 
 public:
   DecodedBitStreamParser() { }
-  Ref<DecoderResult> decode(QSharedPointer<std::vector<zxing::byte>> bytes);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<std::vector<zxing::byte>> bytes);
 };
 
 }

@@ -30,19 +30,19 @@
 namespace zxing {
 namespace qrcode {
 
-class BitMatrixParser : public Counted {
+class BitMatrixParser  {
 private:
-  Ref<BitMatrix> bitMatrix_;
-  Ref<Version>parsedVersion_;
-  Ref<FormatInformation> parsedFormatInfo_;
+  QSharedPointer<BitMatrix> bitMatrix_;
+  QSharedPointer<Version>parsedVersion_;
+  QSharedPointer<FormatInformation> parsedFormatInfo_;
   bool mirror_;
 
   int copyBit(size_t x, size_t y, int versionBits);
 
 public:
-  BitMatrixParser(Ref<BitMatrix> bitMatrix);
-  Ref<FormatInformation> readFormatInformation();
-  Ref<Version>readVersion();
+  BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix);
+  QSharedPointer<FormatInformation> readFormatInformation();
+  QSharedPointer<Version>readVersion();
   QSharedPointer<std::vector<zxing::byte>> readCodewords();
   void remask();
   void setMirror(boolean mirror);

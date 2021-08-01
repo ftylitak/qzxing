@@ -79,9 +79,9 @@ DecodedBitStreamParser::DecodedBitStreamParser(){}
 /**
  * PDF417 main decoder.
  **/
-Ref<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<int>> codewords)
+QSharedPointer<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<int>> codewords)
 {
-  Ref<String> result (new String(100));
+  QSharedPointer<String> result (new String(100));
   // Get compaction mode
   int codeIndex = 1;
   int code = codewords[codeIndex++];
@@ -116,7 +116,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<int
       throw FormatException();
     }
   }
-  return Ref<DecoderResult>(new DecoderResult(QSharedPointer<std::vector<zxing::byte>>(), result));
+  return QSharedPointer<DecoderResult>(new DecoderResult(QSharedPointer<std::vector<zxing::byte>>(), result));
 }
 
 /**
@@ -131,7 +131,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<int
  */
 int DecodedBitStreamParser::textCompaction(QSharedPointer<std::vector<int>> codewords,
                                            int codeIndex,
-                                           Ref<String> result) {
+                                           QSharedPointer<String> result) {
   // 2 character per codeword
   QSharedPointer<std::vector<int>> textCompactionData (codewords[0] << 1);
   // Used to hold the byte compaction value if there is a mode shift
@@ -200,7 +200,7 @@ int DecodedBitStreamParser::textCompaction(QSharedPointer<std::vector<int>> code
 void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int>> textCompactionData,
                                                   QSharedPointer<std::vector<int>> byteCompactionData,
                                                   int length,
-                                                  Ref<String> result)
+                                                  QSharedPointer<String> result)
 {
   // Beginning from an initial state of the Alpha sub-mode
   // The default compaction mode for PDF417 in effect at the start of each symbol shall always be Text
@@ -360,7 +360,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
  */
 int DecodedBitStreamParser::byteCompaction(int mode,
                                            QSharedPointer<std::vector<int>> codewords,
-                                           int codeIndex, Ref<String> result) {
+                                           int codeIndex, QSharedPointer<String> result) {
   if (mode == BYTE_COMPACTION_MODE_LATCH) {
     // Total number of Byte Compaction characters to be encoded
     // is not a multiple of 6
@@ -466,7 +466,7 @@ int DecodedBitStreamParser::byteCompaction(int mode,
  */
 int DecodedBitStreamParser::numericCompaction(QSharedPointer<std::vector<int>> codewords,
                                               int codeIndex,
-                                              Ref<String> result) {
+                                              QSharedPointer<String> result) {
   int count = 0;
   bool end = false;
   
@@ -498,7 +498,7 @@ int DecodedBitStreamParser::numericCompaction(QSharedPointer<std::vector<int>> c
       // while in Numeric Compaction mode) serves  to terminate the
       // current Numeric Compaction mode grouping as described in 5.4.4.2,
       // and then to start a new one grouping.
-      Ref<String> s = decodeBase900toBase10(numericCodewords, count);
+      QSharedPointer<String> s = decodeBase900toBase10(numericCodewords, count);
       result->append(s->getText());
       count = 0;
     }
@@ -549,7 +549,7 @@ int DecodedBitStreamParser::numericCompaction(QSharedPointer<std::vector<int>> c
 
   Remove leading 1 =>  Result is 000213298174000
 */
-Ref<String> DecodedBitStreamParser::decodeBase900toBase10(QSharedPointer<std::vector<int>> codewords, int count)
+QSharedPointer<String> DecodedBitStreamParser::decodeBase900toBase10(QSharedPointer<std::vector<int>> codewords, int count)
 {
   BigInteger result = BigInteger(0);
   for (int i = 0; i < count; i++) {
@@ -561,7 +561,7 @@ Ref<String> DecodedBitStreamParser::decodeBase900toBase10(QSharedPointer<std::ve
   }
   string resultString2;
   resultString2.assign(resultString.begin()+1,resultString.end());
-  Ref<String> res (new String(resultString2));
+  QSharedPointer<String> res (new String(resultString2));
   return res;
 }
 

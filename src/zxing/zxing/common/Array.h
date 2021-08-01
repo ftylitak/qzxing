@@ -28,7 +28,7 @@
 
 //namespace zxing {
 
-//template<typename T> class Array : public Counted {
+//template<typename T> class Array  {
 //protected:
 //public:
 //  std::vector<T> values_;
@@ -87,7 +87,7 @@
 //  }
 //};
 
-//template<typename T> class ArrayRef : public Counted {
+//template<typename T> class ArrayRef  {
 //private:
 //public:
 //  std::vector<T> *array_;

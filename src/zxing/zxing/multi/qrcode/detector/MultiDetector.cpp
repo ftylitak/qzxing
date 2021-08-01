@@ -22,15 +22,15 @@ namespace zxing {
 namespace multi {
 using namespace zxing::qrcode;
 
-MultiDetector::MultiDetector(Ref<BitMatrix> image) : Detector(image) {}
+MultiDetector::MultiDetector(QSharedPointer<BitMatrix> image) : Detector(image) {}
 
 MultiDetector::~MultiDetector(){}
 
-std::vector<Ref<DetectorResult> > MultiDetector::detectMulti(DecodeHints hints){
-  Ref<BitMatrix> image = getImage();
+std::vector<QSharedPointer<DetectorResult> > MultiDetector::detectMulti(DecodeHints hints){
+  QSharedPointer<BitMatrix> image = getImage();
   MultiFinderPatternFinder finder = MultiFinderPatternFinder(image, hints.getResultPointCallback());
-  std::vector<Ref<FinderPatternInfo> > info = finder.findMulti(hints);
-  std::vector<Ref<DetectorResult> > result;
+  std::vector<QSharedPointer<FinderPatternInfo> > info = finder.findMulti(hints);
+  std::vector<QSharedPointer<DetectorResult> > result;
   for(unsigned int i = 0; i < info.size(); i++){
     try{
       result.push_back(processFinderPatternInfo(info[i]));

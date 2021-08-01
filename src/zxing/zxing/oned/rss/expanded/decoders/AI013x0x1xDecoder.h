@@ -46,7 +46,7 @@ class AI013x0x1xDecoder : public AI01weightDecoder
     static const int DATE_SIZE = 16;
 
 public:
-    AI013x0x1xDecoder(Ref<BitArray> information, String firstAIdigits, String dateCode);
+    AI013x0x1xDecoder(QSharedPointer<BitArray> information, String firstAIdigits, String dateCode);
 
     virtual String parseInformation() override;
 

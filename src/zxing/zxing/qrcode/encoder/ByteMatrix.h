@@ -9,7 +9,7 @@
 namespace zxing {
 namespace qrcode {
 
-class ByteMatrix : public Counted
+class ByteMatrix 
 {
 private:
   std::vector< std::vector<zxing::byte> > bytes_;

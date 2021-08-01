@@ -47,7 +47,7 @@ class AI01AndOtherAIs : public AI01decoder
     static const int HEADER_SIZE = 1 + 1 + 2;   //first bit encodes the linkage flag,
                                                 //the second one is the encodation method, and the other two are for the variable length
 public:
-    AI01AndOtherAIs(Ref<BitArray> information);
+    AI01AndOtherAIs(QSharedPointer<BitArray> information);
 
     virtual String parseInformation() override;
 };

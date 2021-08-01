@@ -27,7 +27,7 @@ using zxing::BitArray;
 
 EAN8Reader::EAN8Reader() : decodeMiddleCounters(4, 0) {}
 
-int EAN8Reader::decodeMiddle(Ref<BitArray> row,
+int EAN8Reader::decodeMiddle(QSharedPointer<BitArray> row,
                              Range const& startRange,
                              std::string& result){
   vector<int>& counters (decodeMiddleCounters);

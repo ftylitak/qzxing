@@ -40,7 +40,7 @@ namespace zxing {
 			float getEstimatedModuleSize() const;
 			void incrementCount();
 			bool aboutEquals(float moduleSize, float i, float j) const;
-			Ref<FinderPattern> combineEstimate(float i, float j, float newModuleSize) const;
+			QSharedPointer<FinderPattern> combineEstimate(float i, float j, float newModuleSize) const;
 		};
 	}
 }

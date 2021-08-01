@@ -32,7 +32,7 @@ namespace {
   const int MINIMUM_DIMENSION = BLOCK_SIZE * 5;
 }
 
-HybridBinarizer::HybridBinarizer(Ref<LuminanceSource> source) :
+HybridBinarizer::HybridBinarizer(QSharedPointer<LuminanceSource> source) :
   GlobalHistogramBinarizer(source), matrix_(NULL), cached_row_(NULL) {
 }
 
@@ -40,9 +40,9 @@ HybridBinarizer::~HybridBinarizer() {
 }
 
 
-Ref<Binarizer>
-HybridBinarizer::createBinarizer(Ref<LuminanceSource> source) {
-  return Ref<Binarizer> (new HybridBinarizer(source));
+QSharedPointer<Binarizer>
+HybridBinarizer::createBinarizer(QSharedPointer<LuminanceSource> source) {
+  return QSharedPointer<Binarizer> (new HybridBinarizer(source));
 }
 
 
@@ -51,7 +51,7 @@ HybridBinarizer::createBinarizer(Ref<LuminanceSource> source) {
  * constructor instead, but there are some advantages to doing it lazily, such as making
  * profiling easier, and not doing heavy lifting when callers don't expect it.
  */
-Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
+QSharedPointer<BitMatrix> HybridBinarizer::getBlackMatrix() {
   if (matrix_) {
     return matrix_;
   }
@@ -71,7 +71,7 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
     QSharedPointer<std::vector<int>> blackPoints =
       calculateBlackPoints(luminances, subWidth, subHeight, width, height);
 
-    Ref<BitMatrix> newMatrix (new BitMatrix(width, height));
+    QSharedPointer<BitMatrix> newMatrix (new BitMatrix(width, height));
     calculateThresholdForBlock(luminances,
                                subWidth,
                                subHeight,
@@ -100,7 +100,7 @@ HybridBinarizer::calculateThresholdForBlock(QSharedPointer<std::vector<zxing::by
                                             int width,
                                             int height,
                                             QSharedPointer<std::vector<int>> blackPoints,
-                                            Ref<BitMatrix> const& matrix) {
+                                            QSharedPointer<BitMatrix> const& matrix) {
   for (int y = 0; y < subHeight; y++) {
     int yoffset = y << BLOCK_SIZE_POWER;
     int maxYOffset = height - BLOCK_SIZE;
@@ -135,7 +135,7 @@ void HybridBinarizer::thresholdBlock(QSharedPointer<std::vector<zxing::byte>> lu
                                      int yoffset,
                                      int threshold,
                                      int stride,
-                                     Ref<BitMatrix> const& matrix) {
+                                     QSharedPointer<BitMatrix> const& matrix) {
   for (int y = 0, offset = yoffset * stride + xoffset;
        y < BLOCK_SIZE;
        y++,  offset += stride) {

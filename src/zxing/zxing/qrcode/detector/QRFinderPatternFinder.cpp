@@ -51,7 +51,7 @@ namespace
   class EstimatedModuleComparator
   {
   public:
-    bool operator()(Ref<FinderPattern> a, Ref<FinderPattern> b)
+    bool operator()(QSharedPointer<FinderPattern> a, QSharedPointer<FinderPattern> b)
     {
       return a->getEstimatedModuleSize() < b->getEstimatedModuleSize();
     }
@@ -264,7 +264,7 @@ bool FinderPatternFinder::handlePossibleCenter(int *stateCount, size_t i, size_t
       size_t max = possibleCenters_.size();
       for (size_t index = 0; index < max; index++)
       {
-        Ref<FinderPattern> center = possibleCenters_[index];
+        QSharedPointer<FinderPattern> center = possibleCenters_[index];
         // Look for about the same center and module size:
         if (center->aboutEquals(estimatedModuleSize, centerI, centerJ))
         {
@@ -275,7 +275,7 @@ bool FinderPatternFinder::handlePossibleCenter(int *stateCount, size_t i, size_t
       }
       if (!found)
       {
-        Ref<FinderPattern> newPattern(new FinderPattern(centerJ, centerI, estimatedModuleSize));
+        QSharedPointer<FinderPattern> newPattern(new FinderPattern(centerJ, centerI, estimatedModuleSize));
         possibleCenters_.push_back(newPattern);
         if (callback_ != 0)
         {
@@ -295,10 +295,10 @@ int FinderPatternFinder::findRowSkip()
   {
     return 0;
   }
-  Ref<FinderPattern> firstConfirmedCenter;
+  QSharedPointer<FinderPattern> firstConfirmedCenter;
   for (size_t i = 0; i < max; i++)
   {
-    Ref<FinderPattern> center = possibleCenters_[i];
+    QSharedPointer<FinderPattern> center = possibleCenters_[i];
     if (center->getCount() >= CENTER_QUORUM)
     {
       if (firstConfirmedCenter == 0)
@@ -327,7 +327,7 @@ bool FinderPatternFinder::haveMultiplyConfirmedCenters()
   size_t max = possibleCenters_.size();
   for (size_t i = 0; i < max; i++)
   {
-    Ref<FinderPattern> pattern = possibleCenters_[i];
+    QSharedPointer<FinderPattern> pattern = possibleCenters_[i];
     if (pattern->getCount() >= CENTER_QUORUM)
     {
       confirmedCount++;
@@ -346,15 +346,15 @@ bool FinderPatternFinder::haveMultiplyConfirmedCenters()
   float totalDeviation = 0.0f;
   for (size_t i = 0; i < max; i++)
   {
-    Ref<FinderPattern> pattern = possibleCenters_[i];
+    QSharedPointer<FinderPattern> pattern = possibleCenters_[i];
     totalDeviation += abs(pattern->getEstimatedModuleSize() - average);
   }
   return totalDeviation <= 0.05f * totalModuleSize;
 }
 
-vector<Ref<FinderPattern>> FinderPatternFinder::selectBestPatterns()
+vector<QSharedPointer<FinderPattern>> FinderPatternFinder::selectBestPatterns()
 {
-  std::vector<Ref<FinderPattern>> bestPatterns;
+  std::vector<QSharedPointer<FinderPattern>> bestPatterns;
   int startSize = static_cast<int>(possibleCenters_.size());
   if (startSize < 3)
   {
@@ -369,17 +369,17 @@ vector<Ref<FinderPattern>> FinderPatternFinder::selectBestPatterns()
 
   for (int i = 0; i < startSize - 2; i++)
   {
-    Ref<FinderPattern> fpi = possibleCenters_[i];
+    QSharedPointer<FinderPattern> fpi = possibleCenters_[i];
     float minModuleSize = fpi->getEstimatedModuleSize();
 
     for (int j = i + 1; j < startSize - 1; j++)
     {
-      Ref<FinderPattern> fpj = possibleCenters_[j];
+      QSharedPointer<FinderPattern> fpj = possibleCenters_[j];
       double squares0 = squaredDistance(fpi, fpj);
 
       for (int k = j + 1; k < startSize; k++)
       {
-        Ref<FinderPattern> fpk = possibleCenters_[k];
+        QSharedPointer<FinderPattern> fpk = possibleCenters_[k];
         float maxModuleSize = fpk->getEstimatedModuleSize();
         if (maxModuleSize > minModuleSize * 1.4f)
         {
@@ -413,16 +413,16 @@ vector<Ref<FinderPattern>> FinderPatternFinder::selectBestPatterns()
   return bestPatterns;
 }
 
-vector<Ref<FinderPattern>> FinderPatternFinder::orderBestPatterns(vector<Ref<FinderPattern>> patterns)
+vector<QSharedPointer<FinderPattern>> FinderPatternFinder::orderBestPatterns(vector<QSharedPointer<FinderPattern>> patterns)
 {
   // Find distances between pattern centers
   float abDistance = distance(patterns[0], patterns[1]);
   float bcDistance = distance(patterns[1], patterns[2]);
   float acDistance = distance(patterns[0], patterns[2]);
 
-  Ref<FinderPattern> topLeft;
-  Ref<FinderPattern> topRight;
-  Ref<FinderPattern> bottomLeft;
+  QSharedPointer<FinderPattern> topLeft;
+  QSharedPointer<FinderPattern> topRight;
+  QSharedPointer<FinderPattern> bottomLeft;
   // Assume one closest to other two is top left;
   // topRight and bottomLeft will just be guesses below at first
   if (bcDistance >= abDistance && bcDistance >= acDistance)
@@ -449,31 +449,31 @@ vector<Ref<FinderPattern>> FinderPatternFinder::orderBestPatterns(vector<Ref<Fin
   // should yield a vector with positive z component
   if ((bottomLeft->getY() - topLeft->getY()) * (topRight->getX() - topLeft->getX()) < (bottomLeft->getX() - topLeft->getX()) * (topRight->getY() - topLeft->getY()))
   {
-    Ref<FinderPattern> temp = topRight;
+    QSharedPointer<FinderPattern> temp = topRight;
     topRight = bottomLeft;
     bottomLeft = temp;
   }
 
-  vector<Ref<FinderPattern>> results(3);
+  vector<QSharedPointer<FinderPattern>> results(3);
   results[0] = bottomLeft;
   results[1] = topLeft;
   results[2] = topRight;
   return results;
 }
 
-float FinderPatternFinder::distance(Ref<ResultPoint> p1, Ref<ResultPoint> p2)
+float FinderPatternFinder::distance(QSharedPointer<ResultPoint> p1, QSharedPointer<ResultPoint> p2)
 {
   float dx = p1->getX() - p2->getX();
   float dy = p1->getY() - p2->getY();
   return (float)sqrt(dx * dx + dy * dy);
 }
 
-FinderPatternFinder::FinderPatternFinder(Ref<BitMatrix> image,
-                                         Ref<ResultPointCallback> const &callback) : image_(image), possibleCenters_(), hasSkipped_(false), callback_(callback)
+FinderPatternFinder::FinderPatternFinder(QSharedPointer<BitMatrix> image,
+                                         QSharedPointer<ResultPointCallback> const &callback) : image_(image), possibleCenters_(), hasSkipped_(false), callback_(callback)
 {
 }
 
-Ref<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const &hints)
+QSharedPointer<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const &hints)
 {
   bool tryHarder = hints.getTryHarder();
 
@@ -610,34 +610,34 @@ Ref<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const &hints)
     throw zxing::ReaderException("no possible centers found");
   }
 
-  vector<Ref<FinderPattern>> patternInfo = selectBestPatterns();
+  vector<QSharedPointer<FinderPattern>> patternInfo = selectBestPatterns();
 
   if (patternInfo.size() != 3)
   {
     throw zxing::ReaderException("no pattern info found");
   }
 
-  vector<Ref<ResultPoint>> patternInfoResPoints;
+  vector<QSharedPointer<ResultPoint>> patternInfoResPoints;
 
   for (size_t i = 0; i < patternInfo.size(); i++)
-    patternInfoResPoints.push_back(Ref<ResultPoint>(patternInfo[i]));
+    patternInfoResPoints.push_back(QSharedPointer<ResultPoint>(patternInfo[i]));
 
   ResultPoint::orderBestPatterns(patternInfoResPoints);
 
   patternInfo.clear();
   for (size_t i = 0; i < patternInfoResPoints.size(); i++)
-    patternInfo.push_back(Ref<FinderPattern>(static_cast<FinderPattern *>(&*patternInfoResPoints[i])));
+    patternInfo.push_back(QSharedPointer<FinderPattern>(static_cast<FinderPattern *>(&*patternInfoResPoints[i])));
 
-  Ref<FinderPatternInfo> result(new FinderPatternInfo(patternInfo));
+  QSharedPointer<FinderPatternInfo> result(new FinderPatternInfo(patternInfo));
   return result;
 }
 
-Ref<BitMatrix> FinderPatternFinder::getImage()
+QSharedPointer<BitMatrix> FinderPatternFinder::getImage()
 {
   return image_;
 }
 
-vector<Ref<FinderPattern>> &FinderPatternFinder::getPossibleCenters()
+vector<QSharedPointer<FinderPattern>> &FinderPatternFinder::getPossibleCenters()
 {
   return possibleCenters_;
 }
@@ -739,7 +739,7 @@ int *FinderPatternFinder::getCrossCheckStateCount() const
   return crossCheckStateCount;
 }
 
-double FinderPatternFinder::squaredDistance(Ref<zxing::qrcode::FinderPattern> a, Ref<zxing::qrcode::FinderPattern> b)
+double FinderPatternFinder::squaredDistance(QSharedPointer<zxing::qrcode::FinderPattern> a, QSharedPointer<zxing::qrcode::FinderPattern> b)
 {
   double x = a->getX() - b->getX();
   double y = a->getY() - b->getY();

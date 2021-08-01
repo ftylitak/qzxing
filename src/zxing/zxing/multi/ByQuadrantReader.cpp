@@ -24,16 +24,16 @@ ByQuadrantReader::ByQuadrantReader(Reader& delegate) : delegate_(delegate) {}
 
 ByQuadrantReader::~ByQuadrantReader(){}
 
-Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image){
+QSharedPointer<Result> ByQuadrantReader::decode(QSharedPointer<BinaryBitmap> image){
   return decode(image, DecodeHints::DEFAULT_HINT);
 }
 
-Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image, DecodeHints hints){
+QSharedPointer<Result> ByQuadrantReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints){
   int width = image->getWidth();
   int height = image->getHeight();
   int halfWidth = width / 2;
   int halfHeight = height / 2;
-  Ref<BinaryBitmap> topLeft = image->crop(0, 0, halfWidth, halfHeight);
+  QSharedPointer<BinaryBitmap> topLeft = image->crop(0, 0, halfWidth, halfHeight);
   try {
     return delegate_.decode(topLeft, hints);
   } catch (ReaderException const& re) {
@@ -41,7 +41,7 @@ Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
     // continue
   }
 
-  Ref<BinaryBitmap> topRight = image->crop(halfWidth, 0, halfWidth, halfHeight);
+  QSharedPointer<BinaryBitmap> topRight = image->crop(halfWidth, 0, halfWidth, halfHeight);
   try {
     return delegate_.decode(topRight, hints);
   } catch (ReaderException const& re) {
@@ -49,7 +49,7 @@ Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
     // continue
   }
 
-  Ref<BinaryBitmap> bottomLeft = image->crop(0, halfHeight, halfWidth, halfHeight);
+  QSharedPointer<BinaryBitmap> bottomLeft = image->crop(0, halfHeight, halfWidth, halfHeight);
   try {
     return delegate_.decode(bottomLeft, hints);
   } catch (ReaderException const& re) {
@@ -57,7 +57,7 @@ Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
     // continue
   }
 
-  Ref<BinaryBitmap> bottomRight = image->crop(halfWidth, halfHeight, halfWidth, halfHeight);
+  QSharedPointer<BinaryBitmap> bottomRight = image->crop(halfWidth, halfHeight, halfWidth, halfHeight);
   try {
     return delegate_.decode(bottomRight, hints);
   } catch (ReaderException const& re) {
@@ -67,7 +67,7 @@ Ref<Result> ByQuadrantReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
 
   int quarterWidth = halfWidth / 2;
   int quarterHeight = halfHeight / 2;
-  Ref<BinaryBitmap> center = image->crop(quarterWidth, quarterHeight, halfWidth, halfHeight);
+  QSharedPointer<BinaryBitmap> center = image->crop(quarterWidth, quarterHeight, halfWidth, halfHeight);
   return delegate_.decode(center, hints);
 }
 

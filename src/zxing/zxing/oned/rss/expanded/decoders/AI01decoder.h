@@ -45,7 +45,7 @@ class AI01decoder : public AbstractExpandedDecoder
 public:
     static const int GTIN_SIZE = 40;
 
-    AI01decoder(Ref<BitArray> information);
+    AI01decoder(QSharedPointer<BitArray> information);
 
     void encodeCompressedGtin(String &buf, int currentPos);
 

@@ -134,7 +134,7 @@ int ModulusPoly::evaluateAt(int a)
   return result;
 }
 
-Ref<ModulusPoly> ModulusPoly::add(Ref<ModulusPoly> other)
+QSharedPointer<ModulusPoly> ModulusPoly::add(QSharedPointer<ModulusPoly> other)
 {
   if (&field_ != &other->field_)
   {
@@ -146,7 +146,7 @@ Ref<ModulusPoly> ModulusPoly::add(Ref<ModulusPoly> other)
   }
   if (other->isZero())
   {
-    return Ref<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(this);
   }
 
   QSharedPointer<std::vector<int>> smallerCoefficients = coefficients_;
@@ -170,10 +170,10 @@ Ref<ModulusPoly> ModulusPoly::add(Ref<ModulusPoly> other)
     sumDiff[i] = field_.add(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
   }
 
-  return Ref<ModulusPoly>(new ModulusPoly(field_, sumDiff));
+  return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, sumDiff));
 }
 
-Ref<ModulusPoly> ModulusPoly::subtract(Ref<ModulusPoly> other)
+QSharedPointer<ModulusPoly> ModulusPoly::subtract(QSharedPointer<ModulusPoly> other)
 {
   if (&field_ != &other->field_)
   {
@@ -181,12 +181,12 @@ Ref<ModulusPoly> ModulusPoly::subtract(Ref<ModulusPoly> other)
   }
   if (other->isZero())
   {
-    return Ref<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(this);
   }
   return add(other->negative());
 }
 
-Ref<ModulusPoly> ModulusPoly::multiply(Ref<ModulusPoly> other)
+QSharedPointer<ModulusPoly> ModulusPoly::multiply(QSharedPointer<ModulusPoly> other)
 {
   if (&field_ != &other->field_)
   {
@@ -210,10 +210,10 @@ Ref<ModulusPoly> ModulusPoly::multiply(Ref<ModulusPoly> other)
       product[i + j] = field_.add(product[i + j], field_.multiply(aCoeff, bCoefficients[j]));
     }
   }
-  return Ref<ModulusPoly>(new ModulusPoly(field_, product));
+  return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
 }
 
-Ref<ModulusPoly> ModulusPoly::negative()
+QSharedPointer<ModulusPoly> ModulusPoly::negative()
 {
   int size = coefficients_->size();
   QSharedPointer<std::vector<int>> negativeCoefficients(new std::vector<int>(size));
@@ -221,10 +221,10 @@ Ref<ModulusPoly> ModulusPoly::negative()
   {
     negativeCoefficients[i] = field_.subtract(0, coefficients_[i]);
   }
-  return Ref<ModulusPoly>(new ModulusPoly(field_, negativeCoefficients));
+  return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, negativeCoefficients));
 }
 
-Ref<ModulusPoly> ModulusPoly::multiply(int scalar)
+QSharedPointer<ModulusPoly> ModulusPoly::multiply(int scalar)
 {
   if (scalar == 0)
   {
@@ -232,7 +232,7 @@ Ref<ModulusPoly> ModulusPoly::multiply(int scalar)
   }
   if (scalar == 1)
   {
-    return Ref<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(this);
   }
   int size = coefficients_->size();
   QSharedPointer<std::vector<int>> product(new std::vector<int>(size));
@@ -240,10 +240,10 @@ Ref<ModulusPoly> ModulusPoly::multiply(int scalar)
   {
     product[i] = field_.multiply(coefficients_[i], scalar);
   }
-  return Ref<ModulusPoly>(new ModulusPoly(field_, product));
+  return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
 }
 
-Ref<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient)
+QSharedPointer<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient)
 {
   if (degree < 0)
   {
@@ -259,10 +259,10 @@ Ref<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient)
   {
     product[i] = field_.multiply(coefficients_[i], coefficient);
   }
-  return Ref<ModulusPoly>(new ModulusPoly(field_, product));
+  return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
 }
 
-std::vector<Ref<ModulusPoly>> ModulusPoly::divide(Ref<ModulusPoly> other)
+std::vector<QSharedPointer<ModulusPoly>> ModulusPoly::divide(QSharedPointer<ModulusPoly> other)
 {
   if (&field_ != &other->field_)
   {
@@ -273,8 +273,8 @@ std::vector<Ref<ModulusPoly>> ModulusPoly::divide(Ref<ModulusPoly> other)
     throw IllegalArgumentException("Divide by 0");
   }
 
-  Ref<ModulusPoly> quotient(field_.getZero());
-  Ref<ModulusPoly> remainder(this);
+  QSharedPointer<ModulusPoly> quotient(field_.getZero());
+  QSharedPointer<ModulusPoly> remainder(this);
 
   int denominatorLeadingTerm = other->getCoefficient(other->getDegree());
   int inverseDenominatorLeadingTerm = field_.inverse(denominatorLeadingTerm);
@@ -283,13 +283,13 @@ std::vector<Ref<ModulusPoly>> ModulusPoly::divide(Ref<ModulusPoly> other)
   {
     int degreeDifference = remainder->getDegree() - other->getDegree();
     int scale = field_.multiply(remainder->getCoefficient(remainder->getDegree()), inverseDenominatorLeadingTerm);
-    Ref<ModulusPoly> term(other->multiplyByMonomial(degreeDifference, scale));
-    Ref<ModulusPoly> iterationQuotient(field_.buildMonomial(degreeDifference, scale));
+    QSharedPointer<ModulusPoly> term(other->multiplyByMonomial(degreeDifference, scale));
+    QSharedPointer<ModulusPoly> iterationQuotient(field_.buildMonomial(degreeDifference, scale));
     quotient = quotient->add(iterationQuotient);
     remainder = remainder->subtract(term);
   }
 
-  std::vector<Ref<ModulusPoly>> result(2);
+  std::vector<QSharedPointer<ModulusPoly>> result(2);
   result[0] = quotient;
   result[1] = remainder;
   return result;

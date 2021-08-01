@@ -28,7 +28,7 @@
 
 namespace zxing {
 
-class BitMatrix : public Counted {
+class BitMatrix  {
 public:
   static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
@@ -59,8 +59,8 @@ public:
 
   void clear();
   void setRegion(int left, int top, int width, int height);
-  Ref<BitArray> getRow(int y, Ref<BitArray> row);
-  void setRow(int y, Ref<BitArray> row);
+  QSharedPointer<BitArray> getRow(int y, QSharedPointer<BitArray> row);
+  void setRow(int y, QSharedPointer<BitArray> row);
 
   int getWidth() const;
   int getHeight() const;

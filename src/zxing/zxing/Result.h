@@ -31,26 +31,26 @@
 
 namespace zxing {
 
-class Result : public Counted {
+class Result  {
 private:
-  Ref<String> text_;
+  QSharedPointer<String> text_;
   QSharedPointer<std::vector<zxing::byte>> rawBytes_;
-  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints_;
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints_;
   BarcodeFormat format_;
   std::string charSet_;
   ResultMetadata metadata_;
 
 public:
-  Result(Ref<String> text,
+  Result(QSharedPointer<String> text,
          QSharedPointer<std::vector<zxing::byte>> rawBytes,
-         QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints,
+         QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints,
          BarcodeFormat format, const std::string &charSet = "",
          ResultMetadata metadata = ResultMetadata());
   ~Result();
-  Ref<String> getText();
+  QSharedPointer<String> getText();
   QSharedPointer<std::vector<zxing::byte>> getRawBytes();
-  QSharedPointer<std::vector<Ref<ResultPoint>> > const& getResultPoints() const;
-  QSharedPointer<std::vector<Ref<ResultPoint>> >& getResultPoints();
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > const& getResultPoints() const;
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
   std::string getCharSet() const;
   ResultMetadata& getMetadata();

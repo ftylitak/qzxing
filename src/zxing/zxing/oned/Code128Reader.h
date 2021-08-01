@@ -29,13 +29,13 @@ private:
   static const int MAX_AVG_VARIANCE;
   static const int MAX_INDIVIDUAL_VARIANCE;
 
-  static std::vector<int> findStartPattern(Ref<BitArray> row);
-  static int decodeCode(Ref<BitArray> row,
+  static std::vector<int> findStartPattern(QSharedPointer<BitArray> row);
+  static int decodeCode(QSharedPointer<BitArray> row,
                         std::vector<int>& counters,
                         int rowOffset);
 			
 public:
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
   Code128Reader();
   ~Code128Reader();
 

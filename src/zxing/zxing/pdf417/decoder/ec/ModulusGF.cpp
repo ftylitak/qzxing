@@ -57,15 +57,15 @@ ModulusGF::ModulusGF(int modulus, int generator)
   one_ = new ModulusPoly(*this, aOne);
 }
  
-Ref<ModulusPoly> ModulusGF::getZero() {
+QSharedPointer<ModulusPoly> ModulusGF::getZero() {
   return zero_;
 }
 
-Ref<ModulusPoly> ModulusGF::getOne() {
+QSharedPointer<ModulusPoly> ModulusGF::getOne() {
   return one_;
 }
 
-Ref<ModulusPoly> ModulusGF::buildMonomial(int degree, int coefficient)
+QSharedPointer<ModulusPoly> ModulusGF::buildMonomial(int degree, int coefficient)
 {
   if (degree < 0) {
     throw IllegalArgumentException("monomial: degree < 0!");
@@ -76,7 +76,7 @@ Ref<ModulusPoly> ModulusGF::buildMonomial(int degree, int coefficient)
 	int nCoefficients = degree + 1;
   QSharedPointer<std::vector<int>> coefficients (new std::vector<int>(nCoefficients));
   coefficients[0] = coefficient;
-	Ref<ModulusPoly> result(new ModulusPoly(*this,coefficients));
+	QSharedPointer<ModulusPoly> result(new ModulusPoly(*this,coefficients));
   return result;
 }
 

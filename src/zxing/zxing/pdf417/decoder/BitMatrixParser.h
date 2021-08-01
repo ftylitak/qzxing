@@ -31,14 +31,14 @@ namespace zxing {
 namespace pdf417 {
 namespace decoder {
 
-class BitMatrixParser : public Counted {
+class BitMatrixParser  {
 private:
   static const int MAX_ROWS;
   // Maximum Codewords (Data + Error)
   static const int MAX_CW_CAPACITY;
   static const int MODULES_IN_SYMBOL;
 
-  Ref<BitMatrix> bitMatrix_;
+  QSharedPointer<BitMatrix> bitMatrix_;
   int rows_; /* = 0 */
   int leftColumnECData_; /* = 0 */
   int rightColumnECData_; /* = 0 */
@@ -55,7 +55,7 @@ public:
   static const int CODEWORD_TABLE[];
   
 public:
-  BitMatrixParser(Ref<BitMatrix> bitMatrix);
+  BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix);
   QSharedPointer<std::vector<int>> getErasures() const {return erasures_;}
   int getECLevel() const {return ecLevel_;}
   int getEraseCount() const {return eraseCount_;}

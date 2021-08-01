@@ -35,17 +35,17 @@ namespace oned {
 class Code93Reader : public OneDReader {
 public:
   Code93Reader();
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
 
 private:
   std::string decodeRowResult;
   std::vector<int> counters;
 
-  Range findAsteriskPattern(Ref<BitArray> row);
+  Range findAsteriskPattern(QSharedPointer<BitArray> row);
 
   static int toPattern(std::vector<int>& counters);
   static char patternToChar(int pattern);
-  static Ref<String> decodeExtended(std::string const& encoded);
+  static QSharedPointer<String> decodeExtended(std::string const& encoded);
   static void checkChecksums(std::string const& result);
   static void checkOneChecksum(std::string const& result,
                                int checkPosition,

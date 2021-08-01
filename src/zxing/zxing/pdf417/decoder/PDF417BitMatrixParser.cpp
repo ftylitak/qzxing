@@ -38,7 +38,7 @@ const int BitMatrixParser::MAX_ROWS = 90;
 const int BitMatrixParser::MAX_CW_CAPACITY = 929;
 const int BitMatrixParser::MODULES_IN_SYMBOL = 17;
 
-BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix)
+BitMatrixParser::BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix)
   : bitMatrix_(bitMatrix)
 {
   rows_ = 0;

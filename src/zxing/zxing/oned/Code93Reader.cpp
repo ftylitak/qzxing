@@ -64,7 +64,7 @@ Code93Reader::Code93Reader() {
   counters.resize(6);
 }
 
-Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+QSharedPointer<Result> Code93Reader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/) {
   Range start (findAsteriskPattern(row));
   // Read off white space    
   int nextStart = row->getNextSet(start[1]);
@@ -117,25 +117,25 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
   // Remove checksum digits
   result.resize(result.length() - 2);
 
-  Ref<String> resultString = decodeExtended(result);
+  QSharedPointer<String> resultString = decodeExtended(result);
 
   float left = (float) (start[1] + start[0]) / 2.0f;
   float right = lastStart + lastPatternSize / 2.0f;
 
-  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints (2);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints (2);
   resultPoints[0] = 
-    Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =
-    Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
   
-  return Ref<Result>(new Result(
+  return QSharedPointer<Result>(new Result(
                        resultString,
                        QSharedPointer<std::vector<zxing::byte>>(),
                        resultPoints,
                        BarcodeFormat::CODE_93));
 }
 
-Code93Reader::Range Code93Reader::findAsteriskPattern(Ref<BitArray> row)  {
+Code93Reader::Range Code93Reader::findAsteriskPattern(QSharedPointer<BitArray> row)  {
   int width = row->getSize();
   int rowOffset = row->getNextSet(0);
 
@@ -211,7 +211,7 @@ char Code93Reader::patternToChar(int pattern)  {
   throw NotFoundException();
 }
 
-Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
+QSharedPointer<String> Code93Reader::decodeExtended(string const& encoded)  {
   int length = int(encoded.length());
   string decoded;
   for (int i = 0; i < length; i++) {
@@ -267,7 +267,7 @@ Ref<String> Code93Reader::decodeExtended(string const& encoded)  {
       decoded.append(1, c);
     }
   }
-  return Ref<String>(new String(decoded));
+  return QSharedPointer<String>(new String(decoded));
 }
 
 void Code93Reader::checkChecksums(string const& result) {

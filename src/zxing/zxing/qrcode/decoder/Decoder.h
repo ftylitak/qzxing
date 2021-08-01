@@ -37,7 +37,7 @@ private:
 
 public:
   Decoder();
-  Ref<DecoderResult> decode(Ref<BitMatrix> bits);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<BitMatrix> bits);
 };
 
 }

@@ -95,7 +95,7 @@ Mode &Mode::forBits(int bits)
     }
 }
 
-int Mode::getCharacterCountBits(Ref<Version> version) const
+int Mode::getCharacterCountBits(QSharedPointer<Version> version) const
 {
     int number = version->getVersionNumber();
     if (number <= 9)

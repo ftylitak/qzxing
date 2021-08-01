@@ -62,15 +62,15 @@ void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordByt
   }
 }
 
-Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
+QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits) {
   // Construct a parser and read version, error-correction level
   BitMatrixParser parser(bits);
-  Ref<Version>version = parser.readVersion(bits);
+  QSharedPointer<Version>version = parser.readVersion(bits);
 
   // Read codewords
   QSharedPointer<std::vector<zxing::byte>> codewords(parser.readCodewords());
   // Separate into data blocks
-  std::vector<Ref<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
+  std::vector<QSharedPointer<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
 
   int dataBlocksCount = int(dataBlocks.size());
 
@@ -83,7 +83,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
-    Ref<DataBlock> dataBlock(dataBlocks[j]);
+    QSharedPointer<DataBlock> dataBlock(dataBlocks[j]);
     QSharedPointer<std::vector<zxing::byte>> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
@@ -94,7 +94,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   }
   // Decode the contents of that stream of bytes
   DecodedBitStreamParser decodedBSParser;
-  return Ref<DecoderResult> (decodedBSParser.decode(resultBytes));
+  return QSharedPointer<DecoderResult> (decodedBSParser.decode(resultBytes));
 }
 
 }

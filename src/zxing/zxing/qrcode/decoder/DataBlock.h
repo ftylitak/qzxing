@@ -29,7 +29,7 @@
 namespace zxing {
 namespace qrcode {
 
-class DataBlock : public Counted {
+class DataBlock  {
 private:
   int numDataCodewords_;
   QSharedPointer<std::vector<zxing::byte>> codewords_;
@@ -37,8 +37,8 @@ private:
   DataBlock(int numDataCodewords, QSharedPointer<std::vector<zxing::byte>> codewords);
 
 public:
-  static std::vector<Ref<DataBlock> >
-  getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, Ref<Version>version, ErrorCorrectionLevel &ecLevel);
+  static std::vector<QSharedPointer<DataBlock> >
+  getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, QSharedPointer<Version>version, ErrorCorrectionLevel &ecLevel);
 
   int getNumDataCodewords();
   QSharedPointer<std::vector<zxing::byte>> getCodewords();

@@ -35,7 +35,7 @@ using zxing::BinaryBitmap;
 using zxing::BitArray;
 using zxing::DecodeHints;
 
-Ref<Result> OneDReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
+QSharedPointer<Result> OneDReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints)
 {
   try
   {
@@ -48,11 +48,11 @@ Ref<Result> OneDReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
     if (tryHarder && image->isRotateSupported())
     {
       // std::cerr << "v rotate" << std::endl;
-      Ref<BinaryBitmap> rotatedImage(image->rotateCounterClockwise());
+      QSharedPointer<BinaryBitmap> rotatedImage(image->rotateCounterClockwise());
       // std::cerr << "^ rotate" << std::endl;
-      Ref<Result> result = doDecode(rotatedImage, hints);
+      QSharedPointer<Result> result = doDecode(rotatedImage, hints);
       // Doesn't have java metadata stuff
-      QSharedPointer<std::vector<Ref<ResultPoint>>> &points(result->getResultPoints());
+      QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> &points(result->getResultPoints());
       if (points && !points->empty())
       {
         int height = rotatedImage->getHeight();
@@ -74,11 +74,11 @@ Ref<Result> OneDReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
 
 #include <typeinfo>
 
-Ref<Result> OneDReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints)
+QSharedPointer<Result> OneDReader::doDecode(QSharedPointer<BinaryBitmap> image, DecodeHints hints)
 {
   int width = image->getWidth();
   int height = image->getHeight();
-  Ref<BitArray> row(new BitArray(width));
+  QSharedPointer<BitArray> row(new BitArray(width));
 
   int middle = height >> 1;
   bool tryHarder = hints.getTryHarder();
@@ -143,19 +143,19 @@ Ref<Result> OneDReader::doDecode(Ref<BinaryBitmap> image, DecodeHints hints)
       {
         // Look for a barcode
         // std::cerr << "rn " << rowNumber << " " << typeid(*this).name() << std::endl;
-        Ref<Result> result = decodeRow(rowNumber, row, hints);
+        QSharedPointer<Result> result = decodeRow(rowNumber, row, hints);
         // We found our barcode
         if (attempt == 1)
         {
           // But it was upside down, so note that
           // result.putMetadata(ResultMetadataType.ORIENTATION, new Integer(180));
           // And remember to flip the result points horizontally.
-          QSharedPointer<std::vector<Ref<ResultPoint>>> points(result->getResultPoints());
+          QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> points(result->getResultPoints());
           if (points)
           {
-            points[0] = Ref<ResultPoint>(new OneDResultPoint(width - points[0]->getX() - 1,
+            points[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - points[0]->getX() - 1,
                                                              points[0]->getY()));
-            points[1] = Ref<ResultPoint>(new OneDResultPoint(width - points[1]->getX() - 1,
+            points[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - points[1]->getX() - 1,
                                                              points[1]->getY()));
           }
         }
@@ -217,7 +217,7 @@ int OneDReader::patternMatchVariance(vector<int> &counters,
   return totalVariance / total;
 }
 
-void OneDReader::recordPattern(Ref<BitArray> row,
+void OneDReader::recordPattern(QSharedPointer<BitArray> row,
                                int start,
                                vector<int> &counters)
 {
@@ -263,7 +263,7 @@ void OneDReader::recordPattern(Ref<BitArray> row,
   }
 }
 
-void OneDReader::recordPatternInReverse(Ref<BitArray> row,
+void OneDReader::recordPatternInReverse(QSharedPointer<BitArray> row,
                                         int start,
                                         vector<int> &counters)
 {

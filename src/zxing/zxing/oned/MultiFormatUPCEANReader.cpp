@@ -43,39 +43,39 @@ MultiFormatUPCEANReader::MultiFormatUPCEANReader(DecodeHints hints) : readers()
 {
   if (hints.containsFormat(BarcodeFormat::EAN_13))
   {
-    readers.push_back(Ref<UPCEANReader>(new EAN13Reader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN13Reader()));
   }
   else if (hints.containsFormat(BarcodeFormat::UPC_A))
   {
-    readers.push_back(Ref<UPCEANReader>(new UPCAReader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCAReader()));
   }
   if (hints.containsFormat(BarcodeFormat::EAN_8))
   {
-    readers.push_back(Ref<UPCEANReader>(new EAN8Reader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN8Reader()));
   }
   if (hints.containsFormat(BarcodeFormat::UPC_E))
   {
-    readers.push_back(Ref<UPCEANReader>(new UPCEReader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCEReader()));
   }
   if (readers.size() == 0)
   {
-    readers.push_back(Ref<UPCEANReader>(new EAN13Reader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN13Reader()));
     // UPC-A is covered by EAN-13
-    readers.push_back(Ref<UPCEANReader>(new EAN8Reader()));
-    readers.push_back(Ref<UPCEANReader>(new UPCEReader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN8Reader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCEReader()));
   }
 }
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints)
+QSharedPointer<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints)
 {
   // Compute this location once and reuse it on multiple implementations
   UPCEANReader::Range startGuardPattern = UPCEANReader::findStartGuardPattern(row);
   for (int i = 0, e = int(readers.size()); i < e; i++)
   {
-    Ref<UPCEANReader> reader = readers[i];
-    Ref<Result> result;
+    QSharedPointer<UPCEANReader> reader = readers[i];
+    QSharedPointer<Result> result;
     try
     {
       result = reader->decodeRow(rowNumber, row, startGuardPattern, hints);
@@ -115,7 +115,7 @@ Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row,
     if (ean13MayBeUPCA && canReturnUPCA)
     {
       // Transfer the metdata across
-      Ref<Result> resultUPCA(new Result(result->getText()->substring(1),
+      QSharedPointer<Result> resultUPCA(new Result(result->getText()->substring(1),
                                         result->getRawBytes(),
                                         result->getResultPoints(),
                                         BarcodeFormat::UPC_A));

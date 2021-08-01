@@ -29,10 +29,10 @@ class UPCEANReader;
 
 class MultiFormatUPCEANReader : public OneDReader {
 private:
-    std::vector< Ref<UPCEANReader> > readers;
+    std::vector< QSharedPointer<UPCEANReader> > readers;
 public:
     MultiFormatUPCEANReader(DecodeHints hints);
-    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+    QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
 };
 
 }

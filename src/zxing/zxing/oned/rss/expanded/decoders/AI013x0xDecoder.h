@@ -50,7 +50,7 @@ class AI013x0xDecoder : public AI01weightDecoder
     static const int WEIGHT_SIZE = 15;
 
 public:
-    AI013x0xDecoder(Ref<BitArray> information);
+    AI013x0xDecoder(QSharedPointer<BitArray> information);
 
     virtual String parseInformation() override;
 };

@@ -36,7 +36,7 @@ private:
 public:
   EAN13Reader();
 
-  int decodeMiddle(Ref<BitArray> row,
+  int decodeMiddle(QSharedPointer<BitArray> row,
                    Range const& startRange,
                    std::string& resultString);
 

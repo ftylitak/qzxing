@@ -49,19 +49,19 @@ using zxing::DecodeHints;
 
 MultiFormatReader::MultiFormatReader() {}
 
-Ref<Result> MultiFormatReader::decode(Ref<BinaryBitmap> image)
+QSharedPointer<Result> MultiFormatReader::decode(QSharedPointer<BinaryBitmap> image)
 {
   setHints(DecodeHints::DEFAULT_HINT);
   return decodeInternal(image);
 }
 
-Ref<Result> MultiFormatReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
+QSharedPointer<Result> MultiFormatReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints)
 {
   setHints(hints);
   return decodeInternal(image);
 }
 
-Ref<Result> MultiFormatReader::decodeWithState(Ref<BinaryBitmap> image)
+QSharedPointer<Result> MultiFormatReader::decodeWithState(QSharedPointer<BinaryBitmap> image)
 {
   // Make sure to set up the default state so we don't crash
   if (readers_.empty())
@@ -102,35 +102,35 @@ void MultiFormatReader::enableReaders(zxing::DecodeHints hints, bool allowAll)
 #ifdef ENABLE_DECODER_1D_BARCODES
   if ((allowAll || addOneDReader) && !tryHarder)
   {
-    readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
   }
 #endif
 
 #ifdef ENABLE_DECODER_QR_CODE
   if (allowAll || hints.containsFormat(BarcodeFormat::QR_CODE))
   {
-    readers_.push_back(Ref<Reader>(new zxing::qrcode::QRCodeReader()));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::qrcode::QRCodeReader()));
   }
 #endif
 
 #ifdef ENABLE_DECODER_DATA_MATRIX
   if (allowAll || hints.containsFormat(BarcodeFormat::DATA_MATRIX))
   {
-    readers_.push_back(Ref<Reader>(new zxing::datamatrix::DataMatrixReader()));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::datamatrix::DataMatrixReader()));
   }
 #endif
 
 #ifdef ENABLE_DECODER_AZTEC
   if (allowAll || hints.containsFormat(BarcodeFormat::AZTEC))
   {
-    readers_.push_back(Ref<Reader>(new zxing::aztec::AztecReader()));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::aztec::AztecReader()));
   }
 #endif
 
 #ifdef ENABLE_DECODER_PDF17
   if (allowAll || hints.containsFormat(BarcodeFormat::PDF_417))
   {
-    readers_.push_back(Ref<Reader>(new zxing::pdf417::PDF417Reader()));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::pdf417::PDF417Reader()));
   }
 #endif
   /*
@@ -141,12 +141,12 @@ void MultiFormatReader::enableReaders(zxing::DecodeHints hints, bool allowAll)
 #ifdef ENABLE_DECODER_1D_BARCODES
   if ((allowAll || addOneDReader) && tryHarder)
   {
-    readers_.push_back(Ref<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
+    readers_.push_back(QSharedPointer<Reader>(new zxing::oned::MultiFormatOneDReader(hints)));
   }
 #endif
 }
 
-Ref<Result> MultiFormatReader::decodeInternal(Ref<BinaryBitmap> image)
+QSharedPointer<Result> MultiFormatReader::decodeInternal(QSharedPointer<BinaryBitmap> image)
 {
   for (size_t i = 0; i < readers_.size(); i++)
   {

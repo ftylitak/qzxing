@@ -34,7 +34,7 @@ private:
 
 public:
   DataMatrixReader();
-  virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
   virtual ~DataMatrixReader();
 
 };

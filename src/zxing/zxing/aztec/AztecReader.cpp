@@ -37,17 +37,17 @@ AztecReader::AztecReader() : decoder_()
   // nothing
 }
 
-Ref<Result> AztecReader::decode(Ref<zxing::BinaryBitmap> image)
+QSharedPointer<Result> AztecReader::decode(QSharedPointer<zxing::BinaryBitmap> image)
 {
   Detector detector(image->getBlackMatrix());
 
-  Ref<AztecDetectorResult> detectorResult(detector.detect());
+  QSharedPointer<AztecDetectorResult> detectorResult(detector.detect());
 
-  QSharedPointer<std::vector<Ref<ResultPoint>>> points(detectorResult->getPoints());
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> points(detectorResult->getPoints());
 
-  Ref<DecoderResult> decoderResult(decoder_.decode(detectorResult));
+  QSharedPointer<DecoderResult> decoderResult(decoder_.decode(detectorResult));
 
-  Ref<Result> result(new Result(decoderResult->getText(),
+  QSharedPointer<Result> result(new Result(decoderResult->getText(),
                                 decoderResult->getRawBytes(),
                                 points,
                                 BarcodeFormat::AZTEC));
@@ -55,7 +55,7 @@ Ref<Result> AztecReader::decode(Ref<zxing::BinaryBitmap> image)
   return result;
 }
 
-Ref<Result> AztecReader::decode(Ref<BinaryBitmap> image, DecodeHints)
+QSharedPointer<Result> AztecReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints)
 {
   //cout << "decoding with hints not supported for aztec" << "\n" << flush;
   return this->decode(image);

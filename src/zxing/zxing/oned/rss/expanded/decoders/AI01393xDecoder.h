@@ -46,7 +46,7 @@ class AI01393xDecoder : public AI01decoder
     static const int FIRST_THREE_DIGITS_SIZE = 10;
 
 public:
-    AI01393xDecoder(Ref<BitArray> information);
+    AI01393xDecoder(QSharedPointer<BitArray> information);
 
     virtual String parseInformation() override;
 };

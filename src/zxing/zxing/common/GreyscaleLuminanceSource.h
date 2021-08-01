@@ -45,7 +45,7 @@ public:
     return true;
   }
 
-  Ref<LuminanceSource> rotateCounterClockwise() const;
+  QSharedPointer<LuminanceSource> rotateCounterClockwise() const;
 };
 
 }

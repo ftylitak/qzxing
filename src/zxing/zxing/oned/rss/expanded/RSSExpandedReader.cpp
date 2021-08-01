@@ -79,7 +79,7 @@ RSSExpandedReader::RSSExpandedReader()
 
 }
 
-Ref<Result> RSSExpandedReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints /*hints*/)
+QSharedPointer<Result> RSSExpandedReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints /*hints*/)
 {
     // Rows can start with even pattern in case in prev rows there where odd number of patters.
     // So lets try twice
@@ -102,7 +102,7 @@ void RSSExpandedReader::reset()
     m_rows.clear();
 }
 
-std::vector<ExpandedPair> RSSExpandedReader::decodeRow2pairs(int rowNumber, Ref<BitArray> row)
+std::vector<ExpandedPair> RSSExpandedReader::decodeRow2pairs(int rowNumber, QSharedPointer<BitArray> row)
 {
     bool done = false;
     while (!done) {
@@ -316,24 +316,24 @@ std::vector<ExpandedRow> RSSExpandedReader::getRows() const
     return m_rows;
 }
 
-Ref<Result> RSSExpandedReader::constructResult(std::vector<ExpandedPair> pairs)
+QSharedPointer<Result> RSSExpandedReader::constructResult(std::vector<ExpandedPair> pairs)
 {
-    Ref<BitArray> binary = BitArrayBuilder::buildBitArray(pairs);
+    QSharedPointer<BitArray> binary = BitArrayBuilder::buildBitArray(pairs);
 
     AbstractExpandedDecoder* decoder = AbstractExpandedDecoder::createDecoder(binary);
     String resultingString = decoder->parseInformation();
 
-    QSharedPointer<std::vector<Ref<ResultPoint>> > firstPoints = pairs[0].getFinderPattern().getResultPoints();
-    QSharedPointer<std::vector<Ref<ResultPoint>> > lastPoints  = pairs[pairs.size() - 1].getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > firstPoints = pairs[0].getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > lastPoints  = pairs[pairs.size() - 1].getFinderPattern().getResultPoints();
 
-    QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(4);
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(4);
     resultPoints[0] = firstPoints[0];
     resultPoints[1] = firstPoints[1];
     resultPoints[2] = lastPoints[0];
     resultPoints[3] = lastPoints[1];
 
-    return Ref<Result>(new Result(
-                           Ref<String>(new String(resultingString)),
+    return QSharedPointer<Result>(new Result(
+                           QSharedPointer<String>(new String(resultingString)),
                            nullptr,
                            resultPoints,
                            BarcodeFormat::RSS_EXPANDED
@@ -371,7 +371,7 @@ bool RSSExpandedReader::checkChecksum()
     return checkCharacterValue == checkCharacter.getValue();
 }
 
-int RSSExpandedReader::getNextSecondBar(Ref<BitArray> row, int initialPos)
+int RSSExpandedReader::getNextSecondBar(QSharedPointer<BitArray> row, int initialPos)
 {
     int currentPos;
     if (row->get(initialPos)) {
@@ -384,7 +384,7 @@ int RSSExpandedReader::getNextSecondBar(Ref<BitArray> row, int initialPos)
     return currentPos;
 }
 
-ExpandedPair RSSExpandedReader::retrieveNextPair(Ref<BitArray> row, std::vector<ExpandedPair>& previousPairs, int rowNumber)
+ExpandedPair RSSExpandedReader::retrieveNextPair(QSharedPointer<BitArray> row, std::vector<ExpandedPair>& previousPairs, int rowNumber)
 {
     bool isOddPattern  = previousPairs.size() % 2 == 0;
     if (m_startFromEven) {
@@ -423,7 +423,7 @@ ExpandedPair RSSExpandedReader::retrieveNextPair(Ref<BitArray> row, std::vector<
     return ExpandedPair(leftChar, rightChar, pattern);
 }
 
-void RSSExpandedReader::findNextPair(Ref<BitArray> row, std::vector<ExpandedPair> previousPairs, int forcedOffset)
+void RSSExpandedReader::findNextPair(QSharedPointer<BitArray> row, std::vector<ExpandedPair> previousPairs, int forcedOffset)
 {
     std::vector<int>& counters = getDecodeFinderCounters();
     counters[0] = 0;
@@ -493,7 +493,7 @@ void RSSExpandedReader::findNextPair(Ref<BitArray> row, std::vector<ExpandedPair
     throw NotFoundException();
 }
 
-FinderPattern RSSExpandedReader::parseFoundFinderPattern(Ref<BitArray> row, int rowNumber, bool oddPattern)
+FinderPattern RSSExpandedReader::parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool oddPattern)
 {
     // Actually we found elements 2-5.
     int firstCounter;
@@ -541,7 +541,7 @@ FinderPattern RSSExpandedReader::parseFoundFinderPattern(Ref<BitArray> row, int 
     return FinderPattern(value, {start, end}, start, end, rowNumber);
 }
 
-DataCharacter RSSExpandedReader::decodeDataCharacter(Ref<BitArray> row, FinderPattern pattern, bool isOddPattern, bool leftChar)
+DataCharacter RSSExpandedReader::decodeDataCharacter(QSharedPointer<BitArray> row, FinderPattern pattern, bool isOddPattern, bool leftChar)
 {
     std::vector<int>& counters = getDataCharacterCounters();
     for (size_t x = 0; x < counters.size(); x++) {

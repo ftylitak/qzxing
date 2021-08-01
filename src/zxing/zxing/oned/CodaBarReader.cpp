@@ -76,7 +76,7 @@ const int CodaBarReader::PADDING =
 CodaBarReader::CodaBarReader() 
   : counters(80, 0), counterLength(0) {}
 
-Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+QSharedPointer<Result> CodaBarReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/) {
 
   { // Arrays.fill(counters, 0);
     int size = int(counters.size());
@@ -154,13 +154,13 @@ Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   }
   float right = (float) runningCount;
 
-  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(2);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(2);
   resultPoints[0] =
-    Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =
-    Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
 
-  return Ref<Result>(new Result(Ref<String>(new String(decodeRowResult)),
+  return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(decodeRowResult)),
                                 QSharedPointer<std::vector<zxing::byte>>(),
                                 resultPoints,
                                 BarcodeFormat::CODABAR));
@@ -233,7 +233,7 @@ void CodaBarReader::validatePattern(int start)  {
  * uses our builtin "counters" member for storage.
  * @param row row to count from
  */
-void CodaBarReader::setCounters(Ref<BitArray> row)  {
+void CodaBarReader::setCounters(QSharedPointer<BitArray> row)  {
   counterLength = 0;
   // Start from the first white bit.
   int i = row->getNextUnset(0);

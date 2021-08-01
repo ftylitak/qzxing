@@ -44,55 +44,55 @@ MultiFormatOneDReader::MultiFormatOneDReader(DecodeHints hints) : readers()
       hints.containsFormat(BarcodeFormat::UPC_A) ||
       hints.containsFormat(BarcodeFormat::UPC_E))
   {
-    readers.push_back(Ref<OneDReader>(new MultiFormatUPCEANReader(hints)));
+    readers.push_back(QSharedPointer<OneDReader>(new MultiFormatUPCEANReader(hints)));
   }
   if (hints.containsFormat(BarcodeFormat::CODE_39))
   {
-    readers.push_back(Ref<OneDReader>(new Code39Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new Code39Reader()));
   }
   if (hints.containsFormat(BarcodeFormat::CODE_93))
   {
-    readers.push_back(Ref<OneDReader>(new Code93Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new Code93Reader()));
   }
   if (hints.containsFormat(BarcodeFormat::CODE_128))
   {
-    readers.push_back(Ref<OneDReader>(new Code128Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new Code128Reader()));
   }
   if (hints.containsFormat(BarcodeFormat::ITF))
   {
-    readers.push_back(Ref<OneDReader>(new ITFReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new ITFReader()));
   }
   if (hints.containsFormat(BarcodeFormat::CODABAR))
   {
-    readers.push_back(Ref<OneDReader>(new CodaBarReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new CodaBarReader()));
   }
 
   if (hints.containsFormat(BarcodeFormat::RSS_14))
   {
-    readers.push_back(Ref<OneDReader>(new RSS14Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new RSS14Reader()));
   }
 
   if (hints.containsFormat(BarcodeFormat::RSS_EXPANDED))
   {
-    readers.push_back(Ref<OneDReader>(new RSSExpandedReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new RSSExpandedReader()));
   }
 
   if (readers.size() == 0)
   {
-    readers.push_back(Ref<OneDReader>(new MultiFormatUPCEANReader(hints)));
-    readers.push_back(Ref<OneDReader>(new Code39Reader()));
-    readers.push_back(Ref<OneDReader>(new CodaBarReader()));
-    readers.push_back(Ref<OneDReader>(new Code93Reader()));
-    readers.push_back(Ref<OneDReader>(new Code128Reader()));
-    readers.push_back(Ref<OneDReader>(new ITFReader()));
-    readers.push_back(Ref<OneDReader>(new RSS14Reader()));
-    readers.push_back(Ref<OneDReader>(new RSSExpandedReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new MultiFormatUPCEANReader(hints)));
+    readers.push_back(QSharedPointer<OneDReader>(new Code39Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new CodaBarReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new Code93Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new Code128Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new ITFReader()));
+    readers.push_back(QSharedPointer<OneDReader>(new RSS14Reader()));
+    readers.push_back(QSharedPointer<OneDReader>(new RSSExpandedReader()));
   }
 }
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatOneDReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints)
+QSharedPointer<Result> MultiFormatOneDReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints)
 {
   int size = int(readers.size());
   for (int i = 0; i < size; i++)
@@ -100,7 +100,7 @@ Ref<Result> MultiFormatOneDReader::decodeRow(int rowNumber, Ref<BitArray> row, z
     OneDReader *reader = readers[i];
     try
     {
-      Ref<Result> result = reader->decodeRow(rowNumber, row, hints);
+      QSharedPointer<Result> result = reader->decodeRow(rowNumber, row, hints);
       return result;
     }
     catch (ReaderException const &re)

@@ -21,7 +21,7 @@ namespace multi {
 
 MultipleBarcodeReader::~MultipleBarcodeReader() { }
 
-std::vector<Ref<Result> > MultipleBarcodeReader::decodeMultiple(Ref<BinaryBitmap> image) {
+std::vector<QSharedPointer<Result> > MultipleBarcodeReader::decodeMultiple(QSharedPointer<BinaryBitmap> image) {
   return decodeMultiple(image, DecodeHints::DEFAULT_HINT);
 }
 

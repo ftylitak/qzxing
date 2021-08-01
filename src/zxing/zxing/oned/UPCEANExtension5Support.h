@@ -29,7 +29,7 @@ namespace oned {
 class UPCEANExtension5Support
 {
 public:
-    static Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, int extStartRangeBegin, int extStartRangeEnd);
+    static QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, int extStartRangeBegin, int extStartRangeEnd);
 };
 
 }

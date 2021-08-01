@@ -82,7 +82,7 @@ ITFReader::ITFReader() : narrowLineWidth(-1)
 {
 }
 
-Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/)
+QSharedPointer<Result> ITFReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/)
 {
   // Find out where the Middle section (payload) starts & ends
 
@@ -91,7 +91,7 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
 
   std::string result;
   decodeMiddle(row, startRange[1], endRange[0], result);
-  Ref<String> resultString(new String(result));
+  QSharedPointer<String> resultString(new String(result));
 
   QSharedPointer<std::vector<int>> allowedLengths;
   // Java hints stuff missing
@@ -118,12 +118,12 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
     throw FormatException();
   }
 
-  QSharedPointer<std::vector<Ref<ResultPoint>>> resultPoints(2);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(2);
   resultPoints[0] =
-      Ref<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
+      QSharedPointer<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
   resultPoints[1] =
-      Ref<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
-  return Ref<Result>(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::ITF));
+      QSharedPointer<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
+  return QSharedPointer<Result>(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::ITF));
 }
 
 /**
@@ -132,7 +132,7 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
  * @param resultString {@link StringBuffer} to append decoded chars to
  * @throws ReaderException if decoding could not complete successfully
  */
-void ITFReader::decodeMiddle(Ref<BitArray> row,
+void ITFReader::decodeMiddle(QSharedPointer<BitArray> row,
                              int payloadStart,
                              int payloadEnd,
                              std::string &resultString)
@@ -179,7 +179,7 @@ void ITFReader::decodeMiddle(Ref<BitArray> row,
  *         'start block'
  * @throws ReaderException
  */
-ITFReader::Range ITFReader::decodeStart(Ref<BitArray> row)
+ITFReader::Range ITFReader::decodeStart(QSharedPointer<BitArray> row)
 {
   int endStart = skipWhiteSpace(row);
   Range startPattern = findGuardPattern(row, endStart, START_PATTERN);
@@ -202,7 +202,7 @@ ITFReader::Range ITFReader::decodeStart(Ref<BitArray> row)
  * @throws ReaderException
  */
 
-ITFReader::Range ITFReader::decodeEnd(Ref<BitArray> row)
+ITFReader::Range ITFReader::decodeEnd(QSharedPointer<BitArray> row)
 {
   // For convenience, reverse the row and then
   // search from 'the start' for the end block
@@ -241,7 +241,7 @@ ITFReader::Range ITFReader::decodeEnd(Ref<BitArray> row)
  * @param startPattern index into row of the start or end pattern.
  * @throws ReaderException if the quiet zone cannot be found, a ReaderException is thrown.
  */
-void ITFReader::validateQuietZone(Ref<BitArray> row, int startPattern)
+void ITFReader::validateQuietZone(QSharedPointer<BitArray> row, int startPattern)
 {
   int quietCount = this->narrowLineWidth * 10; // expect to find this many pixels of quiet zone
 
@@ -267,7 +267,7 @@ void ITFReader::validateQuietZone(Ref<BitArray> row, int startPattern)
  * @return index of the first black line.
  * @throws ReaderException Throws exception if no black lines are found in the row
  */
-int ITFReader::skipWhiteSpace(Ref<BitArray> row)
+int ITFReader::skipWhiteSpace(QSharedPointer<BitArray> row)
 {
   int width = row->getSize();
   int endStart = row->getNextSet(0);
@@ -287,7 +287,7 @@ int ITFReader::skipWhiteSpace(Ref<BitArray> row)
  *         ints
  * @throws ReaderException if pattern is not found
  */
-ITFReader::Range ITFReader::findGuardPattern(Ref<BitArray> row,
+ITFReader::Range ITFReader::findGuardPattern(QSharedPointer<BitArray> row,
                                              int rowOffset,
                                              vector<int> const &pattern)
 {

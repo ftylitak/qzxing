@@ -92,7 +92,7 @@ Code39Reader::Code39Reader(bool usingCheckDigit_, bool extendedMode_) {
   init(usingCheckDigit_, extendedMode_);
 }
 
-Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+QSharedPointer<Result> Code39Reader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/) {
   std::vector<int>& theCounters (counters);
   { // Arrays.fill(counters, 0);
     int size = int(theCounters.size());
@@ -154,28 +154,28 @@ Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
     throw NotFoundException();
   }
   
-  Ref<String> resultString;
+  QSharedPointer<String> resultString;
   if (extendedMode) {
     resultString = decodeExtended(result);
   } else {
-    resultString = Ref<String>(new String(result));
+    resultString = QSharedPointer<String>(new String(result));
   }
 
   float left = (float) (start[1] + start[0]) / 2.0f;
   float right = lastStart + lastPatternSize / 2.0f;
 
-  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints (2);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints (2);
   resultPoints[0] = 
-    Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =
-    Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+    QSharedPointer<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
   
-  return Ref<Result>(
+  return QSharedPointer<Result>(
     new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::CODE_39)
     );
 }
 
-vector<int> Code39Reader::findAsteriskPattern(Ref<BitArray> row, vector<int>& counters){
+vector<int> Code39Reader::findAsteriskPattern(QSharedPointer<BitArray> row, vector<int>& counters){
   int width = row->getSize();
   int rowOffset = row->getNextSet(0);
 
@@ -271,7 +271,7 @@ char Code39Reader::patternToChar(int pattern){
   throw ReaderException("");
 }
 
-Ref<String> Code39Reader::decodeExtended(std::string encoded){
+QSharedPointer<String> Code39Reader::decodeExtended(std::string encoded){
   int length = int(encoded.length());
   std::string tmpDecoded;
   for (int i = 0; i < length; i++) {
@@ -324,6 +324,6 @@ Ref<String> Code39Reader::decodeExtended(std::string encoded){
       tmpDecoded.append(1, c);
     }
   }
-  Ref<String> decoded(new String(tmpDecoded));
+  QSharedPointer<String> decoded(new String(tmpDecoded));
   return decoded;
 }

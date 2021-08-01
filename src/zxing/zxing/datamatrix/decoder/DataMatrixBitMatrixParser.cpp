@@ -30,7 +30,7 @@ int BitMatrixParser::copyBit(size_t x, size_t y, int versionBits) {
   return bitMatrix_->get(int(x), int(y)) ? (versionBits << 1) | 0x1 : versionBits << 1;
 }
 
-BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) : bitMatrix_(NULL),
+BitMatrixParser::BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix) : bitMatrix_(NULL),
                                                              parsedVersion_(NULL),
                                                              readBitMatrix_(NULL) {
   size_t dimension = bitMatrix->getHeight();
@@ -42,7 +42,7 @@ BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix) : bitMatrix_(NULL),
   readBitMatrix_ = new BitMatrix(bitMatrix_->getWidth(), bitMatrix_->getHeight());
 }
 
-Ref<Version> BitMatrixParser::readVersion(Ref<BitMatrix> bitMatrix) {
+QSharedPointer<Version> BitMatrixParser::readVersion(QSharedPointer<BitMatrix> bitMatrix) {
   if (parsedVersion_ != 0) {
     return parsedVersion_;
   }
@@ -50,7 +50,7 @@ Ref<Version> BitMatrixParser::readVersion(Ref<BitMatrix> bitMatrix) {
   int numRows = bitMatrix->getHeight();
   int numColumns = bitMatrix->getWidth();
 
-  Ref<Version> version = parsedVersion_->getVersionForDimensions(numRows, numColumns);
+  QSharedPointer<Version> version = parsedVersion_->getVersionForDimensions(numRows, numColumns);
   if (version != 0) {
     return version;
   }
@@ -319,7 +319,7 @@ int BitMatrixParser::readCorner4(int numRows, int numColumns) {
     return currentByte;
   }
 
-Ref<BitMatrix> BitMatrixParser::extractDataRegion(Ref<BitMatrix> bitMatrix) {
+QSharedPointer<BitMatrix> BitMatrixParser::extractDataRegion(QSharedPointer<BitMatrix> bitMatrix) {
     int symbolSizeRows = parsedVersion_->getSymbolSizeRows();
     int symbolSizeColumns = parsedVersion_->getSymbolSizeColumns();
 
@@ -336,7 +336,7 @@ Ref<BitMatrix> BitMatrixParser::extractDataRegion(Ref<BitMatrix> bitMatrix) {
     int sizeDataRegionRow = numDataRegionsRow * dataRegionSizeRows;
     int sizeDataRegionColumn = numDataRegionsColumn * dataRegionSizeColumns;
 
-    Ref<BitMatrix> bitMatrixWithoutAlignment(new BitMatrix(sizeDataRegionColumn, sizeDataRegionRow));
+    QSharedPointer<BitMatrix> bitMatrixWithoutAlignment(new BitMatrix(sizeDataRegionColumn, sizeDataRegionRow));
     for (int dataRegionRow = 0; dataRegionRow < numDataRegionsRow; ++dataRegionRow) {
       int dataRegionRowOffset = dataRegionRow * dataRegionSizeRows;
       for (int dataRegionColumn = 0; dataRegionColumn < numDataRegionsColumn; ++dataRegionColumn) {

@@ -29,8 +29,8 @@ using zxing::aztec::AztecDetectorResult;
 using zxing::BitMatrix;
 using zxing::ResultPoint;
 
-AztecDetectorResult::AztecDetectorResult(Ref<BitMatrix> bits,
-                                         QSharedPointer<std::vector<Ref<ResultPoint>>> points,
+AztecDetectorResult::AztecDetectorResult(QSharedPointer<BitMatrix> bits,
+                                         QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> points,
                                          bool compact,
                                          int nbDatablocks,
                                          int nbLayers)

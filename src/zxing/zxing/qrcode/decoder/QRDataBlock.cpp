@@ -39,7 +39,7 @@ QSharedPointer<std::vector<zxing::byte>> DataBlock::getCodewords() {
 }
 
 
-std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, Ref<Version>version,
+std::vector<QSharedPointer<DataBlock> > DataBlock::getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, QSharedPointer<Version>version,
     ErrorCorrectionLevel &ecLevel) {
 
 
@@ -53,7 +53,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(QSharedPointer<std::vector
   vector<ECB*> ecBlockArray = ecBlocks.getECBlocks();
 
   // Now establish DataBlocks of the appropriate size and number of data codewords
-  std::vector<Ref<DataBlock> > result(totalBlocks);
+  std::vector<QSharedPointer<DataBlock> > result(totalBlocks);
   int numResultBlocks = 0;
   for (size_t j = 0; j < ecBlockArray.size(); j++) {
     ECB *ecBlock = ecBlockArray[j];
@@ -61,7 +61,7 @@ std::vector<Ref<DataBlock> > DataBlock::getDataBlocks(QSharedPointer<std::vector
       int numDataCodewords = ecBlock->getDataCodewords();
       int numBlockCodewords = ecBlocks.getECCodewordsPerBloc() + numDataCodewords;
       QSharedPointer<std::vector<zxing::byte>> buffer(numBlockCodewords);
-      Ref<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
+      QSharedPointer<DataBlock> blockRef(new DataBlock(numDataCodewords, buffer));
       result[numResultBlocks++] = blockRef;
     }
   }

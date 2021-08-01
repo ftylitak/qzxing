@@ -12,13 +12,13 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-AbstractExpandedDecoder::AbstractExpandedDecoder(Ref<BitArray> information)
+AbstractExpandedDecoder::AbstractExpandedDecoder(QSharedPointer<BitArray> information)
     : m_information(information), m_generalDecoder(GeneralAppIdDecoder(information))
 {
 
 }
 
-Ref<BitArray> AbstractExpandedDecoder::getInformation() const
+QSharedPointer<BitArray> AbstractExpandedDecoder::getInformation() const
 {
     return m_information;
 }
@@ -28,7 +28,7 @@ GeneralAppIdDecoder AbstractExpandedDecoder::getGeneralDecoder()
     return m_generalDecoder;
 }
 
-AbstractExpandedDecoder *AbstractExpandedDecoder::createDecoder(Ref<BitArray> information)
+AbstractExpandedDecoder *AbstractExpandedDecoder::createDecoder(QSharedPointer<BitArray> information)
 {
     if (information->get(1)) {
         return new AI01AndOtherAIs(information);

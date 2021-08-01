@@ -69,10 +69,10 @@ QSharedPointer<std::vector<zxing::byte>> GreyscaleLuminanceSource::getMatrix() c
   return result;
 }
 
-Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {
+QSharedPointer<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {
   // Intentionally flip the left, top, width, and height arguments as
   // needed. dataWidth and dataHeight are always kept unrotated.
-  Ref<LuminanceSource> result ( 
+  QSharedPointer<LuminanceSource> result ( 
       new GreyscaleRotatedLuminanceSource(greyData_,
                                           dataWidth_, dataHeight_,
                                           top_, left_, getHeight(), getWidth()));

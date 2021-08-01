@@ -345,7 +345,7 @@ void QZXing::setDecoder(const uint &hint)
  * \param bitMatrix
  * \return
  */
-QRectF getTagRect(const QSharedPointer<std::vector<Ref<ResultPoint>> > &resultPoints, const Ref<BitMatrix> &bitMatrix)
+QRectF getTagRect(const QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > &resultPoints, const QSharedPointer<BitMatrix> &bitMatrix)
 {
     if (resultPoints->size() < 2)
         return QRectF();
@@ -355,7 +355,7 @@ QRectF getTagRect(const QSharedPointer<std::vector<Ref<ResultPoint>> > &resultPo
     // 1D barcode
     if (resultPoints->size() == 2) {
         WhiteRectangleDetector detector(bitMatrix);
-        std::vector<Ref<ResultPoint> > resultRectPoints = detector.detect();
+        std::vector<QSharedPointer<ResultPoint> > resultRectPoints = detector.detect();
 
         if (resultRectPoints.size() != 4)
             return QRectF();
@@ -414,7 +414,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
     QElapsedTimer t;
     t.start();
     processingTime = -1;
-    Ref<Result> res;
+    QSharedPointer<Result> res;
     emit decodingStarted();
 
     if(image.isNull())
@@ -434,10 +434,10 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
     QString errorMessage = "Unknown";
 
-    Ref<LuminanceSource> imageRefOriginal = Ref<LuminanceSource>(ciw);
-    Ref<LuminanceSource> imageRef = imageRefOriginal;
-    Ref<GlobalHistogramBinarizer> binz;
-    Ref<BinaryBitmap> bb;
+    QSharedPointer<LuminanceSource> imageRefOriginal = QSharedPointer<LuminanceSource>(ciw);
+    QSharedPointer<LuminanceSource> imageRef = imageRefOriginal;
+    QSharedPointer<GlobalHistogramBinarizer> binz;
+    QSharedPointer<BinaryBitmap> bb;
 
     size_t numberOfIterations = 0;
     if (imageSourceFilter & SourceFilter_ImageNormal)
@@ -451,10 +451,10 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         try {
             if((numberOfIterations == 1 && (imageSourceFilter & SourceFilter_ImageInverted)) || i == 1) {
                 //qDebug() << "Selecting Inverted Luminance source";
-                imageRef = Ref<LuminanceSource>((LuminanceSource*)(new InvertedLuminanceSource(imageRefOriginal)));
+                imageRef = QSharedPointer<LuminanceSource>((LuminanceSource*)(new InvertedLuminanceSource(imageRefOriginal)));
             }
-            binz = Ref<GlobalHistogramBinarizer>( new GlobalHistogramBinarizer(imageRef) );
-            bb = Ref<BinaryBitmap>( new BinaryBitmap(binz) );
+            binz = QSharedPointer<GlobalHistogramBinarizer>( new GlobalHistogramBinarizer(imageRef) );
+            bb = QSharedPointer<BinaryBitmap>( new BinaryBitmap(binz) );
 
             DecodeHints hints(static_cast<DecodeHintType>(enabledDecoders));
 
@@ -493,13 +493,13 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             }
 
             if (!lastDecodeOperationSucceded_&& tryHarder_ && (tryHarderType & TryHarderBehaviour_Rotate) && bb->isRotateSupported()) {
-                Ref<BinaryBitmap> bbTmp = bb;
+                QSharedPointer<BinaryBitmap> bbTmp = bb;
 
                 //qDebug() << "Decoding phase 2, rotate: starting";
 
                 hints.setTryHarder(true);
                 for (int i=0; (i<3 && !lastDecodeOperationSucceded_); i++) {
-                    Ref<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
+                    QSharedPointer<BinaryBitmap> rotatedImage(bbTmp->rotateCounterClockwise());
                     bbTmp = rotatedImage;
 
                     try {
@@ -670,7 +670,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 #ifdef ENABLE_ENCODER_QR_CODE
         case EncoderFormat_QR_CODE:
         {
-            Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
+            QSharedPointer<qrcode::QRCode> barcode = qrcode::Encoder::encode(
                         data.toStdWString(),
                         encoderConfig.errorCorrectionLevel == EncodeErrorCorrectionLevel_H ?
                             qrcode::ErrorCorrectionLevel::H :
@@ -680,7 +680,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
                                       qrcode::ErrorCorrectionLevel::M :
                                       qrcode::ErrorCorrectionLevel::L)));
 
-            Ref<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
+            QSharedPointer<qrcode::ByteMatrix> bytesRef = barcode->getMatrix();
             const std::vector< std::vector <zxing::byte> >& bytes = bytesRef->getArray();
             const int width = int(bytesRef->getWidth()) + (encoderConfig.border ? 2 : 0);
             const int height = int(bytesRef->getHeight()) + (encoderConfig.border ? 2 : 0);

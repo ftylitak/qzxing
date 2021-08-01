@@ -26,7 +26,7 @@
 namespace zxing {
 namespace qrcode {
 
-class ErrorCorrectionLevel : public Counted {
+class ErrorCorrectionLevel  {
 private:
   int ordinal_;
   int bits_;

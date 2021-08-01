@@ -29,9 +29,9 @@
 namespace zxing {
 namespace qrcode {
 
-class DataMask : public Counted {
+class DataMask  {
 private:
-  static std::vector<Ref<DataMask> > DATA_MASKS;
+  static std::vector<QSharedPointer<DataMask> > DATA_MASKS;
 
 protected:
 

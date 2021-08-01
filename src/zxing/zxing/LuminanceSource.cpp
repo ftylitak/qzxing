@@ -34,7 +34,7 @@ bool LuminanceSource::isCropSupported() const
   return false;
 }
 
-Ref<LuminanceSource> LuminanceSource::crop(int, int, int, int) const
+QSharedPointer<LuminanceSource> LuminanceSource::crop(int, int, int, int) const
 {
   throw IllegalArgumentException("This luminance source does not support cropping.");
 }
@@ -44,12 +44,12 @@ bool LuminanceSource::isRotateSupported() const
   return false;
 }
 
-Ref<LuminanceSource> LuminanceSource::rotateCounterClockwise() const
+QSharedPointer<LuminanceSource> LuminanceSource::rotateCounterClockwise() const
 {
   throw IllegalArgumentException("This luminance source does not support rotation.");
 }
 
-Ref<zxing::LuminanceSource> LuminanceSource::rotateCounterClockwise45() const
+QSharedPointer<zxing::LuminanceSource> LuminanceSource::rotateCounterClockwise45() const
 {
   throw IllegalArgumentException("This luminance source does not support rotation 45.");
 }
@@ -88,7 +88,7 @@ LuminanceSource::operator std::string() const
   return oss.str();
 }
 
-Ref<LuminanceSource> LuminanceSource::invert() const
+QSharedPointer<LuminanceSource> LuminanceSource::invert() const
 {
 
   // N.B.: this only works because we use counted objects with the
@@ -100,5 +100,5 @@ Ref<LuminanceSource> LuminanceSource::invert() const
   // needed. And, FWIW, that has nasty semantics in the face of
   // exceptions during construction.
 
-  return Ref<LuminanceSource>(new InvertedLuminanceSource(Ref<LuminanceSource>(const_cast<LuminanceSource *>(this))));
+  return QSharedPointer<LuminanceSource>(new InvertedLuminanceSource(QSharedPointer<LuminanceSource>(const_cast<LuminanceSource *>(this))));
 }

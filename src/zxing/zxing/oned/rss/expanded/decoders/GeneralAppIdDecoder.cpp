@@ -5,7 +5,7 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-GeneralAppIdDecoder::GeneralAppIdDecoder(Ref<BitArray> information)
+GeneralAppIdDecoder::GeneralAppIdDecoder(QSharedPointer<BitArray> information)
     : m_information(information),
       m_buffer("")
 {
@@ -76,7 +76,7 @@ int GeneralAppIdDecoder::extractNumericValueFromBitArray(int pos, int bits)
     return extractNumericValueFromBitArray(m_information, pos, bits);
 }
 
-int GeneralAppIdDecoder::extractNumericValueFromBitArray(Ref<BitArray> information, int pos, int bits)
+int GeneralAppIdDecoder::extractNumericValueFromBitArray(QSharedPointer<BitArray> information, int pos, int bits)
 {
     int value = 0;
     for (int i = 0; i < bits; ++i) {

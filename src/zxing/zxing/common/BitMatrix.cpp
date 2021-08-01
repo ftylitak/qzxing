@@ -59,8 +59,8 @@ void BitMatrix::rotate180()
 {
     int width = getWidth();
     int height = getHeight();
-    Ref<BitArray> topRow( new BitArray(width) );
-    Ref<BitArray> bottomRow( new BitArray(width) );
+    QSharedPointer<BitArray> topRow( new BitArray(width) );
+    QSharedPointer<BitArray> bottomRow( new BitArray(width) );
     for (int i = 0; i < (height+1) / 2; i++) {
         getRow(i, topRow);
         bottomRow = getRow(height - 1 - i, bottomRow);
@@ -91,7 +91,7 @@ void BitMatrix::setRegion(int left, int top, int width, int height) {
     }
 }
 
-Ref<BitArray> BitMatrix::getRow(int y, Ref<BitArray> row) {
+QSharedPointer<BitArray> BitMatrix::getRow(int y, QSharedPointer<BitArray> row) {
     if (row.empty() || row->getSize() < width) {
         row = new BitArray(width);
     }
@@ -102,7 +102,7 @@ Ref<BitArray> BitMatrix::getRow(int y, Ref<BitArray> row) {
     return row;
 }
 
-void BitMatrix::setRow(int y, Ref<zxing::BitArray> row)
+void BitMatrix::setRow(int y, QSharedPointer<zxing::BitArray> row)
 {
     if (y < 0 || y >= bits->size() ||
             row->getSize() != width)

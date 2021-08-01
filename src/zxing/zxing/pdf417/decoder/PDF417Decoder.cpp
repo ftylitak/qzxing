@@ -40,7 +40,7 @@ using zxing::DecodeHints;
 const int Decoder::MAX_ERRORS = 3;
 const int Decoder::MAX_EC_CODEWORDS = 512;
 
-Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits, DecodeHints const& hints) {
+QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits, DecodeHints const& hints) {
   (void)hints;
   // Construct a parser to read the data codewords and error-correction level
   BitMatrixParser parser(bits);
@@ -105,7 +105,7 @@ void Decoder::correctErrors(QSharedPointer<std::vector<int>> codewords,
     throw FormatException("PDF:Decoder:correctErrors: Too many errors or EC Codewords corrupted");
   }
 
-  Ref<ErrorCorrection> errorCorrection(new ErrorCorrection);
+  QSharedPointer<ErrorCorrection> errorCorrection(new ErrorCorrection);
   errorCorrection->decode(codewords, numECCodewords, erasures);
 
   // 2012-06-27 HFN if, despite of error correction, there are still codewords with invalid

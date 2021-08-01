@@ -27,7 +27,7 @@ class QRCodeMultiReader: public zxing::qrcode::QRCodeReader, public MultipleBarc
   public:
     QRCodeMultiReader();
     virtual ~QRCodeMultiReader();
-    virtual std::vector<Ref<Result> > decodeMultiple(Ref<BinaryBitmap> image, DecodeHints hints);
+    virtual std::vector<QSharedPointer<Result> > decodeMultiple(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }

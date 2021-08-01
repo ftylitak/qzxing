@@ -52,7 +52,7 @@ private:
 
 public:
 
-  Ref<DecoderResult> decode(Ref<BitMatrix> bits, DecodeHints const &hints);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<BitMatrix> bits, DecodeHints const &hints);
 };
 
 }

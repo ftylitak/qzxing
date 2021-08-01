@@ -34,13 +34,13 @@ using zxing::IllegalStateException;
 // VC++
 using zxing::GenericGF;
 
-ReedSolomonDecoder::ReedSolomonDecoder(Ref<GenericGF> field_) : field(field_) {}
+ReedSolomonDecoder::ReedSolomonDecoder(QSharedPointer<GenericGF> field_) : field(field_) {}
 
 ReedSolomonDecoder::~ReedSolomonDecoder() {
 }
 
 void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int twoS) {
-  Ref<GenericGFPoly> poly(new GenericGFPoly(field, received));
+  QSharedPointer<GenericGFPoly> poly(new GenericGFPoly(field, received));
   QSharedPointer<std::vector<int>> syndromeCoefficients(twoS);
   bool noError = true;
   for (int i = 0; i < twoS; i++) {
@@ -53,11 +53,11 @@ void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int t
   if (noError) {
     return;
   }
-  Ref<GenericGFPoly> syndrome(new GenericGFPoly(field, syndromeCoefficients));
-  vector<Ref<GenericGFPoly> > sigmaOmega =
+  QSharedPointer<GenericGFPoly> syndrome(new GenericGFPoly(field, syndromeCoefficients));
+  vector<QSharedPointer<GenericGFPoly> > sigmaOmega =
     runEuclideanAlgorithm(field->buildMonomial(twoS, 1), syndrome, twoS);
-  Ref<GenericGFPoly> sigma = sigmaOmega[0];
-  Ref<GenericGFPoly> omega = sigmaOmega[1];
+  QSharedPointer<GenericGFPoly> sigma = sigmaOmega[0];
+  QSharedPointer<GenericGFPoly> omega = sigmaOmega[1];
   QSharedPointer<std::vector<int>> errorLocations = findErrorLocations(sigma);
   QSharedPointer<std::vector<int>> errorMagitudes = findErrorMagnitudes(omega, errorLocations);
   for (int i = 0; i < errorLocations->size(); i++) {
@@ -69,25 +69,25 @@ void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int t
   }
 }
 
-vector<Ref<GenericGFPoly> > ReedSolomonDecoder::runEuclideanAlgorithm(Ref<GenericGFPoly> a,
-                                                                      Ref<GenericGFPoly> b,
+vector<QSharedPointer<GenericGFPoly> > ReedSolomonDecoder::runEuclideanAlgorithm(QSharedPointer<GenericGFPoly> a,
+                                                                      QSharedPointer<GenericGFPoly> b,
                                                                       int R) {
   // Assume a's degree is >= b's
   if (a->getDegree() < b->getDegree()) {
-    Ref<GenericGFPoly> tmp = a;
+    QSharedPointer<GenericGFPoly> tmp = a;
     a = b;
     b = tmp;
   }
 
-  Ref<GenericGFPoly> rLast(a);
-  Ref<GenericGFPoly> r(b);
-  Ref<GenericGFPoly> tLast(field->getZero());
-  Ref<GenericGFPoly> t(field->getOne());
+  QSharedPointer<GenericGFPoly> rLast(a);
+  QSharedPointer<GenericGFPoly> r(b);
+  QSharedPointer<GenericGFPoly> tLast(field->getZero());
+  QSharedPointer<GenericGFPoly> t(field->getOne());
 
   // Run Euclidean algorithm until r's degree is less than R/2
   while (r->getDegree() >= R / 2) {
-    Ref<GenericGFPoly> rLastLast(rLast);
-    Ref<GenericGFPoly> tLastLast(tLast);
+    QSharedPointer<GenericGFPoly> rLastLast(rLast);
+    QSharedPointer<GenericGFPoly> tLastLast(tLast);
     rLast = r;
     tLast = t;
 
@@ -97,7 +97,7 @@ vector<Ref<GenericGFPoly> > ReedSolomonDecoder::runEuclideanAlgorithm(Ref<Generi
       throw ReedSolomonException("r_{i-1} was zero");
     }
     r = rLastLast;
-    Ref<GenericGFPoly> q = field->getZero();
+    QSharedPointer<GenericGFPoly> q = field->getZero();
     int denominatorLeadingTerm = rLast->getCoefficient(rLast->getDegree());
     int dltInverse = field->inverse(denominatorLeadingTerm);
     while (r->getDegree() >= rLast->getDegree() && !r->isZero()) {
@@ -120,15 +120,15 @@ vector<Ref<GenericGFPoly> > ReedSolomonDecoder::runEuclideanAlgorithm(Ref<Generi
   }
 
   int inverse = field->inverse(sigmaTildeAtZero);
-  Ref<GenericGFPoly> sigma(t->multiply(inverse));
-  Ref<GenericGFPoly> omega(r->multiply(inverse));
-  vector<Ref<GenericGFPoly> > result(2);
+  QSharedPointer<GenericGFPoly> sigma(t->multiply(inverse));
+  QSharedPointer<GenericGFPoly> omega(r->multiply(inverse));
+  vector<QSharedPointer<GenericGFPoly> > result(2);
   result[0] = sigma;
   result[1] = omega;
   return result;
 }
 
-QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLocator) {
+QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorLocations(QSharedPointer<GenericGFPoly> errorLocator) {
   // This is a direct application of Chien's search
   int numErrors = errorLocator->getDegree();
   if (numErrors == 1) { // shortcut
@@ -150,7 +150,7 @@ QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorLocations(Ref<Gene
   return result;
 }
 
-QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorMagnitudes(Ref<GenericGFPoly> errorEvaluator, QSharedPointer<std::vector<int>> errorLocations) {
+QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorMagnitudes(QSharedPointer<GenericGFPoly> errorEvaluator, QSharedPointer<std::vector<int>> errorLocations) {
   // This is directly applying Forney's Formula
   int s = errorLocations->size();
   QSharedPointer<std::vector<int>> result(new std::vector<int>(s));

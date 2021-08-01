@@ -28,7 +28,7 @@
 
 namespace zxing {
 
-class BitArray : public Counted {
+class BitArray  {
 public:
     static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
@@ -86,9 +86,9 @@ public:
 
     class Reverse {
     private:
-        Ref<BitArray> array;
+        QSharedPointer<BitArray> array;
     public:
-        Reverse(Ref<BitArray> array);
+        Reverse(QSharedPointer<BitArray> array);
         ~Reverse();
     };
 

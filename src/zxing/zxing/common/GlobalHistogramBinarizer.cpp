@@ -38,7 +38,7 @@ const int LUMINANCE_SHIFT = 8 - LUMINANCE_BITS;
 const int LUMINANCE_BUCKETS = 1 << LUMINANCE_BITS;
 const QSharedPointer<std::vector<zxing::byte>> EMPTY (0);
 
-GlobalHistogramBinarizer::GlobalHistogramBinarizer(Ref<LuminanceSource> source) 
+GlobalHistogramBinarizer::GlobalHistogramBinarizer(QSharedPointer<LuminanceSource> source) 
     : Binarizer(source), luminances(EMPTY), buckets(LUMINANCE_BUCKETS) {}
 
 GlobalHistogramBinarizer::~GlobalHistogramBinarizer() {}
@@ -53,7 +53,7 @@ void GlobalHistogramBinarizer::initArrays(int luminanceSize) {
     memset(&buckets[0], 0, sizeof(int) * LUMINANCE_BUCKETS);
 }
 
-Ref<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, Ref<BitArray> row) {
+QSharedPointer<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, QSharedPointer<BitArray> row) {
     // std::cerr << "gbr " << y << std::endl;
     LuminanceSource& source = *getLuminanceSource();
     int width = source.getWidth();
@@ -95,11 +95,11 @@ Ref<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, Ref<BitArray> row) {
     return row;
 }
 
-Ref<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
+QSharedPointer<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
     LuminanceSource& source = *getLuminanceSource();
     int width = source.getWidth();
     int height = source.getHeight();
-    Ref<BitMatrix> matrix(new BitMatrix(width, height));
+    QSharedPointer<BitMatrix> matrix(new BitMatrix(width, height));
 
     // Quickly calculates the histogram by sampling four rows from the image.
     // This proved to be more robust on the blackbox tests than sampling a
@@ -207,8 +207,8 @@ int GlobalHistogramBinarizer::estimateBlackPoint(QSharedPointer<std::vector<int>
     return bestValley << LUMINANCE_SHIFT;
 }
 
-Ref<Binarizer> GlobalHistogramBinarizer::createBinarizer(Ref<LuminanceSource> source) {
-    return Ref<Binarizer> (new GlobalHistogramBinarizer(source));
+QSharedPointer<Binarizer> GlobalHistogramBinarizer::createBinarizer(QSharedPointer<LuminanceSource> source) {
+    return QSharedPointer<Binarizer> (new GlobalHistogramBinarizer(source));
 }
 
 }

@@ -33,7 +33,7 @@ namespace zxing {
  * @author srowen@google.com (Sean Owen)
  * @author christian.brunschen@gmail.com (Christian Brunschen)
  */
-class BitSource : public Counted {
+class BitSource  {
 private:
   QSharedPointer<std::vector<zxing::byte>> bytes_;
   int byteOffset_;

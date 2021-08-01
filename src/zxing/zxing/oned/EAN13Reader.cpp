@@ -31,7 +31,7 @@ namespace
 
 EAN13Reader::EAN13Reader() : decodeMiddleCounters(4, 0) {}
 
-int EAN13Reader::decodeMiddle(Ref<BitArray> row,
+int EAN13Reader::decodeMiddle(QSharedPointer<BitArray> row,
                               Range const &startRange,
                               std::string &resultString)
 {
