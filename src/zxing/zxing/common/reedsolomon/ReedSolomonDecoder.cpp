@@ -132,11 +132,11 @@ ArrayRef<int> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLoc
   // This is a direct application of Chien's search
   int numErrors = errorLocator->getDegree();
   if (numErrors == 1) { // shortcut
-    ArrayRef<int> result(new Array<int>(1));
+    ArrayRef<int> result(new std::vector<int>(1));
     result[0] = errorLocator->getCoefficient(1);
     return result;
   }
-  ArrayRef<int> result(new Array<int>(numErrors));
+  ArrayRef<int> result(new std::vector<int>(numErrors));
   int e = 0;
   for (size_t i = 1; i < field->getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
@@ -153,7 +153,7 @@ ArrayRef<int> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLoc
 ArrayRef<int> ReedSolomonDecoder::findErrorMagnitudes(Ref<GenericGFPoly> errorEvaluator, ArrayRef<int> errorLocations) {
   // This is directly applying Forney's Formula
   int s = errorLocations->size();
-  ArrayRef<int> result(new Array<int>(s));
+  ArrayRef<int> result(new std::vector<int>(s));
   for (int i = 0; i < s; i++) {
     int xiInverse = field->inverse(errorLocations[i]);
     int denominator = 1;

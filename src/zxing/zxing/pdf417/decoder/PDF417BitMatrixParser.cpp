@@ -72,9 +72,9 @@ ArrayRef<int> BitMatrixParser::readCodewords()
   //int width = bitMatrix_->getWidth();
   int height = bitMatrix_->getHeight();
 
-  erasures_ = new Array<int>(MAX_CW_CAPACITY);
+  erasures_ = new std::vector<int>(MAX_CW_CAPACITY);
 
-  ArrayRef<int> codewords (new Array<int>(MAX_CW_CAPACITY));
+  ArrayRef<int> codewords (new std::vector<int>(MAX_CW_CAPACITY));
   int next = 0;
   int rowNumber = 0;
   for (int i = 0; i < height; i++) {
@@ -187,7 +187,7 @@ ArrayRef<int> BitMatrixParser::trimArray(ArrayRef<int> array, int size)
     throw IllegalArgumentException("BitMatrixParser::trimArray: negative size!");
   }
   // 2012-10-12 hfn don't throw "NoErrorException" when size == 0
-  ArrayRef<int> a = new Array<int>(size);
+  ArrayRef<int> a = new std::vector<int>(size);
   for (int i = 0; i < size; i++) {
     a[i] = array[i];
   }

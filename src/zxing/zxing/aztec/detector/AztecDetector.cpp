@@ -167,7 +167,7 @@ Detector::getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints) {
       !isValid(targetdx, targetdy)) {
     throw ReaderException("matrix extends over image bounds");
   }
-  Array< Ref<ResultPoint> >* array = new Array< Ref<ResultPoint> >();
+  std::vector< Ref<ResultPoint> >* array = new std::vector< Ref<ResultPoint> >();
   vector< Ref<ResultPoint> >& returnValue (array->values());
   returnValue.push_back(Ref<ResultPoint>(new ResultPoint(float(targetax), float(targetay))));
   returnValue.push_back(Ref<ResultPoint>(new ResultPoint(float(targetbx), float(targetby))));
@@ -190,7 +190,7 @@ void Detector::correctParameterData(Ref<zxing::BitArray> parameterData, bool com
             
   int numECCodewords = numCodewords - numDataCodewords;
             
-  ArrayRef<int> parameterWords(new Array<int>(numCodewords));
+  ArrayRef<int> parameterWords(new std::vector<int>(numCodewords));
             
   int codewordSize = 4;
   for (int i = 0; i < numCodewords; i++) {

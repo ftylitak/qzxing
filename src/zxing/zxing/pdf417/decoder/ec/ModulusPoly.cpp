@@ -45,18 +45,18 @@ ModulusPoly::ModulusPoly(ModulusGF& field, ArrayRef<int> coefficients)
     }
     if (firstNonZero == coefficientsLength) {
 	    coefficientsLength = field_.getZero()->getCoefficients()->size();
-      coefficients_.reset(new Array<int> (coefficientsLength));
+      coefficients_.reset(new std::vector<int> (coefficientsLength));
       *coefficients_ = *(field_.getZero()->getCoefficients());
     } else {
       ArrayRef<int> c(coefficients);
       coefficientsLength -= firstNonZero;
-      coefficients_.reset(new Array<int> (coefficientsLength));
+      coefficients_.reset(new std::vector<int> (coefficientsLength));
       for (int i = 0; i < coefficientsLength; i++) {
         coefficients_[i] = c[i + firstNonZero];
       }
       /*
         coefficientsLength -= firstNonZero;
-        coefficients_.reset(new Array<int>(coefficientsLength - firstNonZero));
+        coefficients_.reset(new std::vector<int>(coefficientsLength - firstNonZero));
         for (int i = 0; i < coefficientsLength; i++) {
         coefficients_[i] = coefficients[i + firstNonZero];
         }
@@ -135,7 +135,7 @@ Ref<ModulusPoly> ModulusPoly::add(Ref<ModulusPoly> other) {
     smallerCoefficients = largerCoefficients;
     largerCoefficients = temp;
   }
-  ArrayRef<int>  sumDiff (new Array<int>(largerCoefficients->size()));
+  ArrayRef<int>  sumDiff (new std::vector<int>(largerCoefficients->size()));
   int lengthDiff = largerCoefficients->size() - smallerCoefficients->size();
   // Copy high-order terms only found in higher-degree polynomial's coefficients
 	for (int i = 0; i < lengthDiff; i++) {
@@ -171,7 +171,7 @@ Ref<ModulusPoly> ModulusPoly::multiply(Ref<ModulusPoly> other) {
   int aLength = aCoefficients->size();
   ArrayRef<int> bCoefficients = other->coefficients_;
   int bLength = bCoefficients->size();
-  ArrayRef<int> product (new Array<int>(aLength + bLength - 1));
+  ArrayRef<int> product (new std::vector<int>(aLength + bLength - 1));
   for (i = 0; i < aLength; i++) {
     int aCoeff = aCoefficients[i];
     for (j = 0; j < bLength; j++) {
@@ -183,7 +183,7 @@ Ref<ModulusPoly> ModulusPoly::multiply(Ref<ModulusPoly> other) {
 
 Ref<ModulusPoly> ModulusPoly::negative() {
   int size = coefficients_->size();
-  ArrayRef<int> negativeCoefficients (new Array<int>(size));
+  ArrayRef<int> negativeCoefficients (new std::vector<int>(size));
   for (int i = 0; i < size; i++) {
     negativeCoefficients[i] = field_.subtract(0, coefficients_[i]);
   }
@@ -198,7 +198,7 @@ Ref<ModulusPoly> ModulusPoly::multiply(int scalar) {
     return Ref<ModulusPoly>(this);
   }
   int size = coefficients_->size();
-  ArrayRef<int> product( new Array<int>(size));
+  ArrayRef<int> product( new std::vector<int>(size));
   for (int i = 0; i < size; i++) {
     product[i] = field_.multiply(coefficients_[i], scalar);
   }
@@ -213,7 +213,7 @@ Ref<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coefficient) {
     return field_.getZero();
   }
   int size = coefficients_->size();
-  ArrayRef<int> product (new Array<int>(size + degree));
+  ArrayRef<int> product (new std::vector<int>(size + degree));
   for (int i = 0; i < size; i++) {
     product[i] = field_.multiply(coefficients_[i], coefficient);
   }

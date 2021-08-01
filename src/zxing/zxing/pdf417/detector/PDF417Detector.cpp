@@ -151,7 +151,7 @@ ArrayRef< Ref<ResultPoint> > Detector::findVertices(Ref<BitMatrix> matrix, int r
   ArrayRef< Ref<ResultPoint> > result(16);
   bool found = false;
 
-  ArrayRef<int> counters(new Array<int>(START_PATTERN_LENGTH));
+  ArrayRef<int> counters(new std::vector<int>(START_PATTERN_LENGTH));
 
   // Top Left
   for (int i = 0; i < height; i += rowStep) {
@@ -179,7 +179,7 @@ ArrayRef< Ref<ResultPoint> > Detector::findVertices(Ref<BitMatrix> matrix, int r
     }
   }
 
-  counters = new Array<int>(STOP_PATTERN_LENGTH);
+  counters = new std::vector<int>(STOP_PATTERN_LENGTH);
 
   // Top right
   if (found) { // Found the Bottom Left vertex
@@ -221,7 +221,7 @@ ArrayRef< Ref<ResultPoint> > Detector::findVertices180(Ref<BitMatrix> matrix, in
   ArrayRef< Ref<ResultPoint> > result(16);
   bool found = false;
   
-  ArrayRef<int> counters = new Array<int>(START_PATTERN_REVERSE_LENGTH);
+  ArrayRef<int> counters = new std::vector<int>(START_PATTERN_REVERSE_LENGTH);
   
   // Top Left
   for (int i = height - 1; i > 0; i -= rowStep) {
@@ -251,7 +251,7 @@ ArrayRef< Ref<ResultPoint> > Detector::findVertices180(Ref<BitMatrix> matrix, in
     }
   }
 
-  counters = new Array<int>(STOP_PATTERN_REVERSE_LENGTH);
+  counters = new std::vector<int>(STOP_PATTERN_REVERSE_LENGTH);
 
   // Top Right
   if (found) { // Found the Bottom Left vertex
@@ -317,7 +317,7 @@ ArrayRef<int> Detector::findGuardPattern(Ref<BitMatrix> matrix,
       if (counterPosition == patternLength - 1) {
         if (patternMatchVariance(counters, pattern,
                                  MAX_INDIVIDUAL_VARIANCE) < MAX_AVG_VARIANCE) {
-          ArrayRef<int> result = new Array<int>(2);
+          ArrayRef<int> result = new std::vector<int>(2);
           result[0] = patternStart;
           result[1] = x;
           return result;

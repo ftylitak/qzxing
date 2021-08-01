@@ -366,8 +366,8 @@ int DecodedBitStreamParser::byteCompaction(int mode,
     // is not a multiple of 6
     int count = 0;
     int64_t value = 0;
-    ArrayRef<zxing::byte> decodedData = new Array<zxing::byte>(6);
-    ArrayRef<int> byteCompactedCodewords = new Array<int>(6);
+    ArrayRef<zxing::byte> decodedData = new std::vector<zxing::byte>(6);
+    ArrayRef<int> byteCompactedCodewords = new std::vector<int>(6);
     bool end = false;
     int nextCode = codewords[codeIndex++];
     while ((codeIndex < codewords[0]) && !end) {
@@ -442,7 +442,7 @@ int DecodedBitStreamParser::byteCompaction(int mode,
       if ((count % 5 == 0) && (count > 0)) {
         // Decode every 5 codewords
         // Convert to Base 256
-        ArrayRef<zxing::byte> decodedData = new Array<zxing::byte>(6);
+        ArrayRef<zxing::byte> decodedData = new std::vector<zxing::byte>(6);
         for (int j = 0; j < 6; ++j) {
           decodedData[5 - j] = (zxing::byte) (value & 0xFF);
           value >>= 8;
@@ -470,7 +470,7 @@ int DecodedBitStreamParser::numericCompaction(ArrayRef<int> codewords,
   int count = 0;
   bool end = false;
   
-  ArrayRef<int> numericCodewords = new Array<int>(MAX_NUMERIC_CODEWORDS);
+  ArrayRef<int> numericCodewords = new std::vector<int>(MAX_NUMERIC_CODEWORDS);
   
   while (codeIndex < codewords[0] && !end) {
     int code = codewords[codeIndex++];

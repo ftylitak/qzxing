@@ -40,8 +40,8 @@ ModulusGF ModulusGF::PDF417_GF(929,3);
  
 ModulusGF::ModulusGF(int modulus, int generator)
     : modulus_(modulus) {
-	expTable_ = new Array<int>(modulus_);
-	logTable_ = new Array<int>(modulus_);
+	expTable_ = new std::vector<int>(modulus_);
+	logTable_ = new std::vector<int>(modulus_);
   int x = 1,i;
   for (i = 0; i < modulus_; i++) {
     expTable_[i] = x;
@@ -51,7 +51,7 @@ ModulusGF::ModulusGF(int modulus, int generator)
     logTable_[expTable_[i]] = i;
   }
   // logTable[0] == 0 but this should never be used
-	ArrayRef<int>aZero(new Array<int>(1)),aOne(new Array<int>(1));
+	ArrayRef<int>aZero(new std::vector<int>(1)),aOne(new std::vector<int>(1));
 	aZero[0]=0;aOne[0]=1;
   zero_ = new ModulusPoly(*this, aZero);
   one_ = new ModulusPoly(*this, aOne);
@@ -74,7 +74,7 @@ Ref<ModulusPoly> ModulusGF::buildMonomial(int degree, int coefficient)
     return zero_;
   }
 	int nCoefficients = degree + 1;
-  ArrayRef<int> coefficients (new Array<int>(nCoefficients));
+  ArrayRef<int> coefficients (new std::vector<int>(nCoefficients));
   coefficients[0] = coefficient;
 	Ref<ModulusPoly> result(new ModulusPoly(*this,coefficients));
   return result;

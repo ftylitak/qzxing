@@ -45,7 +45,7 @@ const int N = 1; // Pixed width of a narrow line
 
 const int DEFAULT_ALLOWED_LENGTHS_[] =
 { 48, 44, 24, 20, 18, 16, 14, 12, 10, 8, 6 };
-const ArrayRef<int> DEFAULT_ALLOWED_LENGTHS (new Array<int>(VECTOR_INIT(DEFAULT_ALLOWED_LENGTHS_)));
+const ArrayRef<int> DEFAULT_ALLOWED_LENGTHS (new std::vector<int>(VECTOR_INIT(DEFAULT_ALLOWED_LENGTHS_)));
 
 /**
  * Start/end guard pattern.
