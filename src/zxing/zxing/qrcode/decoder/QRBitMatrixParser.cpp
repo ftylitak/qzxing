@@ -116,7 +116,7 @@ Ref<Version>BitMatrixParser::readVersion() {
   throw ReaderException("Could not decode version");
 }
 
-ArrayRef<zxing::byte> BitMatrixParser::readCodewords() {
+QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
   Ref<FormatInformation> formatInfo = readFormatInformation();
   Ref<Version>version = readVersion();
 
@@ -138,7 +138,7 @@ ArrayRef<zxing::byte> BitMatrixParser::readCodewords() {
   //	cout << *functionPattern << endl;
 
   bool readingUp = true;
-  ArrayRef<zxing::byte> result(version->getTotalCodewords());
+  QSharedPointer<std::vector<zxing::byte>> result(version->getTotalCodewords());
   int resultOffset = 0;
   int currentByte = 0;
   int bitsRead = 0;

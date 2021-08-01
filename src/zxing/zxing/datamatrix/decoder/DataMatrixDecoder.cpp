@@ -34,7 +34,7 @@ using zxing::DecoderResult;
 //using zxing::datamatrix::DecodedBitStreamParser;
 
 // VC++
-using zxing::ArrayRef;
+
 using zxing::BitMatrix;
 
 namespace zxing {
@@ -42,9 +42,9 @@ namespace datamatrix {
 
 Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
-void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCodewords) {
+void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
-  ArrayRef<int> codewordInts(numCodewords);
+  QSharedPointer<std::vector<int>> codewordInts(numCodewords);
   for (int i = 0; i < numCodewords; i++) {
     codewordInts[i] = codewordBytes[i] & 0xff;
   }
@@ -68,7 +68,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   Ref<Version>version = parser.readVersion(bits);
 
   // Read codewords
-  ArrayRef<zxing::byte> codewords(parser.readCodewords());
+  QSharedPointer<std::vector<zxing::byte>> codewords(parser.readCodewords());
   // Separate into data blocks
   std::vector<Ref<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
 
@@ -79,12 +79,12 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<zxing::byte> resultBytes(totalBytes);
+  QSharedPointer<std::vector<zxing::byte>> resultBytes(totalBytes);
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
     Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<zxing::byte> codewordBytes = dataBlock->getCodewords();
+    QSharedPointer<std::vector<zxing::byte>> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {

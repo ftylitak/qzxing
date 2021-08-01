@@ -39,11 +39,11 @@ class ModulusPoly: public Counted {
 
   private:
 	ModulusGF &field_;
-	ArrayRef<int> coefficients_;
+	QSharedPointer<std::vector<int>> coefficients_;
   public:
-	ModulusPoly(ModulusGF& field, ArrayRef<int> coefficients);
+	ModulusPoly(ModulusGF& field, QSharedPointer<std::vector<int>> coefficients);
 	~ModulusPoly();
-	ArrayRef<int> getCoefficients();
+	QSharedPointer<std::vector<int>> getCoefficients();
 	int getDegree();
 	bool isZero();
 	int getCoefficient(int degree);

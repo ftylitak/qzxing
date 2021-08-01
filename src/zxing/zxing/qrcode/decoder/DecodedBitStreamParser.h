@@ -51,7 +51,7 @@ private:
                                 std::string& result,
                                 int count,
                                 common::CharacterSetECI const *currentCharacterSetECI,
-                                ArrayRef<ArrayRef<zxing::byte> > &byteSegments,
+                                QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > &byteSegments,
                                 Hashtable const& hints);
   static void decodeAlphanumericSegment(Ref<BitSource> bits, std::string &result, int count, bool fc1InEffect);
   static void decodeNumericSegment(Ref<BitSource> bits, std::string &result, int count);
@@ -60,7 +60,7 @@ private:
   static void append(std::string &ost, std::string const& in, const char *src);
 
 public:
-  static Ref<DecoderResult> decode(ArrayRef<zxing::byte> bytes,
+  static Ref<DecoderResult> decode(QSharedPointer<std::vector<zxing::byte>> bytes,
                                    Ref<Version>version,
                                    ErrorCorrectionLevel const& ecLevel,
                                    Hashtable const& hints);

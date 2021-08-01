@@ -36,7 +36,7 @@ Ref<Result> DataMatrixReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
   (void)hints;
   Detector detector(image->getBlackMatrix());
   Ref<DetectorResult> detectorResult(detector.detect());
-  ArrayRef< Ref<ResultPoint> > points(detectorResult->getPoints());
+  QSharedPointer<std::vector<Ref<ResultPoint>> > points(detectorResult->getPoints());
 
 
   Ref<DecoderResult> decoderResult(decoder_.decode(detectorResult->getBits()));

@@ -51,7 +51,7 @@ const char DecodedBitStreamParser::TEXT_SHIFT3_SET_CHARS[] = {
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', (zxing::byte) 127
 };
 
-Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes) {
+Ref<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<zxing::byte>> bytes) {
   Ref<BitSource> bits(new BitSource(bytes));
   ostringstream result;
   ostringstream resultTrailer;
@@ -87,7 +87,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes) {
   if (resultTrailer.str().size() > 0) {
     result << resultTrailer.str();
   }
-  ArrayRef<zxing::byte> rawBytes(bytes);
+  QSharedPointer<std::vector<zxing::byte>> rawBytes(bytes);
   Ref<String> text(new String(result.str()));
   return Ref<DecoderResult>(new DecoderResult(rawBytes, text));
 }

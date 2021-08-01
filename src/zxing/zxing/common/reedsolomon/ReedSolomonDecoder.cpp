@@ -26,7 +26,7 @@
 
 using std::vector;
 using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::ReedSolomonDecoder;
 using zxing::GenericGFPoly;
 using zxing::IllegalStateException;
@@ -39,9 +39,9 @@ ReedSolomonDecoder::ReedSolomonDecoder(Ref<GenericGF> field_) : field(field_) {}
 ReedSolomonDecoder::~ReedSolomonDecoder() {
 }
 
-void ReedSolomonDecoder::decode(ArrayRef<int> received, int twoS) {
+void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int twoS) {
   Ref<GenericGFPoly> poly(new GenericGFPoly(field, received));
-  ArrayRef<int> syndromeCoefficients(twoS);
+  QSharedPointer<std::vector<int>> syndromeCoefficients(twoS);
   bool noError = true;
   for (int i = 0; i < twoS; i++) {
     int eval = poly->evaluateAt(field->exp(i + field->getGeneratorBase()));
@@ -58,8 +58,8 @@ void ReedSolomonDecoder::decode(ArrayRef<int> received, int twoS) {
     runEuclideanAlgorithm(field->buildMonomial(twoS, 1), syndrome, twoS);
   Ref<GenericGFPoly> sigma = sigmaOmega[0];
   Ref<GenericGFPoly> omega = sigmaOmega[1];
-  ArrayRef<int> errorLocations = findErrorLocations(sigma);
-  ArrayRef<int> errorMagitudes = findErrorMagnitudes(omega, errorLocations);
+  QSharedPointer<std::vector<int>> errorLocations = findErrorLocations(sigma);
+  QSharedPointer<std::vector<int>> errorMagitudes = findErrorMagnitudes(omega, errorLocations);
   for (int i = 0; i < errorLocations->size(); i++) {
     int position = received->size() - 1 - field->log(errorLocations[i]);
     if (position < 0) {
@@ -128,15 +128,15 @@ vector<Ref<GenericGFPoly> > ReedSolomonDecoder::runEuclideanAlgorithm(Ref<Generi
   return result;
 }
 
-ArrayRef<int> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLocator) {
+QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLocator) {
   // This is a direct application of Chien's search
   int numErrors = errorLocator->getDegree();
   if (numErrors == 1) { // shortcut
-    ArrayRef<int> result(new std::vector<int>(1));
+    QSharedPointer<std::vector<int>> result(new std::vector<int>(1));
     result[0] = errorLocator->getCoefficient(1);
     return result;
   }
-  ArrayRef<int> result(new std::vector<int>(numErrors));
+  QSharedPointer<std::vector<int>> result(new std::vector<int>(numErrors));
   int e = 0;
   for (size_t i = 1; i < field->getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
@@ -150,10 +150,10 @@ ArrayRef<int> ReedSolomonDecoder::findErrorLocations(Ref<GenericGFPoly> errorLoc
   return result;
 }
 
-ArrayRef<int> ReedSolomonDecoder::findErrorMagnitudes(Ref<GenericGFPoly> errorEvaluator, ArrayRef<int> errorLocations) {
+QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorMagnitudes(Ref<GenericGFPoly> errorEvaluator, QSharedPointer<std::vector<int>> errorLocations) {
   // This is directly applying Forney's Formula
   int s = errorLocations->size();
-  ArrayRef<int> result(new std::vector<int>(s));
+  QSharedPointer<std::vector<int>> result(new std::vector<int>(s));
   for (int i = 0; i < s; i++) {
     int xiInverse = field->inverse(errorLocations[i]);
     int denominator = 1;

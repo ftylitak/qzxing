@@ -28,49 +28,57 @@
 #include <zxing/ReaderException.h>
 #include <zxing/NotFoundException.h>
 
-using zxing::Ref;
 using zxing::Result;
 using zxing::oned::MultiFormatOneDReader;
 using zxing::oned::rss::RSS14Reader;
 using zxing::oned::rss::RSSExpandedReader;
 
 // VC++
-using zxing::DecodeHints;
 using zxing::BitArray;
+using zxing::DecodeHints;
 
-MultiFormatOneDReader::MultiFormatOneDReader(DecodeHints hints) : readers() {
+MultiFormatOneDReader::MultiFormatOneDReader(DecodeHints hints) : readers()
+{
   if (hints.containsFormat(BarcodeFormat::EAN_13) ||
       hints.containsFormat(BarcodeFormat::EAN_8) ||
       hints.containsFormat(BarcodeFormat::UPC_A) ||
-      hints.containsFormat(BarcodeFormat::UPC_E)) {
+      hints.containsFormat(BarcodeFormat::UPC_E))
+  {
     readers.push_back(Ref<OneDReader>(new MultiFormatUPCEANReader(hints)));
   }
-  if (hints.containsFormat(BarcodeFormat::CODE_39)) {
+  if (hints.containsFormat(BarcodeFormat::CODE_39))
+  {
     readers.push_back(Ref<OneDReader>(new Code39Reader()));
   }
-  if (hints.containsFormat(BarcodeFormat::CODE_93)) {
+  if (hints.containsFormat(BarcodeFormat::CODE_93))
+  {
     readers.push_back(Ref<OneDReader>(new Code93Reader()));
   }
-  if (hints.containsFormat(BarcodeFormat::CODE_128)) {
+  if (hints.containsFormat(BarcodeFormat::CODE_128))
+  {
     readers.push_back(Ref<OneDReader>(new Code128Reader()));
   }
-  if (hints.containsFormat(BarcodeFormat::ITF)) {
+  if (hints.containsFormat(BarcodeFormat::ITF))
+  {
     readers.push_back(Ref<OneDReader>(new ITFReader()));
   }
-  if (hints.containsFormat(BarcodeFormat::CODABAR)) {
+  if (hints.containsFormat(BarcodeFormat::CODABAR))
+  {
     readers.push_back(Ref<OneDReader>(new CodaBarReader()));
   }
 
-  if (hints.containsFormat(BarcodeFormat::RSS_14)) {
+  if (hints.containsFormat(BarcodeFormat::RSS_14))
+  {
     readers.push_back(Ref<OneDReader>(new RSS14Reader()));
   }
 
-
-  if (hints.containsFormat(BarcodeFormat::RSS_EXPANDED)) {
+  if (hints.containsFormat(BarcodeFormat::RSS_EXPANDED))
+  {
     readers.push_back(Ref<OneDReader>(new RSSExpandedReader()));
   }
 
-  if (readers.size() == 0) {
+  if (readers.size() == 0)
+  {
     readers.push_back(Ref<OneDReader>(new MultiFormatUPCEANReader(hints)));
     readers.push_back(Ref<OneDReader>(new Code39Reader()));
     readers.push_back(Ref<OneDReader>(new CodaBarReader()));
@@ -84,14 +92,19 @@ MultiFormatOneDReader::MultiFormatOneDReader(DecodeHints hints) : readers() {
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatOneDReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
+Ref<Result> MultiFormatOneDReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints)
+{
   int size = int(readers.size());
-  for (int i = 0; i < size; i++) {
-    OneDReader* reader = readers[i];
-    try {
+  for (int i = 0; i < size; i++)
+  {
+    OneDReader *reader = readers[i];
+    try
+    {
       Ref<Result> result = reader->decodeRow(rowNumber, row, hints);
       return result;
-    } catch (ReaderException const& re) {
+    }
+    catch (ReaderException const &re)
+    {
       (void)re;
       // continue
     }

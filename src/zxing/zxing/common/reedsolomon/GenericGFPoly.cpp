@@ -25,14 +25,14 @@
 #include <zxing/common/IllegalArgumentException.h>
 
 using zxing::GenericGFPoly;
-using zxing::ArrayRef;
+
 using zxing::Ref;
 
 // VC++
 using zxing::GenericGF;
 
 GenericGFPoly::GenericGFPoly(GenericGF *field,
-                             ArrayRef<int> coefficients)
+                             QSharedPointer<std::vector<int>> coefficients)
   :  field_(field) {
   if (coefficients->size() == 0) {
     throw IllegalArgumentException("need coefficients");
@@ -47,7 +47,7 @@ GenericGFPoly::GenericGFPoly(GenericGF *field,
     if (firstNonZero == coefficientsLength) {
       coefficients_ = field->getZero()->getCoefficients();
     } else {
-      coefficients_ = ArrayRef<int>(coefficientsLength-firstNonZero);
+      coefficients_ = QSharedPointer<std::vector<int>>(coefficientsLength-firstNonZero);
       for (int i = 0; i < (int)coefficients_->size(); i++) {
         coefficients_[i] = coefficients[i + firstNonZero];
       }
@@ -57,7 +57,7 @@ GenericGFPoly::GenericGFPoly(GenericGF *field,
   }
 }
   
-ArrayRef<int> GenericGFPoly::getCoefficients() {
+QSharedPointer<std::vector<int>> GenericGFPoly::getCoefficients() {
   return coefficients_;
 }
   
@@ -106,15 +106,15 @@ Ref<GenericGFPoly> GenericGFPoly::addOrSubtract(Ref<zxing::GenericGFPoly> other)
     return Ref<GenericGFPoly>(this);
   }
     
-  ArrayRef<int> smallerCoefficients = coefficients_;
-  ArrayRef<int> largerCoefficients = other->getCoefficients();
+  QSharedPointer<std::vector<int>> smallerCoefficients = coefficients_;
+  QSharedPointer<std::vector<int>> largerCoefficients = other->getCoefficients();
   if (smallerCoefficients->size() > largerCoefficients->size()) {
-    ArrayRef<int> temp = smallerCoefficients;
+    QSharedPointer<std::vector<int>> temp = smallerCoefficients;
     smallerCoefficients = largerCoefficients;
     largerCoefficients = temp;
   }
     
-  ArrayRef<int> sumDiff(largerCoefficients->size());
+  QSharedPointer<std::vector<int>> sumDiff(largerCoefficients->size());
   int lengthDiff = largerCoefficients->size() - smallerCoefficients->size();
   // Copy high-order terms only found in higher-degree polynomial's coefficients
   for (int i = 0; i < lengthDiff; i++) {
@@ -138,13 +138,13 @@ Ref<GenericGFPoly> GenericGFPoly::multiply(Ref<zxing::GenericGFPoly> other) {
     return field_->getZero();
   }
     
-  ArrayRef<int> aCoefficients = coefficients_;
+  QSharedPointer<std::vector<int>> aCoefficients = coefficients_;
   int aLength = aCoefficients->size();
     
-  ArrayRef<int> bCoefficients = other->getCoefficients();
+  QSharedPointer<std::vector<int>> bCoefficients = other->getCoefficients();
   int bLength = bCoefficients->size();
     
-  ArrayRef<int> product(aLength + bLength - 1);
+  QSharedPointer<std::vector<int>> product(aLength + bLength - 1);
   for (int i = 0; i < aLength; i++) {
     int aCoeff = aCoefficients[i];
     for (int j = 0; j < bLength; j++) {
@@ -164,7 +164,7 @@ Ref<GenericGFPoly> GenericGFPoly::multiply(int scalar) {
     return Ref<GenericGFPoly>(this);
   }
   int size = coefficients_->size();
-  ArrayRef<int> product(size);
+  QSharedPointer<std::vector<int>> product(size);
   for (int i = 0; i < size; i++) {
     product[i] = field_->multiply(coefficients_[i], scalar);
   }
@@ -179,7 +179,7 @@ Ref<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int coefficient
     return field_->getZero();
   }
   int size = coefficients_->size();
-  ArrayRef<int> product(size+degree);
+  QSharedPointer<std::vector<int>> product(size+degree);
   for (int i = 0; i < size; i++) {
     product[i] = field_->multiply(coefficients_[i], coefficient);
   }

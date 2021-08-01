@@ -46,9 +46,9 @@ private:
   static const int MAX_ERRORS;
   static const int MAX_EC_CODEWORDS;
 
-  void correctErrors(ArrayRef<int> codewords,
-		ArrayRef<int> erasures, int numECCodewords);
-  static void verifyCodewordCount(ArrayRef<int> codewords, int numECCodewords);
+  void correctErrors(QSharedPointer<std::vector<int>> codewords,
+		QSharedPointer<std::vector<int>> erasures, int numECCodewords);
+  static void verifyCodewordCount(QSharedPointer<std::vector<int>> codewords, int numECCodewords);
 
 public:
 

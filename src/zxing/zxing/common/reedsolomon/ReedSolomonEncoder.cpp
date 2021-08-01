@@ -9,7 +9,7 @@ namespace zxing {
 ReedSolomonEncoder::ReedSolomonEncoder(Ref<GenericGF> field) :
     field_(field), cachedGenerators_()
 {
-    ArrayRef<int> arrayRef(1); //will this work?
+    QSharedPointer<std::vector<int>> arrayRef(1); //will this work?
     arrayRef[0] = 1;
     Ref< GenericGFPoly > tmpGeneratorRef(new GenericGFPoly(field, arrayRef));
     cachedGenerators_.push_back(tmpGeneratorRef);
@@ -21,7 +21,7 @@ Ref<GenericGFPoly> ReedSolomonEncoder::buildGenerator(int degree)
         Ref<GenericGFPoly> lastGenerator = cachedGenerators_.at(cachedGenerators_.size() - 1);
         for (int d = int(cachedGenerators_.size()); d <= degree; d++)
         {
-            ArrayRef<int> arrayRef(2); //will this work?
+            QSharedPointer<std::vector<int>> arrayRef(2); //will this work?
             arrayRef[0] = 1;
             arrayRef[1] = field_->exp(d - 1 + field_->getGeneratorBase());
             Ref<GenericGFPoly> tmpGFRef(new GenericGFPoly(field_, arrayRef));
@@ -48,7 +48,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
         throw Exception("No data bytes provided");
     }
     Ref<GenericGFPoly> generator = buildGenerator(ecBytes);
-    ArrayRef<int> infoCoefficients(dataBytes);
+    QSharedPointer<std::vector<int>> infoCoefficients(dataBytes);
 
     //to-do optimize the following loop
     for(int i=0; i< dataBytes; i++)
@@ -57,7 +57,7 @@ void ReedSolomonEncoder::encode(std::vector<zxing::byte> &toEncode, int ecBytes)
     Ref<GenericGFPoly> info(new GenericGFPoly(field_, infoCoefficients));
     info = info->multiplyByMonomial(ecBytes, 1);
     Ref<GenericGFPoly> remainder = info->divide(generator)[1];
-    ArrayRef<int> coefficients = remainder->getCoefficients();
+    QSharedPointer<std::vector<int>> coefficients = remainder->getCoefficients();
     int numZeroCoefficients = ecBytes - coefficients->size();
     for (int i = 0; i < numZeroCoefficients; i++) {
         toEncode[size_t(dataBytes + i)] = 0;

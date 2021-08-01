@@ -43,7 +43,7 @@ public:
   BitMatrixParser(Ref<BitMatrix> bitMatrix);
   Ref<FormatInformation> readFormatInformation();
   Ref<Version>readVersion();
-  ArrayRef<zxing::byte> readCodewords();
+  QSharedPointer<std::vector<zxing::byte>> readCodewords();
   void remask();
   void setMirror(boolean mirror);
   void mirror();

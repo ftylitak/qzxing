@@ -45,7 +45,7 @@ public:
 
     std::vector<int> &getStartEnd();
 
-    ArrayRef<Ref<ResultPoint> > &getResultPoints();
+    QSharedPointer<std::vector<Ref<ResultPoint>> > &getResultPoints();
 
     bool equals(const FinderPattern& other) const;
 
@@ -56,7 +56,7 @@ public:
 private:
     int m_value;
     std::vector<int> m_startEnd;
-    ArrayRef< Ref<ResultPoint> > m_resultPoints;
+    QSharedPointer<std::vector<Ref<ResultPoint>> > m_resultPoints;
 
 };
 

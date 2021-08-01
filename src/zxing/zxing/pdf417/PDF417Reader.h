@@ -34,7 +34,7 @@ class PDF417Reader : public Reader {
   decoder::Decoder decoder;
 			
   static Ref<BitMatrix> extractPureBits(Ref<BitMatrix> image);
-  static int moduleSize(ArrayRef<int> leftTopBlack, Ref<BitMatrix> image);
+  static int moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, Ref<BitMatrix> image);
   static int findPatternStart(int x, int y, Ref<BitMatrix> image);
   static int findPatternEnd(int x, int y, Ref<BitMatrix> image);
 

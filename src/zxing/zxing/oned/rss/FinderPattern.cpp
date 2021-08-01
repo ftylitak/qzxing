@@ -8,7 +8,7 @@ FinderPattern::FinderPattern(int value, std::vector<int> startEnd, int start, in
     : m_value(value),
       m_startEnd(startEnd)
 {
-    ArrayRef< Ref<ResultPoint> > resultPoints(2);
+    QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(2);
     resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(start, rowNumber));
     resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(end, rowNumber));
     m_resultPoints = resultPoints;
@@ -31,7 +31,7 @@ std::vector<int>& FinderPattern::getStartEnd()
     return m_startEnd;
 }
 
-ArrayRef<Ref<ResultPoint> >& FinderPattern::getResultPoints()
+QSharedPointer<std::vector<Ref<ResultPoint>> >& FinderPattern::getResultPoints()
 {
     return m_resultPoints;
 }

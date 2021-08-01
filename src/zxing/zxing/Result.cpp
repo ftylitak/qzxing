@@ -23,7 +23,7 @@
 
 using zxing::Result;
 using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::String;
 using zxing::ResultPoint;
 
@@ -33,8 +33,8 @@ using zxing::BarcodeFormat;
 namespace zxing {
 
 Result::Result(Ref<String> text,
-               ArrayRef<zxing::byte> rawBytes,
-               ArrayRef< Ref<ResultPoint> > resultPoints,
+               QSharedPointer<std::vector<zxing::byte>> rawBytes,
+               QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints,
                BarcodeFormat format, const std::string &charSet,
                ResultMetadata metadata) :
   text_(text), rawBytes_(rawBytes), resultPoints_(resultPoints), format_(format), charSet_(charSet), metadata_(metadata) {
@@ -47,15 +47,15 @@ Ref<String> Result::getText() {
   return text_;
 }
 
-ArrayRef<zxing::byte> Result::getRawBytes() {
+QSharedPointer<std::vector<zxing::byte>> Result::getRawBytes() {
   return rawBytes_;
 }
 
-ArrayRef< Ref<ResultPoint> > const& Result::getResultPoints() const {
+QSharedPointer<std::vector<Ref<ResultPoint>> > const& Result::getResultPoints() const {
   return resultPoints_;
 }
 
-ArrayRef< Ref<ResultPoint> >& Result::getResultPoints() {
+QSharedPointer<std::vector<Ref<ResultPoint>> >& Result::getResultPoints() {
   return resultPoints_;
 }
 

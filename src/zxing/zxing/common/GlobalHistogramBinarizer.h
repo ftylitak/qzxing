@@ -29,15 +29,15 @@ namespace zxing {
 	
 class GlobalHistogramBinarizer : public Binarizer {
 private:
-  ArrayRef<zxing::byte> luminances;
-  ArrayRef<int> buckets;
+  QSharedPointer<std::vector<zxing::byte>> luminances;
+  QSharedPointer<std::vector<int>> buckets;
 public:
   GlobalHistogramBinarizer(Ref<LuminanceSource> source);
   virtual ~GlobalHistogramBinarizer();
 		
   virtual Ref<BitArray> getBlackRow(int y, Ref<BitArray> row);
   virtual Ref<BitMatrix> getBlackMatrix();
-  static int estimateBlackPoint(ArrayRef<int> const& buckets);
+  static int estimateBlackPoint(QSharedPointer<std::vector<int>> const& buckets);
   Ref<Binarizer> createBinarizer(Ref<LuminanceSource> source);
 private:
   void initArrays(int luminanceSize);

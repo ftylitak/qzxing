@@ -154,14 +154,14 @@ Ref<Result> CodaBarReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   }
   float right = (float) runningCount;
 
-  ArrayRef< Ref<ResultPoint> > resultPoints(2);
+  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(2);
   resultPoints[0] =
     Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =
     Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
 
   return Ref<Result>(new Result(Ref<String>(new String(decodeRowResult)),
-                                ArrayRef<zxing::byte>(),
+                                QSharedPointer<std::vector<zxing::byte>>(),
                                 resultPoints,
                                 BarcodeFormat::CODABAR));
 }

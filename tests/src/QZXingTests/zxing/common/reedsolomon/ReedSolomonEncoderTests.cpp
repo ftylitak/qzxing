@@ -130,7 +130,7 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
             message = referenceMessage;
             corrupt(message, i, field->getSize());
 
-            ArrayRef<int> messageArrayRef(message.size());
+            QSharedPointer<std::vector<int>> messageArrayRef(message.size());
             for(int i=0; i<int(message.size()); i++)
                 messageArrayRef[i] = message[i];
 

@@ -33,7 +33,7 @@ class Decoder {
 private:
   ReedSolomonDecoder rsDecoder_;
 
-  void correctErrors(ArrayRef<zxing::byte> bytes, int numDataCodewords);
+  void correctErrors(QSharedPointer<std::vector<zxing::byte>> bytes, int numDataCodewords);
 
 public:
   Decoder();

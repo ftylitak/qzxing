@@ -186,7 +186,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
                                                       string& result,
                                                       int count,
                                                       CharacterSetECI const * currentCharacterSetECI,
-                                                      ArrayRef< ArrayRef<zxing::byte> >& byteSegments,
+                                                      QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> >& byteSegments,
                                                       Hashtable const& hints) {
     int nBytes = count;
     BitSource& bits (*bits_);
@@ -195,7 +195,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
         throw FormatException();
     }
 
-    ArrayRef<zxing::byte> bytes_ (count);
+    QSharedPointer<std::vector<zxing::byte>> bytes_ (count);
     byte* readBytes = &(*bytes_)[0];
     for (int i = 0; i < count; i++) {
         readBytes[i] = (zxing::byte) bits.readBits(8);
@@ -351,7 +351,7 @@ int parseECIValue(BitSource& bits) {
 }
 
 Ref<DecoderResult>
-DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes,
+DecodedBitStreamParser::decode(QSharedPointer<std::vector<zxing::byte>> bytes,
                                Ref<Version> version,
                                ErrorCorrectionLevel const& ecLevel,
                                Hashtable const& hints) {
@@ -359,7 +359,7 @@ DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes,
     BitSource& bits (*bits_);
     string result;
     result.reserve(50);
-    ArrayRef< ArrayRef<zxing::byte> > byteSegments (0);
+    QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> > byteSegments (0);
     const CharacterSetECI* currentCharacterSetECI = 0;
     string charSet = "";
     try {

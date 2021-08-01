@@ -127,7 +127,7 @@ protected:
 
     void assertDataEquals(const std::string &message,
                             const std::vector<zxing::byte> &expected,
-                            const ArrayRef<zxing::byte> &received)
+                            const QSharedPointer<std::vector<zxing::byte>> &received)
     {
         if(int(expected.size()) != received->size())
             assertTrue(false);
@@ -143,9 +143,9 @@ protected:
 
     void assertDataEquals(const std::string &message,
                             const std::vector<zxing::byte> &expected,
-                            const ArrayRef<int> &received)
+                            const QSharedPointer<std::vector<int>> &received)
     {
-        ArrayRef<zxing::byte> received_copy(received->size());
+        QSharedPointer<std::vector<zxing::byte>> received_copy(received->size());
         for(int i=0; i<received_copy->size(); i++)
             received_copy[i] = received[i];
 

@@ -36,7 +36,7 @@ private:
   int width;
   int height;
   int rowSize;
-  ArrayRef<int> bits;
+  QSharedPointer<std::vector<int>> bits;
 
 public:
   BitMatrix(int dimension);
@@ -65,9 +65,9 @@ public:
   int getWidth() const;
   int getHeight() const;
 
-  ArrayRef<int> getTopLeftOnBit() const;
-  ArrayRef<int> getBottomRightOnBit() const;
-  ArrayRef<int> getEnclosingRectangle() const;
+  QSharedPointer<std::vector<int>> getTopLeftOnBit() const;
+  QSharedPointer<std::vector<int>> getBottomRightOnBit() const;
+  QSharedPointer<std::vector<int>> getEnclosingRectangle() const;
 
   friend std::ostream& operator<<(std::ostream &out, const BitMatrix &bm);
   const char *description();

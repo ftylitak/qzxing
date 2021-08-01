@@ -30,12 +30,12 @@ namespace zxing {
 class DetectorResult : public Counted {
 private:
   Ref<BitMatrix> bits_;
-  ArrayRef< Ref<ResultPoint> > points_;
+  QSharedPointer<std::vector<Ref<ResultPoint>> > points_;
 
 public:
-  DetectorResult(Ref<BitMatrix> bits, ArrayRef< Ref<ResultPoint> > points);
+  DetectorResult(Ref<BitMatrix> bits, QSharedPointer<std::vector<Ref<ResultPoint>> > points);
   Ref<BitMatrix> getBits();
-  ArrayRef< Ref<ResultPoint> > getPoints();
+  QSharedPointer<std::vector<Ref<ResultPoint>> > getPoints();
 };
 
 }

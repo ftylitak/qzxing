@@ -323,10 +323,10 @@ Ref<Result> RSSExpandedReader::constructResult(std::vector<ExpandedPair> pairs)
     AbstractExpandedDecoder* decoder = AbstractExpandedDecoder::createDecoder(binary);
     String resultingString = decoder->parseInformation();
 
-    ArrayRef< Ref<ResultPoint> > firstPoints = pairs[0].getFinderPattern().getResultPoints();
-    ArrayRef< Ref<ResultPoint> > lastPoints  = pairs[pairs.size() - 1].getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<Ref<ResultPoint>> > firstPoints = pairs[0].getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<Ref<ResultPoint>> > lastPoints  = pairs[pairs.size() - 1].getFinderPattern().getResultPoints();
 
-    ArrayRef< Ref<ResultPoint> > resultPoints(4);
+    QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(4);
     resultPoints[0] = firstPoints[0];
     resultPoints[1] = firstPoints[1];
     resultPoints[2] = lastPoints[0];

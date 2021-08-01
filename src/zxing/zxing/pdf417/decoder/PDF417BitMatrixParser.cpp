@@ -26,7 +26,7 @@
 #include <zxing/pdf417/decoder/BitMatrixParser.h>
 
 using zxing::pdf417::decoder::BitMatrixParser;
-using zxing::ArrayRef;
+
 
 // VC++
 
@@ -67,14 +67,14 @@ BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix)
   * @throw FormatException for example if number of rows is too big or something
   * with row processing is bad
   */
-ArrayRef<int> BitMatrixParser::readCodewords()
+QSharedPointer<std::vector<int>> BitMatrixParser::readCodewords()
 {
   //int width = bitMatrix_->getWidth();
   int height = bitMatrix_->getHeight();
 
   erasures_ = new std::vector<int>(MAX_CW_CAPACITY);
 
-  ArrayRef<int> codewords (new std::vector<int>(MAX_CW_CAPACITY));
+  QSharedPointer<std::vector<int>> codewords (new std::vector<int>(MAX_CW_CAPACITY));
   int next = 0;
   int rowNumber = 0;
   for (int i = 0; i < height; i++) {
@@ -103,7 +103,7 @@ ArrayRef<int> BitMatrixParser::readCodewords()
  * @return the next available index into the codeword array after processing
  *         this row.
  */
-int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next) {
+int BitMatrixParser::processRow(int rowNumber, QSharedPointer<std::vector<int>> codewords, int next) {
   int width = bitMatrix_->getWidth();
   int columnNumber = 0;
   int cwClusterNumber = -1;
@@ -181,13 +181,13 @@ int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next
   * @param size  the size to trim it to
   * @return the new trimmed array
   */
-ArrayRef<int> BitMatrixParser::trimArray(ArrayRef<int> array, int size)
+QSharedPointer<std::vector<int>> BitMatrixParser::trimArray(QSharedPointer<std::vector<int>> array, int size)
 {
   if (size < 0) {
     throw IllegalArgumentException("BitMatrixParser::trimArray: negative size!");
   }
   // 2012-10-12 hfn don't throw "NoErrorException" when size == 0
-  ArrayRef<int> a = new std::vector<int>(size);
+  QSharedPointer<std::vector<int>> a = new std::vector<int>(size);
   for (int i = 0; i < size; i++) {
     a[i] = array[i];
   }

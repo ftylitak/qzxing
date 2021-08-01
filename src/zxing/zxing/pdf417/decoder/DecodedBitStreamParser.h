@@ -61,21 +61,21 @@ class DecodedBitStreamParser {
   static const char PUNCT_CHARS[];
   static const char MIXED_CHARS[];
  
-  static ArrayRef<BigInteger> EXP900;
-  static ArrayRef<BigInteger> initEXP900();
+  static QSharedPointer<std::vector<BigInteger> EXP900;
+  static QSharedPointer<std::vector<BigInteger> initEXP900();
   
-  static int textCompaction(ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static void decodeTextCompaction(ArrayRef<int> textCompactionData,
-                                   ArrayRef<int> byteCompactionData,
+  static int textCompaction(QSharedPointer<std::vector<int>> codewords, int codeIndex, Ref<String> result);
+  static void decodeTextCompaction(QSharedPointer<std::vector<int>> textCompactionData,
+                                   QSharedPointer<std::vector<int>> byteCompactionData,
                                    int length,
                                    Ref<String> result);
-  static int byteCompaction(int mode, ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static int numericCompaction(ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static Ref<String> decodeBase900toBase10(ArrayRef<int> codewords, int count);
+  static int byteCompaction(int mode, QSharedPointer<std::vector<int>> codewords, int codeIndex, Ref<String> result);
+  static int numericCompaction(QSharedPointer<std::vector<int>> codewords, int codeIndex, Ref<String> result);
+  static Ref<String> decodeBase900toBase10(QSharedPointer<std::vector<int>> codewords, int count);
 
  public:
   DecodedBitStreamParser();
-  static Ref<DecoderResult> decode(ArrayRef<int> codewords);
+  static Ref<DecoderResult> decode(QSharedPointer<std::vector<int>> codewords);
 };
 
 } /* namespace pdf417 */

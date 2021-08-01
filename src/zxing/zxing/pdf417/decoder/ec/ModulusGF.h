@@ -42,8 +42,8 @@ class ModulusGF {
 	static ModulusGF PDF417_GF;
 
   private:
-	ArrayRef<int> expTable_;
-	ArrayRef<int> logTable_;
+	QSharedPointer<std::vector<int>> expTable_;
+	QSharedPointer<std::vector<int>> logTable_;
 	Ref<ModulusPoly> zero_;
 	Ref<ModulusPoly> one_;
 	int modulus_;

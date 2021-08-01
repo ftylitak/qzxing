@@ -42,19 +42,19 @@ namespace zxing {
   private:
     // We'll be using one-D arrays because C++ can't dynamically allocate 2D
     // arrays
-    ArrayRef<int> calculateBlackPoints(ArrayRef<zxing::byte> luminances,
+    QSharedPointer<std::vector<int>> calculateBlackPoints(QSharedPointer<std::vector<zxing::byte>> luminances,
                                        int subWidth,
                                        int subHeight,
                                        int width,
                                        int height);
-    void calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
+    void calculateThresholdForBlock(QSharedPointer<std::vector<zxing::byte>> luminances,
                                     int subWidth,
                                     int subHeight,
                                     int width,
                                     int height,
-                                    ArrayRef<int> blackPoints,
+                                    QSharedPointer<std::vector<int>> blackPoints,
                                     Ref<BitMatrix> const& matrix);
-    void thresholdBlock(ArrayRef<zxing::byte>luminances,
+    void thresholdBlock(QSharedPointer<std::vector<zxing::byte>>luminances,
                         int xoffset,
                         int yoffset,
                         int threshold,

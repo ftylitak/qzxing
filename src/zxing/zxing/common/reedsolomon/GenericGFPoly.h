@@ -33,11 +33,11 @@ class GenericGF;
 class GenericGFPoly : public Counted {
 private:
   GenericGF *field_;
-  ArrayRef<int> coefficients_;
+  QSharedPointer<std::vector<int>> coefficients_;
     
 public:
-  GenericGFPoly(GenericGF *field, ArrayRef<int> coefficients);
-  ArrayRef<int> getCoefficients();
+  GenericGFPoly(GenericGF *field, QSharedPointer<std::vector<int>> coefficients);
+  QSharedPointer<std::vector<int>> getCoefficients();
   int getDegree();
   bool isZero();
   int getCoefficient(int degree);

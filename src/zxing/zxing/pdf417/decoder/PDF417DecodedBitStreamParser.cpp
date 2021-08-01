@@ -23,7 +23,7 @@
 
 using std::string;
 using zxing::pdf417::DecodedBitStreamParser;
-using zxing::ArrayRef;
+
 using zxing::Ref;
 using zxing::DecoderResult;
 using zxing::String;
@@ -61,8 +61,8 @@ const char DecodedBitStreamParser::MIXED_CHARS[] = {
   '\r', '\t', ',', ':', '#', '-', '.', '$', '/', '+', '%', '*',
   '=', '^'};
 
-ArrayRef<BigInteger> DecodedBitStreamParser::initEXP900() {
-  ArrayRef<BigInteger> EXP900 (16);
+QSharedPointer<std::vector<BigInteger> DecodedBitStreamParser::initEXP900() {
+  QSharedPointer<std::vector<BigInteger> EXP900 (16);
   EXP900[0] = BigInteger(1);
   BigInteger nineHundred (900);
   EXP900[1] = nineHundred;
@@ -72,14 +72,14 @@ ArrayRef<BigInteger> DecodedBitStreamParser::initEXP900() {
   return EXP900;
 }
 
-ArrayRef<BigInteger> DecodedBitStreamParser::EXP900 = initEXP900();
+QSharedPointer<std::vector<BigInteger> DecodedBitStreamParser::EXP900 = initEXP900();
 
 DecodedBitStreamParser::DecodedBitStreamParser(){}
 
 /**
  * PDF417 main decoder.
  **/
-Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<int> codewords)
+Ref<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<int>> codewords)
 {
   Ref<String> result (new String(100));
   // Get compaction mode
@@ -116,7 +116,7 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<int> codewords)
       throw FormatException();
     }
   }
-  return Ref<DecoderResult>(new DecoderResult(ArrayRef<zxing::byte>(), result));
+  return Ref<DecoderResult>(new DecoderResult(QSharedPointer<std::vector<zxing::byte>>(), result));
 }
 
 /**
@@ -129,13 +129,13 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<int> codewords)
  * @param result    The decoded data is appended to the result.
  * @return The next index into the codeword array.
  */
-int DecodedBitStreamParser::textCompaction(ArrayRef<int> codewords,
+int DecodedBitStreamParser::textCompaction(QSharedPointer<std::vector<int>> codewords,
                                            int codeIndex,
                                            Ref<String> result) {
   // 2 character per codeword
-  ArrayRef<int> textCompactionData (codewords[0] << 1);
+  QSharedPointer<std::vector<int>> textCompactionData (codewords[0] << 1);
   // Used to hold the byte compaction value if there is a mode shift
-  ArrayRef<int> byteCompactionData (codewords[0] << 1);
+  QSharedPointer<std::vector<int>> byteCompactionData (codewords[0] << 1);
   
   int index = 0;
   bool end = false;
@@ -197,8 +197,8 @@ int DecodedBitStreamParser::textCompaction(ArrayRef<int> codewords,
  * @param length             The size of the text compaction and byte compaction data.
  * @param result             The decoded data is appended to the result.
  */
-void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionData,
-                                                  ArrayRef<int> byteCompactionData,
+void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int>> textCompactionData,
+                                                  QSharedPointer<std::vector<int>> byteCompactionData,
                                                   int length,
                                                   Ref<String> result)
 {
@@ -359,15 +359,15 @@ void DecodedBitStreamParser::decodeTextCompaction(ArrayRef<int> textCompactionDa
  * @return The next index into the codeword array.
  */
 int DecodedBitStreamParser::byteCompaction(int mode,
-                                           ArrayRef<int> codewords,
+                                           QSharedPointer<std::vector<int>> codewords,
                                            int codeIndex, Ref<String> result) {
   if (mode == BYTE_COMPACTION_MODE_LATCH) {
     // Total number of Byte Compaction characters to be encoded
     // is not a multiple of 6
     int count = 0;
     int64_t value = 0;
-    ArrayRef<zxing::byte> decodedData = new std::vector<zxing::byte>(6);
-    ArrayRef<int> byteCompactedCodewords = new std::vector<int>(6);
+    QSharedPointer<std::vector<zxing::byte>> decodedData = new std::vector<zxing::byte>(6);
+    QSharedPointer<std::vector<int>> byteCompactedCodewords = new std::vector<int>(6);
     bool end = false;
     int nextCode = codewords[codeIndex++];
     while ((codeIndex < codewords[0]) && !end) {
@@ -442,7 +442,7 @@ int DecodedBitStreamParser::byteCompaction(int mode,
       if ((count % 5 == 0) && (count > 0)) {
         // Decode every 5 codewords
         // Convert to Base 256
-        ArrayRef<zxing::byte> decodedData = new std::vector<zxing::byte>(6);
+        QSharedPointer<std::vector<zxing::byte>> decodedData = new std::vector<zxing::byte>(6);
         for (int j = 0; j < 6; ++j) {
           decodedData[5 - j] = (zxing::byte) (value & 0xFF);
           value >>= 8;
@@ -464,13 +464,13 @@ int DecodedBitStreamParser::byteCompaction(int mode,
  * @param result    The decoded data is appended to the result.
  * @return The next index into the codeword array.
  */
-int DecodedBitStreamParser::numericCompaction(ArrayRef<int> codewords,
+int DecodedBitStreamParser::numericCompaction(QSharedPointer<std::vector<int>> codewords,
                                               int codeIndex,
                                               Ref<String> result) {
   int count = 0;
   bool end = false;
   
-  ArrayRef<int> numericCodewords = new std::vector<int>(MAX_NUMERIC_CODEWORDS);
+  QSharedPointer<std::vector<int>> numericCodewords = new std::vector<int>(MAX_NUMERIC_CODEWORDS);
   
   while (codeIndex < codewords[0] && !end) {
     int code = codewords[codeIndex++];
@@ -549,7 +549,7 @@ int DecodedBitStreamParser::numericCompaction(ArrayRef<int> codewords,
 
   Remove leading 1 =>  Result is 000213298174000
 */
-Ref<String> DecodedBitStreamParser::decodeBase900toBase10(ArrayRef<int> codewords, int count)
+Ref<String> DecodedBitStreamParser::decodeBase900toBase10(QSharedPointer<std::vector<int>> codewords, int count)
 {
   BigInteger result = BigInteger(0);
   for (int i = 0; i < count; i++) {

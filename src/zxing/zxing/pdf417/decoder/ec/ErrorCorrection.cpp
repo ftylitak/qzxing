@@ -23,7 +23,7 @@
 
 using std::vector;
 using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::pdf417::decoder::ec::ErrorCorrection;
 using zxing::pdf417::decoder::ec::ModulusPoly;
 using zxing::pdf417::decoder::ec::ModulusGF;
@@ -44,12 +44,12 @@ ErrorCorrection::ErrorCorrection()
 {
 }
 
-void ErrorCorrection::decode(ArrayRef<int> received,
+void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
                              int numECCodewords,
-                             ArrayRef<int> erasures)
+                             QSharedPointer<std::vector<int>> erasures)
 {
   Ref<ModulusPoly> poly (new ModulusPoly(field_, received));
-  ArrayRef<int> S( new std::vector<int>(numECCodewords));
+  QSharedPointer<std::vector<int>> S( new std::vector<int>(numECCodewords));
   bool error = false;
   for (int i = numECCodewords; i > 0; i--) {
     int eval = poly->evaluateAt(field_.exp(i));
@@ -65,7 +65,7 @@ void ErrorCorrection::decode(ArrayRef<int> received,
     for (int i=0;i<erasures->size();i++) {
       int b = field_.exp(received->size() - 1 - erasures[i]);
       // Add (1 - bx) term:
-      ArrayRef<int> one_minus_b_x(new std::vector<int>(2));
+      QSharedPointer<std::vector<int>> one_minus_b_x(new std::vector<int>(2));
       one_minus_b_x[1]=field_.subtract(0,b);
       one_minus_b_x[0]=1;
       Ref<ModulusPoly> term (new ModulusPoly(field_,one_minus_b_x));
@@ -82,8 +82,8 @@ void ErrorCorrection::decode(ArrayRef<int> received,
 
     //sigma = sigma.multiply(knownErrors);
 
-    ArrayRef<int> errorLocations = findErrorLocations(sigma);
-    ArrayRef<int> errorMagnitudes = findErrorMagnitudes(omega, sigma, errorLocations);
+    QSharedPointer<std::vector<int>> errorLocations = findErrorLocations(sigma);
+    QSharedPointer<std::vector<int>> errorMagnitudes = findErrorMagnitudes(omega, sigma, errorLocations);
 
     for (int i = 0; i < errorLocations->size(); i++) {
       int position = received->size() - 1 - field_.log(errorLocations[i]);
@@ -157,10 +157,10 @@ vector<Ref<ModulusPoly> >  ErrorCorrection::runEuclideanAlgorithm(Ref<ModulusPol
   return v;
 }
 
-ArrayRef<int> ErrorCorrection::findErrorLocations(Ref<ModulusPoly> errorLocator)  {
+QSharedPointer<std::vector<int>> ErrorCorrection::findErrorLocations(Ref<ModulusPoly> errorLocator)  {
   // This is a direct application of Chien's search
   int numErrors = errorLocator->getDegree();
-  ArrayRef<int> result( new std::vector<int>(numErrors));
+  QSharedPointer<std::vector<int>> result( new std::vector<int>(numErrors));
   int e = 0;
   for (int i = 1; i < field_.getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
@@ -188,12 +188,12 @@ ArrayRef<int> ErrorCorrection::findErrorLocations(Ref<ModulusPoly> errorLocator)
   return result;
 }
 
-ArrayRef<int> ErrorCorrection::findErrorMagnitudes(Ref<ModulusPoly> errorEvaluator,
+QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(Ref<ModulusPoly> errorEvaluator,
                                                    Ref<ModulusPoly> errorLocator,
-                                                   ArrayRef<int> errorLocations) {
+                                                   QSharedPointer<std::vector<int>> errorLocations) {
 	int i;
   int errorLocatorDegree = errorLocator->getDegree();
-  ArrayRef<int> formalDerivativeCoefficients (new std::vector<int>(errorLocatorDegree));
+  QSharedPointer<std::vector<int>> formalDerivativeCoefficients (new std::vector<int>(errorLocatorDegree));
   for (i = 1; i <= errorLocatorDegree; i++) {
     formalDerivativeCoefficients[errorLocatorDegree - i] =
         field_.multiply(i, errorLocator->getCoefficient(i));
@@ -202,7 +202,7 @@ ArrayRef<int> ErrorCorrection::findErrorMagnitudes(Ref<ModulusPoly> errorEvaluat
 
   // This is directly applying Forney's Formula
   int s = errorLocations->size();
-  ArrayRef<int> result ( new std::vector<int>(s));
+  QSharedPointer<std::vector<int>> result ( new std::vector<int>(s));
   for (i = 0; i < s; i++) {
     int xiInverse = field_.inverse(errorLocations[i]);
     int numerator = field_.subtract(0, errorEvaluator->evaluateAt(xiInverse));

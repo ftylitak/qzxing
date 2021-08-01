@@ -61,7 +61,7 @@ class Detector : public Counted {
   int shift_;
             
   void extractParameters(std::vector<Ref<Point> > bullEyeCornerPoints);
-  ArrayRef< Ref<ResultPoint> > getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints);
+  QSharedPointer<std::vector<Ref<ResultPoint>> > getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints);
   static void correctParameterData(Ref<BitArray> parameterData, bool compact);
   std::vector<Ref<Point> > getBullEyeCornerPoints(Ref<Point> pCenter);
   Ref<Point> getMatrixCenter();

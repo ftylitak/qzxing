@@ -113,7 +113,7 @@ vector<int>& BitArray::getBitArray() {
 
 void BitArray::reverse()
 {
-    ArrayRef<int> newBits(bits->size());
+    QSharedPointer<std::vector<int>> newBits(bits->size());
     // reverse all int's first
     int len = ((this->size-1) / 32);
     int oldBitsLen = len + 1;
@@ -241,7 +241,7 @@ void BitArray::ensureCapacity(int size)
 {
     if (size > bits->size() * 32)
     {
-        ArrayRef<int> newBits = makeArray(size);
+        QSharedPointer<std::vector<int>> newBits = makeArray(size);
         //memcpy(bits, newBits->, bits->size());
         for (int i=0; i<bits->size(); ++i) {
             newBits[i] = bits[i];

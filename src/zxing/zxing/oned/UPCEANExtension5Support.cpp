@@ -147,14 +147,14 @@ Ref<Result> UPCEANExtension5Support::decodeRow(int rowNumber, Ref<BitArray> row,
         metadata.put(ResultMetadata::SUGGESTED_PRICE, value);
     }
 
-    ArrayRef< Ref<ResultPoint> > resultPoints(2);
+    QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(2);
     resultPoints[0] = Ref<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
                                            static_cast<float> (rowNumber)));
     resultPoints[1] = Ref<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
                                            static_cast<float> (rowNumber)));
 
     return Ref<Result>(new Result(Ref<String>(new String(resultString)),
-                                  ArrayRef<zxing::byte>(),
+                                  QSharedPointer<std::vector<zxing::byte>>(),
                                   resultPoints,
                                   BarcodeFormat::UPC_EAN_EXTENSION,
                                   "",

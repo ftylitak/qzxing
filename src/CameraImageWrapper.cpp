@@ -101,12 +101,12 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
         return new CameraImageWrapper(sourceImage);
 }
 
-ArrayRef<ArrayRef<zxing::byte> > CameraImageWrapper::getOriginalImage()
+QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > CameraImageWrapper::getOriginalImage()
 {
     return imageBytesPerRow;
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getRow(int y, ArrayRef<zxing::byte> row) const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const
 {
     if(delegate)
         return delegate->getRow(y, row);
@@ -114,7 +114,7 @@ ArrayRef<zxing::byte> CameraImageWrapper::getRow(int y, ArrayRef<zxing::byte> ro
         return getRowP(y, row);
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getMatrix() const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getMatrix() const
 {
     if(delegate)
         return delegate->getMatrix();
@@ -162,19 +162,19 @@ Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
         return LuminanceSource::rotateCounterClockwise();
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getRowP(int y, ArrayRef<zxing::byte> row) const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getRowP(int y, QSharedPointer<std::vector<zxing::byte>> row) const
 {
     int width = getWidth();
 
     if (row->size() != width)
-        row.reset(ArrayRef<zxing::byte>(width));
+        row.reset(QSharedPointer<std::vector<zxing::byte>>(width));
 
     Q_ASSERT(y >= 0 && y < getHeight());
 
     return imageBytesPerRow[y];
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getMatrixP() const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getMatrixP() const
 {
     return imageBytes;
 }
@@ -195,13 +195,13 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
     const int width = getWidth();
     const int height = getHeight();
 
-    imageBytes = ArrayRef<zxing::byte>(height*width);
-    imageBytesPerRow = ArrayRef<ArrayRef<zxing::byte>>(height);
+    imageBytes = QSharedPointer<std::vector<zxing::byte>>(height*width);
+    imageBytesPerRow = QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>(height);
     zxing::byte* m = &imageBytes[0];
 
     for(int j=0; j<height; j++)
     {
-        ArrayRef<zxing::byte> line(width);
+        QSharedPointer<std::vector<zxing::byte>> line(width);
         for(int i=0; i<width; i++)
         {
             pixel = origin.pixel(i,j);

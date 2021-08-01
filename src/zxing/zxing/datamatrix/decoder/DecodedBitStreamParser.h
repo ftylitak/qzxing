@@ -96,7 +96,7 @@ private:
 
 public:
   DecodedBitStreamParser() { }
-  Ref<DecoderResult> decode(ArrayRef<zxing::byte> bytes);
+  Ref<DecoderResult> decode(QSharedPointer<std::vector<zxing::byte>> bytes);
 };
 
 }

@@ -112,7 +112,7 @@
 //  }
 
 //  template<class Y>
-//  ArrayRef(const ArrayRef<Y> &other) :
+//  ArrayRef(const QSharedPointer<std::vector<Y> &other) :
 //      array_(0) {
 //    reset(static_cast<const std::vector<T> *>(other.array_));
 //  }
@@ -141,14 +141,14 @@
 //    }
 //    array_ = a;
 //  }
-//  void reset(const ArrayRef<T> &other) {
+//  void reset(const QSharedPointer<std::vector<T> &other) {
 //    reset(other.array_);
 //  }
-//  ArrayRef<T>& operator=(const ArrayRef<T> &other) {
+//  QSharedPointer<std::vector<T>& operator=(const QSharedPointer<std::vector<T> &other) {
 //    reset(other);
 //    return *this;
 //  }
-//  ArrayRef<T>& operator=(std::vector<T> *a) {
+//  QSharedPointer<std::vector<T>& operator=(std::vector<T> *a) {
 //    reset(a);
 //    return *this;
 //  }

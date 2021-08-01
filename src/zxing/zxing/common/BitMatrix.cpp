@@ -27,7 +27,7 @@ using std::ostringstream;
 
 using zxing::BitMatrix;
 using zxing::BitArray;
-using zxing::ArrayRef;
+
 using zxing::Ref;
 
 void BitMatrix::init(int width, int height) {
@@ -37,7 +37,7 @@ void BitMatrix::init(int width, int height) {
     this->width = width;
     this->height = height;
     this->rowSize = (width + 31) >> 5;
-    bits = ArrayRef<int>(rowSize * height);
+    bits = QSharedPointer<std::vector<int>>(rowSize * height);
 }
 
 BitMatrix::BitMatrix(int dimension) {
@@ -123,13 +123,13 @@ int BitMatrix::getHeight() const {
     return height;
 }
 
-ArrayRef<int> BitMatrix::getTopLeftOnBit() const {
+QSharedPointer<std::vector<int>> BitMatrix::getTopLeftOnBit() const {
     int bitsOffset = 0;
     while (bitsOffset < bits->size() && bits[bitsOffset] == 0) {
         bitsOffset++;
     }
     if (bitsOffset == bits->size()) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
     int y = bitsOffset / rowSize;
     int x = (bitsOffset % rowSize) << 5;
@@ -140,19 +140,19 @@ ArrayRef<int> BitMatrix::getTopLeftOnBit() const {
         bit++;
     }
     x += bit;
-    ArrayRef<int> res (2);
+    QSharedPointer<std::vector<int>> res (2);
     res[0]=x;
     res[1]=y;
     return res;
 }
 
-ArrayRef<int> BitMatrix::getBottomRightOnBit() const {
+QSharedPointer<std::vector<int>> BitMatrix::getBottomRightOnBit() const {
     int bitsOffset = bits->size() - 1;
     while (bitsOffset >= 0 && bits[bitsOffset] == 0) {
         bitsOffset--;
     }
     if (bitsOffset < 0) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
 
     int y = bitsOffset / rowSize;
@@ -165,13 +165,13 @@ ArrayRef<int> BitMatrix::getBottomRightOnBit() const {
     }
     x += bit;
 
-    ArrayRef<int> res (2);
+    QSharedPointer<std::vector<int>> res (2);
     res[0]=x;
     res[1]=y;
     return res;
 }
 
-ArrayRef<int> BitMatrix::getEnclosingRectangle() const
+QSharedPointer<std::vector<int>> BitMatrix::getEnclosingRectangle() const
 {
     int left = width;
     int top = height;
@@ -214,10 +214,10 @@ ArrayRef<int> BitMatrix::getEnclosingRectangle() const
     int height = bottom - top;
 
     if (width < 0 || height < 0) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
 
-    ArrayRef<int> res(4);
+    QSharedPointer<std::vector<int>> res(4);
     res[0] = left;
     res[1] = top;
     res[2] = width;

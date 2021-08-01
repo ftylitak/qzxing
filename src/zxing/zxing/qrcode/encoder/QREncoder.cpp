@@ -379,8 +379,8 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         std::vector<zxing::byte> dataBytes;
         dataBytes.resize(size_t(size));
         bits.toBytes(8*dataBytesOffset, dataBytes, 0, size);
-        ArrayRef<zxing::byte> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
-        blocks.push_back(BlockPair(ArrayRef<zxing::byte>(dataBytes.data(), int(dataBytes.size())), ecBytes)); //?? please revisit
+        QSharedPointer<std::vector<zxing::byte>> ecBytes = generateECBytes(dataBytes, numEcBytesInBlock[0]);
+        blocks.push_back(BlockPair(QSharedPointer<std::vector<zxing::byte>>(dataBytes.data(), int(dataBytes.size())), ecBytes)); //?? please revisit
 
         maxNumDataBytes = max(maxNumDataBytes, size);
         maxNumEcBytes = max(maxNumEcBytes, ecBytes->size());
@@ -395,7 +395,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // First, place data blocks.
     for (int i = 0; i < maxNumDataBytes; ++i) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<zxing::byte> dataBytes = it->getDataBytes();
+            QSharedPointer<std::vector<zxing::byte>> dataBytes = it->getDataBytes();
             if (i < dataBytes.array_->size()) {
                 result->appendBits(dataBytes[i], 8);  ///????? are we sure?
             }
@@ -404,7 +404,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     // Then, place error correction blocks.
     for (int i = 0; i < maxNumEcBytes; ++i) {
         for (std::vector< BlockPair >::iterator it=blocks.begin(); it != blocks.end(); it++) {
-            ArrayRef<zxing::byte> ecBytes = it->getErrorCorrectionBytes();
+            QSharedPointer<std::vector<zxing::byte>> ecBytes = it->getErrorCorrectionBytes();
             if (i < ecBytes.array_->size()) {
                 result->appendBits(ecBytes[i], 8);
             }
@@ -423,7 +423,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
     return result;
 }
 
-ArrayRef<zxing::byte> Encoder::generateECBytes(const std::vector<zxing::byte>& dataBytes, int numEcBytesInBlock)
+QSharedPointer<std::vector<zxing::byte>> Encoder::generateECBytes(const std::vector<zxing::byte>& dataBytes, int numEcBytesInBlock)
 {
     size_t numDataBytes = dataBytes.size();
     std::vector<zxing::byte> dataBytesCopy(dataBytes);
@@ -431,7 +431,7 @@ ArrayRef<zxing::byte> Encoder::generateECBytes(const std::vector<zxing::byte>& d
     zxing::ReedSolomonEncoder encoder(GenericGF::QR_CODE_FIELD_256);
     encoder.encode(dataBytesCopy, numEcBytesInBlock);
 
-    ArrayRef<zxing::byte> ecBytes(numEcBytesInBlock);
+    QSharedPointer<std::vector<zxing::byte>> ecBytes(numEcBytesInBlock);
     for (int i = 0; i < numEcBytesInBlock; i++) {
         ecBytes[i] = dataBytesCopy[numDataBytes + size_t(i)];
     }

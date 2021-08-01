@@ -50,17 +50,17 @@ class ErrorCorrection: public Counted {
 
  public:
   ErrorCorrection();
-  void decode(ArrayRef<int> received,
+  void decode(QSharedPointer<std::vector<int>> received,
               int numECCodewords,
-              ArrayRef<int> erasures);
+              QSharedPointer<std::vector<int>> erasures);
 
  private:
   std::vector<Ref<ModulusPoly> > runEuclideanAlgorithm(Ref<ModulusPoly> a, Ref<ModulusPoly> b, int R);
 
-  ArrayRef<int> findErrorLocations(Ref<ModulusPoly> errorLocator);
-  ArrayRef<int> findErrorMagnitudes(Ref<ModulusPoly> errorEvaluator,
+  QSharedPointer<std::vector<int>> findErrorLocations(Ref<ModulusPoly> errorLocator);
+  QSharedPointer<std::vector<int>> findErrorMagnitudes(Ref<ModulusPoly> errorEvaluator,
                                     Ref<ModulusPoly> errorLocator,
-                                    ArrayRef<int> errorLocations);
+                                    QSharedPointer<std::vector<int>> errorLocations);
 };
 
 }

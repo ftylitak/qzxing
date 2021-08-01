@@ -77,7 +77,7 @@ protected:
                                         int numDataBytes,
                                         int numRSBlocks);
 
-  static ArrayRef<zxing::byte> generateECBytes(const std::vector<zxing::byte> &dataBytes, int numEcBytesInBlock);
+  static QSharedPointer<std::vector<zxing::byte>> generateECBytes(const std::vector<zxing::byte> &dataBytes, int numEcBytesInBlock);
 
   static void appendNumericBytes(const std::wstring& content, BitArray& bits);
 

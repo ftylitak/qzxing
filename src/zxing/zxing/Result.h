@@ -34,23 +34,23 @@ namespace zxing {
 class Result : public Counted {
 private:
   Ref<String> text_;
-  ArrayRef<zxing::byte> rawBytes_;
-  ArrayRef< Ref<ResultPoint> > resultPoints_;
+  QSharedPointer<std::vector<zxing::byte>> rawBytes_;
+  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints_;
   BarcodeFormat format_;
   std::string charSet_;
   ResultMetadata metadata_;
 
 public:
   Result(Ref<String> text,
-         ArrayRef<zxing::byte> rawBytes,
-         ArrayRef< Ref<ResultPoint> > resultPoints,
+         QSharedPointer<std::vector<zxing::byte>> rawBytes,
+         QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints,
          BarcodeFormat format, const std::string &charSet = "",
          ResultMetadata metadata = ResultMetadata());
   ~Result();
   Ref<String> getText();
-  ArrayRef<zxing::byte> getRawBytes();
-  ArrayRef< Ref<ResultPoint> > const& getResultPoints() const;
-  ArrayRef< Ref<ResultPoint> >& getResultPoints();
+  QSharedPointer<std::vector<zxing::byte>> getRawBytes();
+  QSharedPointer<std::vector<Ref<ResultPoint>> > const& getResultPoints() const;
+  QSharedPointer<std::vector<Ref<ResultPoint>> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
   std::string getCharSet() const;
   ResultMetadata& getMetadata();

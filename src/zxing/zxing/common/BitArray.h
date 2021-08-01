@@ -34,7 +34,7 @@ public:
 
 private:
     int size;
-    ArrayRef<int> bits;
+    QSharedPointer<std::vector<int>> bits;
     static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
     static const int bitsMask = (1 << logBits) - 1;
 
@@ -78,8 +78,8 @@ public:
 
     std::string toString() const;
 
-    static ArrayRef<int> makeArray(int size) {
-        return ArrayRef<int>((size + 31) / 32);
+    static QSharedPointer<std::vector<int>> makeArray(int size) {
+        return QSharedPointer<std::vector<int>>((size + 31) / 32);
       }
 
     void reverse();

@@ -22,7 +22,7 @@
 #include <zxing/common/GreyscaleRotatedLuminanceSource.h>
 #include <zxing/common/IllegalArgumentException.h>
 
-using zxing::ArrayRef;
+
 
 namespace zxing {
 
@@ -30,7 +30,7 @@ namespace zxing {
 // be able to traverse the greyData correctly, which does not get
 // rotated.
 GreyscaleRotatedLuminanceSource::
-GreyscaleRotatedLuminanceSource(ArrayRef<zxing::byte> greyData,
+GreyscaleRotatedLuminanceSource(QSharedPointer<std::vector<zxing::byte>> greyData,
                                 int dataWidth, int dataHeight,
                                 int left, int top,
                                 int width, int height)
@@ -45,13 +45,13 @@ GreyscaleRotatedLuminanceSource(ArrayRef<zxing::byte> greyData,
 }
 
 // The API asks for rows, but we're rotated, so we return columns.
-ArrayRef<zxing::byte>
-GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<zxing::byte> row) const {
+QSharedPointer<std::vector<zxing::byte>>
+GreyscaleRotatedLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const {
   if (y < 0 || y >= getHeight()) {
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   if (!row || row->size() < getWidth()) {
-    row = ArrayRef<zxing::byte>(getWidth());
+    row = QSharedPointer<std::vector<zxing::byte>>(getWidth());
   }
   int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
   using namespace std;
@@ -68,8 +68,8 @@ GreyscaleRotatedLuminanceSource::getRow(int y, ArrayRef<zxing::byte> row) const 
   return row;
 }
 
-ArrayRef<zxing::byte> GreyscaleRotatedLuminanceSource::getMatrix() const {
-  ArrayRef<zxing::byte> result (getWidth() * getHeight());
+QSharedPointer<std::vector<zxing::byte>> GreyscaleRotatedLuminanceSource::getMatrix() const {
+  QSharedPointer<std::vector<zxing::byte>> result (getWidth() * getHeight());
   for (int y = 0; y < getHeight(); y++) {
     zxing::byte* row = &result[y * getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));

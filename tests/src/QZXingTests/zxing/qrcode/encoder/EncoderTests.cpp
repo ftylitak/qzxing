@@ -394,7 +394,7 @@ void EncoderTests::testGenerateECBytes()
 {
     std::vector<zxing::byte> dataBytes = {32, 65, 205, 69, 41, 220, 46, 128, 236};
 
-    ArrayRef<zxing::byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
+    QSharedPointer<std::vector<zxing::byte>> ecBytes = Encoder::generateECBytes(dataBytes, 17);
     byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };

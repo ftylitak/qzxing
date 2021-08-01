@@ -118,7 +118,7 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
 
   Ref<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
   Ref<BitMatrix> bits(sampleGrid(image_, dimension, transform));
-  ArrayRef< Ref<ResultPoint> > points(new std::vector< Ref<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
+  QSharedPointer<std::vector<Ref<ResultPoint>> > points(new std::vector< Ref<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
   points[0].reset(bottomLeft);
   points[1].reset(topLeft);
   points[2].reset(topRight);

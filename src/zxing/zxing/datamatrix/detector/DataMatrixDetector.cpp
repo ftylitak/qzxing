@@ -246,7 +246,7 @@ Ref<DetectorResult> Detector::detect() {
     bits = sampleGrid(image_, dimensionCorrected, dimensionCorrected, transform);
   }
 
-  ArrayRef< Ref<ResultPoint> > points (new std::vector< Ref<ResultPoint> >(4));
+  QSharedPointer<std::vector<Ref<ResultPoint>> > points (new std::vector< Ref<ResultPoint> >(4));
   points[0].reset(topLeft);
   points[1].reset(bottomLeft);
   points[2].reset(correctedTopRight);

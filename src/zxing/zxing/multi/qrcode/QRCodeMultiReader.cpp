@@ -36,7 +36,7 @@ std::vector<Ref<Result> > QRCodeMultiReader::decodeMultiple(Ref<BinaryBitmap> im
   for (unsigned int i = 0; i < detectorResult.size(); i++) {
     try {
       Ref<DecoderResult> decoderResult = getDecoder().decode(detectorResult[i]->getBits());
-      ArrayRef< Ref<ResultPoint> > points = detectorResult[i]->getPoints();
+      QSharedPointer<std::vector<Ref<ResultPoint>> > points = detectorResult[i]->getPoints();
       Ref<Result> result = Ref<Result>(new Result(decoderResult->getText(),
       decoderResult->getRawBytes(), 
       points, BarcodeFormat::QR_CODE));

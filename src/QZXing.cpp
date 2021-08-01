@@ -345,7 +345,7 @@ void QZXing::setDecoder(const uint &hint)
  * \param bitMatrix
  * \return
  */
-QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<BitMatrix> &bitMatrix)
+QRectF getTagRect(const QSharedPointer<std::vector<Ref<ResultPoint>> > &resultPoints, const Ref<BitMatrix> &bitMatrix)
 {
     if (resultPoints->size() < 2)
         return QRectF();

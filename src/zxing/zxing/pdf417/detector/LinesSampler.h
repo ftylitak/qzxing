@@ -42,15 +42,15 @@ private:
   static std::vector<Ref<ResultPoint> > findVertices(Ref<BitMatrix> matrix, int rowStep);
   static std::vector<Ref<ResultPoint> > findVertices180(Ref<BitMatrix> matrix, int rowStep);
 
-  static ArrayRef<int> findGuardPattern(Ref<BitMatrix> matrix,
+  static QSharedPointer<std::vector<int>> findGuardPattern(Ref<BitMatrix> matrix,
                                         int column,
                                         int row,
                                         int width,
                                         bool whiteFirst,
                                         const int pattern[],
                                         int patternSize,
-                                        ArrayRef<int> counters);
-  static int patternMatchVariance(ArrayRef<int> counters, const int pattern[],
+                                        QSharedPointer<std::vector<int>> counters);
+  static int patternMatchVariance(QSharedPointer<std::vector<int>> counters, const int pattern[],
                                   int maxIndividualVariance);
 
   static void correctVertices(Ref<BitMatrix> matrix,

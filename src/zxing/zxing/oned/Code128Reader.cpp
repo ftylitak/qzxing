@@ -532,12 +532,12 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   float right = lastStart + lastPatternSize / 2.0f;
 
   int rawCodesSize = rawCodes.size();
-  ArrayRef<zxing::byte> rawBytes (rawCodesSize);
+  QSharedPointer<std::vector<zxing::byte>> rawBytes (rawCodesSize);
   for (int i = 0; i < rawCodesSize; i++) {
     rawBytes[i] = rawCodes[i];
   }
 
-  ArrayRef< Ref<ResultPoint> > resultPoints(2);
+  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints(2);
   resultPoints[0] =
       Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =

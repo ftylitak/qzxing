@@ -34,7 +34,7 @@ using zxing::aztec::Detector;
 using zxing::aztec::Point;
 using zxing::aztec::AztecDetectorResult;
 using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::ResultPoint;
 using zxing::BitArray;
 using zxing::BitMatrix;
@@ -55,7 +55,7 @@ Ref<AztecDetectorResult> Detector::detect() {
             
   extractParameters(bullEyeCornerPoints);
   
-  ArrayRef< Ref<ResultPoint> > corners = getMatrixCornerPoints(bullEyeCornerPoints);
+  QSharedPointer<std::vector<Ref<ResultPoint>> > corners = getMatrixCornerPoints(bullEyeCornerPoints);
             
   Ref<BitMatrix> bits =
     sampleGrid(image_,
@@ -135,7 +135,7 @@ void Detector::extractParameters(std::vector<Ref<Point> > bullEyeCornerPoints) {
   getParameters(parameterData);
 }
         
-ArrayRef< Ref<ResultPoint> >
+QSharedPointer<std::vector<Ref<ResultPoint>> >
 Detector::getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints) {
   float ratio = (2 * nbLayers_ + (nbLayers_ > 4 ? 1 : 0) + (nbLayers_ - 4) / 8) / (2.0f * nbCenterLayers_);
             
@@ -173,7 +173,7 @@ Detector::getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints) {
   returnValue.push_back(Ref<ResultPoint>(new ResultPoint(float(targetbx), float(targetby))));
   returnValue.push_back(Ref<ResultPoint>(new ResultPoint(float(targetcx), float(targetcy))));
   returnValue.push_back(Ref<ResultPoint>(new ResultPoint(float(targetdx), float(targetdy))));
-  return ArrayRef< Ref<ResultPoint> >(array);
+  return QSharedPointer<std::vector<Ref<ResultPoint>> >(array);
 }
         
 void Detector::correctParameterData(Ref<zxing::BitArray> parameterData, bool compact) {
@@ -190,7 +190,7 @@ void Detector::correctParameterData(Ref<zxing::BitArray> parameterData, bool com
             
   int numECCodewords = numCodewords - numDataCodewords;
             
-  ArrayRef<int> parameterWords(new std::vector<int>(numCodewords));
+  QSharedPointer<std::vector<int>> parameterWords(new std::vector<int>(numCodewords));
             
   int codewordSize = 4;
   for (int i = 0; i < numCodewords; i++) {

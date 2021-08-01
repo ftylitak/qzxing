@@ -122,7 +122,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
   float left = (float) (start[1] + start[0]) / 2.0f;
   float right = lastStart + lastPatternSize / 2.0f;
 
-  ArrayRef< Ref<ResultPoint> > resultPoints (2);
+  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints (2);
   resultPoints[0] = 
     Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
   resultPoints[1] =
@@ -130,7 +130,7 @@ Ref<Result> Code93Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
   
   return Ref<Result>(new Result(
                        resultString,
-                       ArrayRef<zxing::byte>(),
+                       QSharedPointer<std::vector<zxing::byte>>(),
                        resultPoints,
                        BarcodeFormat::CODE_93));
 }

@@ -72,7 +72,7 @@ void GenericMultipleBarcodeReader::doDecodeMultiple(Ref<BinaryBitmap> image,
     results.push_back(translateResultPoints(result, xOffset, yOffset));
   }
   
-  ArrayRef< Ref<ResultPoint> > resultPoints = result->getResultPoints();
+  QSharedPointer<std::vector<Ref<ResultPoint>> > resultPoints = result->getResultPoints();
   if (resultPoints->empty()) {
     return;
   }
@@ -124,11 +124,11 @@ void GenericMultipleBarcodeReader::doDecodeMultiple(Ref<BinaryBitmap> image,
 }
 
 Ref<Result> GenericMultipleBarcodeReader::translateResultPoints(Ref<Result> result, int xOffset, int yOffset){
-    ArrayRef< Ref<ResultPoint> > oldResultPoints = result->getResultPoints();
+    QSharedPointer<std::vector<Ref<ResultPoint>> > oldResultPoints = result->getResultPoints();
   if (oldResultPoints->empty()) {
     return result;
   }
-  ArrayRef< Ref<ResultPoint> > newResultPoints;
+  QSharedPointer<std::vector<Ref<ResultPoint>> > newResultPoints;
   for (int i = 0; i < oldResultPoints->size(); i++) {
     Ref<ResultPoint> oldPoint = oldResultPoints[i];
     newResultPoints->values().push_back(Ref<ResultPoint>(new ResultPoint(oldPoint->getX() + xOffset, oldPoint->getY() + yOffset)));

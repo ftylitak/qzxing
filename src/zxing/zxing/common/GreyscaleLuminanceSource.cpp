@@ -23,13 +23,13 @@
 #include <zxing/common/IllegalArgumentException.h>
 
 using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::LuminanceSource;
 
 namespace zxing {
 
 GreyscaleLuminanceSource::
-GreyscaleLuminanceSource(ArrayRef<zxing::byte> greyData,
+GreyscaleLuminanceSource(QSharedPointer<std::vector<zxing::byte>> greyData,
                          int dataWidth, int dataHeight,
                          int left, int top,
                          int width, int height) 
@@ -43,13 +43,13 @@ GreyscaleLuminanceSource(ArrayRef<zxing::byte> greyData,
   }
 }
 
-ArrayRef<zxing::byte> GreyscaleLuminanceSource::getRow(int y, ArrayRef<zxing::byte> row) const {
+QSharedPointer<std::vector<zxing::byte>> GreyscaleLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const {
   if (y < 0 || y >= this->getHeight()) {
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   int width = getWidth();
   if (!row || row->size() < width) {
-    ArrayRef<zxing::byte> temp (width);
+    QSharedPointer<std::vector<zxing::byte>> temp (width);
     row = temp;
   }
   int offset = (y + top_) * dataWidth_ + left_;
@@ -57,12 +57,12 @@ ArrayRef<zxing::byte> GreyscaleLuminanceSource::getRow(int y, ArrayRef<zxing::by
   return row;
 }
 
-ArrayRef<zxing::byte> GreyscaleLuminanceSource::getMatrix() const {
+QSharedPointer<std::vector<zxing::byte>> GreyscaleLuminanceSource::getMatrix() const {
   if (left_ == 0 && top_ == 0 && dataWidth_ == getWidth() && dataHeight_ == getHeight())
     return greyData_;
 
   int size = getWidth() * getHeight();
-  ArrayRef<zxing::byte> result (size);
+  QSharedPointer<std::vector<zxing::byte>> result (size);
   for (int row = 0; row < getHeight(); row++) {
     memcpy(&result[row * getWidth()], &greyData_[(top_ + row) * dataWidth_ + left_], getWidth());
   }
