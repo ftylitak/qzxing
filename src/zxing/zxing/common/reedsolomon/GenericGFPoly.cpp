@@ -31,25 +31,25 @@ using zxing::GenericGFPoly;
 // VC++
 using zxing::GenericGF;
 
-GenericGFPoly::GenericGFPoly(GenericGF *field,
+GenericGFPoly::GenericGFPoly(zxing::GenericGF *field,
                              QSharedPointer<std::vector<int>> coefficients)
   :  field_(field) {
   if (coefficients->size() == 0) {
     throw IllegalArgumentException("need coefficients");
   }
   int coefficientsLength = coefficients->size();
-  if (coefficientsLength > 1 && coefficients[0] == 0) {
+  if (coefficientsLength > 1 && (*coefficients)[0] == 0) {
     // Leading term must be non-zero for anything except the constant polynomial "0"
     int firstNonZero = 1;
-    while (firstNonZero < coefficientsLength && coefficients[firstNonZero] == 0) {
+    while (firstNonZero < coefficientsLength && (*coefficients)[firstNonZero] == 0) {
       firstNonZero++;
     }
     if (firstNonZero == coefficientsLength) {
       coefficients_ = field->getZero()->getCoefficients();
     } else {
-      coefficients_ = QSharedPointer<std::vector<int>>(coefficientsLength-firstNonZero);
+      coefficients_.reset(new std::vector<int>(coefficientsLength-firstNonZero));
       for (int i = 0; i < (int)coefficients_->size(); i++) {
-        coefficients_[i] = coefficients[i + firstNonZero];
+        (*coefficients_)[i] = (*coefficients)[i + firstNonZero];
       }
     }
   } else {
@@ -66,11 +66,11 @@ int GenericGFPoly::getDegree() {
 }
   
 bool GenericGFPoly::isZero() {
-  return coefficients_[0] == 0;
+  return (*coefficients_)[0] == 0;
 }
   
 int GenericGFPoly::getCoefficient(int degree) {
-  return coefficients_[coefficients_->size() - 1 - degree];
+  return (*coefficients_)[coefficients_->size() - 1 - degree];
 }
   
 int GenericGFPoly::evaluateAt(int a) {
@@ -84,13 +84,13 @@ int GenericGFPoly::evaluateAt(int a) {
     // Just the sum of the coefficients
     int result = 0;
     for (int i = 0; i < size; i++) {
-      result = GenericGF::addOrSubtract(result, coefficients_[i]);
+      result = GenericGF::addOrSubtract(result, (*coefficients_)[i]);
     }
     return result;
   }
-  int result = coefficients_[0];
+  int result = (*coefficients_)[0];
   for (int i = 1; i < size; i++) {
-    result = GenericGF::addOrSubtract(field_->multiply(a, result), coefficients_[i]);
+    result = GenericGF::addOrSubtract(field_->multiply(a, result), (*coefficients_)[i]);
   }
   return result;
 }
@@ -114,16 +114,16 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::addOrSubtract(QSharedPointer<zxing:
     largerCoefficients = temp;
   }
     
-  QSharedPointer<std::vector<int>> sumDiff(largerCoefficients->size());
+  QSharedPointer<std::vector<int>> sumDiff(new std::vector<int>(largerCoefficients->size()));
   int lengthDiff = largerCoefficients->size() - smallerCoefficients->size();
   // Copy high-order terms only found in higher-degree polynomial's coefficients
   for (int i = 0; i < lengthDiff; i++) {
-    sumDiff[i] = largerCoefficients[i];
+    (*sumDiff)[i] = (*largerCoefficients)[i];
   }
     
   for (int i = lengthDiff; i < (int)largerCoefficients->size(); i++) {
-    sumDiff[i] = GenericGF::addOrSubtract(smallerCoefficients[i-lengthDiff],
-                                          largerCoefficients[i]);
+    (*sumDiff)[i] = GenericGF::addOrSubtract((*smallerCoefficients)[i-lengthDiff],
+                                          (*largerCoefficients)[i]);
   }
     
   return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, sumDiff));
@@ -144,12 +144,12 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::multiply(QSharedPointer<zxing::Gene
   QSharedPointer<std::vector<int>> bCoefficients = other->getCoefficients();
   int bLength = bCoefficients->size();
     
-  QSharedPointer<std::vector<int>> product(aLength + bLength - 1);
+  QSharedPointer<std::vector<int>> product(new std::vector<int>(aLength + bLength - 1));
   for (int i = 0; i < aLength; i++) {
-    int aCoeff = aCoefficients[i];
+    int aCoeff = (*aCoefficients)[i];
     for (int j = 0; j < bLength; j++) {
-      product[i+j] = GenericGF::addOrSubtract(product[i+j], 
-                                              field_->multiply(aCoeff, bCoefficients[j]));
+      (*product)[i+j] = GenericGF::addOrSubtract((*product)[i+j],
+                                              field_->multiply(aCoeff, (*bCoefficients)[j]));
     }
   }
     
@@ -164,9 +164,9 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::multiply(int scalar) {
     return QSharedPointer<GenericGFPoly>(this);
   }
   int size = coefficients_->size();
-  QSharedPointer<std::vector<int>> product(size);
+  QSharedPointer<std::vector<int>> product(new std::vector<int>(size));
   for (int i = 0; i < size; i++) {
-    product[i] = field_->multiply(coefficients_[i], scalar);
+    (*product)[i] = field_->multiply((*coefficients_)[i], scalar);
   }
   return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, product));
 }
@@ -179,9 +179,9 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::multiplyByMonomial(int degree, int 
     return field_->getZero();
   }
   int size = coefficients_->size();
-  QSharedPointer<std::vector<int>> product(size+degree);
+  QSharedPointer<std::vector<int>> product(new std::vector<int>(size+degree));
   for (int i = 0; i < size; i++) {
-    product[i] = field_->multiply(coefficients_[i], coefficient);
+    (*product)[i] = field_->multiply((*coefficients_)[i], coefficient);
   }
   return QSharedPointer<GenericGFPoly>(new GenericGFPoly(field_, product));
 }

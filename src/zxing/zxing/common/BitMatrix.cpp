@@ -37,7 +37,7 @@ void BitMatrix::init(int width, int height) {
     this->width = width;
     this->height = height;
     this->rowSize = (width + 31) >> 5;
-    bits = QSharedPointer<std::vector<int>>(rowSize * height);
+    bits.reset(new std::vector<int>(rowSize * height));
 }
 
 BitMatrix::BitMatrix(int dimension) {
@@ -52,7 +52,7 @@ BitMatrix::~BitMatrix() {}
 
 void BitMatrix::flip(int x, int y) {
     int offset = y * rowSize + (x >> 5);
-    bits[offset] ^= 1 << (x & 0x1f);
+    (*bits)[offset] ^= 1 << (x & 0x1f);
 }
 
 void BitMatrix::rotate180()
@@ -86,18 +86,18 @@ void BitMatrix::setRegion(int left, int top, int width, int height) {
     for (int y = top; y < bottom; y++) {
         int offset = y * rowSize;
         for (int x = left; x < right; x++) {
-            bits[offset + (x >> 5)] |= 1 << (x & 0x1f);
+            (*bits)[offset + (x >> 5)] |= 1 << (x & 0x1f);
         }
     }
 }
 
 QSharedPointer<BitArray> BitMatrix::getRow(int y, QSharedPointer<BitArray> row) {
-    if (row.empty() || row->getSize() < width) {
-        row = new BitArray(width);
+    if (row.isNull() || row->getSize() < width) {
+        row.reset(new BitArray(width));
     }
     int offset = y * rowSize;
     for (int x = 0; x < rowSize; x++) {
-        row->setBulk(x << 5, bits[offset + x]);
+        row->setBulk(x << 5, (*bits)[offset + x]);
     }
     return row;
 }
@@ -112,7 +112,7 @@ void BitMatrix::setRow(int y, QSharedPointer<zxing::BitArray> row)
 
     //change with memcopy
     for(int i=0; i<width; i++)
-        bits[y * rowSize + i] = row->get(i);
+        (*bits)[y * rowSize + i] = row->get(i);
 }
 
 int BitMatrix::getWidth() const {
@@ -125,7 +125,7 @@ int BitMatrix::getHeight() const {
 
 QSharedPointer<std::vector<int>> BitMatrix::getTopLeftOnBit() const {
     int bitsOffset = 0;
-    while (bitsOffset < bits->size() && bits[bitsOffset] == 0) {
+    while (bitsOffset < bits->size() && (*bits)[bitsOffset] == 0) {
         bitsOffset++;
     }
     if (bitsOffset == bits->size()) {
@@ -134,21 +134,21 @@ QSharedPointer<std::vector<int>> BitMatrix::getTopLeftOnBit() const {
     int y = bitsOffset / rowSize;
     int x = (bitsOffset % rowSize) << 5;
 
-    int theBits = bits[bitsOffset];
+    int theBits = (*bits)[bitsOffset];
     int bit = 0;
     while ((theBits << (31-bit)) == 0) {
         bit++;
     }
     x += bit;
-    QSharedPointer<std::vector<int>> res (2);
-    res[0]=x;
-    res[1]=y;
+    QSharedPointer<std::vector<int>> res (new std::vector<int>(2));
+    (*res)[0]=x;
+    (*res)[1]=y;
     return res;
 }
 
 QSharedPointer<std::vector<int>> BitMatrix::getBottomRightOnBit() const {
     int bitsOffset = bits->size() - 1;
-    while (bitsOffset >= 0 && bits[bitsOffset] == 0) {
+    while (bitsOffset >= 0 && (*bits)[bitsOffset] == 0) {
         bitsOffset--;
     }
     if (bitsOffset < 0) {
@@ -158,16 +158,16 @@ QSharedPointer<std::vector<int>> BitMatrix::getBottomRightOnBit() const {
     int y = bitsOffset / rowSize;
     int x = (bitsOffset % rowSize) << 5;
 
-    int theBits = bits[bitsOffset];
+    int theBits = (*bits)[bitsOffset];
     int bit = 31;
     while ((theBits >> bit) == 0) {
         bit--;
     }
     x += bit;
 
-    QSharedPointer<std::vector<int>> res (2);
-    res[0]=x;
-    res[1]=y;
+    QSharedPointer<std::vector<int>> res (new std::vector<int>(2));
+    (*res)[0]=x;
+    (*res)[1]=y;
     return res;
 }
 
@@ -180,7 +180,7 @@ QSharedPointer<std::vector<int>> BitMatrix::getEnclosingRectangle() const
 
     for (int y = 0; y < height; y++) {
         for (int x32 = 0; x32 < rowSize; x32++) {
-            int theBits = bits[y * rowSize + x32];
+            int theBits = (*bits)[y * rowSize + x32];
             if (theBits != 0) {
                 if (y < top) {
                     top = y;
@@ -217,11 +217,11 @@ QSharedPointer<std::vector<int>> BitMatrix::getEnclosingRectangle() const
         return QSharedPointer<std::vector<int>>();
     }
 
-    QSharedPointer<std::vector<int>> res(4);
-    res[0] = left;
-    res[1] = top;
-    res[2] = width;
-    res[3] = height;
+    QSharedPointer<std::vector<int>> res(new std::vector<int>(4));
+    (*res)[0] = left;
+    (*res)[1] = top;
+    (*res)[2] = width;
+    (*res)[3] = height;
 
     return res;
 }

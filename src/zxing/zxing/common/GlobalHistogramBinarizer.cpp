@@ -39,18 +39,18 @@ const int LUMINANCE_BUCKETS = 1 << LUMINANCE_BITS;
 const QSharedPointer<std::vector<zxing::byte>> EMPTY (0);
 
 GlobalHistogramBinarizer::GlobalHistogramBinarizer(QSharedPointer<LuminanceSource> source) 
-    : Binarizer(source), luminances(EMPTY), buckets(LUMINANCE_BUCKETS) {}
+    : Binarizer(source), luminances(EMPTY), buckets(new std::vector<int>(LUMINANCE_BUCKETS)) {}
 
 GlobalHistogramBinarizer::~GlobalHistogramBinarizer() {}
 
 void GlobalHistogramBinarizer::initArrays(int luminanceSize) {
     if (luminances->size() < luminanceSize) {
-        luminances = QSharedPointer<std::vector<zxing::byte>>(luminanceSize);
+        luminances.reset(new std::vector<zxing::byte>(luminanceSize));
     }
 //    for (int x = 0; x < LUMINANCE_BUCKETS; x++) {
 //        buckets[x] = 0;
 //    }
-    memset(&buckets[0], 0, sizeof(int) * LUMINANCE_BUCKETS);
+    memset(&(*buckets)[0], 0, sizeof(int) * LUMINANCE_BUCKETS);
 }
 
 QSharedPointer<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, QSharedPointer<BitArray> row) {
@@ -58,7 +58,7 @@ QSharedPointer<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, QSharedPoi
     LuminanceSource& source = *getLuminanceSource();
     int width = source.getWidth();
     if (row == NULL || static_cast<int>(row->getSize()) < width) {
-        row = new BitArray(width);
+        row.reset(new BitArray(width));
     } else {
         row->clear();
     }
@@ -68,22 +68,22 @@ QSharedPointer<BitArray> GlobalHistogramBinarizer::getBlackRow(int y, QSharedPoi
     if (false) {
         std::cerr << "gbr " << y << " r ";
         for(int i=0, e=localLuminances->size(); i < e; ++i) {
-            std::cerr << 0+localLuminances[i] << " ";
+            std::cerr << 0+(*localLuminances)[i] << " ";
         }
         std::cerr << std::endl;
     }
     QSharedPointer<std::vector<int>> localBuckets = buckets;
     for (int x = 0; x < width; x++) {
-        int pixel = localLuminances[x] & 0xff;
-        localBuckets[pixel >> LUMINANCE_SHIFT]++;
+        int pixel = (*localLuminances)[x] & 0xff;
+        (*localBuckets)[pixel >> LUMINANCE_SHIFT]++;
     }
     int blackPoint = estimateBlackPoint(localBuckets);
     // std::cerr << "gbr bp " << y << " " << blackPoint << std::endl;
 
-    int left = localLuminances[0] & 0xff;
-    int center = localLuminances[1] & 0xff;
+    int left = (*localLuminances)[0] & 0xff;
+    int center = (*localLuminances)[1] & 0xff;
     for (int x = 1; x < width - 1; x++) {
-        int right = localLuminances[x + 1] & 0xff;
+        int right = (*localLuminances)[x + 1] & 0xff;
         // A simple -1 4 -1 box filter with a weight of 2.
         int luminance = ((center << 2) - left - right) >> 1;
         if (luminance < blackPoint) {
@@ -111,8 +111,8 @@ QSharedPointer<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
         QSharedPointer<std::vector<zxing::byte>> localLuminances = source.getRow(row, luminances);
         int right = (width << 2) / 5;
         for (int x = width / 5; x < right; x++) {
-            int pixel = localLuminances[x] & 0xff;
-            localBuckets[pixel >> LUMINANCE_SHIFT]++;
+            int pixel = (*localLuminances)[x] & 0xff;
+            (*localBuckets)[pixel >> LUMINANCE_SHIFT]++;
         }
     }
 
@@ -122,7 +122,7 @@ QSharedPointer<BitMatrix> GlobalHistogramBinarizer::getBlackMatrix() {
     for (int y = 0; y < height; y++) {
         int offset = y * width;
         for (int x = 0; x < width; x++) {
-            int pixel = localLuminances[offset + x] & 0xff;
+            int pixel = (*localLuminances)[offset + x] & 0xff;
             if (pixel < blackPoint) {
                 matrix->set(x, y);
             }
@@ -142,17 +142,17 @@ int GlobalHistogramBinarizer::estimateBlackPoint(QSharedPointer<std::vector<int>
     int firstPeakSize = 0;
     if (false) {
         for (int x = 0; x < numBuckets; x++) {
-            cerr << buckets[x] << " ";
+            cerr << (*buckets)[x] << " ";
         }
         cerr << endl;
     }
     for (int x = 0; x < numBuckets; x++) {
-        if (buckets[x] > firstPeakSize) {
+        if ((*buckets)[x] > firstPeakSize) {
             firstPeak = x;
-            firstPeakSize = buckets[x];
+            firstPeakSize = (*buckets)[x];
         }
-        if (buckets[x] > maxBucketCount) {
-            maxBucketCount = buckets[x];
+        if ((*buckets)[x] > maxBucketCount) {
+            maxBucketCount = (*buckets)[x];
         }
     }
 
@@ -163,7 +163,7 @@ int GlobalHistogramBinarizer::estimateBlackPoint(QSharedPointer<std::vector<int>
     for (int x = 0; x < numBuckets; x++) {
         int distanceToBiggest = x - firstPeak;
         // Encourage more distant second peaks by multiplying by square of distance
-        int score = buckets[x] * distanceToBiggest * distanceToBiggest;
+        int score = (*buckets)[x] * distanceToBiggest * distanceToBiggest;
         if (score > secondPeakScore) {
             secondPeak = x;
             secondPeakScore = score;
@@ -196,7 +196,7 @@ int GlobalHistogramBinarizer::estimateBlackPoint(QSharedPointer<std::vector<int>
         // Favor a "valley" that is not too close to either peak -- especially not
         // the black peak -- and that has a low value of course
         int score = fromFirst * fromFirst * (secondPeak - x) *
-                (maxBucketCount - buckets[x]);
+                (maxBucketCount - (*buckets)[x]);
         if (score > bestValleyScore) {
             bestValley = x;
             bestValleyScore = score;

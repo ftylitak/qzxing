@@ -56,14 +56,14 @@ vector<QSharedPointer<ResultPoint> > MonochromeRectangleDetector::detect() {
   bottom = (int) pointD->getY() + 1;
 
   // Go try to find point A again with better information -- might have been off at first.
-  pointA.reset(findCornerFromCenter(halfWidth, 0, left, right,
-                                    halfHeight, -deltaY, top, bottom, halfWidth >> 2));
+  pointA = findCornerFromCenter(halfWidth, 0, left, right,
+                                    halfHeight, -deltaY, top, bottom, halfWidth >> 2);
 
   vector<QSharedPointer<ResultPoint> > corners(4);
-  corners[0].reset(pointA);
-  corners[1].reset(pointB);
-  corners[2].reset(pointC);
-  corners[3].reset(pointD);
+  corners[0] = pointA;
+  corners[1] = pointB;
+  corners[2] = pointC;
+  corners[3] = pointD;
   return corners;
 }
 
@@ -167,7 +167,7 @@ QSharedPointer<TwoInts> MonochromeRectangleDetector::blackWhiteRange(int fixedDi
   end--;
   QSharedPointer<TwoInts> result(NULL);
   if (end > start) {
-    result = new TwoInts;
+    result.reset(new TwoInts);
     result->start = start;
     result->end = end;
   }

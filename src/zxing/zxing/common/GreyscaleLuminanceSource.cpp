@@ -49,11 +49,11 @@ QSharedPointer<std::vector<zxing::byte>> GreyscaleLuminanceSource::getRow(int y,
   }
   int width = getWidth();
   if (!row || row->size() < width) {
-    QSharedPointer<std::vector<zxing::byte>> temp (width);
+    QSharedPointer<std::vector<zxing::byte>> temp (new std::vector<zxing::byte>(width));
     row = temp;
   }
   int offset = (y + top_) * dataWidth_ + left_;
-  memcpy(&row[0], &greyData_[offset], width);
+  memcpy(&(*row)[0], &(*greyData_)[offset], width);
   return row;
 }
 
@@ -62,9 +62,9 @@ QSharedPointer<std::vector<zxing::byte>> GreyscaleLuminanceSource::getMatrix() c
     return greyData_;
 
   int size = getWidth() * getHeight();
-  QSharedPointer<std::vector<zxing::byte>> result (size);
+  QSharedPointer<std::vector<zxing::byte>> result (new std::vector<zxing::byte>(size));
   for (int row = 0; row < getHeight(); row++) {
-    memcpy(&result[row * getWidth()], &greyData_[(top_ + row) * dataWidth_ + left_], getWidth());
+    memcpy(&(*result)[row * getWidth()], &(*greyData_)[(top_ + row) * dataWidth_ + left_], getWidth());
   }
   return result;
 }

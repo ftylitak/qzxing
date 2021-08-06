@@ -276,19 +276,19 @@ vector<QSharedPointer<ResultPoint> > WhiteRectangleDetector::centerEdges(QShared
     QSharedPointer<ResultPoint> pointB(new ResultPoint(zi + CORR, zj + CORR));
     QSharedPointer<ResultPoint> pointC(new ResultPoint(xi - CORR, xj - CORR));
     QSharedPointer<ResultPoint> pointD(new ResultPoint(yi + CORR, yj - CORR));
-	  corners[0].reset(pointA);
-	  corners[1].reset(pointB);
-	  corners[2].reset(pointC);
-	  corners[3].reset(pointD);
+      corners[0] = pointA;
+      corners[1] = pointB;
+      corners[2] = pointC;
+      corners[3] = pointD;
   } else {
     QSharedPointer<ResultPoint> pointA(new ResultPoint(ti + CORR, tj + CORR));
     QSharedPointer<ResultPoint> pointB(new ResultPoint(zi + CORR, zj - CORR));
     QSharedPointer<ResultPoint> pointC(new ResultPoint(xi - CORR, xj + CORR));
     QSharedPointer<ResultPoint> pointD(new ResultPoint(yi - CORR, yj - CORR));
-	  corners[0].reset(pointA);
-	  corners[1].reset(pointB);
-	  corners[2].reset(pointC);
-	  corners[3].reset(pointD);
+      corners[0] = pointA;
+      corners[1] = pointB;
+      corners[2] = pointC;
+      corners[3] = pointD;
   }
   return corners;
 }

@@ -73,7 +73,7 @@ bool CharacterSetECI::init_tables() {
 }
 
 CharacterSetECI::CharacterSetECI(const std::vector<int> values, const std::vector<const char*> names)
-  : Counted(), values_(values)
+  : values_(values)
 {
     for(size_t i=0; i<names.size(); i++)
         names_.push_back(std::string(names[i]));

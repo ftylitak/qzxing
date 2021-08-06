@@ -71,11 +71,11 @@ void GenericGF::initialize() {
     logTable.at(expTable.at(i)) = i;
   }
   //logTable[0] == 0 but this should never be used
-  QSharedPointer<std::vector<int>> coefficients_zero(1);
-  QSharedPointer<std::vector<int>> coefficients_one(1);
+  QSharedPointer<std::vector<int>> coefficients_zero(new std::vector<int>(1));
+  QSharedPointer<std::vector<int>> coefficients_one(new std::vector<int>(1));
 
-  coefficients_zero[0] = 0;
-  coefficients_one[0] = 1;
+  (*coefficients_zero)[0] = 0;
+  (*coefficients_one)[0] = 1;
 
   zero = QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients_zero));
   one = QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients_one));
@@ -107,8 +107,8 @@ QSharedPointer<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficie
   if (coefficient == 0) {
     return zero;
   }
-  QSharedPointer<std::vector<int>> coefficients(degree + 1);
-  coefficients[0] = coefficient;
+  QSharedPointer<std::vector<int>> coefficients(new std::vector<int>(degree + 1));
+  (*coefficients)[0] = coefficient;
 
   return QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients));
 }

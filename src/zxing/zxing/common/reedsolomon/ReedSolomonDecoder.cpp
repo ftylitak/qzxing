@@ -40,12 +40,12 @@ ReedSolomonDecoder::~ReedSolomonDecoder() {
 }
 
 void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int twoS) {
-  QSharedPointer<GenericGFPoly> poly(new GenericGFPoly(field, received));
-  QSharedPointer<std::vector<int>> syndromeCoefficients(twoS);
+  QSharedPointer<GenericGFPoly> poly(new GenericGFPoly(field.data(), received));
+  QSharedPointer<std::vector<int>> syndromeCoefficients(new std::vector<int>(twoS));
   bool noError = true;
   for (int i = 0; i < twoS; i++) {
     int eval = poly->evaluateAt(field->exp(i + field->getGeneratorBase()));
-    syndromeCoefficients[syndromeCoefficients->size() - 1 - i] = eval;
+    (*syndromeCoefficients)[syndromeCoefficients->size() - 1 - i] = eval;
     if (eval != 0) {
       noError = false;
     }
@@ -53,7 +53,7 @@ void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int t
   if (noError) {
     return;
   }
-  QSharedPointer<GenericGFPoly> syndrome(new GenericGFPoly(field, syndromeCoefficients));
+  QSharedPointer<GenericGFPoly> syndrome(new GenericGFPoly(field.data(), syndromeCoefficients));
   vector<QSharedPointer<GenericGFPoly> > sigmaOmega =
     runEuclideanAlgorithm(field->buildMonomial(twoS, 1), syndrome, twoS);
   QSharedPointer<GenericGFPoly> sigma = sigmaOmega[0];
@@ -61,11 +61,11 @@ void ReedSolomonDecoder::decode(QSharedPointer<std::vector<int>> received, int t
   QSharedPointer<std::vector<int>> errorLocations = findErrorLocations(sigma);
   QSharedPointer<std::vector<int>> errorMagitudes = findErrorMagnitudes(omega, errorLocations);
   for (int i = 0; i < errorLocations->size(); i++) {
-    int position = received->size() - 1 - field->log(errorLocations[i]);
+    int position = received->size() - 1 - field->log((*errorLocations)[i]);
     if (position < 0) {
       throw ReedSolomonException("Bad error location");
     }
-    received[position] = GenericGF::addOrSubtract(received[position], errorMagitudes[i]);
+    (*received)[position] = GenericGF::addOrSubtract((*received)[position], (*errorMagitudes)[i]);
   }
 }
 
@@ -133,14 +133,14 @@ QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorLocations(QSharedP
   int numErrors = errorLocator->getDegree();
   if (numErrors == 1) { // shortcut
     QSharedPointer<std::vector<int>> result(new std::vector<int>(1));
-    result[0] = errorLocator->getCoefficient(1);
+    (*result)[0] = errorLocator->getCoefficient(1);
     return result;
   }
   QSharedPointer<std::vector<int>> result(new std::vector<int>(numErrors));
   int e = 0;
   for (size_t i = 1; i < field->getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
-      result[e] = field->inverse(i);
+      (*result)[e] = field->inverse(i);
       e++;
     }
   }
@@ -155,19 +155,19 @@ QSharedPointer<std::vector<int>> ReedSolomonDecoder::findErrorMagnitudes(QShared
   int s = errorLocations->size();
   QSharedPointer<std::vector<int>> result(new std::vector<int>(s));
   for (int i = 0; i < s; i++) {
-    int xiInverse = field->inverse(errorLocations[i]);
+    int xiInverse = field->inverse((*errorLocations)[i]);
     int denominator = 1;
     for (int j = 0; j < s; j++) {
       if (i != j) {
-        int term = field->multiply(errorLocations[j], xiInverse);
+        int term = field->multiply((*errorLocations)[j], xiInverse);
         int termPlus1 = (term & 0x1) == 0 ? term | 1 : term & ~1;
         denominator = field->multiply(denominator, termPlus1);
       }
     }
-    result[i] = field->multiply(errorEvaluator->evaluateAt(xiInverse),
+    (*result)[i] = field->multiply(errorEvaluator->evaluateAt(xiInverse),
                                 field->inverse(denominator));
     if (field->getGeneratorBase() != 0) {
-      result[i] = field->multiply(result[i], xiInverse);
+      (*result)[i] = field->multiply((*result)[i], xiInverse);
     }
   }
   return result;
