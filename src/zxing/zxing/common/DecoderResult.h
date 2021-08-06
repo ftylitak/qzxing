@@ -32,14 +32,14 @@ class DecoderResult  {
 private:
   QSharedPointer<std::vector<zxing::byte>> rawBytes_;
   QSharedPointer<String> text_;
-  QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> > byteSegments_;
+  QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>> byteSegments_;
   std::string ecLevel_;
   std::string charSet_;
 
 public:
   DecoderResult(QSharedPointer<std::vector<zxing::byte>> rawBytes,
                 QSharedPointer<String> text,
-                QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> >& byteSegments,
+                QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>>& byteSegments,
                 std::string const& ecLevel,
                 std::string charSet = "");
 

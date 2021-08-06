@@ -46,8 +46,8 @@ QSharedPointer<PerspectiveTransform> PerspectiveTransform::squareToQuadrilateral
   float dy3 = y0 - y1 + y2 - y3;
   QSharedPointer<PerspectiveTransform> result;
   if (dx3 == 0.0f && dy3 == 0.0f) {
-    result = new PerspectiveTransform(x1 - x0, x2 - x1, x0, y1 - y0, y2 - y1, y0, 0.0f,
-                                     0.0f, 1.0f);
+    result.reset(new PerspectiveTransform(x1 - x0, x2 - x1, x0, y1 - y0, y2 - y1, y0, 0.0f,
+                                     0.0f, 1.0f));
   }
   else
   {
@@ -58,8 +58,8 @@ QSharedPointer<PerspectiveTransform> PerspectiveTransform::squareToQuadrilateral
     float denominator = dx1 * dy2 - dx2 * dy1;
     float a13 = (dx3 * dy2 - dx2 * dy3) / denominator;
     float a23 = (dx1 * dy3 - dx3 * dy1) / denominator;
-    result = new PerspectiveTransform(x1 - x0 + a13 * x1, x3 - x0 + a23 * x3, x0, y1 - y0
-                                     + a13 * y1, y3 - y0 + a23 * y3, y0, a13, a23, 1.0f);
+    result.reset(new PerspectiveTransform(x1 - x0 + a13 * x1, x3 - x0 + a23 * x3, x0, y1 - y0
+                                     + a13 * y1, y3 - y0 + a23 * y3, y0, a13, a23, 1.0f));
   }
 
   return result;

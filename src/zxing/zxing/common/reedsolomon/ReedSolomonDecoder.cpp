@@ -25,7 +25,7 @@
 #include <zxing/IllegalStateException.h>
 
 using std::vector;
-using zxing::Ref;
+
 
 using zxing::ReedSolomonDecoder;
 using zxing::GenericGFPoly;

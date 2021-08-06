@@ -27,7 +27,7 @@
 #include <zxing/ChecksumException.h>
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 
-using zxing::Ref;
+
 using zxing::DecoderResult;
 //using zxing::datamatrix::Decoder;
 //using zxing::datamatrix::DataBlock;

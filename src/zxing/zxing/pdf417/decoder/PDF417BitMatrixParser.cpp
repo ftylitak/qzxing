@@ -30,7 +30,7 @@ using zxing::pdf417::decoder::BitMatrixParser;
 
 // VC++
 
-using zxing::Ref;
+
 using zxing::BitMatrix;
 
 const int BitMatrixParser::MAX_ROWS = 90;

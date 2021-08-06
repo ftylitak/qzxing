@@ -26,7 +26,7 @@
 
 using zxing::GenericGFPoly;
 
-using zxing::Ref;
+
 
 // VC++
 using zxing::GenericGF;

@@ -33,7 +33,7 @@ using std::vector;
 using zxing::aztec::Detector;
 using zxing::aztec::Point;
 using zxing::aztec::AztecDetectorResult;
-using zxing::Ref;
+
 
 using zxing::ResultPoint;
 using zxing::BitArray;

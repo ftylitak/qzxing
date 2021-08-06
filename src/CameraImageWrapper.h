@@ -33,7 +33,7 @@ public:
 
     static CameraImageWrapper* Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
     
-    QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > getOriginalImage();
+    QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > > getOriginalImage();
     QSharedPointer<GreyscaleLuminanceSource> getDelegate() { return delegate; }
 
     QSharedPointer<std::vector<zxing::byte>> getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const;
@@ -53,7 +53,7 @@ private:
     void updateImageAsGrayscale(const QImage &origin);
 
     QSharedPointer<GreyscaleLuminanceSource> delegate;
-    QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>> imageBytesPerRow;
+    QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>> imageBytesPerRow;
     QSharedPointer<std::vector<zxing::byte>> imageBytes;
 
     static const zxing::byte B_TO_GREYSCALE[256];

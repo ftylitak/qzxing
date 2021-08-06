@@ -28,7 +28,7 @@ using std::numeric_limits;
 using zxing::pdf417::detector::Detector;
 using zxing::common::detector::Math;
 using zxing::common::detector::MathUtils;
-using zxing::Ref;
+
 
 using zxing::DetectorResult;
 using zxing::ResultPoint;

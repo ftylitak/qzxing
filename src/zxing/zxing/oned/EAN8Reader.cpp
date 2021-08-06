@@ -22,7 +22,7 @@ using std::vector;
 using zxing::oned::EAN8Reader;
 
 // VC++
-using zxing::Ref;
+
 using zxing::BitArray;
 
 EAN8Reader::EAN8Reader() : decodeMiddleCounters(4, 0) {}

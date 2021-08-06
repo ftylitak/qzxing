@@ -101,7 +101,7 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
         return new CameraImageWrapper(sourceImage);
 }
 
-QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > CameraImageWrapper::getOriginalImage()
+QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>> CameraImageWrapper::getOriginalImage()
 {
     return imageBytesPerRow;
 }
@@ -167,11 +167,11 @@ QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getRowP(int y, QSha
     int width = getWidth();
 
     if (row->size() != width)
-        row.reset(QSharedPointer<std::vector<zxing::byte>>(width));
+        row.reset(new std::vector<zxing::byte>(width));
 
     Q_ASSERT(y >= 0 && y < getHeight());
 
-    return imageBytesPerRow[y];
+    return (*imageBytesPerRow)[y];
 }
 
 QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getMatrixP() const
@@ -195,13 +195,13 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
     const int width = getWidth();
     const int height = getHeight();
 
-    imageBytes = QSharedPointer<std::vector<zxing::byte>>(height*width);
-    imageBytesPerRow = QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>(height);
-    zxing::byte* m = &imageBytes[0];
+    imageBytes = QSharedPointer<std::vector<zxing::byte>>(new std::vector<zxing::byte>(height*width));
+    imageBytesPerRow = QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>>(new std::vector<QSharedPointer<std::vector<zxing::byte>>>(height));
+    zxing::byte* m = &(*imageBytes)[0];
 
     for(int j=0; j<height; j++)
     {
-        QSharedPointer<std::vector<zxing::byte>> line(width);
+        QSharedPointer<std::vector<zxing::byte>> line(new std::vector<zxing::byte>(width));
         for(int i=0; i<width; i++)
         {
             pixel = origin.pixel(i,j);
@@ -209,12 +209,12 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
                 pixelGrayscale = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
             else
                 pixelGrayscale = pixel & 0xFF;
-            line[i] = pixelGrayscale;
+            (*line)[i] = pixelGrayscale;
         }
-        imageBytesPerRow[j] = line;
+        (*imageBytesPerRow)[j] = line;
 
 #if __cplusplus > 199711L
-        memcpy(m, line->values().data(), width);
+        memcpy(m, (*line).data(), width);  ///the below line is also usable
 #else
         memcpy(m, &line[0], width);
 #endif

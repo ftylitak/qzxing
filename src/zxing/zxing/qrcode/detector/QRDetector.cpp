@@ -37,7 +37,7 @@ using std::abs;
 using std::min;
 using std::max;
 using zxing::qrcode::Detector;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ResultPointCallback;
 using zxing::DetectorResult;

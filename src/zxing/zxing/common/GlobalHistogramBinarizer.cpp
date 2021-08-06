@@ -24,7 +24,7 @@
 
 using zxing::Binarizer;
 
-using zxing::Ref;
+
 using zxing::BitArray;
 using zxing::BitMatrix;
 

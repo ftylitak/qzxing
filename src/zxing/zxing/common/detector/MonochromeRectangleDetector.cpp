@@ -25,7 +25,7 @@
 #include <algorithm>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::ResultPoint;
 using zxing::TwoInts;
 using zxing::MonochromeRectangleDetector;

@@ -31,7 +31,7 @@ using std::string;
 using zxing::NotFoundException;
 using zxing::FormatException;
 using zxing::ChecksumException;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::oned::CodaBarReader;
 

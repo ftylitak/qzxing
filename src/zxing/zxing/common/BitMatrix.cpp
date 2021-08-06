@@ -28,7 +28,7 @@ using std::ostringstream;
 using zxing::BitMatrix;
 using zxing::BitArray;
 
-using zxing::Ref;
+
 
 void BitMatrix::init(int width, int height) {
     if (width < 1 || height < 1) {

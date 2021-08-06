@@ -25,7 +25,7 @@ using std::abs;
 using std::min;
 using std::sort;
 using std::vector;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ReaderException;
 using zxing::qrcode::FinderPattern;

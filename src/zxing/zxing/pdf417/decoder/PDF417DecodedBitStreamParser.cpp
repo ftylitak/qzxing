@@ -24,7 +24,7 @@
 using std::string;
 using zxing::pdf417::DecodedBitStreamParser;
 
-using zxing::Ref;
+
 using zxing::DecoderResult;
 using zxing::String;
 

@@ -25,7 +25,7 @@
 #include <sstream>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::ResultPoint;
 using zxing::WhiteRectangleDetector;
 using zxing::common::detector::MathUtils;

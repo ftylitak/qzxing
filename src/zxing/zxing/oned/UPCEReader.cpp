@@ -21,7 +21,7 @@
 
 using std::string;
 using std::vector;
-using zxing::Ref;
+
 using zxing::String;
 using zxing::oned::UPCEReader;
 

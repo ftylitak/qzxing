@@ -22,7 +22,7 @@
 #include <zxing/Result.h>
 
 using zxing::Result;
-using zxing::Ref;
+
 
 using zxing::String;
 using zxing::ResultPoint;

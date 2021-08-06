@@ -22,7 +22,7 @@
 #include <zxing/pdf417/decoder/ec/ModulusGF.h>
 
 using std::vector;
-using zxing::Ref;
+
 
 using zxing::pdf417::decoder::ec::ErrorCorrection;
 using zxing::pdf417::decoder::ec::ModulusPoly;

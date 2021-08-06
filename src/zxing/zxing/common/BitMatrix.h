@@ -46,12 +46,12 @@ public:
 
   bool get(int x, int y) const {
     int offset = y * rowSize + (x >> 5);
-    return ((((unsigned)bits[offset]) >> (x & 0x1f)) & 1) != 0;
+    return ((((unsigned)(*bits)[offset]) >> (x & 0x1f)) & 1) != 0;
   }
 
   void set(int x, int y) {
     int offset = y * rowSize + (x >> 5);
-    bits[offset] |= 1 << (x & 0x1f);
+    (*bits)[offset] |= 1 << (x & 0x1f);
   }
 
   void flip(int x, int y);

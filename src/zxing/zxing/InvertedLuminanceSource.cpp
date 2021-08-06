@@ -33,7 +33,7 @@ namespace zxing
     int width = getWidth();
     for (int i = 0; i < width; i++)
     {
-      row[i] = 0xFF - row[i];
+      (*row)[i] = 0xFF - (*row)[i];
     }
     return row;
   }
@@ -42,10 +42,10 @@ namespace zxing
   {
     QSharedPointer<std::vector<zxing::byte>> matrix = delegate->getMatrix();
     int length = getWidth() * getHeight();
-    QSharedPointer<std::vector<zxing::byte>> invertedMatrix(length);
+    QSharedPointer<std::vector<zxing::byte>> invertedMatrix(new std::vector<zxing::byte>(length));
     for (int i = 0; i < length; i++)
     {
-      invertedMatrix[i] = 0xFF - matrix[i];
+      (*invertedMatrix)[i] = 0xFF - (*matrix)[i];
     }
     return invertedMatrix;
   }

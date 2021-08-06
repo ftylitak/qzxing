@@ -22,7 +22,7 @@
 #include <zxing/ReaderException.h>
 
 using zxing::oned::UPCAReader;
-using zxing::Ref;
+
 using zxing::Result;
 
 // VC++

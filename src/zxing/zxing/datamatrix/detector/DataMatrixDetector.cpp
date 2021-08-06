@@ -30,7 +30,7 @@
 #include <algorithm>
 
 using std::abs;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ResultPoint;
 using zxing::DetectorResult;

@@ -27,7 +27,7 @@
 
 using std::vector;
 using std::string;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::String;
 using zxing::NotFoundException;

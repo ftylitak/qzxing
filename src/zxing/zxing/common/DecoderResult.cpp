@@ -26,7 +26,7 @@ using namespace zxing;
 
 DecoderResult::DecoderResult(QSharedPointer<std::vector<zxing::byte>> rawBytes,
                              QSharedPointer<String> text,
-                             QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>> >& byteSegments,
+                             QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>>& byteSegments,
                              string const& ecLevel, string charSet) :
   rawBytes_(rawBytes),
   text_(text),

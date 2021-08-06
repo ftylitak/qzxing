@@ -22,7 +22,7 @@
 #include <zxing/qrcode/detector/AlignmentPattern.h>
 
 using std::abs;
-using zxing::Ref;
+
 using zxing::qrcode::AlignmentPattern;
 
 AlignmentPattern::AlignmentPattern(float posX, float posY, float estimatedModuleSize) :

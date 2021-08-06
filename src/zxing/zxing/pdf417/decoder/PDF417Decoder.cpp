@@ -28,7 +28,7 @@
 
 using zxing::pdf417::decoder::Decoder;
 using zxing::pdf417::decoder::ec::ErrorCorrection;
-using zxing::Ref;
+
 using zxing::DecoderResult;
 
 // VC++

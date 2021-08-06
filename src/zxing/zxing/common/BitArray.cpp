@@ -25,7 +25,7 @@ using zxing::BitArray;
 
 
 // VC++
-using zxing::Ref;
+
 
 
 namespace zxing {

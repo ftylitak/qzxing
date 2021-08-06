@@ -26,7 +26,7 @@
 
 using zxing::GenericGF;
 using zxing::GenericGFPoly;
-using zxing::Ref;
+
 
 QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_12(new GenericGF(0x1069, 4096, 1));
 QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_10(new GenericGF(0x409, 1024, 1));

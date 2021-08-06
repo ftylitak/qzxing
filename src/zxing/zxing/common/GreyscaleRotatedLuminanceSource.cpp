@@ -51,7 +51,7 @@ GreyscaleRotatedLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing:
     throw IllegalArgumentException("Requested row is outside the image.");
   }
   if (!row || row->size() < getWidth()) {
-    row = QSharedPointer<std::vector<zxing::byte>>(getWidth());
+    row.reset(new std::vector<zxing::byte>(getWidth()));
   }
   int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
   using namespace std;
@@ -62,19 +62,19 @@ GreyscaleRotatedLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing:
          << y << endl;
   }
   for (int x = 0; x < getWidth(); x++) {
-    row[x] = greyData_[offset];
+    (*row)[x] = (*greyData_)[offset];
     offset += dataWidth_;
   }
   return row;
 }
 
 QSharedPointer<std::vector<zxing::byte>> GreyscaleRotatedLuminanceSource::getMatrix() const {
-  QSharedPointer<std::vector<zxing::byte>> result (getWidth() * getHeight());
+  QSharedPointer<std::vector<zxing::byte>> result (new std::vector<zxing::byte>(getWidth() * getHeight()));
   for (int y = 0; y < getHeight(); y++) {
-    zxing::byte* row = &result[y * getWidth()];
+    zxing::byte* row = &(*result)[y * getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
     for (int x = 0; x < getWidth(); x++) {
-      row[x] = greyData_[offset];
+      row[x] = (*greyData_)[offset];
       offset += dataWidth_;
     }
   }

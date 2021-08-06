@@ -23,7 +23,7 @@
 
 using std::string;
 using zxing::String;
-using zxing::Ref;
+
 
 String::String(const std::string &text) :
   text_(text) {

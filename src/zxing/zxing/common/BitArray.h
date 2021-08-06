@@ -47,15 +47,15 @@ public:
     int getSizeInBytes() const;
 
     bool get(int i) const {
-        return (bits[i / 32] & (1 << (i & 0x1F))) != 0;
+        return ((*bits)[i / 32] & (1 << (i & 0x1F))) != 0;
     }
 
     void set(int i) {
-        bits[i / 32] |= 1 << (i & 0x1F);
+        (*bits)[i / 32] |= 1 << (i & 0x1F);
     }
 
     void flip(int i) {
-        bits[i / 32] ^= 1 << (i & 0x1F);
+        (*bits)[i / 32] ^= 1 << (i & 0x1F);
       }
 
     int getNextSet(int from);
@@ -79,7 +79,7 @@ public:
     std::string toString() const;
 
     static QSharedPointer<std::vector<int>> makeArray(int size) {
-        return QSharedPointer<std::vector<int>>((size + 31) / 32);
+        return QSharedPointer<std::vector<int>>(new std::vector<int>((size + 31) / 32));
       }
 
     void reverse();

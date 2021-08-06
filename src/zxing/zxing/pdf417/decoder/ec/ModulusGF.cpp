@@ -20,7 +20,7 @@
 #include <zxing/pdf417/decoder/ec/ModulusGF.h>
 #include <zxing/pdf417/decoder/ec/ModulusPoly.h>
 
-using zxing::Ref;
+
 using zxing::pdf417::decoder::ec::ModulusGF;
 using zxing::pdf417::decoder::ec::ModulusPoly;
 

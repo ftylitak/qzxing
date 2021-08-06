@@ -20,7 +20,7 @@
 #include <zxing/ResultPoint.h>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::multi::GenericMultipleBarcodeReader;
 

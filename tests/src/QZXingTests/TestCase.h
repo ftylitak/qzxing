@@ -133,7 +133,7 @@ protected:
             assertTrue(false);
 
         for (size_t i = 0; i < expected.size(); i++) {
-            if (expected[i] != received[i]) {
+            if (expected[i] != (*received)[i]) {
                 qDebug() << QString::fromStdString(message) << ". Mismatch at " << QString::number(i) /*<< ". Expected " + arrayToString(expected) + ", got " +
                      arrayToString(Arrays.copyOf(received, expected.length)))*/;
                 assertTrue(false);
@@ -145,9 +145,9 @@ protected:
                             const std::vector<zxing::byte> &expected,
                             const QSharedPointer<std::vector<int>> &received)
     {
-        QSharedPointer<std::vector<zxing::byte>> received_copy(received->size());
+        QSharedPointer<std::vector<zxing::byte>> received_copy(new std::vector<zxing::byte>(received->size()));
         for(int i=0; i<received_copy->size(); i++)
-            received_copy[i] = received[i];
+            (*received_copy)[i] = (*received)[i];
 
         assertDataEquals(message, expected, received_copy);
     }

@@ -43,7 +43,7 @@ void QRCodeTests::test()
 
     // Set the matrix.
     qrCode.setMatrix(matrix);
-    assertSame(matrix, qrCode.getMatrix());
+    assertSame(matrix.data(), qrCode.getMatrix().data());
 }
 
 void QRCodeTests::testToString1() {

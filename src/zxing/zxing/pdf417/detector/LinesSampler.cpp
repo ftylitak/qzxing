@@ -29,7 +29,7 @@ using std::min;
 using std::abs;
 using zxing::pdf417::detector::LinesSampler;
 using zxing::pdf417::decoder::BitMatrixParser;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::NotFoundException;
 using zxing::Point;

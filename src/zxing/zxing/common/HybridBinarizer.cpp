@@ -117,7 +117,7 @@ HybridBinarizer::calculateThresholdForBlock(QSharedPointer<std::vector<zxing::by
       int top = cap(y, 2, subHeight - 3);
       int sum = 0;
       for (int z = -2; z <= 2; z++) {
-        int *blackRow = &blackPoints[(top + z) * subWidth];
+        int *blackRow = &(*blackPoints)[(top + z) * subWidth];
         sum += blackRow[left - 2];
         sum += blackRow[left - 1];
         sum += blackRow[left];
@@ -140,7 +140,7 @@ void HybridBinarizer::thresholdBlock(QSharedPointer<std::vector<zxing::byte>> lu
        y < BLOCK_SIZE;
        y++,  offset += stride) {
     for (int x = 0; x < BLOCK_SIZE; x++) {
-      int pixel = luminances[offset + x] & 0xff;
+      int pixel = (*luminances)[offset + x] & 0xff;
       if (pixel <= threshold) {
         matrix->set(xoffset + x, yoffset + y);
       }
@@ -150,9 +150,9 @@ void HybridBinarizer::thresholdBlock(QSharedPointer<std::vector<zxing::byte>> lu
 
 namespace {
   inline int getBlackPointFromNeighbors(QSharedPointer<std::vector<int>> blackPoints, int subWidth, int x, int y) {
-    return (blackPoints[(y-1)*subWidth+x] +
-            2*blackPoints[y*subWidth+x-1] +
-            blackPoints[(y-1)*subWidth+x-1]) >> 2;
+    return ((*blackPoints)[(y-1)*subWidth+x] +
+            2*(*blackPoints)[y*subWidth+x-1] +
+            (*blackPoints)[(y-1)*subWidth+x-1]) >> 2;
   }
 }
 
@@ -164,7 +164,7 @@ QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPo
                                                     int height) {
   const int minDynamicRange = 24;
 
-  QSharedPointer<std::vector<int>> blackPoints (subHeight * subWidth);
+  QSharedPointer<std::vector<int>> blackPoints (new std::vector<int>(subHeight * subWidth));
   for (int y = 0; y < subHeight; y++) {
     int yoffset = y << BLOCK_SIZE_POWER;
     int maxYOffset = height - BLOCK_SIZE;
@@ -184,7 +184,7 @@ QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPo
            yy < BLOCK_SIZE;
            yy++, offset += width) {
         for (int xx = 0; xx < BLOCK_SIZE; xx++) {
-          int pixel = luminances[offset + xx] & 0xFF;
+          int pixel = (*luminances)[offset + xx] & 0xFF;
           sum += pixel;
           // still looking for good contrast
           if (pixel < min) {
@@ -200,8 +200,8 @@ QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPo
           // finish the rest of the rows quickly
           for (yy++, offset += width; yy < BLOCK_SIZE; yy++, offset += width) {
             for (int xx = 0; xx < BLOCK_SIZE; xx += 2) {
-              sum += luminances[offset + xx] & 0xFF;
-              sum += luminances[offset + xx + 1] & 0xFF;
+              sum += (*luminances)[offset + xx] & 0xFF;
+              sum += (*luminances)[offset + xx + 1] & 0xFF;
             }
           }
         }
@@ -218,7 +218,7 @@ QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPo
           }
         }
       }
-      blackPoints[y * subWidth + x] = average;
+      (*blackPoints)[y * subWidth + x] = average;
     }
   }
   return blackPoints;
