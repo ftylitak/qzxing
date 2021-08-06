@@ -88,7 +88,7 @@ QSharedPointer<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, QShared
 
     //added this because reader->decodeRow returns null if row is null
     //TODO: investigate why the execution reaches here with empty row.
-    if (result.empty())
+    if (result.isNull())
       continue;
 
     // Special case: a 12-digit code encoded in UPC-A is identical

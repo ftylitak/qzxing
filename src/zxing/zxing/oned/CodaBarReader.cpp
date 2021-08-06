@@ -154,11 +154,9 @@ QSharedPointer<Result> CodaBarReader::decodeRow(int rowNumber, QSharedPointer<Bi
   }
   float right = (float) runningCount;
 
-  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(2);
-  resultPoints[0] =
-    QSharedPointer<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] =
-    QSharedPointer<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(left, (float) rowNumber));
+  (*resultPoints)[1].reset(new OneDResultPoint(right, (float) rowNumber));
 
   return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(decodeRowResult)),
                                 QSharedPointer<std::vector<zxing::byte>>(),

@@ -97,7 +97,7 @@ QSharedPointer<Result> MultiFormatOneDReader::decodeRow(int rowNumber, QSharedPo
   int size = int(readers.size());
   for (int i = 0; i < size; i++)
   {
-    OneDReader *reader = readers[i];
+    OneDReader *reader = readers[i].data();
     try
     {
       QSharedPointer<Result> result = reader->decodeRow(rowNumber, row, hints);

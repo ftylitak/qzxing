@@ -41,7 +41,6 @@ namespace zxing {
     bool initialized;
 
     GenericGF(int primitive, size_t size, int b);
-    ~GenericGF();
     
     void initialize();
     void checkInit();
@@ -55,6 +54,8 @@ namespace zxing {
     static QSharedPointer<GenericGF> QR_CODE_FIELD_256;
     static QSharedPointer<GenericGF> DATA_MATRIX_FIELD_256;
     static QSharedPointer<GenericGF> MAXICODE_FIELD_64;
+
+    ~GenericGF();
     
     QSharedPointer<GenericGFPoly> getZero();
     QSharedPointer<GenericGFPoly> getOne();

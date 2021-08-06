@@ -122,11 +122,9 @@ QSharedPointer<Result> Code93Reader::decodeRow(int rowNumber, QSharedPointer<Bit
   float left = (float) (start[1] + start[0]) / 2.0f;
   float right = lastStart + lastPatternSize / 2.0f;
 
-  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints (2);
-  resultPoints[0] = 
-    QSharedPointer<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] =
-    QSharedPointer<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints (new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(left, (float) rowNumber));
+  (*resultPoints)[1].reset(new OneDResultPoint(right, (float) rowNumber));
   
   return QSharedPointer<Result>(new Result(
                        resultString,

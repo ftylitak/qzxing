@@ -360,10 +360,10 @@ QRectF getTagRect(const QSharedPointer<std::vector<QSharedPointer<ResultPoint>> 
         if (resultRectPoints.size() != 4)
             return QRectF();
 
-        qreal xMin = qreal(resultPoints[0]->getX());
+        qreal xMin = qreal((*resultPoints)[0]->getX());
         qreal xMax = xMin;
         for (int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = qreal(resultPoints[i]->getX());
+            qreal x = qreal((*resultPoints)[i]->getX());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)
@@ -385,13 +385,13 @@ QRectF getTagRect(const QSharedPointer<std::vector<QSharedPointer<ResultPoint>> 
 
     // 2D QR code
     if (resultPoints->size() == 4) {
-        qreal xMin = qreal(resultPoints[0]->getX());
+        qreal xMin = qreal((*resultPoints)[0]->getX());
         qreal xMax = xMin;
-        qreal yMin = qreal(resultPoints[0]->getY());
+        qreal yMin = qreal((*resultPoints)[0]->getY());
         qreal yMax = yMin;
         for (int i = 1; i < resultPoints->size(); ++i) {
-            qreal x = qreal(resultPoints[i]->getX());
-            qreal y = qreal(resultPoints[i]->getY());
+            qreal x = qreal((*resultPoints)[i]->getX());
+            qreal y = qreal((*resultPoints)[i]->getY());
             if (x < xMin)
                 xMin = x;
             if (x > xMax)

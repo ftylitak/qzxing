@@ -58,7 +58,7 @@ QSharedPointer<Result> OneDReader::decode(QSharedPointer<BinaryBitmap> image, De
         int height = rotatedImage->getHeight();
         for (int i = 0; i < points->size(); i++)
         {
-          points[i].reset(new OneDResultPoint(height - points[i]->getY() - 1, points[i]->getX()));
+          (*points)[i].reset(new OneDResultPoint(height - (*points)[i]->getY() - 1, (*points)[i]->getX()));
         }
       }
       // std::cerr << "tried harder" << std::endl;
@@ -153,10 +153,10 @@ QSharedPointer<Result> OneDReader::doDecode(QSharedPointer<BinaryBitmap> image, 
           QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> points(result->getResultPoints());
           if (points)
           {
-            points[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - points[0]->getX() - 1,
-                                                             points[0]->getY()));
-            points[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - points[1]->getX() - 1,
-                                                             points[1]->getY()));
+            (*points)[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - (*points)[0]->getX() - 1,
+                                                             (*points)[0]->getY()));
+            (*points)[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(width - (*points)[1]->getX() - 1,
+                                                             (*points)[1]->getY()));
           }
         }
         return result;

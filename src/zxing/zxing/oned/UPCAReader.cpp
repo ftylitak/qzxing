@@ -53,7 +53,7 @@ int UPCAReader::decodeMiddle(QSharedPointer<BitArray> row,
 }
 
 QSharedPointer<Result> UPCAReader::maybeReturnResult(QSharedPointer<Result> result) {
-  if (result.empty()) {
+  if (result.isNull()) {
     return result;
   }
   const std::string& text = (result->getText())->getText();

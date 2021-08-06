@@ -326,11 +326,11 @@ QSharedPointer<Result> RSSExpandedReader::constructResult(std::vector<ExpandedPa
     QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > firstPoints = pairs[0].getFinderPattern().getResultPoints();
     QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > lastPoints  = pairs[pairs.size() - 1].getFinderPattern().getResultPoints();
 
-    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(4);
-    resultPoints[0] = firstPoints[0];
-    resultPoints[1] = firstPoints[1];
-    resultPoints[2] = lastPoints[0];
-    resultPoints[3] = lastPoints[1];
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(4));
+    (*resultPoints)[0] = (*firstPoints)[0];
+    (*resultPoints)[1] = (*firstPoints)[1];
+    (*resultPoints)[2] = (*lastPoints)[0];
+    (*resultPoints)[3] = (*lastPoints)[1];
 
     return QSharedPointer<Result>(new Result(
                            QSharedPointer<String>(new String(resultingString)),

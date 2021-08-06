@@ -8,9 +8,9 @@ FinderPattern::FinderPattern(int value, std::vector<int> startEnd, int start, in
     : m_value(value),
       m_startEnd(startEnd)
 {
-    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(2);
-    resultPoints[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(start, rowNumber));
-    resultPoints[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(end, rowNumber));
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+    (*resultPoints)[0].reset(new OneDResultPoint(start, rowNumber));
+    (*resultPoints)[1].reset(new OneDResultPoint(end, rowNumber));
     m_resultPoints = resultPoints;
 }
 

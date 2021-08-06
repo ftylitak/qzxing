@@ -26,8 +26,6 @@
 
 using std::vector;
 
-using zxing::Array;
-
 using zxing::FormatException;
 using zxing::NotFoundException;
 using zxing::Result;
@@ -106,7 +104,7 @@ QSharedPointer<Result> ITFReader::decodeRow(int rowNumber, QSharedPointer<BitArr
   bool lengthOK = false;
   for (int i = 0, e = allowedLengths->size(); i < e; i++)
   {
-    if (length == allowedLengths[i])
+    if (length == (*allowedLengths)[i])
     {
       lengthOK = true;
       break;
@@ -118,11 +116,9 @@ QSharedPointer<Result> ITFReader::decodeRow(int rowNumber, QSharedPointer<BitArr
     throw FormatException();
   }
 
-  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(2);
-  resultPoints[0] =
-      QSharedPointer<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
-  resultPoints[1] =
-      QSharedPointer<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
+  (*resultPoints)[1].reset(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
   return QSharedPointer<Result>(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::ITF));
 }
 

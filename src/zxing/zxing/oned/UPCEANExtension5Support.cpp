@@ -147,10 +147,10 @@ QSharedPointer<Result> UPCEANExtension5Support::decodeRow(int rowNumber, QShared
         metadata.put(ResultMetadata::SUGGESTED_PRICE, value);
     }
 
-    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(2);
-    resultPoints[0] = QSharedPointer<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+    (*resultPoints)[0] = QSharedPointer<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
                                            static_cast<float> (rowNumber)));
-    resultPoints[1] = QSharedPointer<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
+    (*resultPoints)[1] = QSharedPointer<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
                                            static_cast<float> (rowNumber)));
 
     return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(resultString)),

@@ -112,11 +112,11 @@ QSharedPointer<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPai
     QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > leftPoints = leftPair.getFinderPattern().getResultPoints();
     QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > rightPoints = rightPair.getFinderPattern().getResultPoints();
 
-    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(4);
-    resultPoints[0] = leftPoints[0];
-    resultPoints[1] = leftPoints[1];
-    resultPoints[2] = rightPoints[0];
-    resultPoints[3] = rightPoints[1];
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(4));
+    (*resultPoints)[0] = (*leftPoints)[0];
+    (*resultPoints)[1] = (*leftPoints)[1];
+    (*resultPoints)[2] = (*rightPoints)[0];
+    (*resultPoints)[3] = (*rightPoints)[1];
 
     return QSharedPointer<Result>(new Result(
                            QSharedPointer<String>(new String(buffer)),

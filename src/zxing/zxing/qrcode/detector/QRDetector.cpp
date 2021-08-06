@@ -119,18 +119,18 @@ QSharedPointer<DetectorResult> Detector::processFinderPatternInfo(QSharedPointer
   QSharedPointer<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
   QSharedPointer<BitMatrix> bits(sampleGrid(image_, dimension, transform));
   QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points(new std::vector< QSharedPointer<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
-  points[0].reset(bottomLeft);
-  points[1].reset(topLeft);
-  points[2].reset(topRight);
+  (*points)[0] = bottomLeft;
+  (*points)[1] = topLeft;
+  (*points)[2] = topRight;
   if (alignmentPattern != 0) {
-    points[3].reset(alignmentPattern);
+    (*points)[3] = alignmentPattern;
   }
 
   QSharedPointer<DetectorResult> result(new DetectorResult(bits, points));
   return result;
 }
 
-QSharedPointer<PerspectiveTransform> Detector::createTransform(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, Ref <
+QSharedPointer<PerspectiveTransform> Detector::createTransform(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, QSharedPointer <
                                                     ResultPoint > bottomLeft, QSharedPointer<ResultPoint> alignmentPattern, int dimension) {
 
   float dimMinusThree = (float)dimension - 3.5f;

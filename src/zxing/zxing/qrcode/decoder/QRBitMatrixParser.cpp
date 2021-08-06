@@ -138,7 +138,7 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
   //	cout << *functionPattern << endl;
 
   bool readingUp = true;
-  QSharedPointer<std::vector<zxing::byte>> result(version->getTotalCodewords());
+  QSharedPointer<std::vector<zxing::byte>> result(new std::vector<zxing::byte>(version->getTotalCodewords()));
   int resultOffset = 0;
   int currentByte = 0;
   int bitsRead = 0;
@@ -163,7 +163,7 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
           }
           // If we've made a whole byte, save it off
           if (bitsRead == 8) {
-            result[resultOffset++] = (zxing::byte)currentByte;
+            (*result)[resultOffset++] = (zxing::byte)currentByte;
             bitsRead = 0;
             currentByte = 0;
           }

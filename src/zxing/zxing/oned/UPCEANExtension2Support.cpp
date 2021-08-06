@@ -79,10 +79,10 @@ QSharedPointer<Result> UPCEANExtension2Support::decodeRow(int rowNumber, QShared
     ResultMetadata metadata;
     metadata.put(ResultMetadata::ISSUE_NUMBER, std::atoi(resultString.c_str()));
 
-    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints(2);
-    resultPoints[0] = QSharedPointer<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+    (*resultPoints)[0].reset(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
                                            static_cast<float> (rowNumber)));
-    resultPoints[1] = QSharedPointer<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
+    (*resultPoints)[1].reset(new OneDResultPoint(static_cast<float> (range),
                                            static_cast<float> (rowNumber)));
     return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(resultString)),
                                   QSharedPointer<std::vector<zxing::byte>>(),

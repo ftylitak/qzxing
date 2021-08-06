@@ -55,7 +55,7 @@ protected:
       float allowanceFactor);
   QSharedPointer<DetectorResult> processFinderPatternInfo(QSharedPointer<FinderPatternInfo> info);
 public:
-  virtual QSharedPointer<PerspectiveTransform> createTransform(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, Ref <
+  virtual QSharedPointer<PerspectiveTransform> createTransform(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, QSharedPointer <
       ResultPoint > bottomLeft, QSharedPointer<ResultPoint> alignmentPattern, int dimension);
 
   Detector(QSharedPointer<BitMatrix> image);

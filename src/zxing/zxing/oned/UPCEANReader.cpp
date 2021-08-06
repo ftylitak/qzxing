@@ -156,9 +156,9 @@ QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber,
   float right = (float)(endRange[1] + endRange[0]) / 2.0f;
   BarcodeFormat format = getBarcodeFormat();
 
-  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(2);
-  resultPoints[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(left, static_cast<float>(rowNumber)));
-  resultPoints[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(right, static_cast<float>(rowNumber)));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(left, static_cast<float>(rowNumber)));
+  (*resultPoints)[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(right, static_cast<float>(rowNumber)));
 
   QSharedPointer<Result> decodeResult(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, format));
   int extensionLength = 0;
@@ -172,7 +172,7 @@ QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber,
       decodeResult->getMetadata().putAll(extensionResult->getMetadata());
       extensionLength = extensionResult->getText()->length();
 
-      for (const QSharedPointer<ResultPoint> &resultPoint : extensionResult->getResultPoints()->values())
+      for (const QSharedPointer<ResultPoint> &resultPoint : (*extensionResult->getResultPoints()))
       {
         decodeResult->getResultPoints()->push_back(resultPoint);
       }

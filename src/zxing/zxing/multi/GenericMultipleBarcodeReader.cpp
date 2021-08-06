@@ -84,7 +84,7 @@ void GenericMultipleBarcodeReader::doDecodeMultiple(QSharedPointer<BinaryBitmap>
   float maxX = 0.0f;
   float maxY = 0.0f;
   for (int i = 0; i < resultPoints->size(); i++) {
-    QSharedPointer<ResultPoint> point = resultPoints[i];
+    QSharedPointer<ResultPoint> point = (*resultPoints)[i];
     float x = point->getX();
     float y = point->getY();
     if (x < minX) {
@@ -130,8 +130,8 @@ QSharedPointer<Result> GenericMultipleBarcodeReader::translateResultPoints(QShar
   }
   QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > newResultPoints;
   for (int i = 0; i < oldResultPoints->size(); i++) {
-    QSharedPointer<ResultPoint> oldPoint = oldResultPoints[i];
-    newResultPoints->values().push_back(QSharedPointer<ResultPoint>(new ResultPoint(oldPoint->getX() + xOffset, oldPoint->getY() + yOffset)));
+    QSharedPointer<ResultPoint> oldPoint = (*oldResultPoints)[i];
+    newResultPoints->push_back(QSharedPointer<ResultPoint>(new ResultPoint(oldPoint->getX() + xOffset, oldPoint->getY() + yOffset)));
   }
   return QSharedPointer<Result>(new Result(result->getText(), result->getRawBytes(), newResultPoints, result->getBarcodeFormat()));
 }
