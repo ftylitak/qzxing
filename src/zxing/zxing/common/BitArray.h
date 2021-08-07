@@ -21,7 +21,6 @@
 #include <zxing/ZXing.h>
 #include <QSharedPointer>
 #include <zxing/common/IllegalArgumentException.h>
-#include <zxing/common/Array.h>
 #include <vector>
 #include <limits>
 #include <iostream>

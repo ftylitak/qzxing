@@ -20,7 +20,6 @@
 
 #include <zxing/common/GlobalHistogramBinarizer.h>
 #include <zxing/NotFoundException.h>
-#include <zxing/common/Array.h>
 
 using zxing::Binarizer;
 

@@ -20,7 +20,6 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Array.h>
 #include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 

@@ -23,7 +23,6 @@
 #include <zxing/Binarizer.h>
 #include <zxing/common/BitArray.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Array.h>
 
 namespace zxing {
 	

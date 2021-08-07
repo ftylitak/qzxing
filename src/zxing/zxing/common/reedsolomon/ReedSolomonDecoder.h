@@ -23,7 +23,6 @@
 #include <memory>
 #include <vector>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <zxing/common/reedsolomon/GenericGFPoly.h>
 #include <zxing/common/reedsolomon/GenericGF.h>
 

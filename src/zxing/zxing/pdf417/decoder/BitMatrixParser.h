@@ -24,7 +24,6 @@
 #include <zxing/FormatException.h>
 #include <zxing/common/BitMatrix.h>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <stdint.h>
 
 namespace zxing {

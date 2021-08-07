@@ -16,7 +16,6 @@
  */
 
 #include <zxing/common/BitArray.h>
-#include <zxing/common/Array.h>
 #include <cstring>
 #include <sstream>
 

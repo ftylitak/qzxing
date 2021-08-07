@@ -28,7 +28,6 @@
 #include <zxing/qrcode/decoder/Mode.h>
 #include <zxing/common/BitSource.h>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/CharacterSetECI.h>
 #include <zxing/DecodeHints.h>

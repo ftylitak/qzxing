@@ -23,7 +23,6 @@
 
 #include <vector>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <zxing/datamatrix/Version.h>
 
 namespace zxing {

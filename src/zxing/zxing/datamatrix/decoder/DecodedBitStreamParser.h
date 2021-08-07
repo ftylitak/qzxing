@@ -23,7 +23,6 @@
 
 #include <string>
 #include <sstream>
-#include <zxing/common/Array.h>
 #include <zxing/common/BitSource.h>
 #include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>

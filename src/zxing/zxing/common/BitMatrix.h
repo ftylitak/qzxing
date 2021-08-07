@@ -23,7 +23,6 @@
 
 #include <QSharedPointer>
 #include <zxing/common/BitArray.h>
-#include <zxing/common/Array.h>
 #include <limits>
 
 namespace zxing {

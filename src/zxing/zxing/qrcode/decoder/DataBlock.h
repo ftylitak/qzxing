@@ -22,7 +22,6 @@
 
 #include <vector>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <zxing/qrcode/Version.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 

@@ -21,7 +21,6 @@
  */
 
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <string.h>
 #include "common/Types.h"
 

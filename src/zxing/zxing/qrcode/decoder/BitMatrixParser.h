@@ -23,7 +23,6 @@
 #include <zxing/ReaderException.h>
 #include <zxing/common/BitMatrix.h>
 #include <QSharedPointer>
-#include <zxing/common/Array.h>
 #include <zxing/qrcode/Version.h>
 #include <zxing/qrcode/FormatInformation.h>
 

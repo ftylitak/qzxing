@@ -23,7 +23,6 @@
 #define GENERICGFPOLY_H
 
 #include <vector>
-#include <zxing/common/Array.h>
 #include <QSharedPointer>
 
 namespace zxing {
