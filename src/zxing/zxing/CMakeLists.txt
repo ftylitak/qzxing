@@ -61,7 +61,6 @@ SET(AZTEC_DIR
 
 SET(COMMON_DIR
 
-    ${ZXING_DIR}/common/Array.h
     ${ZXING_DIR}/common/BitArray.cpp
     ${ZXING_DIR}/common/BitArray.h
     ${ZXING_DIR}/common/BitArrayIO.cpp

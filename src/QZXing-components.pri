@@ -62,7 +62,6 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/common/BitSource.h \
     $$PWD/zxing/zxing/common/BitMatrix.h \
     $$PWD/zxing/zxing/common/BitArray.h \
-    $$PWD/zxing/zxing/common/Array.h \
     $$PWD/zxing/zxing/common/detector/MathUtils.h \
     $$PWD/zxing/zxing/common/detector/JavaMath.h \
     $$PWD/zxing/zxing/common/detector/WhiteRectangleDetector.h \
