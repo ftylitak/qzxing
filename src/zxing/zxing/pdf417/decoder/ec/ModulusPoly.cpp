@@ -146,7 +146,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::add(QSharedPointer<ModulusPoly> other)
   }
   if (other->isZero())
   {
-    return QSharedPointer<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(new ModulusPoly(*this));
   }
 
   QSharedPointer<std::vector<int>> smallerCoefficients = coefficients_;
@@ -181,7 +181,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::subtract(QSharedPointer<ModulusPoly> ot
   }
   if (other->isZero())
   {
-    return QSharedPointer<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(new ModulusPoly(*this));
   }
   return add(other->negative());
 }
@@ -232,7 +232,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::multiply(int scalar)
   }
   if (scalar == 1)
   {
-    return QSharedPointer<ModulusPoly>(this);
+    return QSharedPointer<ModulusPoly>(new ModulusPoly(*this));
   }
   int size = coefficients_->size();
   QSharedPointer<std::vector<int>> product(new std::vector<int>(size));
@@ -274,7 +274,7 @@ std::vector<QSharedPointer<ModulusPoly>> ModulusPoly::divide(QSharedPointer<Modu
   }
 
   QSharedPointer<ModulusPoly> quotient(field_.getZero());
-  QSharedPointer<ModulusPoly> remainder(this);
+  QSharedPointer<ModulusPoly> remainder(new ModulusPoly(*this));
 
   int denominatorLeadingTerm = other->getCoefficient(other->getDegree());
   int inverseDenominatorLeadingTerm = field_.inverse(denominatorLeadingTerm);

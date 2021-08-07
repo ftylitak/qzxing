@@ -51,7 +51,7 @@ private:
                                 std::string& result,
                                 int count,
                                 common::CharacterSetECI const *currentCharacterSetECI,
-                                QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> >> &byteSegments,
+                                QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> >> byteSegments,
                                 Hashtable const& hints);
   static void decodeAlphanumericSegment(QSharedPointer<BitSource> bits, std::string &result, int count, bool fc1InEffect);
   static void decodeNumericSegment(QSharedPointer<BitSource> bits, std::string &result, int count);

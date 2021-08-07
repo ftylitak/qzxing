@@ -186,7 +186,7 @@ std::string DecodedBitStreamParser::decodeByteSegment(QSharedPointer<BitSource> 
                                                       string& result,
                                                       int count,
                                                       CharacterSetECI const * currentCharacterSetECI,
-                                                      QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>>& byteSegments,
+                                                      QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>> byteSegments,
                                                       Hashtable const& hints) {
     int nBytes = count;
     BitSource& bits (*bits_);
@@ -359,7 +359,7 @@ DecodedBitStreamParser::decode(QSharedPointer<std::vector<zxing::byte>> bytes,
     BitSource& bits (*bits_);
     string result;
     result.reserve(50);
-    QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>> byteSegments (0);
+    QSharedPointer<std::vector< QSharedPointer<std::vector<zxing::byte>>>> byteSegments (new std::vector< QSharedPointer<std::vector<zxing::byte>>>());
     const CharacterSetECI* currentCharacterSetECI = 0;
     string charSet = "";
     try {

@@ -626,7 +626,7 @@ QSharedPointer<FinderPatternInfo> FinderPatternFinder::find(DecodeHints const &h
 
   patternInfo.clear();
   for (size_t i = 0; i < patternInfoResPoints.size(); i++)
-    patternInfo.push_back(QSharedPointer<FinderPattern>(static_cast<FinderPattern *>(&*patternInfoResPoints[i])));
+      patternInfo.push_back(qSharedPointerCast<FinderPattern>(patternInfoResPoints[i]));
 
   QSharedPointer<FinderPatternInfo> result(new FinderPatternInfo(patternInfo));
   return result;

@@ -28,7 +28,7 @@
 namespace zxing {
   class GenericGFPoly;
   
-  class GenericGF  {
+  class GenericGF {
     
   private:
     std::vector<int> expTable;

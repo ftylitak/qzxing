@@ -39,7 +39,7 @@ const int LUMINANCE_BUCKETS = 1 << LUMINANCE_BITS;
 const QSharedPointer<std::vector<zxing::byte>> EMPTY (0);
 
 GlobalHistogramBinarizer::GlobalHistogramBinarizer(QSharedPointer<LuminanceSource> source) 
-    : Binarizer(source), luminances(EMPTY), buckets(new std::vector<int>(LUMINANCE_BUCKETS)) {}
+    : Binarizer(source), luminances(new std::vector<zxing::byte>()), buckets(new std::vector<int>(LUMINANCE_BUCKETS)) {}
 
 GlobalHistogramBinarizer::~GlobalHistogramBinarizer() {}
 

@@ -103,7 +103,7 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::addOrSubtract(QSharedPointer<zxing:
     return other;
   }
   if (other->isZero()) {
-    return QSharedPointer<GenericGFPoly>(this);
+    return QSharedPointer<GenericGFPoly>(new GenericGFPoly(*this));
   }
     
   QSharedPointer<std::vector<int>> smallerCoefficients = coefficients_;
@@ -161,7 +161,7 @@ QSharedPointer<GenericGFPoly> GenericGFPoly::multiply(int scalar) {
     return field_->getZero();
   }
   if (scalar == 1) {
-    return QSharedPointer<GenericGFPoly>(this);
+    return QSharedPointer<GenericGFPoly>(new GenericGFPoly(*this));
   }
   int size = coefficients_->size();
   QSharedPointer<std::vector<int>> product(new std::vector<int>(size));
@@ -195,7 +195,7 @@ std::vector<QSharedPointer<GenericGFPoly>> GenericGFPoly::divide(QSharedPointer<
   }
     
   QSharedPointer<GenericGFPoly> quotient = field_->getZero();
-  QSharedPointer<GenericGFPoly> remainder = QSharedPointer<GenericGFPoly>(this);
+  QSharedPointer<GenericGFPoly> remainder = QSharedPointer<GenericGFPoly>(new GenericGFPoly(*this));
     
   int denominatorLeadingTerm = other->getCoefficient(other->getDegree());
   int inverseDenominatorLeadingTerm = field_->inverse(denominatorLeadingTerm);
