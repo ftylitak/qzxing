@@ -85,7 +85,7 @@ CameraImageWrapper::~CameraImageWrapper()
 {
 }
 
-CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int maxWidth, int maxHeight, bool smoothTransformation)
+QSharedPointer<CameraImageWrapper> CameraImageWrapper::Factory(const QImage &sourceImage, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     if((maxWidth != -1 && sourceImage.width() > maxWidth) || (maxHeight != -1 && sourceImage.height() > maxHeight))
     {
@@ -95,10 +95,10 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
                     maxHeight != -1 ? maxHeight : sourceImage.height(),
                     Qt::KeepAspectRatio,
                     smoothTransformation ? Qt::SmoothTransformation : Qt::FastTransformation);
-        return new CameraImageWrapper(image);
+        return QSharedPointer<CameraImageWrapper>(new CameraImageWrapper(image));
     }
     else
-        return new CameraImageWrapper(sourceImage);
+        return QSharedPointer<CameraImageWrapper>(new CameraImageWrapper(sourceImage));
 }
 
 QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>> CameraImageWrapper::getOriginalImage()

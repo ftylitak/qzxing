@@ -425,7 +425,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
         return "";
     }
 
-    CameraImageWrapper *ciw = ZXING_NULLPTR;
+    QSharedPointer<CameraImageWrapper> ciw;
 
     if ((maxWidth > 0) || (maxHeight > 0))
         ciw = CameraImageWrapper::Factory(image, maxWidth, maxHeight, smoothTransformation);
@@ -434,7 +434,7 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
     QString errorMessage = "Unknown";
 
-    QSharedPointer<LuminanceSource> imageRefOriginal = QSharedPointer<LuminanceSource>(ciw);
+    QSharedPointer<LuminanceSource> imageRefOriginal = ciw;
     QSharedPointer<LuminanceSource> imageRef = imageRefOriginal;
     QSharedPointer<GlobalHistogramBinarizer> binz;
     QSharedPointer<BinaryBitmap> bb;
@@ -527,7 +527,6 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
             int fmt = res->getBarcodeFormat().value;
             decodedFormat = decoderFormatToString(1<<fmt);
             charSet_ = QString::fromStdString(res->getCharSet());
-            qDebug() << "charSet_: " << charSet_;
             if (!charSet_.isEmpty()) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                     QTextCodec *codec = QTextCodec::codecForName(res->getCharSet().c_str());

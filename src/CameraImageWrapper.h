@@ -31,7 +31,7 @@ public:
     CameraImageWrapper(CameraImageWrapper& otherInstance);
     ~CameraImageWrapper();
 
-    static CameraImageWrapper* Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
+    static QSharedPointer<CameraImageWrapper> Factory(const QImage& image, int maxWidth=-1, int maxHeight=-1, bool smoothTransformation=false);
     
     QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>> > > getOriginalImage();
     QSharedPointer<GreyscaleLuminanceSource> getDelegate() { return delegate; }
