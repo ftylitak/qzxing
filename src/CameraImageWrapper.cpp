@@ -216,7 +216,7 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
 #if __cplusplus > 199711L
         memcpy(m, (*line).data(), width);  ///the below line is also usable
 #else
-        memcpy(m, &line[0], width);
+        memcpy(m, &(*line)[0], width);
 #endif
         m += width * sizeof(zxing::byte);
     }
