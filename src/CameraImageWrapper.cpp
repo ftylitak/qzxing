@@ -195,7 +195,7 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
     const int width = getWidth();
     const int height = getHeight();
 
-    imageBytes = QSharedPointer<std::vector<zxing::byte>>(new std::vector<zxing::byte>(height*width));
+    imageBytes = QSharedPointer<std::vector<zxing::byte>>(new std::vector<zxing::byte>((size_t)height * (size_t)width));
     imageBytesPerRow = QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>>(new std::vector<QSharedPointer<std::vector<zxing::byte>>>(height));
     zxing::byte* m = &(*imageBytes)[0];
 

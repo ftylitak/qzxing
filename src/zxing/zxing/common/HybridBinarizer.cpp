@@ -117,7 +117,7 @@ HybridBinarizer::calculateThresholdForBlock(QSharedPointer<std::vector<zxing::by
       int top = cap(y, 2, subHeight - 3);
       int sum = 0;
       for (int z = -2; z <= 2; z++) {
-        int *blackRow = &(*blackPoints)[(top + z) * subWidth];
+        int *blackRow = &(*blackPoints)[(size_t)(top + z) * (size_t)subWidth];
         sum += blackRow[left - 2];
         sum += blackRow[left - 1];
         sum += blackRow[left];
@@ -164,7 +164,7 @@ QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPo
                                                     int height) {
   const int minDynamicRange = 24;
 
-  QSharedPointer<std::vector<int>> blackPoints (new std::vector<int>(subHeight * subWidth));
+  QSharedPointer<std::vector<int>> blackPoints (new std::vector<int>((size_t)subHeight * (size_t)subWidth));
   for (int y = 0; y < subHeight; y++) {
     int yoffset = y << BLOCK_SIZE_POWER;
     int maxYOffset = height - BLOCK_SIZE;

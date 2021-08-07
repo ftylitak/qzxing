@@ -37,7 +37,7 @@ void BitMatrix::init(int width, int height) {
     this->width = width;
     this->height = height;
     this->rowSize = (width + 31) >> 5;
-    bits.reset(new std::vector<int>(rowSize * height));
+    bits.reset(new std::vector<int>((size_t)rowSize * (size_t)height));
 }
 
 BitMatrix::BitMatrix(int dimension) {

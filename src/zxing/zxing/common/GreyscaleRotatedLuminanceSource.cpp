@@ -69,9 +69,9 @@ GreyscaleRotatedLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing:
 }
 
 QSharedPointer<std::vector<zxing::byte>> GreyscaleRotatedLuminanceSource::getMatrix() const {
-  QSharedPointer<std::vector<zxing::byte>> result (new std::vector<zxing::byte>(getWidth() * getHeight()));
+  QSharedPointer<std::vector<zxing::byte>> result (new std::vector<zxing::byte>((size_t)getWidth() * (size_t)getHeight()));
   for (int y = 0; y < getHeight(); y++) {
-    zxing::byte* row = &(*result)[y * getWidth()];
+    zxing::byte* row = &(*result)[(size_t)y * (size_t)getWidth()];
     int offset = (left_ * dataWidth_) + (dataWidth_ - 1 - (y + top_));
     for (int x = 0; x < getWidth(); x++) {
       row[x] = (*greyData_)[offset];
