@@ -44,9 +44,9 @@ Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
 void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
-  QSharedPointer<std::vector<int>> codewordInts(numCodewords);
+  QSharedPointer<std::vector<int>> codewordInts(new std::vector<int>(numCodewords));
   for (int i = 0; i < numCodewords; i++) {
-    codewordInts[i] = codewordBytes[i] & 0xff;
+    (*codewordInts)[i] = (*codewordBytes)[i] & 0xff;
   }
   int numECCodewords = numCodewords - numDataCodewords;
   try {
@@ -58,7 +58,7 @@ void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordByt
   // Copy back into array of bytes -- only need to worry about the bytes that were data
   // We don't care about errors in the error-correction codewords
   for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (zxing::byte)codewordInts[i];
+    (*codewordBytes)[i] = (zxing::byte)(*codewordInts)[i];
   }
 }
 
@@ -79,7 +79,7 @@ QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits) {
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  QSharedPointer<std::vector<zxing::byte>> resultBytes(totalBytes);
+  QSharedPointer<std::vector<zxing::byte>> resultBytes(new std::vector<zxing::byte>(totalBytes));
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
@@ -89,7 +89,7 @@ QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits) {
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {
       // De-interlace data blocks.
-      resultBytes[i * dataBlocksCount + j] = codewordBytes[i];
+      (*resultBytes)[i * dataBlocksCount + j] = (*codewordBytes)[i];
     }
   }
   // Decode the contents of that stream of bytes

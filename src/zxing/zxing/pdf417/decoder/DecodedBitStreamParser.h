@@ -61,8 +61,8 @@ class DecodedBitStreamParser {
   static const char PUNCT_CHARS[];
   static const char MIXED_CHARS[];
  
-  static QSharedPointer<std::vector<BigInteger> EXP900;
-  static QSharedPointer<std::vector<BigInteger> initEXP900();
+  static QSharedPointer<std::vector<BigInteger>> EXP900;
+  static QSharedPointer<std::vector<BigInteger>> initEXP900();
   
   static int textCompaction(QSharedPointer<std::vector<int>> codewords, int codeIndex, QSharedPointer<String> result);
   static void decodeTextCompaction(QSharedPointer<std::vector<int>> textCompactionData,

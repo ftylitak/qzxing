@@ -53,7 +53,7 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
   bool error = false;
   for (int i = numECCodewords; i > 0; i--) {
     int eval = poly->evaluateAt(field_.exp(i));
-    S[numECCodewords - i] = eval;
+    (*S)[numECCodewords - i] = eval;
     if (eval != 0) {
       error = true;
     }
@@ -63,11 +63,11 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
 
     QSharedPointer<ModulusPoly> knownErrors = field_.getOne();
     for (int i=0;i<erasures->size();i++) {
-      int b = field_.exp(received->size() - 1 - erasures[i]);
+      int b = field_.exp(received->size() - 1 - (*erasures)[i]);
       // Add (1 - bx) term:
       QSharedPointer<std::vector<int>> one_minus_b_x(new std::vector<int>(2));
-      one_minus_b_x[1]=field_.subtract(0,b);
-      one_minus_b_x[0]=1;
+      (*one_minus_b_x)[1]=field_.subtract(0,b);
+      (*one_minus_b_x)[0]=1;
       QSharedPointer<ModulusPoly> term (new ModulusPoly(field_,one_minus_b_x));
       knownErrors = knownErrors->multiply(term);
     }
@@ -86,11 +86,11 @@ void ErrorCorrection::decode(QSharedPointer<std::vector<int>> received,
     QSharedPointer<std::vector<int>> errorMagnitudes = findErrorMagnitudes(omega, sigma, errorLocations);
 
     for (int i = 0; i < errorLocations->size(); i++) {
-      int position = received->size() - 1 - field_.log(errorLocations[i]);
+      int position = received->size() - 1 - field_.log((*errorLocations)[i]);
       if (position < 0) {
         throw ReedSolomonException("Bad error location!");
       }
-      received[position] = field_.subtract(received[position], errorMagnitudes[i]);
+      (*received)[position] = field_.subtract((*received)[position], (*errorMagnitudes)[i]);
 #if (defined (DEBUG)  && defined _WIN32)
       {
         WCHAR szmsg[256];
@@ -164,7 +164,7 @@ QSharedPointer<std::vector<int>> ErrorCorrection::findErrorLocations(QSharedPoin
   int e = 0;
   for (int i = 1; i < field_.getSize() && e < numErrors; i++) {
     if (errorLocator->evaluateAt(i) == 0) {
-      result[e] = field_.inverse(i);
+      (*result)[e] = field_.inverse(i);
       e++;
     }
   }
@@ -195,7 +195,7 @@ QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(QSharedPoi
   int errorLocatorDegree = errorLocator->getDegree();
   QSharedPointer<std::vector<int>> formalDerivativeCoefficients (new std::vector<int>(errorLocatorDegree));
   for (i = 1; i <= errorLocatorDegree; i++) {
-    formalDerivativeCoefficients[errorLocatorDegree - i] =
+    (*formalDerivativeCoefficients)[errorLocatorDegree - i] =
         field_.multiply(i, errorLocator->getCoefficient(i));
   }
   QSharedPointer<ModulusPoly> formalDerivative (new ModulusPoly(field_, formalDerivativeCoefficients));
@@ -204,10 +204,10 @@ QSharedPointer<std::vector<int>> ErrorCorrection::findErrorMagnitudes(QSharedPoi
   int s = errorLocations->size();
   QSharedPointer<std::vector<int>> result ( new std::vector<int>(s));
   for (i = 0; i < s; i++) {
-    int xiInverse = field_.inverse(errorLocations[i]);
+    int xiInverse = field_.inverse((*errorLocations)[i]);
     int numerator = field_.subtract(0, errorEvaluator->evaluateAt(xiInverse));
     int denominator = field_.inverse(formalDerivative->evaluateAt(xiInverse));
-    result[i] = field_.multiply(numerator, denominator);
+    (*result)[i] = field_.multiply(numerator, denominator);
   }
   return result;
 }

@@ -49,7 +49,7 @@ std::string QRCode::toString() const
     result << mode_.getName();
 
     result << "\n ecLevel: ";
-    if(!ecLevel_ptr_.empty())
+    if(!ecLevel_ptr_.isNull())
         result << ecLevel_ptr_->name();
     else
         result << "null";

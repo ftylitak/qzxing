@@ -40,21 +40,22 @@ ModulusGF ModulusGF::PDF417_GF(929,3);
  
 ModulusGF::ModulusGF(int modulus, int generator)
     : modulus_(modulus) {
-	expTable_ = new std::vector<int>(modulus_);
-	logTable_ = new std::vector<int>(modulus_);
+    expTable_.reset(new std::vector<int>(modulus_));
+    logTable_.reset(new std::vector<int>(modulus_));
   int x = 1,i;
   for (i = 0; i < modulus_; i++) {
-    expTable_[i] = x;
+    (*expTable_)[i] = x;
     x = (x * generator) % modulus_;
   }
   for (i = 0; i < modulus_-1; i++) {
-    logTable_[expTable_[i]] = i;
+    (*logTable_)[(*expTable_)[i]] = i;
   }
   // logTable[0] == 0 but this should never be used
 	QSharedPointer<std::vector<int>>aZero(new std::vector<int>(1)),aOne(new std::vector<int>(1));
-	aZero[0]=0;aOne[0]=1;
-  zero_ = new ModulusPoly(*this, aZero);
-  one_ = new ModulusPoly(*this, aOne);
+    (*aZero)[0]=0;
+    (*aOne)[0]=1;
+  zero_.reset(new ModulusPoly(*this, aZero));
+  one_.reset(new ModulusPoly(*this, aOne));
 }
  
 QSharedPointer<ModulusPoly> ModulusGF::getZero() {
@@ -75,7 +76,7 @@ QSharedPointer<ModulusPoly> ModulusGF::buildMonomial(int degree, int coefficient
   }
 	int nCoefficients = degree + 1;
   QSharedPointer<std::vector<int>> coefficients (new std::vector<int>(nCoefficients));
-  coefficients[0] = coefficient;
+  (*coefficients)[0] = coefficient;
 	QSharedPointer<ModulusPoly> result(new ModulusPoly(*this,coefficients));
   return result;
 }
@@ -91,28 +92,28 @@ int ModulusGF::subtract(int a, int b) {
 }
 
 int ModulusGF::exp(int a) {
-  return expTable_[a];
+  return (*expTable_)[a];
 }
 
 int ModulusGF::log(int a) {
   if (a == 0) {
     throw IllegalArgumentException("log of zero!");
   }
-  return logTable_[a];
+  return (*logTable_)[a];
 }
 
 int ModulusGF::inverse(int a) {
   if (a == 0) {
     throw IllegalArgumentException("inverse of zero!");;
   }
-  return expTable_[modulus_ - logTable_[a] - 1];
+  return (*expTable_)[modulus_ - (*logTable_)[a] - 1];
 }
 
 int ModulusGF::multiply(int a, int b) {
   if (a == 0 || b == 0) {
     return 0;
   }
-  return expTable_[(logTable_[a] + logTable_[b]) % (modulus_ - 1)];
+  return (*expTable_)[((*logTable_)[a] + (*logTable_)[b]) % (modulus_ - 1)];
 }
 
 int ModulusGF::getSize() {

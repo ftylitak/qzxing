@@ -127,9 +127,8 @@ QSharedPointer<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(ve
         return center->combineEstimate(centerI, centerJ, estimatedModuleSize);
       }
     }
-    AlignmentPattern *tmp = new AlignmentPattern(centerJ, centerI, estimatedModuleSize);
+    QSharedPointer<AlignmentPattern> tmp(new AlignmentPattern(centerJ, centerI, estimatedModuleSize));
     // Hadn't found this before; save it
-    tmp->retain();
     possibleCenters_->push_back(tmp);
     if (callback_ != 0)
     {
@@ -142,7 +141,7 @@ QSharedPointer<AlignmentPattern> AlignmentPatternFinder::handlePossibleCenter(ve
 
 AlignmentPatternFinder::AlignmentPatternFinder(QSharedPointer<BitMatrix> image, int startX, int startY, int width,
                                                int height, float moduleSize,
-                                               QSharedPointer<ResultPointCallback> const &callback) : image_(image), possibleCenters_(new vector<AlignmentPattern *>()), startX_(startX), startY_(startY),
+                                               QSharedPointer<ResultPointCallback> const &callback) : image_(image), possibleCenters_(new vector<QSharedPointer<AlignmentPattern>>()), startX_(startX), startY_(startY),
                                                                                            width_(width), height_(height), moduleSize_(moduleSize), callback_(callback)
 {
 }
@@ -151,7 +150,7 @@ AlignmentPatternFinder::~AlignmentPatternFinder()
 {
   for (int i = 0; i < int(possibleCenters_->size()); i++)
   {
-    (*possibleCenters_)[i]->release();
+    (*possibleCenters_)[i].clear();
     (*possibleCenters_)[i] = 0;
   }
   delete possibleCenters_;

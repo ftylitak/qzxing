@@ -59,10 +59,10 @@ QSharedPointer<AztecDetectorResult> Detector::detect() {
             
   QSharedPointer<BitMatrix> bits =
     sampleGrid(image_,
-               corners[shift_%4],
-               corners[(shift_+3)%4],
-               corners[(shift_+2)%4],
-               corners[(shift_+1)%4]);
+               (*corners)[shift_%4],
+               (*corners)[(shift_+3)%4],
+               (*corners)[(shift_+2)%4],
+               (*corners)[(shift_+1)%4]);
             
   // std::printf("------------\ndetected: compact:%s, nbDataBlocks:%d, nbLayers:%d\n------------\n",compact_?"YES":"NO", nbDataBlocks_, nbLayers_);
             
@@ -168,11 +168,10 @@ Detector::getMatrixCornerPoints(std::vector<QSharedPointer<Point> > bullEyeCorne
     throw ReaderException("matrix extends over image bounds");
   }
   std::vector< QSharedPointer<ResultPoint> >* array = new std::vector< QSharedPointer<ResultPoint> >();
-  vector< QSharedPointer<ResultPoint> >& returnValue (array->values());
-  returnValue.push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetax), float(targetay))));
-  returnValue.push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetbx), float(targetby))));
-  returnValue.push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetcx), float(targetcy))));
-  returnValue.push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetdx), float(targetdy))));
+  array->push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetax), float(targetay))));
+  array->push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetbx), float(targetby))));
+  array->push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetcx), float(targetcy))));
+  array->push_back(QSharedPointer<ResultPoint>(new ResultPoint(float(targetdx), float(targetdy))));
   return QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >(array);
 }
         
@@ -197,7 +196,7 @@ void Detector::correctParameterData(QSharedPointer<zxing::BitArray> parameterDat
     int flag = 1;
     for (int j = 1; j <= codewordSize; j++) {
       if (parameterData->get(codewordSize*i + codewordSize - j)) {
-        parameterWords[i] += flag;
+        (*parameterWords)[i] += flag;
       }
       flag <<= 1;
     }
@@ -217,7 +216,7 @@ void Detector::correctParameterData(QSharedPointer<zxing::BitArray> parameterDat
   for (int i = 0; i < numDataCodewords; i++) {
     int flag = 1;
     for (int j = 1; j <= codewordSize; j++) {
-      if ((parameterWords[i] & flag) == flag) {
+      if (((*parameterWords)[i] & flag) == flag) {
         parameterData->set(i*codewordSize+codewordSize-j);
       }
       flag <<= 1;
@@ -449,10 +448,10 @@ bool Detector::isWhiteOrBlackRectangle(QSharedPointer<zxing::aztec::Point> p1,
                                        QSharedPointer<zxing::aztec::Point> p4) {
   int corr = 3;
             
-  p1 = new Point(p1->getX() - corr, p1->getY() + corr);
-  p2 = new Point(p2->getX() - corr, p2->getY() - corr);
-  p3 = new Point(p3->getX() + corr, p3->getY() - corr);
-  p4 = new Point(p4->getX() + corr, p4->getY() + corr);
+  p1.reset(new Point(p1->getX() - corr, p1->getY() + corr));
+  p2.reset(new Point(p2->getX() - corr, p2->getY() - corr));
+  p3.reset(new Point(p3->getX() + corr, p3->getY() - corr));
+  p4.reset(new Point(p4->getX() + corr, p4->getY() + corr));
             
   int cInit = getColor(p4, p1);
             

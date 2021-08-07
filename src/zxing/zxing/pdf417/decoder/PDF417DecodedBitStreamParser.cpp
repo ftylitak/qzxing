@@ -61,18 +61,18 @@ const char DecodedBitStreamParser::MIXED_CHARS[] = {
   '\r', '\t', ',', ':', '#', '-', '.', '$', '/', '+', '%', '*',
   '=', '^'};
 
-QSharedPointer<std::vector<BigInteger> DecodedBitStreamParser::initEXP900() {
-  QSharedPointer<std::vector<BigInteger> EXP900 (16);
-  EXP900[0] = BigInteger(1);
+QSharedPointer<std::vector<BigInteger>> DecodedBitStreamParser::initEXP900() {
+  QSharedPointer<std::vector<BigInteger>> EXP900 (new std::vector<BigInteger>(16));
+  (*EXP900)[0] = BigInteger(1);
   BigInteger nineHundred (900);
-  EXP900[1] = nineHundred;
+  (*EXP900)[1] = nineHundred;
   for (int i = 2; i < EXP900->size(); i++) {
-    EXP900[i] = EXP900[i - 1] * nineHundred;
+    (*EXP900)[i] = (*EXP900)[i - 1] * nineHundred;
   }
   return EXP900;
 }
 
-QSharedPointer<std::vector<BigInteger> DecodedBitStreamParser::EXP900 = initEXP900();
+QSharedPointer<std::vector<BigInteger>> DecodedBitStreamParser::EXP900 = initEXP900();
 
 DecodedBitStreamParser::DecodedBitStreamParser(){}
 
@@ -84,8 +84,8 @@ QSharedPointer<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std:
   QSharedPointer<String> result (new String(100));
   // Get compaction mode
   int codeIndex = 1;
-  int code = codewords[codeIndex++];
-  while (codeIndex < codewords[0]) {
+  int code = (*codewords)[codeIndex++];
+  while (codeIndex < (*codewords)[0]) {
     switch (code) {
       case TEXT_COMPACTION_MODE_LATCH:
         codeIndex = textCompaction(codewords, codeIndex, result);
@@ -111,7 +111,7 @@ QSharedPointer<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std:
         break;
     }
     if (codeIndex < codewords->size()) {
-      code = codewords[codeIndex++];
+      code = (*codewords)[codeIndex++];
     } else {
       throw FormatException();
     }
@@ -133,22 +133,22 @@ int DecodedBitStreamParser::textCompaction(QSharedPointer<std::vector<int>> code
                                            int codeIndex,
                                            QSharedPointer<String> result) {
   // 2 character per codeword
-  QSharedPointer<std::vector<int>> textCompactionData (codewords[0] << 1);
+  QSharedPointer<std::vector<int>> textCompactionData (new std::vector<int>((*codewords)[0] << 1));
   // Used to hold the byte compaction value if there is a mode shift
-  QSharedPointer<std::vector<int>> byteCompactionData (codewords[0] << 1);
+  QSharedPointer<std::vector<int>> byteCompactionData (new std::vector<int>((*codewords)[0] << 1));
   
   int index = 0;
   bool end = false;
-  while ((codeIndex < codewords[0]) && !end) {
-    int code = codewords[codeIndex++];
+  while ((codeIndex < (*codewords)[0]) && !end) {
+    int code = (*codewords)[codeIndex++];
     if (code < TEXT_COMPACTION_MODE_LATCH) {
-      textCompactionData[index] = code / 30;
-      textCompactionData[index + 1] = code % 30;
+      (*textCompactionData)[index] = code / 30;
+      (*textCompactionData)[index + 1] = code % 30;
       index += 2;
     } else {
       switch (code) {
         case TEXT_COMPACTION_MODE_LATCH:
-          textCompactionData[index++] = TEXT_COMPACTION_MODE_LATCH;
+          (*textCompactionData)[index++] = TEXT_COMPACTION_MODE_LATCH;
           break;
         case BYTE_COMPACTION_MODE_LATCH:
           codeIndex--;
@@ -165,9 +165,9 @@ int DecodedBitStreamParser::textCompaction(QSharedPointer<std::vector<int>> code
           // after which the mode shall revert to the prevailing sub-mode
           // of the Text Compaction mode. Codeword 913 is only available
           // in Text Compaction mode; its use is described in 5.4.2.4.
-          textCompactionData[index] = MODE_SHIFT_TO_BYTE_COMPACTION_MODE;
-          code = codewords[codeIndex++];
-          byteCompactionData[index] = code; //Integer.toHexString(code);
+          (*textCompactionData)[index] = MODE_SHIFT_TO_BYTE_COMPACTION_MODE;
+          code = (*codewords)[codeIndex++];
+          (*byteCompactionData)[index] = code; //Integer.toHexString(code);
           index++;
           break;
         case BYTE_COMPACTION_MODE_LATCH_6:
@@ -210,7 +210,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
   Mode priorToShiftMode = ALPHA;
   int i = 0;
   while (i < length) {
-    int subModeCh = textCompactionData[i];
+    int subModeCh = (*textCompactionData)[i];
     char ch = 0;
     switch (subMode) {
       case ALPHA:
@@ -230,7 +230,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((zxing::byte) byteCompactionData[i]);
+            result->append((zxing::byte) (*byteCompactionData)[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -255,7 +255,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((zxing::byte) byteCompactionData[i]);
+            result->append((zxing::byte) (*byteCompactionData)[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -280,7 +280,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
             priorToShiftMode = subMode;
             subMode = PUNCT_SHIFT;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((zxing::byte) byteCompactionData[i]);
+            result->append((zxing::byte) (*byteCompactionData)[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -295,7 +295,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
           if (subModeCh == PAL) {
             subMode = ALPHA;
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
-            result->append((zxing::byte) byteCompactionData[i]);
+            result->append((zxing::byte) (*byteCompactionData)[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -332,7 +332,7 @@ void DecodedBitStreamParser::decodeTextCompaction(QSharedPointer<std::vector<int
           } else if (subModeCh == MODE_SHIFT_TO_BYTE_COMPACTION_MODE) {
             // PS before Shift-to-Byte is used as a padding character,
             // see 5.4.2.4 of the specification
-            result->append((zxing::byte) byteCompactionData[i]);
+            result->append((zxing::byte) (*byteCompactionData)[i]);
           } else if (subModeCh == TEXT_COMPACTION_MODE_LATCH) {
             subMode = ALPHA;
           }
@@ -366,15 +366,15 @@ int DecodedBitStreamParser::byteCompaction(int mode,
     // is not a multiple of 6
     int count = 0;
     int64_t value = 0;
-    QSharedPointer<std::vector<zxing::byte>> decodedData = new std::vector<zxing::byte>(6);
-    QSharedPointer<std::vector<int>> byteCompactedCodewords = new std::vector<int>(6);
+    QSharedPointer<std::vector<zxing::byte>> decodedData(new std::vector<zxing::byte>(6));
+    QSharedPointer<std::vector<int>> byteCompactedCodewords(new std::vector<int>(6));
     bool end = false;
-    int nextCode = codewords[codeIndex++];
-    while ((codeIndex < codewords[0]) && !end) {
-      byteCompactedCodewords[count++] = nextCode;
+    int nextCode = (*codewords)[codeIndex++];
+    while ((codeIndex < (*codewords)[0]) && !end) {
+      (*byteCompactedCodewords)[count++] = nextCode;
       // Base 900
       value = 900 * value + nextCode;
-      nextCode = codewords[codeIndex++];
+      nextCode = (*codewords)[codeIndex++];
       // perhaps it should be ok to check only nextCode >= TEXT_COMPACTION_MODE_LATCH
       if (nextCode == TEXT_COMPACTION_MODE_LATCH ||
           nextCode == BYTE_COMPACTION_MODE_LATCH ||
@@ -394,25 +394,25 @@ int DecodedBitStreamParser::byteCompaction(int mode,
           // Convert to Base 256
           for (int j = 0; j < 6; ++j)
           {
-            decodedData[5 - j] = (zxing::byte) (value%256);
+            (*decodedData)[5 - j] = (zxing::byte) (value%256);
             value >>= 8;
           }
-          result->append(string((char*)&(decodedData->values()[0]), decodedData->values().size()));
+          result->append(string((char*)&((*decodedData)[0]), decodedData->size()));
           count = 0;
         }
       }
     }
 
     // if the end of all codewords is reached the last codeword needs to be added
-    if (codeIndex == codewords[0] && nextCode < TEXT_COMPACTION_MODE_LATCH)
-      byteCompactedCodewords[count++] = nextCode;
+    if (codeIndex == (*codewords)[0] && nextCode < TEXT_COMPACTION_MODE_LATCH)
+      (*byteCompactedCodewords)[count++] = nextCode;
 
     // If Byte Compaction mode is invoked with codeword 901,
     // the last group of codewords is interpreted directly
     // as one byte per codeword, without compaction.
     for (int i = 0; i < count; i++)
     {
-      result->append((zxing::byte)byteCompactedCodewords[i]);
+      result->append((zxing::byte)(*byteCompactedCodewords)[i]);
     }
 
   } else if (mode == BYTE_COMPACTION_MODE_LATCH_6) {
@@ -421,8 +421,8 @@ int DecodedBitStreamParser::byteCompaction(int mode,
     int count = 0;
     int64_t value = 0;
     bool end = false;
-    while (codeIndex < codewords[0] && !end) {
-      int code = codewords[codeIndex++];
+    while (codeIndex < (*codewords)[0] && !end) {
+      int code = (*codewords)[codeIndex++];
       if (code < TEXT_COMPACTION_MODE_LATCH) {
         count++;
         // Base 900
@@ -442,12 +442,12 @@ int DecodedBitStreamParser::byteCompaction(int mode,
       if ((count % 5 == 0) && (count > 0)) {
         // Decode every 5 codewords
         // Convert to Base 256
-        QSharedPointer<std::vector<zxing::byte>> decodedData = new std::vector<zxing::byte>(6);
+        QSharedPointer<std::vector<zxing::byte>> decodedData(new std::vector<zxing::byte>(6));
         for (int j = 0; j < 6; ++j) {
-          decodedData[5 - j] = (zxing::byte) (value & 0xFF);
+          (*decodedData)[5 - j] = (zxing::byte) (value & 0xFF);
           value >>= 8;
         }
-        result->append(string((char*)&decodedData[0],6));
+        result->append(string((char*)&(*decodedData)[0],6));
         // 2012-11-27 hfn after recent java code/fix by srowen
         count = 0;
       }
@@ -470,15 +470,15 @@ int DecodedBitStreamParser::numericCompaction(QSharedPointer<std::vector<int>> c
   int count = 0;
   bool end = false;
   
-  QSharedPointer<std::vector<int>> numericCodewords = new std::vector<int>(MAX_NUMERIC_CODEWORDS);
+  QSharedPointer<std::vector<int>> numericCodewords(new std::vector<int>(MAX_NUMERIC_CODEWORDS));
   
-  while (codeIndex < codewords[0] && !end) {
-    int code = codewords[codeIndex++];
-    if (codeIndex == codewords[0]) {
+  while (codeIndex < (*codewords)[0] && !end) {
+    int code = (*codewords)[codeIndex++];
+    if (codeIndex == (*codewords)[0]) {
       end = true;
     }
     if (code < TEXT_COMPACTION_MODE_LATCH) {
-      numericCodewords[count] = code;
+      (*numericCodewords)[count] = code;
       count++;
     } else {
       if (code == TEXT_COMPACTION_MODE_LATCH ||
@@ -553,7 +553,7 @@ QSharedPointer<String> DecodedBitStreamParser::decodeBase900toBase10(QSharedPoin
 {
   BigInteger result = BigInteger(0);
   for (int i = 0; i < count; i++) {
-    result = result + (EXP900[count - i - 1] * BigInteger(codewords[i]));
+    result = result + ((*EXP900)[count - i - 1] * BigInteger((*codewords)[i]));
   }
   string resultString = bigIntegerToString(result);
   if (resultString[0] != '1') {

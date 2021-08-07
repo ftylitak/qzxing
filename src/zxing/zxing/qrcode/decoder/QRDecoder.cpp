@@ -47,10 +47,10 @@ namespace zxing
     void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordBytes, int numDataCodewords)
     {
       int numCodewords = codewordBytes->size();
-      QSharedPointer<std::vector<int>> codewordInts(numCodewords);
+      QSharedPointer<std::vector<int>> codewordInts(new std::vector<int>(numCodewords));
       for (int i = 0; i < numCodewords; i++)
       {
-        codewordInts[i] = codewordBytes[i] & 0xff;
+        (*codewordInts)[i] = (*codewordBytes)[i] & 0xff;
       }
       int numECCodewords = numCodewords - numDataCodewords;
 
@@ -66,7 +66,7 @@ namespace zxing
 
       for (int i = 0; i < numDataCodewords; i++)
       {
-        codewordBytes[i] = (zxing::byte)codewordInts[i];
+        (*codewordBytes)[i] = (zxing::byte)(*codewordInts)[i];
       }
     }
 
@@ -92,7 +92,7 @@ namespace zxing
       {
         totalBytes += dataBlocks[i]->getNumDataCodewords();
       }
-      QSharedPointer<std::vector<zxing::byte>> resultBytes(totalBytes);
+      QSharedPointer<std::vector<zxing::byte>> resultBytes(new std::vector<zxing::byte>(totalBytes));
       int resultOffset = 0;
 
       // Error-correct and copy data blocks together into a stream of bytes
@@ -104,7 +104,7 @@ namespace zxing
         correctErrors(codewordBytes, numDataCodewords);
         for (int i = 0; i < numDataCodewords; i++)
         {
-          resultBytes[resultOffset++] = (zxing::byte)codewordBytes[i];
+          (*resultBytes)[resultOffset++] = (zxing::byte)(*codewordBytes)[i];
         }
       }
 

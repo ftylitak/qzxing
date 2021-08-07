@@ -170,10 +170,10 @@ QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<zxing::aztec::Aztec
   QSharedPointer<String> result = getEncodedData(aCorrectedBits);
 
   // std::printf("constructing array\n");
-  QSharedPointer<std::vector<zxing::byte>> arrayOut(aCorrectedBits->getSize());
-  for (size_t i = 0; i < aCorrectedBits->count(); i++)
+  QSharedPointer<std::vector<zxing::byte>> arrayOut(new std::vector<zxing::byte>(aCorrectedBits->getSize()));
+  for (size_t i = 0; i < aCorrectedBits->getSize(); i++)
   {
-    arrayOut[i] = (zxing::byte)aCorrectedBits->get(i);
+    (*arrayOut)[i] = (zxing::byte)aCorrectedBits->get(i);
   }
 
   // std::printf("returning\n");
@@ -352,7 +352,7 @@ QSharedPointer<BitArray> Decoder::correctBits(QSharedPointer<zxing::BitArray> ra
     numECCodewords = NB_DATABLOCK[ddata_->getNBLayers()] - numDataCodewords;
   }
 
-  QSharedPointer<std::vector<int>> dataWords(numCodewords_);
+  QSharedPointer<std::vector<int>> dataWords(new std::vector<int>(numCodewords_));
 
   for (int i = 0; i < numCodewords_; i++)
   {
@@ -361,7 +361,7 @@ QSharedPointer<BitArray> Decoder::correctBits(QSharedPointer<zxing::BitArray> ra
     {
       if (rawbits->get(codewordSize_ * i + codewordSize_ - j + offset))
       {
-        dataWords[i] += flag;
+        (*dataWords)[i] += flag;
       }
       flag <<= 1;
     }
@@ -402,7 +402,7 @@ QSharedPointer<BitArray> Decoder::correctBits(QSharedPointer<zxing::BitArray> ra
     for (int j = 0; j < codewordSize_; j++)
     {
 
-      bool color = (dataWords[i] & flag) == flag;
+      bool color = ((*dataWords)[i] & flag) == flag;
 
       if (seriesCount == codewordSize_ - 1)
       {

@@ -36,7 +36,7 @@ private:
   static int MAX_MODULES;
 
   QSharedPointer<BitMatrix> image_;
-  std::vector<AlignmentPattern *> *possibleCenters_;
+  std::vector<QSharedPointer<AlignmentPattern>> *possibleCenters_;
   int startX_;
   int startY_;
   int width_;

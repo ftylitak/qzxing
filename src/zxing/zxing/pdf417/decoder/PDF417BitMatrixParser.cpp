@@ -72,7 +72,7 @@ QSharedPointer<std::vector<int>> BitMatrixParser::readCodewords()
   //int width = bitMatrix_->getWidth();
   int height = bitMatrix_->getHeight();
 
-  erasures_ = new std::vector<int>(MAX_CW_CAPACITY);
+  erasures_.reset(new std::vector<int>(MAX_CW_CAPACITY));
 
   QSharedPointer<std::vector<int>> codewords (new std::vector<int>(MAX_CW_CAPACITY));
   int next = 0;
@@ -129,14 +129,14 @@ int BitMatrixParser::processRow(int rowNumber, QSharedPointer<std::vector<int>> 
         if (eraseCount_ >= (int)erasures_->size()) {
           throw FormatException("BitMatrixParser::processRow(PDF417): eraseCount too big!");
         }
-        erasures_[eraseCount_] = next;
+        (*erasures_)[eraseCount_] = next;
         next++;
         eraseCount_++;
       } else {
         if (next >= codewords->size()) {
           throw FormatException("BitMatrixParser::processRow(PDF417): codewords index out of bound.");
         }
-        codewords[next++] = cw;
+        (*codewords)[next++] = cw;
       }
     } else {
       // Left row indicator column
@@ -154,10 +154,10 @@ int BitMatrixParser::processRow(int rowNumber, QSharedPointer<std::vector<int>> 
     // Right row indicator column is in codeword[next]
     // Overwrite the last codeword i.e. Right Row Indicator
     --next;
-    aRightColumnTriple_[rowNumber % 3] = codewords[next]; /* added 2012-06-22 hfn */
+    aRightColumnTriple_[rowNumber % 3] = (*codewords)[next]; /* added 2012-06-22 hfn */
     if (rowNumber % 3 == 2) {
       if (ecLevel_ < 0) {
-        rightColumnECData_ = codewords[next];
+        rightColumnECData_ = (*codewords)[next];
         if (rightColumnECData_ == leftColumnECData_ && (int)leftColumnECData_ > 0) {  /* leftColumnECData_ != 0 */
           ecLevel_ = ((rightColumnECData_ % 30) - rows_ % 3) / 3;
         }
@@ -167,7 +167,7 @@ int BitMatrixParser::processRow(int rowNumber, QSharedPointer<std::vector<int>> 
         throw FormatException("BitMatrixParser::processRow(PDF417): outer columns corrupted!");
       }
     }
-    codewords[next] = 0;
+    (*codewords)[next] = 0;
   }
   return next;
 }
@@ -187,9 +187,9 @@ QSharedPointer<std::vector<int>> BitMatrixParser::trimArray(QSharedPointer<std::
     throw IllegalArgumentException("BitMatrixParser::trimArray: negative size!");
   }
   // 2012-10-12 hfn don't throw "NoErrorException" when size == 0
-  QSharedPointer<std::vector<int>> a = new std::vector<int>(size);
+  QSharedPointer<std::vector<int>> a(new std::vector<int>(size));
   for (int i = 0; i < size; i++) {
-    a[i] = array[i];
+    (*a)[i] = (*array)[i];
   }
   return a;
 }

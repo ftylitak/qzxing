@@ -27,8 +27,8 @@ public:
     QSharedPointer<std::vector<zxing::byte>> getErrorCorrectionBytes() { return errorCorrection_; }
 
     BlockPair& operator=(const BlockPair &other) {
-        data_->release();
-        errorCorrection_->release();
+        data_->clear();
+        errorCorrection_->clear();
 
         data_ = other.data_;
         errorCorrection_ = other.errorCorrection_;

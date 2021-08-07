@@ -37,11 +37,11 @@ ModulusPoly::ModulusPoly(ModulusGF &field, QSharedPointer<std::vector<int>> coef
     throw IllegalArgumentException("no coefficients!");
   }
   int coefficientsLength = coefficients->size();
-  if (coefficientsLength > 1 && coefficients[0] == 0)
+  if (coefficientsLength > 1 && (*coefficients)[0] == 0)
   {
     // Leading term must be non-zero for anything except the constant polynomial "0"
     int firstNonZero = 1;
-    while (firstNonZero < coefficientsLength && coefficients[firstNonZero] == 0)
+    while (firstNonZero < coefficientsLength && (*coefficients)[firstNonZero] == 0)
     {
       firstNonZero++;
     }
@@ -58,7 +58,7 @@ ModulusPoly::ModulusPoly(ModulusGF &field, QSharedPointer<std::vector<int>> coef
       coefficients_.reset(new std::vector<int>(coefficientsLength));
       for (int i = 0; i < coefficientsLength; i++)
       {
-        coefficients_[i] = c[i + firstNonZero];
+        (*coefficients_)[i] = (*c)[i + firstNonZero];
       }
       /*
         coefficientsLength -= firstNonZero;
@@ -93,7 +93,7 @@ int ModulusPoly::getDegree()
  */
 bool ModulusPoly::isZero()
 {
-  return coefficients_[0] == 0;
+  return (*coefficients_)[0] == 0;
 }
 
 /**
@@ -101,7 +101,7 @@ bool ModulusPoly::isZero()
  */
 int ModulusPoly::getCoefficient(int degree)
 {
-  return coefficients_[coefficients_->size() - 1 - degree];
+  return (*coefficients_)[coefficients_->size() - 1 - degree];
 }
 
 /**
@@ -122,14 +122,14 @@ int ModulusPoly::evaluateAt(int a)
     int result = 0;
     for (i = 0; i < size; i++)
     {
-      result = field_.add(result, coefficients_[i]);
+      result = field_.add(result, (*coefficients_)[i]);
     }
     return result;
   }
-  int result = coefficients_[0];
+  int result = (*coefficients_)[0];
   for (i = 1; i < size; i++)
   {
-    result = field_.add(field_.multiply(a, result), coefficients_[i]);
+    result = field_.add(field_.multiply(a, result), (*coefficients_)[i]);
   }
   return result;
 }
@@ -162,12 +162,12 @@ QSharedPointer<ModulusPoly> ModulusPoly::add(QSharedPointer<ModulusPoly> other)
   // Copy high-order terms only found in higher-degree polynomial's coefficients
   for (int i = 0; i < lengthDiff; i++)
   {
-    sumDiff[i] = largerCoefficients[i];
+    (*sumDiff)[i] = (*largerCoefficients)[i];
   }
 
   for (int i = lengthDiff; i < largerCoefficients->size(); i++)
   {
-    sumDiff[i] = field_.add(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
+    (*sumDiff)[i] = field_.add((*smallerCoefficients)[i - lengthDiff], (*largerCoefficients)[i]);
   }
 
   return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, sumDiff));
@@ -204,10 +204,10 @@ QSharedPointer<ModulusPoly> ModulusPoly::multiply(QSharedPointer<ModulusPoly> ot
   QSharedPointer<std::vector<int>> product(new std::vector<int>(aLength + bLength - 1));
   for (i = 0; i < aLength; i++)
   {
-    int aCoeff = aCoefficients[i];
+    int aCoeff = (*aCoefficients)[i];
     for (j = 0; j < bLength; j++)
     {
-      product[i + j] = field_.add(product[i + j], field_.multiply(aCoeff, bCoefficients[j]));
+      (*product)[i + j] = field_.add((*product)[i + j], field_.multiply(aCoeff, (*bCoefficients)[j]));
     }
   }
   return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
@@ -219,7 +219,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::negative()
   QSharedPointer<std::vector<int>> negativeCoefficients(new std::vector<int>(size));
   for (int i = 0; i < size; i++)
   {
-    negativeCoefficients[i] = field_.subtract(0, coefficients_[i]);
+    (*negativeCoefficients)[i] = field_.subtract(0, (*coefficients_)[i]);
   }
   return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, negativeCoefficients));
 }
@@ -238,7 +238,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::multiply(int scalar)
   QSharedPointer<std::vector<int>> product(new std::vector<int>(size));
   for (int i = 0; i < size; i++)
   {
-    product[i] = field_.multiply(coefficients_[i], scalar);
+    (*product)[i] = field_.multiply((*coefficients_)[i], scalar);
   }
   return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
 }
@@ -257,7 +257,7 @@ QSharedPointer<ModulusPoly> ModulusPoly::multiplyByMonomial(int degree, int coef
   QSharedPointer<std::vector<int>> product(new std::vector<int>(size + degree));
   for (int i = 0; i < size; i++)
   {
-    product[i] = field_.multiply(coefficients_[i], coefficient);
+    (*product)[i] = field_.multiply((*coefficients_)[i], coefficient);
   }
   return QSharedPointer<ModulusPoly>(new ModulusPoly(field_, product));
 }

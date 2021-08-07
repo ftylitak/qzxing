@@ -39,7 +39,7 @@ BitMatrixParser::BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix) : bitMatri
 
   parsedVersion_ = readVersion(bitMatrix);
   bitMatrix_ = extractDataRegion(bitMatrix);
-  readBitMatrix_ = new BitMatrix(bitMatrix_->getWidth(), bitMatrix_->getHeight());
+  readBitMatrix_.reset(new BitMatrix(bitMatrix_->getWidth(), bitMatrix_->getHeight()));
 }
 
 QSharedPointer<Version> BitMatrixParser::readVersion(QSharedPointer<BitMatrix> bitMatrix) {
@@ -58,7 +58,7 @@ QSharedPointer<Version> BitMatrixParser::readVersion(QSharedPointer<BitMatrix> b
 }
 
 QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
-    QSharedPointer<std::vector<zxing::byte>> result(parsedVersion_->getTotalCodewords());
+    QSharedPointer<std::vector<zxing::byte>> result(new std::vector<zxing::byte>(parsedVersion_->getTotalCodewords()));
     int resultOffset = 0;
     int row = 4;
     int column = 0;
@@ -75,22 +75,22 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
     do {
       // Check the four corner cases
       if ((row == numRows) && (column == 0) && !corner1Read) {
-        result[resultOffset++] = (zxing::byte) readCorner1(numRows, numColumns);
+        (*result)[resultOffset++] = (zxing::byte) readCorner1(numRows, numColumns);
         row -= 2;
         column +=2;
         corner1Read = true;
       } else if ((row == numRows-2) && (column == 0) && ((numColumns & 0x03) != 0) && !corner2Read) {
-        result[resultOffset++] = (zxing::byte) readCorner2(numRows, numColumns);
+        (*result)[resultOffset++] = (zxing::byte) readCorner2(numRows, numColumns);
         row -= 2;
         column +=2;
         corner2Read = true;
       } else if ((row == numRows+4) && (column == 2) && ((numColumns & 0x07) == 0) && !corner3Read) {
-        result[resultOffset++] = (zxing::byte) readCorner3(numRows, numColumns);
+        (*result)[resultOffset++] = (zxing::byte) readCorner3(numRows, numColumns);
         row -= 2;
         column +=2;
         corner3Read = true;
       } else if ((row == numRows-2) && (column == 0) && ((numColumns & 0x07) == 4) && !corner4Read) {
-        result[resultOffset++] = (zxing::byte) readCorner4(numRows, numColumns);
+        (*result)[resultOffset++] = (zxing::byte) readCorner4(numRows, numColumns);
         row -= 2;
         column +=2;
         corner4Read = true;
@@ -98,7 +98,7 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
         // Sweep upward diagonally to the right
         do {
           if ((row < numRows) && (column >= 0) && !readBitMatrix_->get(column, row)) {
-            result[resultOffset++] = (zxing::byte) readUtah(row, column, numRows, numColumns);
+            (*result)[resultOffset++] = (zxing::byte) readUtah(row, column, numRows, numColumns);
           }
           row -= 2;
           column +=2;
@@ -109,7 +109,7 @@ QSharedPointer<std::vector<zxing::byte>> BitMatrixParser::readCodewords() {
         // Sweep downward diagonally to the left
         do {
           if ((row >= 0) && (column < numColumns) && !readBitMatrix_->get(column, row)) {
-             result[resultOffset++] = (zxing::byte) readUtah(row, column, numRows, numColumns);
+             (*result)[resultOffset++] = (zxing::byte) readUtah(row, column, numRows, numColumns);
           }
           row += 2;
           column -=2;
