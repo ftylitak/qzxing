@@ -77,14 +77,14 @@ void Decoder::verifyCodewordCount(QSharedPointer<std::vector<int>> codewords, in
   // The first codeword, the Symbol Length Descriptor, shall always encode the total number of data
   // codewords in the symbol, including the Symbol Length Descriptor itself, data codewords and pad
   // codewords, but excluding the number of error correction codewords.
-  int numberOfCodewords = codewords[0];
+  int numberOfCodewords = (*codewords)[0];
   if (numberOfCodewords > cwsize) {
     throw FormatException("PDF:Decoder:verifyCodewordCount: bad codeword number descriptor!");
   }
   if (numberOfCodewords == 0) {
     // Reset to the length of the array - 8 (Allow for at least level 3 Error Correction (8 Error Codewords)
     if (numECCodewords < cwsize) {
-      codewords[0] = cwsize - numECCodewords;
+      (*codewords)[0] = cwsize - numECCodewords;
     } else {
       throw FormatException("PDF:Decoder:verifyCodewordCount: bad error correction cw number!");
     }
@@ -111,7 +111,7 @@ void Decoder::correctErrors(QSharedPointer<std::vector<int>> codewords,
   // 2012-06-27 HFN if, despite of error correction, there are still codewords with invalid
   // value, throw an exception here:
   for (int i = 0; i < codewords->size(); i++) {
-    if (codewords[i]<0) {
+    if ((*codewords)[i]<0) {
       throw FormatException("PDF:Decoder:correctErrors: Error correction did not succeed!");
     }
   }

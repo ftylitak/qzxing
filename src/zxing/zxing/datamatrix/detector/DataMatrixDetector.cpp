@@ -92,10 +92,10 @@ QSharedPointer<DetectorResult> Detector::detect() {
   // as are B and C. Figure out which are the solid black lines
   // by counting transitions
   std::vector<QSharedPointer<ResultPointsAndTransitions> > transitions(4);
-  transitions[0].reset(transitionsBetween(pointA, pointB));
-  transitions[1].reset(transitionsBetween(pointA, pointC));
-  transitions[2].reset(transitionsBetween(pointB, pointD));
-  transitions[3].reset(transitionsBetween(pointC, pointD));
+  transitions[0] = transitionsBetween(pointA, pointB);
+  transitions[1] = transitionsBetween(pointA, pointC);
+  transitions[2] = transitionsBetween(pointB, pointD);
+  transitions[3] = transitionsBetween(pointC, pointD);
   insertionSort(transitions);
 
   // Sort by number of transitions. First two will be the two solid sides; last two
@@ -138,9 +138,9 @@ QSharedPointer<DetectorResult> Detector::detect() {
 
   // Bottom left is correct but top left and bottom right might be switched
   std::vector<QSharedPointer<ResultPoint> > corners(3);
-  corners[0].reset(maybeTopLeft);
-  corners[1].reset(bottomLeft);
-  corners[2].reset(maybeBottomRight);
+  corners[0] = maybeTopLeft;
+  corners[1] = bottomLeft;
+  corners[2] = maybeBottomRight;
 
   // Use the dot product trick to sort them out
   ResultPoint::orderBestPatterns(corners);
@@ -247,10 +247,10 @@ QSharedPointer<DetectorResult> Detector::detect() {
   }
 
   QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points (new std::vector< QSharedPointer<ResultPoint> >(4));
-  points[0].reset(topLeft);
-  points[1].reset(bottomLeft);
-  points[2].reset(correctedTopRight);
-  points[3].reset(bottomRight);
+  (*points)[0] = topLeft;
+  (*points)[1] = bottomLeft;
+  (*points)[2] = correctedTopRight;
+  (*points)[3] = bottomRight;
   QSharedPointer<DetectorResult> detectorResult(new DetectorResult(bits, points));
   return detectorResult;
 }
@@ -435,8 +435,8 @@ void Detector::insertionSort(std::vector<QSharedPointer<ResultPointsAndTransitio
       value = vector[i - 1];
       if (compare(value, (valueB = vector[i])) > 0){
         swapped = true;
-        vector[i - 1].reset(valueB);
-        vector[i].reset(value);
+        vector[i - 1] = valueB;
+        vector[i] = value;
       }
     }
   } while (swapped);

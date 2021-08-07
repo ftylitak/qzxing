@@ -52,7 +52,7 @@ QSharedPointer<Result> PDF417Reader::decode(QSharedPointer<BinaryBitmap> image, 
     {
       for (int i = 0; i < points->size(); i++)
       {
-        rpcb->foundPossibleResultPoint(*points[i]);
+        rpcb->foundPossibleResultPoint(*(*points)[i]);
       }
     }
   }
@@ -81,10 +81,10 @@ QSharedPointer<BitMatrix> PDF417Reader::extractPureBits(QSharedPointer<BitMatrix
 
   int nModuleSize = moduleSize(leftTopBlack, image);
 
-  int top = leftTopBlack[1];
-  int bottom = rightBottomBlack[1];
-  int left = findPatternStart(leftTopBlack[0], top, image);
-  int right = findPatternEnd(leftTopBlack[0], top, image);
+  int top = (*leftTopBlack)[1];
+  int bottom = (*rightBottomBlack)[1];
+  int left = findPatternStart((*leftTopBlack)[0], top, image);
+  int right = findPatternEnd((*leftTopBlack)[0], top, image);
 
   int matrixWidth = (right - left + 1) / nModuleSize;
   int matrixHeight = (bottom - top + 1) / nModuleSize;
@@ -118,8 +118,8 @@ QSharedPointer<BitMatrix> PDF417Reader::extractPureBits(QSharedPointer<BitMatrix
 
 int PDF417Reader::moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, QSharedPointer<BitMatrix> image)
 {
-  int x = leftTopBlack[0];
-  int y = leftTopBlack[1];
+  int x = (*leftTopBlack)[0];
+  int y = (*leftTopBlack)[1];
   int width = image->getWidth();
   while (x < width && image->get(x, y))
   {
@@ -130,7 +130,7 @@ int PDF417Reader::moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, QSha
     throw NotFoundException("PDF417Reader::moduleSize: not found!");
   }
 
-  int moduleSize = (int)(((unsigned)(x - leftTopBlack[0])) >> 3); // We've crossed left first bar, which is 8x
+  int moduleSize = (int)(((unsigned)(x - (*leftTopBlack)[0])) >> 3); // We've crossed left first bar, which is 8x
   if (moduleSize == 0)
   {
     throw NotFoundException("PDF417Reader::moduleSize: is zero!");
