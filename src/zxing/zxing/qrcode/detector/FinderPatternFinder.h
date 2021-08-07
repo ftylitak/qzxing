@@ -23,7 +23,7 @@
 
 #include <zxing/qrcode/detector/FinderPattern.h>
 #include <zxing/qrcode/detector/FinderPatternInfo.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 #include <zxing/ResultPointCallback.h>
 #include <vector>

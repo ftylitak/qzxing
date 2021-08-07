@@ -21,7 +21,7 @@
  */
 
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <iostream>
 
 namespace zxing {

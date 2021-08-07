@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Types.h>
 
 namespace zxing {

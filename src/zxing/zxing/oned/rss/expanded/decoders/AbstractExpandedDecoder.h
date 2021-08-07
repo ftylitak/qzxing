@@ -56,7 +56,7 @@ public:
 
     virtual String parseInformation() = 0;
 
-    static AbstractExpandedDecoder* createDecoder(QSharedPointer<BitArray> information);
+    static QSharedPointer<AbstractExpandedDecoder> createDecoder(QSharedPointer<BitArray> information);
 
 protected:
     QSharedPointer<BitArray> m_information;

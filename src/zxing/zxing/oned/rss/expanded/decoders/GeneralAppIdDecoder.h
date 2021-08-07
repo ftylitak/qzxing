@@ -28,7 +28,7 @@
  *   http://www.piramidepse.com/
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitArray.h>
 #include <zxing/common/Str.h>
 #include <zxing/IllegalStateException.h>
@@ -56,7 +56,7 @@ public:
 
     bool isStillNumeric(int pos) const;
 
-    DecodedNumeric *decodeNumeric(int pos);
+    QSharedPointer<DecodedNumeric> decodeNumeric(int pos);
 
     int extractNumericValueFromBitArray(int pos, int bits);
 
@@ -66,11 +66,11 @@ public:
 
     DecodedInformation parseBlocks();
 
-    BlockParsedResult *parseNumericBlock();
+    QSharedPointer<BlockParsedResult> parseNumericBlock();
 
-    BlockParsedResult *parseIsoIec646Block();
+    QSharedPointer<BlockParsedResult> parseIsoIec646Block();
 
-    BlockParsedResult *parseAlphaBlock();
+    QSharedPointer<BlockParsedResult> parseAlphaBlock();
 
     bool isStillIsoIec646(int pos);
 

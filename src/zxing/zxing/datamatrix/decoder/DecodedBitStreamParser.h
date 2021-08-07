@@ -25,7 +25,7 @@
 #include <sstream>
 #include <zxing/common/Array.h>
 #include <zxing/common/BitSource.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 
 

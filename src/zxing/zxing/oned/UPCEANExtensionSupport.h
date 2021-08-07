@@ -17,7 +17,7 @@
 *
 * 2019-05-08 translation from Java into C++
 */
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 

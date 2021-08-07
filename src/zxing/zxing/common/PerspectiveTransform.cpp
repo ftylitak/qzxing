@@ -19,6 +19,7 @@
  */
 
 #include <zxing/common/PerspectiveTransform.h>
+#include <iostream>
 
 namespace zxing {
 using namespace std;

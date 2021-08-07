@@ -24,7 +24,7 @@
 #include <vector>
 #include <QSharedPointer>
 
-//#include <zxing/common/Counted.h>
+//#include <QSharedPointer>
 
 //namespace zxing {
 

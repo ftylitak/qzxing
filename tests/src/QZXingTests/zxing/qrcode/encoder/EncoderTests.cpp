@@ -270,7 +270,7 @@ void EncoderTests::testInterleaveWithECBytes()
         in.appendBits(dataByte, 8);
     }
 
-    BitArray* out = Encoder::interleaveWithECBytes(in, 26, 9, 1);
+    QSharedPointer<BitArray> out = Encoder::interleaveWithECBytes(in, 26, 9, 1);
     const byte expected[] = {
         // Data bytes.
         32, 65, 205, 69, 41, 220, 46, 128, 236,

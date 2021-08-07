@@ -21,7 +21,7 @@
  */
 
 #include <zxing/qrcode/detector/FinderPattern.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <vector>
 

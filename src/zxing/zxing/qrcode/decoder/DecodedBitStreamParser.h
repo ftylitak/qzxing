@@ -27,7 +27,7 @@
 #include <map>
 #include <zxing/qrcode/decoder/Mode.h>
 #include <zxing/common/BitSource.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/CharacterSetECI.h>

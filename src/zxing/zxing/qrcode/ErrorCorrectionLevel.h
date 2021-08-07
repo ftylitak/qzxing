@@ -21,7 +21,7 @@
  */
 
 #include <zxing/ReaderException.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 namespace qrcode {

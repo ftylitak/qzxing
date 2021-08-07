@@ -4,7 +4,7 @@
 
 #include <string>
 #include <iostream>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 

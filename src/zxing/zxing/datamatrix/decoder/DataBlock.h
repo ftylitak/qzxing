@@ -22,7 +22,7 @@
  */
 
 #include <vector>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <zxing/datamatrix/Version.h>
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/Result.h>
 #include <zxing/BinaryBitmap.h>
 #include <zxing/DecodeHints.h>

@@ -343,7 +343,7 @@ void Encoder::getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
    * Interleave "bits" with corresponding error correction bytes. On success, store the result in
    * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
    */
-BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
+QSharedPointer<BitArray> Encoder::interleaveWithECBytes(const BitArray& bits,
                                          int numTotalBytes,
                                          int numDataBytes,
                                          int numRSBlocks)
@@ -390,7 +390,7 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         throw WriterException("Data bytes does not match offset");
     }
 
-    BitArray* result = new BitArray;
+    QSharedPointer<BitArray> result(new BitArray);
 
     // First, place data blocks.
     for (int i = 0; i < maxNumDataBytes; ++i) {
@@ -416,7 +416,6 @@ BitArray* Encoder::interleaveWithECBytes(const BitArray& bits,
         message += " and ";
         message += zxing::common::StringUtils::intToStr(result->getSizeInBytes());
         message += " differ.";
-        delete result;
         throw WriterException(message.c_str());
     }
 

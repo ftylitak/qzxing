@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {

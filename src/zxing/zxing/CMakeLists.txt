@@ -71,8 +71,6 @@ SET(COMMON_DIR
     ${ZXING_DIR}/common/BitSource.h
     ${ZXING_DIR}/common/CharacterSetECI.cpp
     ${ZXING_DIR}/common/CharacterSetECI.h
-    ${ZXING_DIR}/common/Counted.h
-    ${ZXING_DIR}/common/Counted.cpp
     ${ZXING_DIR}/common/DecoderResult.cpp
     ${ZXING_DIR}/common/DecoderResult.h
     ${ZXING_DIR}/common/DetectorResult.cpp

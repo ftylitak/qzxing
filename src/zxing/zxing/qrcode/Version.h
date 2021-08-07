@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include <zxing/ReaderException.h>
 #include <zxing/common/BitMatrix.h>

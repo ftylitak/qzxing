@@ -324,7 +324,7 @@ FinderPattern RSS14Reader::parseFoundFinderPattern(QSharedPointer<BitArray> row,
         start = row->getSize() - 1 - start;
         end = row->getSize() - 1 - end;
     }
-    return new FinderPattern(value, {firstElementStart, startEnd[1]}, start, end, rowNumber);
+    return FinderPattern(value, {firstElementStart, startEnd[1]}, start, end, rowNumber);
 }
 
 void RSS14Reader::adjustOddEvenCounts(bool outsideChar, int numModules)

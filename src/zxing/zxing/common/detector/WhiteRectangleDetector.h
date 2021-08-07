@@ -25,7 +25,7 @@
 #include <zxing/ReaderException.h>
 #include <zxing/ResultPoint.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/ResultPoint.h>
 
 
@@ -57,4 +57,3 @@ class WhiteRectangleDetector  {
 }
 
 #endif // ZXING_WHITERECTANGLEDETECTOR_H
-

@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 #include <zxing/common/PerspectiveTransform.h>
 

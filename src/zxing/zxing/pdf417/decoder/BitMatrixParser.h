@@ -23,7 +23,7 @@
 #include <zxing/ReaderException.h>
 #include <zxing/FormatException.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <stdint.h>
 

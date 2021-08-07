@@ -23,7 +23,7 @@
 
 #include <zxing/pdf417/decoder/ec/ErrorCorrection.h>
 #include <zxing/pdf417/decoder/ec/ModulusGF.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>

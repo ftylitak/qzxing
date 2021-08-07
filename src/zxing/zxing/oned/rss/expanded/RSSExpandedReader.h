@@ -96,14 +96,14 @@ public:
 
     void findNextPair(QSharedPointer<BitArray> row, std::vector<ExpandedPair> previousPairs, int forcedOffset);
 
-    FinderPattern parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool oddPattern);
+    QSharedPointer<FinderPattern> parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool oddPattern);
 
     DataCharacter decodeDataCharacter(QSharedPointer<BitArray> row,
-                                      FinderPattern pattern,
+                                      QSharedPointer<FinderPattern> pattern,
                                       bool isOddPattern,
                                       bool leftChar);
 
-    static bool isNotA1left(FinderPattern pattern, bool isOddPattern, bool leftChar);
+    static bool isNotA1left(QSharedPointer<FinderPattern> pattern, bool isOddPattern, bool leftChar);
 
     void adjustOddEvenCounts(int numModules);
 

@@ -18,7 +18,7 @@
  * 2012-09-17 HFN translation from Java into C++
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Array.h>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>

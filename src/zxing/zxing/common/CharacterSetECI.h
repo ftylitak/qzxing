@@ -21,7 +21,7 @@
 
 #include <map>
 #include <zxing/DecodeHints.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
@@ -55,4 +55,3 @@ public:
 }
 
 #endif // ZXING_CHARACTERSET_ECI
-

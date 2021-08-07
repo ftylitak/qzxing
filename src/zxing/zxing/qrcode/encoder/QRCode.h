@@ -5,7 +5,7 @@
 #include <zxing/qrcode/Version.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include "ByteMatrix.h"
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <string>
 
 namespace zxing {
