@@ -120,7 +120,7 @@ QSharedPointer<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPai
 
     return QSharedPointer<Result>(new Result(
                            QSharedPointer<String>(new String(buffer)),
-                           nullptr,
+                           QSharedPointer<std::vector<zxing::byte>>(),
                            resultPoints,
                            BarcodeFormat::RSS_14));
 }

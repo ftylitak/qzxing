@@ -150,8 +150,7 @@ AlignmentPatternFinder::~AlignmentPatternFinder()
 {
   for (int i = 0; i < int(possibleCenters_->size()); i++)
   {
-    (*possibleCenters_)[i].clear();
-    (*possibleCenters_)[i] = 0;
+    (*possibleCenters_)[i].reset();
   }
   delete possibleCenters_;
 }

@@ -190,8 +190,8 @@ void BitMatrixParser::remask() {
 }
 
 void BitMatrixParser::setMirror(boolean mirror) {
-    parsedVersion_ = 0;
-    parsedFormatInfo_ = 0;
+    parsedVersion_.reset();
+    parsedFormatInfo_.reset();
     mirror_ = mirror;
 }
 

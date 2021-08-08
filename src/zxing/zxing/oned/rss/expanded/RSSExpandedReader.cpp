@@ -334,7 +334,7 @@ QSharedPointer<Result> RSSExpandedReader::constructResult(std::vector<ExpandedPa
 
     return QSharedPointer<Result>(new Result(
                            QSharedPointer<String>(new String(resultingString)),
-                           nullptr,
+                           QSharedPointer<std::vector<zxing::byte>>(),
                            resultPoints,
                            BarcodeFormat::RSS_EXPANDED
                            ));

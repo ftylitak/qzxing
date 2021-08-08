@@ -32,7 +32,7 @@ namespace qrcode {
 class BitMatrixParser  {
 private:
   QSharedPointer<BitMatrix> bitMatrix_;
-  QSharedPointer<Version>parsedVersion_;
+  QSharedPointer<Version> parsedVersion_;
   QSharedPointer<FormatInformation> parsedFormatInfo_;
   bool mirror_;
 

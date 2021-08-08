@@ -18,7 +18,7 @@ FinderPattern::FinderPattern(const FinderPattern *other)
 {
     m_value = other != nullptr ? other->m_value : 0;
     m_startEnd = other != nullptr ? other->m_startEnd : std::vector<int> ();
-    m_resultPoints = other != nullptr ? other->m_resultPoints : nullptr;
+    m_resultPoints = other != nullptr ? other->m_resultPoints : QSharedPointer<std::vector<QSharedPointer<ResultPoint>>>();
 }
 
 int FinderPattern::getValue() const
