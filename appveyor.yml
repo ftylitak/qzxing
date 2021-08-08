@@ -95,10 +95,10 @@ branches:
   only:
     - master
 
-deploy:
-  provider: GitHub
-  #token: https://github.com/settings/tokens encode token: https://ci.appveyor.com/tools/encrypt
-  auth_token:
-    secure: #TODO: set your token
-  on:
-    appveyor_repo_tag: true # deploy on tag push only
+# deploy:
+#   provider: GitHub
+#   #token: https://github.com/settings/tokens encode token: https://ci.appveyor.com/tools/encrypt
+#   auth_token:
+#     secure: #TODO: set your token
+#   on:
+#     appveyor_repo_tag: true # deploy on tag push only
