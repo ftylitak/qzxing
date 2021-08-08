@@ -30,7 +30,7 @@
 #include <algorithm>
 
 using std::abs;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ResultPoint;
 using zxing::DetectorResult;
@@ -41,30 +41,30 @@ using zxing::datamatrix::ResultPointsAndTransitions;
 using zxing::common::detector::MathUtils;
 
 namespace {
-  typedef std::map<Ref<ResultPoint>, int> PointMap;
-  void increment(PointMap& table, Ref<ResultPoint> const& key) {
+  typedef std::map<QSharedPointer<ResultPoint>, int> PointMap;
+  void increment(PointMap& table, QSharedPointer<ResultPoint> const& key) {
     int& value = table[key];
     value += 1;
   }
 }
 
 ResultPointsAndTransitions::ResultPointsAndTransitions() {
-  Ref<ResultPoint> ref(new ResultPoint(0, 0));
+  QSharedPointer<ResultPoint> ref(new ResultPoint(0, 0));
   from_ = ref;
   to_ = ref;
   transitions_ = 0;
 }
 
-ResultPointsAndTransitions::ResultPointsAndTransitions(Ref<ResultPoint> from, Ref<ResultPoint> to,
+ResultPointsAndTransitions::ResultPointsAndTransitions(QSharedPointer<ResultPoint> from, QSharedPointer<ResultPoint> to,
                                                        int transitions)
   : to_(to), from_(from), transitions_(transitions) {
 }
 
-Ref<ResultPoint> ResultPointsAndTransitions::getFrom() {
+QSharedPointer<ResultPoint> ResultPointsAndTransitions::getFrom() {
   return from_;
 }
 
-Ref<ResultPoint> ResultPointsAndTransitions::getTo() {
+QSharedPointer<ResultPoint> ResultPointsAndTransitions::getTo() {
   return to_;
 }
 
@@ -72,40 +72,40 @@ int ResultPointsAndTransitions::getTransitions() {
   return transitions_;
 }
 
-Detector::Detector(Ref<BitMatrix> image)
+Detector::Detector(QSharedPointer<BitMatrix> image)
   : image_(image) {
 }
 
-Ref<BitMatrix> Detector::getImage() {
+QSharedPointer<BitMatrix> Detector::getImage() {
   return image_;
 }
 
-Ref<DetectorResult> Detector::detect() {
-  Ref<WhiteRectangleDetector> rectangleDetector_(new WhiteRectangleDetector(image_));
-  std::vector<Ref<ResultPoint> > ResultPoints = rectangleDetector_->detect();
-  Ref<ResultPoint> pointA = ResultPoints[0];
-  Ref<ResultPoint> pointB = ResultPoints[1];
-  Ref<ResultPoint> pointC = ResultPoints[2];
-  Ref<ResultPoint> pointD = ResultPoints[3];
+QSharedPointer<DetectorResult> Detector::detect() {
+  QSharedPointer<WhiteRectangleDetector> rectangleDetector_(new WhiteRectangleDetector(image_));
+  std::vector<QSharedPointer<ResultPoint> > ResultPoints = rectangleDetector_->detect();
+  QSharedPointer<ResultPoint> pointA = ResultPoints[0];
+  QSharedPointer<ResultPoint> pointB = ResultPoints[1];
+  QSharedPointer<ResultPoint> pointC = ResultPoints[2];
+  QSharedPointer<ResultPoint> pointD = ResultPoints[3];
 
   // Point A and D are across the diagonal from one another,
   // as are B and C. Figure out which are the solid black lines
   // by counting transitions
-  std::vector<Ref<ResultPointsAndTransitions> > transitions(4);
-  transitions[0].reset(transitionsBetween(pointA, pointB));
-  transitions[1].reset(transitionsBetween(pointA, pointC));
-  transitions[2].reset(transitionsBetween(pointB, pointD));
-  transitions[3].reset(transitionsBetween(pointC, pointD));
+  std::vector<QSharedPointer<ResultPointsAndTransitions> > transitions(4);
+  transitions[0] = transitionsBetween(pointA, pointB);
+  transitions[1] = transitionsBetween(pointA, pointC);
+  transitions[2] = transitionsBetween(pointB, pointD);
+  transitions[3] = transitionsBetween(pointC, pointD);
   insertionSort(transitions);
 
   // Sort by number of transitions. First two will be the two solid sides; last two
   // will be the two alternating black/white sides
-  Ref<ResultPointsAndTransitions> lSideOne(transitions[0]);
-  Ref<ResultPointsAndTransitions> lSideTwo(transitions[1]);
+  QSharedPointer<ResultPointsAndTransitions> lSideOne(transitions[0]);
+  QSharedPointer<ResultPointsAndTransitions> lSideTwo(transitions[1]);
 
   // Figure out which point is their intersection by tallying up the number of times we see the
   // endpoints in the four endpoints. One will show up twice.
-  typedef std::map<Ref<ResultPoint>, int> PointMap;
+  typedef std::map<QSharedPointer<ResultPoint>, int> PointMap;
   PointMap pointCount;
   increment(pointCount, lSideOne->getFrom());
   increment(pointCount, lSideOne->getTo());
@@ -114,11 +114,11 @@ Ref<DetectorResult> Detector::detect() {
 
   // Figure out which point is their intersection by tallying up the number of times we see the
   // endpoints in the four endpoints. One will show up twice.
-  Ref<ResultPoint> maybeTopLeft;
-  Ref<ResultPoint> bottomLeft;
-  Ref<ResultPoint> maybeBottomRight;
+  QSharedPointer<ResultPoint> maybeTopLeft;
+  QSharedPointer<ResultPoint> bottomLeft;
+  QSharedPointer<ResultPoint> maybeBottomRight;
   for (PointMap::const_iterator entry = pointCount.begin(), end = pointCount.end(); entry != end; ++entry) {
-    Ref<ResultPoint> const& point = entry->first;
+    QSharedPointer<ResultPoint> const& point = entry->first;
     int value = entry->second;
     if (value == 2) {
       bottomLeft = point; // this is definitely the bottom left, then -- end of two L sides
@@ -137,21 +137,21 @@ Ref<DetectorResult> Detector::detect() {
   }
 
   // Bottom left is correct but top left and bottom right might be switched
-  std::vector<Ref<ResultPoint> > corners(3);
-  corners[0].reset(maybeTopLeft);
-  corners[1].reset(bottomLeft);
-  corners[2].reset(maybeBottomRight);
+  std::vector<QSharedPointer<ResultPoint> > corners(3);
+  corners[0] = maybeTopLeft;
+  corners[1] = bottomLeft;
+  corners[2] = maybeBottomRight;
 
   // Use the dot product trick to sort them out
   ResultPoint::orderBestPatterns(corners);
 
   // Now we know which is which:
-  Ref<ResultPoint> bottomRight(corners[0]);
+  QSharedPointer<ResultPoint> bottomRight(corners[0]);
   bottomLeft = corners[1];
-  Ref<ResultPoint> topLeft(corners[2]);
+  QSharedPointer<ResultPoint> topLeft(corners[2]);
 
   // Which point didn't we find in relation to the "L" sides? that's the top right corner
-  Ref<ResultPoint> topRight;
+  QSharedPointer<ResultPoint> topRight;
   if (!(pointA->equals(bottomRight) || pointA->equals(bottomLeft) || pointA->equals(topLeft))) {
     topRight = pointA;
   } else if (!(pointB->equals(bottomRight) || pointB->equals(bottomLeft)
@@ -190,9 +190,9 @@ Ref<DetectorResult> Detector::detect() {
   }
   dimensionRight += 2;
 
-  Ref<BitMatrix> bits;
-  Ref<PerspectiveTransform> transform;
-  Ref<ResultPoint> correctedTopRight;
+  QSharedPointer<BitMatrix> bits;
+  QSharedPointer<PerspectiveTransform> transform;
+  QSharedPointer<ResultPoint> correctedTopRight;
 
 
   // Rectanguar symbols are 6x16, 6x28, 10x24, 10x32, 14x32, or 14x44. If one dimension is more
@@ -246,12 +246,12 @@ Ref<DetectorResult> Detector::detect() {
     bits = sampleGrid(image_, dimensionCorrected, dimensionCorrected, transform);
   }
 
-  ArrayRef< Ref<ResultPoint> > points (new Array< Ref<ResultPoint> >(4));
-  points[0].reset(topLeft);
-  points[1].reset(bottomLeft);
-  points[2].reset(correctedTopRight);
-  points[3].reset(bottomRight);
-  Ref<DetectorResult> detectorResult(new DetectorResult(bits, points));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points (new std::vector< QSharedPointer<ResultPoint> >(4));
+  (*points)[0] = topLeft;
+  (*points)[1] = bottomLeft;
+  (*points)[2] = correctedTopRight;
+  (*points)[3] = bottomRight;
+  QSharedPointer<DetectorResult> detectorResult(new DetectorResult(bits, points));
   return detectorResult;
 }
 
@@ -259,8 +259,8 @@ Ref<DetectorResult> Detector::detect() {
  * Calculates the position of the white top right module using the output of the rectangle detector
  * for a rectangular matrix
  */
-Ref<ResultPoint> Detector::correctTopRightRectangular(Ref<ResultPoint> bottomLeft,
-                                                      Ref<ResultPoint> bottomRight, Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight,
+QSharedPointer<ResultPoint> Detector::correctTopRightRectangular(QSharedPointer<ResultPoint> bottomLeft,
+                                                      QSharedPointer<ResultPoint> bottomRight, QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight,
                                                       int dimensionTop, int dimensionRight) {
 
   float corr = distance(bottomLeft, bottomRight) / (float) dimensionTop;
@@ -268,7 +268,7 @@ Ref<ResultPoint> Detector::correctTopRightRectangular(Ref<ResultPoint> bottomLef
   float cos = (topRight->getX() - topLeft->getX()) / norm;
   float sin = (topRight->getY() - topLeft->getY()) / norm;
 
-  Ref<ResultPoint> c1(
+  QSharedPointer<ResultPoint> c1(
     new ResultPoint(topRight->getX() + corr * cos, topRight->getY() + corr * sin));
 
   corr = distance(bottomLeft, topLeft) / (float) dimensionRight;
@@ -276,14 +276,14 @@ Ref<ResultPoint> Detector::correctTopRightRectangular(Ref<ResultPoint> bottomLef
   cos = (topRight->getX() - bottomRight->getX()) / norm;
   sin = (topRight->getY() - bottomRight->getY()) / norm;
 
-  Ref<ResultPoint> c2(
+  QSharedPointer<ResultPoint> c2(
     new ResultPoint(topRight->getX() + corr * cos, topRight->getY() + corr * sin));
 
   if (!isValid(c1)) {
     if (isValid(c2)) {
       return c2;
     }
-    return Ref<ResultPoint>(NULL);
+    return QSharedPointer<ResultPoint>(NULL);
   }
   if (!isValid(c2)) {
     return c1;
@@ -301,8 +301,8 @@ Ref<ResultPoint> Detector::correctTopRightRectangular(Ref<ResultPoint> bottomLef
  * Calculates the position of the white top right module using the output of the rectangle detector
  * for a square matrix
  */
-Ref<ResultPoint> Detector::correctTopRight(Ref<ResultPoint> bottomLeft,
-                                           Ref<ResultPoint> bottomRight, Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight,
+QSharedPointer<ResultPoint> Detector::correctTopRight(QSharedPointer<ResultPoint> bottomLeft,
+                                           QSharedPointer<ResultPoint> bottomRight, QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight,
                                            int dimension) {
 
   float corr = distance(bottomLeft, bottomRight) / (float) dimension;
@@ -310,7 +310,7 @@ Ref<ResultPoint> Detector::correctTopRight(Ref<ResultPoint> bottomLeft,
   float cos = (topRight->getX() - topLeft->getX()) / norm;
   float sin = (topRight->getY() - topLeft->getY()) / norm;
 
-  Ref<ResultPoint> c1(
+  QSharedPointer<ResultPoint> c1(
     new ResultPoint(topRight->getX() + corr * cos, topRight->getY() + corr * sin));
 
   corr = distance(bottomLeft, topLeft) / (float) dimension;
@@ -318,14 +318,14 @@ Ref<ResultPoint> Detector::correctTopRight(Ref<ResultPoint> bottomLeft,
   cos = (topRight->getX() - bottomRight->getX()) / norm;
   sin = (topRight->getY() - bottomRight->getY()) / norm;
 
-  Ref<ResultPoint> c2(
+  QSharedPointer<ResultPoint> c2(
     new ResultPoint(topRight->getX() + corr * cos, topRight->getY() + corr * sin));
 
   if (!isValid(c1)) {
     if (isValid(c2)) {
       return c2;
     }
-    return Ref<ResultPoint>(NULL);
+    return QSharedPointer<ResultPoint>(NULL);
   }
   if (!isValid(c2)) {
     return c1;
@@ -341,17 +341,17 @@ Ref<ResultPoint> Detector::correctTopRight(Ref<ResultPoint> bottomLeft,
   return l1 <= l2 ? c1 : c2;
 }
 
-bool Detector::isValid(Ref<ResultPoint> p) {
+bool Detector::isValid(QSharedPointer<ResultPoint> p) {
   return p->getX() >= 0 && p->getX() < image_->getWidth() && p->getY() > 0
     && p->getY() < image_->getHeight();
 }
 
-int Detector::distance(Ref<ResultPoint> a, Ref<ResultPoint> b) {
+int Detector::distance(QSharedPointer<ResultPoint> a, QSharedPointer<ResultPoint> b) {
   return MathUtils::round(ResultPoint::distance(a, b));
 }
 
-Ref<ResultPointsAndTransitions> Detector::transitionsBetween(Ref<ResultPoint> from,
-                                                             Ref<ResultPoint> to) {
+QSharedPointer<ResultPointsAndTransitions> Detector::transitionsBetween(QSharedPointer<ResultPoint> from,
+                                                             QSharedPointer<ResultPoint> to) {
   // See QR Code Detector, sizeOfBlackWhiteBlackRun()
   int fromX = (int) from->getX();
   int fromY = (int) from->getY();
@@ -389,15 +389,15 @@ Ref<ResultPointsAndTransitions> Detector::transitionsBetween(Ref<ResultPoint> fr
       error -= dx;
     }
   }
-  Ref<ResultPointsAndTransitions> result(new ResultPointsAndTransitions(from, to, transitions));
+  QSharedPointer<ResultPointsAndTransitions> result(new ResultPointsAndTransitions(from, to, transitions));
   return result;
 }
 
-Ref<PerspectiveTransform> Detector::createTransform(Ref<ResultPoint> topLeft,
-                                                    Ref<ResultPoint> topRight, Ref<ResultPoint> bottomLeft, Ref<ResultPoint> bottomRight,
+QSharedPointer<PerspectiveTransform> Detector::createTransform(QSharedPointer<ResultPoint> topLeft,
+                                                    QSharedPointer<ResultPoint> topRight, QSharedPointer<ResultPoint> bottomLeft, QSharedPointer<ResultPoint> bottomRight,
                                                     int dimensionX, int dimensionY) {
 
-  Ref<PerspectiveTransform> transform(
+  QSharedPointer<PerspectiveTransform> transform(
     PerspectiveTransform::quadrilateralToQuadrilateral(
       0.5f,
       0.5f,
@@ -418,30 +418,30 @@ Ref<PerspectiveTransform> Detector::createTransform(Ref<ResultPoint> topLeft,
   return transform;
 }
 
-Ref<BitMatrix> Detector::sampleGrid(Ref<BitMatrix> image, int dimensionX, int dimensionY,
-                                    Ref<PerspectiveTransform> transform) {
+QSharedPointer<BitMatrix> Detector::sampleGrid(QSharedPointer<BitMatrix> image, int dimensionX, int dimensionY,
+                                    QSharedPointer<PerspectiveTransform> transform) {
   GridSampler &sampler = GridSampler::getInstance();
   return sampler.sampleGrid(image, dimensionX, dimensionY, transform);
 }
 
-void Detector::insertionSort(std::vector<Ref<ResultPointsAndTransitions> > &vector) {
+void Detector::insertionSort(std::vector<QSharedPointer<ResultPointsAndTransitions> > &vector) {
   int max = int(vector.size());
   bool swapped = true;
-  Ref<ResultPointsAndTransitions> value;
-  Ref<ResultPointsAndTransitions> valueB;
+  QSharedPointer<ResultPointsAndTransitions> value;
+  QSharedPointer<ResultPointsAndTransitions> valueB;
   do {
     swapped = false;
     for (int i = 1; i < max; i++) {
       value = vector[i - 1];
       if (compare(value, (valueB = vector[i])) > 0){
         swapped = true;
-        vector[i - 1].reset(valueB);
-        vector[i].reset(value);
+        vector[i - 1] = valueB;
+        vector[i] = value;
       }
     }
   } while (swapped);
 }
 
-int Detector::compare(Ref<ResultPointsAndTransitions> a, Ref<ResultPointsAndTransitions> b) {
+int Detector::compare(QSharedPointer<ResultPointsAndTransitions> a, QSharedPointer<ResultPointsAndTransitions> b) {
   return a->getTransitions() - b->getTransitions();
 }

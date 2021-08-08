@@ -93,7 +93,7 @@ void EncoderTests::testChooseMode()
 
 void EncoderTests::testEncode()
 {
-    Ref<QRCode> qrCode = Encoder::encode(L"ABCDEF", ErrorCorrectionLevel::H);
+    QSharedPointer<QRCode> qrCode = Encoder::encode(L"ABCDEF", ErrorCorrectionLevel::H);
     const std::string expected =
             "<<\n"
             " mode: ALPHANUMERIC\n"
@@ -270,7 +270,7 @@ void EncoderTests::testInterleaveWithECBytes()
         in.appendBits(dataByte, 8);
     }
 
-    BitArray* out = Encoder::interleaveWithECBytes(in, 26, 9, 1);
+    QSharedPointer<BitArray> out = Encoder::interleaveWithECBytes(in, 26, 9, 1);
     const byte expected[] = {
         // Data bytes.
         32, 65, 205, 69, 41, 220, 46, 128, 236,
@@ -394,13 +394,13 @@ void EncoderTests::testGenerateECBytes()
 {
     std::vector<zxing::byte> dataBytes = {32, 65, 205, 69, 41, 220, 46, 128, 236};
 
-    ArrayRef<zxing::byte> ecBytes = Encoder::generateECBytes(dataBytes, 17);
+    QSharedPointer<std::vector<zxing::byte>> ecBytes = Encoder::generateECBytes(dataBytes, 17);
     byte expected[] = {
         42, 159, 74, 221, 244, 169, 239, 150, 138, 70, 237, 85, 224, 96, 74, 219, 61
     };
-    assertEquals( getArrayLength(expected), ecBytes->size());
+    assertEquals( getArrayLength(expected), int(ecBytes->size()));
     for (int x = 0; x < getArrayLength(expected); x++) {
-        assertEquals(expected[x], ecBytes[x]);
+        assertEquals(expected[x], (*ecBytes)[x]);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -412,9 +412,9 @@ void EncoderTests::testGenerateECBytes()
         175, 80, 155, 64, 178, 45, 214, 233, 65, 209, 12, 155, 117, 31, 140, 214, 27, 187
     };
 
-    assertEquals(getArrayLength(expected2), ecBytes->size());
+    assertEquals(getArrayLength(expected2), int(ecBytes->size()));
     for (int x = 0; x < getArrayLength(expected2); x++) {
-        assertEquals(expected2[x], ecBytes[x] );
+        assertEquals(expected2[x], (*ecBytes)[x] );
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -425,9 +425,9 @@ void EncoderTests::testGenerateECBytes()
     byte expected3[] = {
         0, 3, 130, 179, 194, 0, 55, 211, 110, 79, 98, 72, 170, 96, 211, 137, 213
     };
-    assertEquals(getArrayLength(expected3), ecBytes->size());
+    assertEquals(getArrayLength(expected3), int(ecBytes->size()));
     for (int x = 0; x < getArrayLength(expected3); x++) {
-        assertEquals(expected3[x], ecBytes[x]);
+        assertEquals(expected3[x], (*ecBytes)[x]);
     }
 }
 

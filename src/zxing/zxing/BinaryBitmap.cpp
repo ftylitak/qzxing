@@ -17,58 +17,68 @@
 
 #include <zxing/BinaryBitmap.h>
 
-using zxing::Ref;
+using zxing::BinaryBitmap;
 using zxing::BitArray;
 using zxing::BitMatrix;
 using zxing::LuminanceSource;
-using zxing::BinaryBitmap;
 
 // VC++
 using zxing::Binarizer;
 
-BinaryBitmap::BinaryBitmap(Ref<Binarizer> binarizer) : binarizer_(binarizer) {
+BinaryBitmap::BinaryBitmap(QSharedPointer<Binarizer> binarizer) : binarizer_(binarizer)
+{
 }
 
-BinaryBitmap::~BinaryBitmap() {
+BinaryBitmap::~BinaryBitmap()
+{
 }
 
-Ref<BitArray> BinaryBitmap::getBlackRow(int y, Ref<BitArray> row) {
+QSharedPointer<BitArray> BinaryBitmap::getBlackRow(int y, QSharedPointer<BitArray> row)
+{
     return binarizer_->getBlackRow(y, row);
 }
 
-Ref<BitMatrix> BinaryBitmap::getBlackMatrix() {
+QSharedPointer<BitMatrix> BinaryBitmap::getBlackMatrix()
+{
     return binarizer_->getBlackMatrix();
 }
 
-int BinaryBitmap::getWidth() const {
+int BinaryBitmap::getWidth() const
+{
     return getLuminanceSource()->getWidth();
 }
 
-int BinaryBitmap::getHeight() const {
+int BinaryBitmap::getHeight() const
+{
     return getLuminanceSource()->getHeight();
 }
 
-Ref<LuminanceSource> BinaryBitmap::getLuminanceSource() const {
+QSharedPointer<LuminanceSource> BinaryBitmap::getLuminanceSource() const
+{
     return binarizer_->getLuminanceSource();
 }
 
-bool BinaryBitmap::isCropSupported() const {
+bool BinaryBitmap::isCropSupported() const
+{
     return getLuminanceSource()->isCropSupported();
 }
 
-Ref<BinaryBitmap> BinaryBitmap::crop(int left, int top, int width, int height) {
-    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->crop(left, top, width, height))));
+QSharedPointer<BinaryBitmap> BinaryBitmap::crop(int left, int top, int width, int height)
+{
+    return QSharedPointer<BinaryBitmap>(new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->crop(left, top, width, height))));
 }
 
-bool BinaryBitmap::isRotateSupported() const {
+bool BinaryBitmap::isRotateSupported() const
+{
     return getLuminanceSource()->isRotateSupported();
 }
 
-Ref<BinaryBitmap> BinaryBitmap::rotateCounterClockwise() {
-    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise())));
+QSharedPointer<BinaryBitmap> BinaryBitmap::rotateCounterClockwise()
+{
+    return QSharedPointer<BinaryBitmap>(new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise())));
 }
 
-Ref<zxing::BinaryBitmap> BinaryBitmap::rotateCounterClockwise45()
+QSharedPointer<zxing::BinaryBitmap> BinaryBitmap::rotateCounterClockwise45()
 {
-    return Ref<BinaryBitmap> (new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise45())));
+    return QSharedPointer<BinaryBitmap>(new BinaryBitmap(binarizer_->createBinarizer(getLuminanceSource()->rotateCounterClockwise45())));
 }

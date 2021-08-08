@@ -23,44 +23,45 @@
 #define GENERICGF_H
 
 #include <vector>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
   class GenericGFPoly;
   
-  class GenericGF : public Counted {
+  class GenericGF {
     
   private:
     std::vector<int> expTable;
     std::vector<int> logTable;
-    Ref<GenericGFPoly> zero;
-    Ref<GenericGFPoly> one;
+    QSharedPointer<GenericGFPoly> zero;
+    QSharedPointer<GenericGFPoly> one;
     size_t size;
     int primitive;
     int generatorBase;
     bool initialized;
 
     GenericGF(int primitive, size_t size, int b);
-    ~GenericGF();
     
     void initialize();
     void checkInit();
     
   public:
-    static Ref<GenericGF> AZTEC_DATA_12;
-    static Ref<GenericGF> AZTEC_DATA_10;
-    static Ref<GenericGF> AZTEC_DATA_8;
-    static Ref<GenericGF> AZTEC_DATA_6;
-    static Ref<GenericGF> AZTEC_PARAM;
-    static Ref<GenericGF> QR_CODE_FIELD_256;
-    static Ref<GenericGF> DATA_MATRIX_FIELD_256;
-    static Ref<GenericGF> MAXICODE_FIELD_64;
+    static QSharedPointer<GenericGF> AZTEC_DATA_12;
+    static QSharedPointer<GenericGF> AZTEC_DATA_10;
+    static QSharedPointer<GenericGF> AZTEC_DATA_8;
+    static QSharedPointer<GenericGF> AZTEC_DATA_6;
+    static QSharedPointer<GenericGF> AZTEC_PARAM;
+    static QSharedPointer<GenericGF> QR_CODE_FIELD_256;
+    static QSharedPointer<GenericGF> DATA_MATRIX_FIELD_256;
+    static QSharedPointer<GenericGF> MAXICODE_FIELD_64;
+
+    ~GenericGF();
     
-    Ref<GenericGFPoly> getZero();
-    Ref<GenericGFPoly> getOne();
+    QSharedPointer<GenericGFPoly> getZero();
+    QSharedPointer<GenericGFPoly> getOne();
     size_t getSize();
     int getGeneratorBase();
-    Ref<GenericGFPoly> buildMonomial(int degree, int coefficient);
+    QSharedPointer<GenericGFPoly> buildMonomial(int degree, int coefficient);
     
     static int addOrSubtract(int a, int b);
     int exp(int a);
@@ -71,4 +72,3 @@ namespace zxing {
 }
 
 #endif //GENERICGF_H
-

@@ -23,7 +23,7 @@
 
 #include <zxing/qrcode/detector/FinderPattern.h>
 #include <zxing/qrcode/detector/FinderPatternInfo.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 #include <zxing/ResultPointCallback.h>
 #include <vector>
@@ -42,11 +42,11 @@ protected:
   static int MIN_SKIP;
   static int MAX_MODULES;
 
-  Ref<BitMatrix> image_;
-  std::vector<Ref<FinderPattern> > possibleCenters_;
+  QSharedPointer<BitMatrix> image_;
+  std::vector<QSharedPointer<FinderPattern> > possibleCenters_;
   bool hasSkipped_;
 
-  Ref<ResultPointCallback> callback_;
+  QSharedPointer<ResultPointCallback> callback_;
   mutable int crossCheckStateCount[5];
 
   /** stateCount must be int[5] */
@@ -60,21 +60,21 @@ protected:
   bool handlePossibleCenter(int* stateCount, size_t i, size_t j);
   int findRowSkip();
   bool haveMultiplyConfirmedCenters();
-  std::vector<Ref<FinderPattern> > selectBestPatterns();
-  static std::vector<Ref<FinderPattern> > orderBestPatterns(std::vector<Ref<FinderPattern> > patterns);
+  std::vector<QSharedPointer<FinderPattern> > selectBestPatterns();
+  static std::vector<QSharedPointer<FinderPattern> > orderBestPatterns(std::vector<QSharedPointer<FinderPattern> > patterns);
 
-  Ref<BitMatrix> getImage();
-  std::vector<Ref<FinderPattern> >& getPossibleCenters();
+  QSharedPointer<BitMatrix> getImage();
+  std::vector<QSharedPointer<FinderPattern> >& getPossibleCenters();
 
   bool crossCheckDiagonal(int startI, int centerJ, int maxCount, int originalStateCountTotal) const;
   int *getCrossCheckStateCount() const;
 
-  static double squaredDistance(Ref<FinderPattern> a, Ref<FinderPattern> b);
+  static double squaredDistance(QSharedPointer<FinderPattern> a, QSharedPointer<FinderPattern> b);
 
 public:
-  static float distance(Ref<ResultPoint> p1, Ref<ResultPoint> p2);
-  FinderPatternFinder(Ref<BitMatrix> image, Ref<ResultPointCallback>const&);
-  Ref<FinderPatternInfo> find(DecodeHints const& hints);
+  static float distance(QSharedPointer<ResultPoint> p1, QSharedPointer<ResultPoint> p2);
+  FinderPatternFinder(QSharedPointer<BitMatrix> image, QSharedPointer<ResultPointCallback>const&);
+  QSharedPointer<FinderPatternInfo> find(DecodeHints const& hints);
 };
 }
 }

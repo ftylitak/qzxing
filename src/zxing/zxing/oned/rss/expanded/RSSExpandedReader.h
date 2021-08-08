@@ -55,13 +55,13 @@ public:
 
     RSSExpandedReader();
 
-    Ref<Result> decodeRow(int rowNumber,
-                          Ref<BitArray> row, DecodeHints);
+    QSharedPointer<Result> decodeRow(int rowNumber,
+                          QSharedPointer<BitArray> row, DecodeHints);
 
     void reset();
 
     // Not private for testing
-    std::vector<ExpandedPair> decodeRow2pairs(int rowNumber, Ref<BitArray> row);
+    std::vector<ExpandedPair> decodeRow2pairs(int rowNumber, QSharedPointer<BitArray> row);
 
     std::vector<ExpandedPair> checkRows(bool reverse);
 
@@ -85,25 +85,25 @@ public:
     std::vector<ExpandedRow> getRows() const;
 
     // Not private for unit testing
-    static Ref<Result> constructResult(std::vector<ExpandedPair> pairs);
+    static QSharedPointer<Result> constructResult(std::vector<ExpandedPair> pairs);
 
     bool checkChecksum();
 
-    static int getNextSecondBar(Ref<BitArray> row, int initialPos);
+    static int getNextSecondBar(QSharedPointer<BitArray> row, int initialPos);
 
     // not private for testing
-    ExpandedPair retrieveNextPair(Ref<BitArray> row, std::vector<ExpandedPair> &previousPairs, int rowNumber);
+    ExpandedPair retrieveNextPair(QSharedPointer<BitArray> row, std::vector<ExpandedPair> &previousPairs, int rowNumber);
 
-    void findNextPair(Ref<BitArray> row, std::vector<ExpandedPair> previousPairs, int forcedOffset);
+    void findNextPair(QSharedPointer<BitArray> row, std::vector<ExpandedPair> previousPairs, int forcedOffset);
 
-    FinderPattern parseFoundFinderPattern(Ref<BitArray> row, int rowNumber, bool oddPattern);
+    QSharedPointer<FinderPattern> parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool oddPattern);
 
-    DataCharacter decodeDataCharacter(Ref<BitArray> row,
-                                      FinderPattern pattern,
+    DataCharacter decodeDataCharacter(QSharedPointer<BitArray> row,
+                                      QSharedPointer<FinderPattern> pattern,
                                       bool isOddPattern,
                                       bool leftChar);
 
-    static bool isNotA1left(FinderPattern pattern, bool isOddPattern, bool leftChar);
+    static bool isNotA1left(QSharedPointer<FinderPattern> pattern, bool isOddPattern, bool leftChar);
 
     void adjustOddEvenCounts(int numModules);
 

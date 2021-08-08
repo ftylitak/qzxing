@@ -35,7 +35,7 @@ DecodeHints operator & (DecodeHints const&, DecodeHints const&);
 class DecodeHints {
  private:
   DecodeHintType hints;
-  Ref<ResultPointCallback> callback;
+  QSharedPointer<ResultPointCallback> callback;
   std::set<int> allowedEanExtensions;
 
  public:
@@ -82,8 +82,8 @@ class DecodeHints {
   void setAllowedEanExtensions(std::set<int> toset);
   std::set<int> getAllowedEanExtensions() const;
 
-  void setResultPointCallback(Ref<ResultPointCallback> const&);
-  Ref<ResultPointCallback> getResultPointCallback() const;
+  void setResultPointCallback(QSharedPointer<ResultPointCallback> const&);
+  QSharedPointer<ResultPointCallback> getResultPointCallback() const;
 
   DecodeHints& operator =(DecodeHints const &other);
 

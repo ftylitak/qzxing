@@ -21,12 +21,12 @@
  */
 
 #include <zxing/ReaderException.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 namespace qrcode {
 
-class ErrorCorrectionLevel : public Counted {
+class ErrorCorrectionLevel  {
 private:
   int ordinal_;
   int bits_;

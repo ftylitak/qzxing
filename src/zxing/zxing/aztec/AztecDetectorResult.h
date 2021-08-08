@@ -32,8 +32,8 @@ class AztecDetectorResult : public DetectorResult {
   bool compact_;
   int nbDatablocks_, nbLayers_;
  public:
-  AztecDetectorResult(Ref<BitMatrix> bits, 
-                      ArrayRef< Ref<ResultPoint> > points,
+  AztecDetectorResult(QSharedPointer<BitMatrix> bits, 
+                      QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points,
                       bool compact,
                       int nbDatablocks,
                       int nbLayers);

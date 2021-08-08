@@ -26,7 +26,7 @@
 namespace zxing {
 namespace qrcode {
 
-class Mode : public Counted
+class Mode 
 {
 private:
   int characterCountBitsForVersions0To9_;
@@ -53,7 +53,7 @@ public:
   static Mode HANZI;
 
   static Mode& forBits(int bits);
-  int getCharacterCountBits(Ref<Version> version) const;
+  int getCharacterCountBits(QSharedPointer<Version> version) const;
   int getBits() const { return bits_; }
 
   Mode& operator=(const Mode& other);

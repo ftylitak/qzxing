@@ -33,7 +33,7 @@ DataMask::DataMask() {
 DataMask::~DataMask() {
 }
 
-vector<Ref<DataMask> > DataMask::DATA_MASKS;
+vector<QSharedPointer<DataMask> > DataMask::DATA_MASKS;
 static int N_DATA_MASKS = DataMask::buildDataMasks();
 
 DataMask &DataMask::forReference(int reference) {
@@ -144,14 +144,14 @@ public:
 };
 
 int DataMask::buildDataMasks() {
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask000()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask001()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask010()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask011()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask100()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask101()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask110()));
-  DATA_MASKS.push_back(Ref<DataMask> (new DataMask111()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask000()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask001()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask010()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask011()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask100()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask101()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask110()));
+  DATA_MASKS.push_back(QSharedPointer<DataMask> (new DataMask111()));
   return int(DATA_MASKS.size());
 }
 

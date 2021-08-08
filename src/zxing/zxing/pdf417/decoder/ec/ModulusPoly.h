@@ -19,8 +19,7 @@
  * 2012-09-17 HFN translation from Java into C++
  */
 
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>
 
@@ -35,26 +34,26 @@ class ModulusGF;
  * @author Sean Owen
  * @see com.google.zxing.common.reedsolomon.GenericGFPoly
  */
-class ModulusPoly: public Counted {
+class ModulusPoly {
 
   private:
 	ModulusGF &field_;
-	ArrayRef<int> coefficients_;
+	QSharedPointer<std::vector<int>> coefficients_;
   public:
-	ModulusPoly(ModulusGF& field, ArrayRef<int> coefficients);
+	ModulusPoly(ModulusGF& field, QSharedPointer<std::vector<int>> coefficients);
 	~ModulusPoly();
-	ArrayRef<int> getCoefficients();
+	QSharedPointer<std::vector<int>> getCoefficients();
 	int getDegree();
 	bool isZero();
 	int getCoefficient(int degree);
 	int evaluateAt(int a);
-	Ref<ModulusPoly> add(Ref<ModulusPoly> other);
-	Ref<ModulusPoly> subtract(Ref<ModulusPoly> other);
-	Ref<ModulusPoly> multiply(Ref<ModulusPoly> other);
-	Ref<ModulusPoly> negative();
-	Ref<ModulusPoly> multiply(int scalar);
-	Ref<ModulusPoly> multiplyByMonomial(int degree, int coefficient);
-	std::vector<Ref<ModulusPoly> > divide(Ref<ModulusPoly> other);
+	QSharedPointer<ModulusPoly> add(QSharedPointer<ModulusPoly> other);
+	QSharedPointer<ModulusPoly> subtract(QSharedPointer<ModulusPoly> other);
+	QSharedPointer<ModulusPoly> multiply(QSharedPointer<ModulusPoly> other);
+	QSharedPointer<ModulusPoly> negative();
+	QSharedPointer<ModulusPoly> multiply(int scalar);
+	QSharedPointer<ModulusPoly> multiplyByMonomial(int degree, int coefficient);
+	std::vector<QSharedPointer<ModulusPoly> > divide(QSharedPointer<ModulusPoly> other);
 	#if 0
     public String toString();
 	#endif

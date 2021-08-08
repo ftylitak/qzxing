@@ -21,7 +21,7 @@
 
 using std::string;
 using std::vector;
-using zxing::Ref;
+
 using zxing::String;
 using zxing::oned::UPCEReader;
 
@@ -53,7 +53,7 @@ namespace {
 UPCEReader::UPCEReader() {
 }
 
-int UPCEReader::decodeMiddle(Ref<BitArray> row, Range const& startRange, string& result) {
+int UPCEReader::decodeMiddle(QSharedPointer<BitArray> row, Range const& startRange, string& result) {
   vector<int>& counters (decodeMiddleCounters);
   counters.clear();
   counters.resize(4);
@@ -78,11 +78,11 @@ int UPCEReader::decodeMiddle(Ref<BitArray> row, Range const& startRange, string&
   return rowOffset;
 }
 
-UPCEReader::Range UPCEReader::decodeEnd(Ref<BitArray> row, int endStart) {
+UPCEReader::Range UPCEReader::decodeEnd(QSharedPointer<BitArray> row, int endStart) {
   return findGuardPattern(row, endStart, true, MIDDLE_END_PATTERN);
 }
 
-bool UPCEReader::checkChecksum(Ref<String> const& s){
+bool UPCEReader::checkChecksum(QSharedPointer<String> const& s){
   return UPCEANReader::checkChecksum(convertUPCEtoUPCA(s));
 }
 
@@ -106,7 +106,7 @@ bool UPCEReader::determineNumSysAndCheckDigit(std::string& resultString, int lgP
  * @param upce UPC-E code as string of digits
  * @return equivalent UPC-A code as string of digits
  */
-Ref<String> UPCEReader::convertUPCEtoUPCA(Ref<String> const& upce_) {
+QSharedPointer<String> UPCEReader::convertUPCEtoUPCA(QSharedPointer<String> const& upce_) {
   string const& upce(upce_->getText());
   string result;
   result.append(1, upce[0]);
@@ -137,7 +137,7 @@ Ref<String> UPCEReader::convertUPCEtoUPCA(Ref<String> const& upce_) {
     break;
   }
   result.append(1, upce[7]);
-  return Ref<String>(new String(result));
+  return QSharedPointer<String>(new String(result));
 }
 
 

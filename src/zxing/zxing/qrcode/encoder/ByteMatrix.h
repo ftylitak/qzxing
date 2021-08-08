@@ -3,13 +3,13 @@
 
 #include <vector>
 #include <string>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Types.h>
 
 namespace zxing {
 namespace qrcode {
 
-class ByteMatrix : public Counted
+class ByteMatrix 
 {
 private:
   std::vector< std::vector<zxing::byte> > bytes_;

@@ -32,18 +32,18 @@ private:
   // Stores the actual narrow line width of the image being decoded.
   int narrowLineWidth;
 			
-  Range decodeStart(Ref<BitArray> row);
-  Range decodeEnd(Ref<BitArray> row);
-  static void decodeMiddle(Ref<BitArray> row, int payloadStart, int payloadEnd, std::string& resultString);
-  void validateQuietZone(Ref<BitArray> row, int startPattern);
-  static int skipWhiteSpace(Ref<BitArray> row);
+  Range decodeStart(QSharedPointer<BitArray> row);
+  Range decodeEnd(QSharedPointer<BitArray> row);
+  static void decodeMiddle(QSharedPointer<BitArray> row, int payloadStart, int payloadEnd, std::string& resultString);
+  void validateQuietZone(QSharedPointer<BitArray> row, int startPattern);
+  static int skipWhiteSpace(QSharedPointer<BitArray> row);
 			
-  static Range findGuardPattern(Ref<BitArray> row, int rowOffset, std::vector<int> const& pattern);
+  static Range findGuardPattern(QSharedPointer<BitArray> row, int rowOffset, std::vector<int> const& pattern);
   static int decodeDigit(std::vector<int>& counters);
 			
   void append(char* s, char c);
 public:
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
   ITFReader();
   ~ITFReader();
 };

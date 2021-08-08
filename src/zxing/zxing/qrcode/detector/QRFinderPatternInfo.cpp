@@ -23,17 +23,17 @@
 namespace zxing {
 namespace qrcode {
 
-FinderPatternInfo::FinderPatternInfo(std::vector<Ref<FinderPattern> > patternCenters) :
+FinderPatternInfo::FinderPatternInfo(std::vector<QSharedPointer<FinderPattern> > patternCenters) :
     bottomLeft_(patternCenters[0]), topLeft_(patternCenters[1]), topRight_(patternCenters[2]) {
 }
 
-Ref<FinderPattern> FinderPatternInfo::getBottomLeft() {
+QSharedPointer<FinderPattern> FinderPatternInfo::getBottomLeft() {
   return bottomLeft_;
 }
-Ref<FinderPattern> FinderPatternInfo::getTopLeft() {
+QSharedPointer<FinderPattern> FinderPatternInfo::getTopLeft() {
   return topLeft_;
 }
-Ref<FinderPattern> FinderPatternInfo::getTopRight() {
+QSharedPointer<FinderPattern> FinderPatternInfo::getTopRight() {
   return topRight_;
 }
 

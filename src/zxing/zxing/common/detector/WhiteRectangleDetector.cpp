@@ -25,7 +25,7 @@
 #include <sstream>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::ResultPoint;
 using zxing::WhiteRectangleDetector;
 using zxing::common::detector::MathUtils;
@@ -36,12 +36,12 @@ using zxing::BitMatrix;
 int WhiteRectangleDetector::INIT_SIZE = 10;
 int WhiteRectangleDetector::CORR = 1;
 
-WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image) :
+WhiteRectangleDetector::WhiteRectangleDetector(QSharedPointer<BitMatrix> image) :
    WhiteRectangleDetector(image, INIT_SIZE, image->getWidth() >> 1, image->getHeight() >> 1)
 {
 }
 
-WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image, int initSize, int x, int y) : image_(image) {
+WhiteRectangleDetector::WhiteRectangleDetector(QSharedPointer<BitMatrix> image, int initSize, int x, int y) : image_(image) {
   width_ = image->getWidth();
   height_ = image->getHeight();
   
@@ -63,14 +63,14 @@ WhiteRectangleDetector::WhiteRectangleDetector(Ref<BitMatrix> image, int initSiz
  * region until it finds a white rectangular region.
  * </p>
  *
- * @return {@link vector<Ref<ResultPoint> >} describing the corners of the rectangular
+ * @return {@link vector<QSharedPointer<ResultPoint> >} describing the corners of the rectangular
  *         region. The first and last points are opposed on the diagonal, as
  *         are the second and third. The first point will be the topmost
  *         point and the last, the bottommost. The second point will be
  *         leftmost and the third, the rightmost
  * @throws NotFoundException if no Data Matrix Code can be found
 */
-std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
+std::vector<QSharedPointer<ResultPoint> > WhiteRectangleDetector::detect() {
   int left = leftInit_;
   int right = rightInit_;
   int up = upInit_;
@@ -160,7 +160,7 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
 
     int maxSize = right - left;
 
-    Ref<ResultPoint> z(NULL);
+    QSharedPointer<ResultPoint> z(NULL);
     //go up right
     for (int i = 1; i < maxSize; i++) {
       z = getBlackPointOnSegment(left, down - i, left + i, down);
@@ -173,7 +173,7 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
       throw NotFoundException("z == NULL");
     }
 
-    Ref<ResultPoint> t(NULL);
+    QSharedPointer<ResultPoint> t(NULL);
     //go down right
     for (int i = 1; i < maxSize; i++) {
       t = getBlackPointOnSegment(left, up + i, left + i, up);
@@ -186,7 +186,7 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
       throw NotFoundException("t == NULL");
     }
 
-    Ref<ResultPoint> x(NULL);
+    QSharedPointer<ResultPoint> x(NULL);
     //go down left
     for (int i = 1; i < maxSize; i++) {
       x = getBlackPointOnSegment(right, up + i, right - i, up);
@@ -199,7 +199,7 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
       throw NotFoundException("x == NULL");
     }
 
-    Ref<ResultPoint> y(NULL);
+    QSharedPointer<ResultPoint> y(NULL);
     //go up left
     for (int i = 1; i < maxSize; i++) {
       y = getBlackPointOnSegment(right, down - i, right - i, down);
@@ -219,7 +219,7 @@ std::vector<Ref<ResultPoint> > WhiteRectangleDetector::detect() {
   }
 }
 
-Ref<ResultPoint>
+QSharedPointer<ResultPoint>
 WhiteRectangleDetector::getBlackPointOnSegment(int aX_, int aY_, int bX_, int bY_) {
   float aX = float(aX_), aY = float(aY_), bX = float(bX_), bY = float(bY_);
   int dist = MathUtils::round(MathUtils::distance(aX, aY, bX, bY));
@@ -230,11 +230,11 @@ WhiteRectangleDetector::getBlackPointOnSegment(int aX_, int aY_, int bX_, int bY
     int x = MathUtils::round(aX + i * xStep);
     int y = MathUtils::round(aY + i * yStep);
     if (image_->get(x, y)) {
-      Ref<ResultPoint> point(new ResultPoint(float(x), float(y)));
+      QSharedPointer<ResultPoint> point(new ResultPoint(float(x), float(y)));
       return point;
     }
   }
-  Ref<ResultPoint> point(NULL);
+  QSharedPointer<ResultPoint> point(NULL);
   return point;
 }
 
@@ -245,14 +245,14 @@ WhiteRectangleDetector::getBlackPointOnSegment(int aX_, int aY_, int bX_, int bY
  * @param z left most point
  * @param x right most point
  * @param t top most point
- * @return {@link vector<Ref<ResultPoint> >} describing the corners of the rectangular
+ * @return {@link vector<QSharedPointer<ResultPoint> >} describing the corners of the rectangular
  *         region. The first and last points are opposed on the diagonal, as
  *         are the second and third. The first point will be the topmost
  *         point and the last, the bottommost. The second point will be
  *         leftmost and the third, the rightmost
  */
-vector<Ref<ResultPoint> > WhiteRectangleDetector::centerEdges(Ref<ResultPoint> y, Ref<ResultPoint> z,
-                                  Ref<ResultPoint> x, Ref<ResultPoint> t) {
+vector<QSharedPointer<ResultPoint> > WhiteRectangleDetector::centerEdges(QSharedPointer<ResultPoint> y, QSharedPointer<ResultPoint> z,
+                                  QSharedPointer<ResultPoint> x, QSharedPointer<ResultPoint> t) {
 
   //
   //       t            t
@@ -270,25 +270,25 @@ vector<Ref<ResultPoint> > WhiteRectangleDetector::centerEdges(Ref<ResultPoint> y
   float ti = t->getX();
   float tj = t->getY();
 
-  std::vector<Ref<ResultPoint> > corners(4);
+  std::vector<QSharedPointer<ResultPoint> > corners(4);
   if (yi < (float)width_/2.0f) {
-    Ref<ResultPoint> pointA(new ResultPoint(ti - CORR, tj + CORR));
-    Ref<ResultPoint> pointB(new ResultPoint(zi + CORR, zj + CORR));
-    Ref<ResultPoint> pointC(new ResultPoint(xi - CORR, xj - CORR));
-    Ref<ResultPoint> pointD(new ResultPoint(yi + CORR, yj - CORR));
-	  corners[0].reset(pointA);
-	  corners[1].reset(pointB);
-	  corners[2].reset(pointC);
-	  corners[3].reset(pointD);
+    QSharedPointer<ResultPoint> pointA(new ResultPoint(ti - CORR, tj + CORR));
+    QSharedPointer<ResultPoint> pointB(new ResultPoint(zi + CORR, zj + CORR));
+    QSharedPointer<ResultPoint> pointC(new ResultPoint(xi - CORR, xj - CORR));
+    QSharedPointer<ResultPoint> pointD(new ResultPoint(yi + CORR, yj - CORR));
+      corners[0] = pointA;
+      corners[1] = pointB;
+      corners[2] = pointC;
+      corners[3] = pointD;
   } else {
-    Ref<ResultPoint> pointA(new ResultPoint(ti + CORR, tj + CORR));
-    Ref<ResultPoint> pointB(new ResultPoint(zi + CORR, zj - CORR));
-    Ref<ResultPoint> pointC(new ResultPoint(xi - CORR, xj + CORR));
-    Ref<ResultPoint> pointD(new ResultPoint(yi - CORR, yj - CORR));
-	  corners[0].reset(pointA);
-	  corners[1].reset(pointB);
-	  corners[2].reset(pointC);
-	  corners[3].reset(pointD);
+    QSharedPointer<ResultPoint> pointA(new ResultPoint(ti + CORR, tj + CORR));
+    QSharedPointer<ResultPoint> pointB(new ResultPoint(zi + CORR, zj - CORR));
+    QSharedPointer<ResultPoint> pointC(new ResultPoint(xi - CORR, xj + CORR));
+    QSharedPointer<ResultPoint> pointD(new ResultPoint(yi - CORR, yj - CORR));
+      corners[0] = pointA;
+      corners[1] = pointB;
+      corners[2] = pointC;
+      corners[3] = pointD;
   }
   return corners;
 }

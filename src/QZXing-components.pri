@@ -58,12 +58,10 @@ HEADERS += $$PWD/QZXing_global.h \
     $$PWD/zxing/zxing/common/GlobalHistogramBinarizer.h \
     $$PWD/zxing/zxing/common/DetectorResult.h \
     $$PWD/zxing/zxing/common/DecoderResult.h \
-    $$PWD/zxing/zxing/common/Counted.h \
     $$PWD/zxing/zxing/common/CharacterSetECI.h \
     $$PWD/zxing/zxing/common/BitSource.h \
     $$PWD/zxing/zxing/common/BitMatrix.h \
     $$PWD/zxing/zxing/common/BitArray.h \
-    $$PWD/zxing/zxing/common/Array.h \
     $$PWD/zxing/zxing/common/detector/MathUtils.h \
     $$PWD/zxing/zxing/common/detector/JavaMath.h \
     $$PWD/zxing/zxing/common/detector/WhiteRectangleDetector.h \
@@ -109,7 +107,6 @@ SOURCES += $$PWD/CameraImageWrapper.cpp \
     $$PWD/zxing/zxing/IllegalStateException.cpp \
     $$PWD/zxing/zxing/NotFoundException.cpp \
     $$PWD/zxing/zxing/WriterException.cpp \
-    $$PWD/zxing/zxing/common/Counted.cpp \
     $$PWD/zxing/zxing/common/StringUtils.cpp \
     $$PWD/zxing/zxing/common/Str.cpp \
     $$PWD/zxing/zxing/common/PerspectiveTransform.cpp \

@@ -26,18 +26,18 @@ QRCodeMultiReader::QRCodeMultiReader(){}
 
 QRCodeMultiReader::~QRCodeMultiReader(){}
 
-std::vector<Ref<Result> > QRCodeMultiReader::decodeMultiple(Ref<BinaryBitmap> image, 
+std::vector<QSharedPointer<Result> > QRCodeMultiReader::decodeMultiple(QSharedPointer<BinaryBitmap> image, 
   DecodeHints hints)
 {
-  std::vector<Ref<Result> > results;
+  std::vector<QSharedPointer<Result> > results;
   MultiDetector detector(image->getBlackMatrix());
 
-  std::vector<Ref<DetectorResult> > detectorResult =  detector.detectMulti(hints);
+  std::vector<QSharedPointer<DetectorResult> > detectorResult =  detector.detectMulti(hints);
   for (unsigned int i = 0; i < detectorResult.size(); i++) {
     try {
-      Ref<DecoderResult> decoderResult = getDecoder().decode(detectorResult[i]->getBits());
-      ArrayRef< Ref<ResultPoint> > points = detectorResult[i]->getPoints();
-      Ref<Result> result = Ref<Result>(new Result(decoderResult->getText(),
+      QSharedPointer<DecoderResult> decoderResult = getDecoder().decode(detectorResult[i]->getBits());
+      QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points = detectorResult[i]->getPoints();
+      QSharedPointer<Result> result = QSharedPointer<Result>(new Result(decoderResult->getText(),
       decoderResult->getRawBytes(), 
       points, BarcodeFormat::QR_CODE));
       // result->putMetadata(ResultMetadataType.BYTE_SEGMENTS, decoderResult->getByteSegments());

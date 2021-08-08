@@ -45,7 +45,7 @@ class AnyAIDecoder : public AbstractExpandedDecoder
     static const int HEADER_SIZE = 2 + 1 + 2;
 
 public:
-    AnyAIDecoder(Ref<BitArray> information);
+    AnyAIDecoder(QSharedPointer<BitArray> information);
 
     String parseInformation() override;
 };

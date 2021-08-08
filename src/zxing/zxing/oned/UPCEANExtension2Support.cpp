@@ -30,7 +30,7 @@
 namespace zxing {
 namespace oned {
 
-static int decodeMiddle(Ref<BitArray> row, int rowOffset_, std::string& resultString)
+static int decodeMiddle(QSharedPointer<BitArray> row, int rowOffset_, std::string& resultString)
 {
     std::vector<int> counters(4);
     counters[0] = 0;
@@ -71,7 +71,7 @@ static int decodeMiddle(Ref<BitArray> row, int rowOffset_, std::string& resultSt
     return rowOffset;
 }
 
-Ref<Result> UPCEANExtension2Support::decodeRow(int rowNumber, Ref<BitArray> row, int extStartRangeBegin, int extStartRangeEnd)
+QSharedPointer<Result> UPCEANExtension2Support::decodeRow(int rowNumber, QSharedPointer<BitArray> row, int extStartRangeBegin, int extStartRangeEnd)
 {
     std::string resultString;
     int range = decodeMiddle(row, extStartRangeEnd, resultString);
@@ -79,13 +79,13 @@ Ref<Result> UPCEANExtension2Support::decodeRow(int rowNumber, Ref<BitArray> row,
     ResultMetadata metadata;
     metadata.put(ResultMetadata::ISSUE_NUMBER, std::atoi(resultString.c_str()));
 
-    ArrayRef< Ref<ResultPoint> > resultPoints(2);
-    resultPoints[0] = Ref<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+    (*resultPoints)[0].reset(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
                                            static_cast<float> (rowNumber)));
-    resultPoints[1] = Ref<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
+    (*resultPoints)[1].reset(new OneDResultPoint(static_cast<float> (range),
                                            static_cast<float> (rowNumber)));
-    return Ref<Result>(new Result(Ref<String>(new String(resultString)),
-                                  ArrayRef<zxing::byte>(),
+    return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(resultString)),
+                                  QSharedPointer<std::vector<zxing::byte>>(),
                                   resultPoints,
                                   BarcodeFormat::UPC_EAN_EXTENSION,
                                   "",

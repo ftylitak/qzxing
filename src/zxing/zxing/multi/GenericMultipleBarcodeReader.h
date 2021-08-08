@@ -26,12 +26,12 @@ namespace multi {
 
 class GenericMultipleBarcodeReader : public MultipleBarcodeReader {
  private:
-  static Ref<Result> translateResultPoints(Ref<Result> result, 
+  static QSharedPointer<Result> translateResultPoints(QSharedPointer<Result> result, 
                                            int xOffset, 
                                            int yOffset);
-  void doDecodeMultiple(Ref<BinaryBitmap> image, 
+  void doDecodeMultiple(QSharedPointer<BinaryBitmap> image, 
                         DecodeHints hints, 
-                        std::vector<Ref<Result> >& results, 
+                        std::vector<QSharedPointer<Result> >& results, 
                         int xOffset, 
                         int yOffset,
                         int currentDepth);
@@ -42,7 +42,7 @@ class GenericMultipleBarcodeReader : public MultipleBarcodeReader {
  public:
   GenericMultipleBarcodeReader(Reader& delegate);
   virtual ~GenericMultipleBarcodeReader();
-  virtual std::vector<Ref<Result> > decodeMultiple(Ref<BinaryBitmap> image, DecodeHints hints);
+  virtual std::vector<QSharedPointer<Result> > decodeMultiple(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }

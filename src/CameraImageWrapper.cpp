@@ -71,7 +71,7 @@ CameraImageWrapper::CameraImageWrapper(const QImage &sourceImage) : LuminanceSou
 {
     updateImageAsGrayscale( sourceImage );
 
-    delegate = Ref<GreyscaleLuminanceSource>(
+    delegate = QSharedPointer<GreyscaleLuminanceSource>(
                 new GreyscaleLuminanceSource(getMatrixP(), sourceImage.width(), sourceImage.height(),0, 0, sourceImage.width(), sourceImage.height()));
 }
 
@@ -85,7 +85,7 @@ CameraImageWrapper::~CameraImageWrapper()
 {
 }
 
-CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int maxWidth, int maxHeight, bool smoothTransformation)
+QSharedPointer<CameraImageWrapper> CameraImageWrapper::Factory(const QImage &sourceImage, int maxWidth, int maxHeight, bool smoothTransformation)
 {
     if((maxWidth != -1 && sourceImage.width() > maxWidth) || (maxHeight != -1 && sourceImage.height() > maxHeight))
     {
@@ -95,18 +95,18 @@ CameraImageWrapper *CameraImageWrapper::Factory(const QImage &sourceImage, int m
                     maxHeight != -1 ? maxHeight : sourceImage.height(),
                     Qt::KeepAspectRatio,
                     smoothTransformation ? Qt::SmoothTransformation : Qt::FastTransformation);
-        return new CameraImageWrapper(image);
+        return QSharedPointer<CameraImageWrapper>(new CameraImageWrapper(image));
     }
     else
-        return new CameraImageWrapper(sourceImage);
+        return QSharedPointer<CameraImageWrapper>(new CameraImageWrapper(sourceImage));
 }
 
-ArrayRef<ArrayRef<zxing::byte> > CameraImageWrapper::getOriginalImage()
+QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>> CameraImageWrapper::getOriginalImage()
 {
     return imageBytesPerRow;
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getRow(int y, ArrayRef<zxing::byte> row) const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const
 {
     if(delegate)
         return delegate->getRow(y, row);
@@ -114,7 +114,7 @@ ArrayRef<zxing::byte> CameraImageWrapper::getRow(int y, ArrayRef<zxing::byte> ro
         return getRowP(y, row);
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getMatrix() const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getMatrix() const
 {
     if(delegate)
         return delegate->getMatrix();
@@ -130,7 +130,7 @@ bool CameraImageWrapper::isCropSupported() const
         return LuminanceSource::isCropSupported();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
+QSharedPointer<LuminanceSource> CameraImageWrapper::crop(int left, int top, int width, int height) const
 {
     if(delegate)
         return delegate->crop(left, top, width, height);
@@ -146,7 +146,7 @@ bool CameraImageWrapper::isRotateSupported() const
         return LuminanceSource::isRotateSupported();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::invert() const
+QSharedPointer<LuminanceSource> CameraImageWrapper::invert() const
 {
     if(delegate)
         return delegate->invert();
@@ -154,7 +154,7 @@ Ref<LuminanceSource> CameraImageWrapper::invert() const
         return LuminanceSource::invert();
 }
 
-Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
+QSharedPointer<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
 {
     if(delegate)
         return delegate->rotateCounterClockwise();
@@ -162,19 +162,19 @@ Ref<LuminanceSource> CameraImageWrapper::rotateCounterClockwise() const
         return LuminanceSource::rotateCounterClockwise();
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getRowP(int y, ArrayRef<zxing::byte> row) const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getRowP(int y, QSharedPointer<std::vector<zxing::byte>> row) const
 {
     int width = getWidth();
 
     if (row->size() != width)
-        row.reset(ArrayRef<zxing::byte>(width));
+        row.reset(new std::vector<zxing::byte>(width));
 
     Q_ASSERT(y >= 0 && y < getHeight());
 
-    return imageBytesPerRow[y];
+    return (*imageBytesPerRow)[y];
 }
 
-ArrayRef<zxing::byte> CameraImageWrapper::getMatrixP() const
+QSharedPointer<std::vector<zxing::byte>> CameraImageWrapper::getMatrixP() const
 {
     return imageBytes;
 }
@@ -195,13 +195,13 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
     const int width = getWidth();
     const int height = getHeight();
 
-    imageBytes = ArrayRef<zxing::byte>(height*width);
-    imageBytesPerRow = ArrayRef<ArrayRef<zxing::byte>>(height);
-    zxing::byte* m = &imageBytes[0];
+    imageBytes = QSharedPointer<std::vector<zxing::byte>>(new std::vector<zxing::byte>((size_t)height * (size_t)width));
+    imageBytesPerRow = QSharedPointer<std::vector<QSharedPointer<std::vector<zxing::byte>>>>(new std::vector<QSharedPointer<std::vector<zxing::byte>>>(height));
+    zxing::byte* m = &(*imageBytes)[0];
 
     for(int j=0; j<height; j++)
     {
-        ArrayRef<zxing::byte> line(width);
+        QSharedPointer<std::vector<zxing::byte>> line(new std::vector<zxing::byte>(width));
         for(int i=0; i<width; i++)
         {
             pixel = origin.pixel(i,j);
@@ -209,14 +209,14 @@ void CameraImageWrapper::updateImageAsGrayscale(const QImage &origin)
                 pixelGrayscale = gray(qRed(pixel),qGreen(pixel),qBlue(pixel));
             else
                 pixelGrayscale = pixel & 0xFF;
-            line[i] = pixelGrayscale;
+            (*line)[i] = pixelGrayscale;
         }
-        imageBytesPerRow[j] = line;
+        (*imageBytesPerRow)[j] = line;
 
 #if __cplusplus > 199711L
-        memcpy(m, line->values().data(), width);
+        memcpy(m, (*line).data(), width);  ///the below line is also usable
 #else
-        memcpy(m, &line[0], width);
+        memcpy(m, &(*line)[0], width);
 #endif
         m += width * sizeof(zxing::byte);
     }

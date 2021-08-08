@@ -46,20 +46,20 @@ class AbstractExpandedDecoder
 {
 
 public:
-    AbstractExpandedDecoder(Ref<BitArray> information);
+    AbstractExpandedDecoder(QSharedPointer<BitArray> information);
 
     virtual ~AbstractExpandedDecoder() {}
 
-    Ref<BitArray> getInformation() const;
+    QSharedPointer<BitArray> getInformation() const;
 
     virtual GeneralAppIdDecoder getGeneralDecoder();
 
     virtual String parseInformation() = 0;
 
-    static AbstractExpandedDecoder* createDecoder(Ref<BitArray> information);
+    static QSharedPointer<AbstractExpandedDecoder> createDecoder(QSharedPointer<BitArray> information);
 
 protected:
-    Ref<BitArray> m_information;
+    QSharedPointer<BitArray> m_information;
     GeneralAppIdDecoder m_generalDecoder;
 
 };

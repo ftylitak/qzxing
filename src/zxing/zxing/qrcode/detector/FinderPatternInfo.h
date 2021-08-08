@@ -21,25 +21,24 @@
  */
 
 #include <zxing/qrcode/detector/FinderPattern.h>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
 namespace qrcode {
 
-class FinderPatternInfo : public Counted {
+class FinderPatternInfo  {
 private:
-  Ref<FinderPattern> bottomLeft_;
-  Ref<FinderPattern> topLeft_;
-  Ref<FinderPattern> topRight_;
+  QSharedPointer<FinderPattern> bottomLeft_;
+  QSharedPointer<FinderPattern> topLeft_;
+  QSharedPointer<FinderPattern> topRight_;
 
 public:
-  FinderPatternInfo(std::vector<Ref<FinderPattern> > patternCenters);
+  FinderPatternInfo(std::vector<QSharedPointer<FinderPattern> > patternCenters);
 
-  Ref<FinderPattern> getBottomLeft();
-  Ref<FinderPattern> getTopLeft();
-  Ref<FinderPattern> getTopRight();
+  QSharedPointer<FinderPattern> getBottomLeft();
+  QSharedPointer<FinderPattern> getTopLeft();
+  QSharedPointer<FinderPattern> getTopRight();
 };
 }
 }

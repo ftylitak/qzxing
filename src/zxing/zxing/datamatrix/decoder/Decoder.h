@@ -22,8 +22,7 @@
  */
 
 #include <zxing/common/reedsolomon/ReedSolomonDecoder.h>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>
 
@@ -35,12 +34,12 @@ class Decoder {
 private:
   ReedSolomonDecoder rsDecoder_;
 
-  void correctErrors(ArrayRef<zxing::byte> bytes, int numDataCodewords);
+  void correctErrors(QSharedPointer<std::vector<zxing::byte>> bytes, int numDataCodewords);
 
 public:
   Decoder();
 
-  Ref<DecoderResult> decode(Ref<BitMatrix> bits);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<BitMatrix> bits);
 };
 
 }

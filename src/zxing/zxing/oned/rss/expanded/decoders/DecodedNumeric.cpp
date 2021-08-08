@@ -17,12 +17,12 @@ DecodedNumeric::DecodedNumeric(int newPosition, int firstDigit, int secondDigit)
     m_secondDigit = secondDigit;
 }
 
-DecodedNumeric::DecodedNumeric(const DecodedNumeric *other)
-    : DecodedObject (other == nullptr ? 0 : other->m_newPosition)
+DecodedNumeric::DecodedNumeric(const QSharedPointer<DecodedNumeric> other)
+    : DecodedObject (other.isNull() ? 0 : other->m_newPosition)
 {
-    m_newPosition = other == nullptr ? 0 : other->m_newPosition;
-    m_firstDigit  = other == nullptr ? 0 : other->m_firstDigit;
-    m_secondDigit = other == nullptr ? 0 : other->m_secondDigit;
+    m_newPosition = other.isNull() ? 0 : other->m_newPosition;
+    m_firstDigit  = other.isNull() ? 0 : other->m_firstDigit;
+    m_secondDigit = other.isNull() ? 0 : other->m_secondDigit;
 }
 
 int DecodedNumeric::getFirstDigit() const

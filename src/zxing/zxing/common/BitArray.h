@@ -19,22 +19,21 @@
  */
 
 #include <zxing/ZXing.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/IllegalArgumentException.h>
-#include <zxing/common/Array.h>
 #include <vector>
 #include <limits>
 #include <iostream>
 
 namespace zxing {
 
-class BitArray : public Counted {
+class BitArray  {
 public:
     static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
 private:
     int size;
-    ArrayRef<int> bits;
+    QSharedPointer<std::vector<int>> bits;
     static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
     static const int bitsMask = (1 << logBits) - 1;
 
@@ -47,15 +46,15 @@ public:
     int getSizeInBytes() const;
 
     bool get(int i) const {
-        return (bits[i / 32] & (1 << (i & 0x1F))) != 0;
+        return ((*bits)[i / 32] & (1 << (i & 0x1F))) != 0;
     }
 
     void set(int i) {
-        bits[i / 32] |= 1 << (i & 0x1F);
+        (*bits)[i / 32] |= 1 << (i & 0x1F);
     }
 
     void flip(int i) {
-        bits[i / 32] ^= 1 << (i & 0x1F);
+        (*bits)[i / 32] ^= 1 << (i & 0x1F);
       }
 
     int getNextSet(int from);
@@ -78,17 +77,17 @@ public:
 
     std::string toString() const;
 
-    static ArrayRef<int> makeArray(int size) {
-        return ArrayRef<int>((size + 31) / 32);
+    static QSharedPointer<std::vector<int>> makeArray(int size) {
+        return QSharedPointer<std::vector<int>>(new std::vector<int>((size + 31) / 32));
       }
 
     void reverse();
 
     class Reverse {
     private:
-        Ref<BitArray> array;
+        QSharedPointer<BitArray> array;
     public:
-        Reverse(Ref<BitArray> array);
+        Reverse(QSharedPointer<BitArray> array);
         ~Reverse();
     };
 

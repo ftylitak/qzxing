@@ -25,59 +25,70 @@
 #include <zxing/oned/UPCEReader.h>
 #include <zxing/oned/UPCAReader.h>
 #include <zxing/oned/OneDResultPoint.h>
-#include <zxing/common/Array.h>
 #include <zxing/ReaderException.h>
 #include <zxing/NotFoundException.h>
 #include <math.h>
 
 using zxing::NotFoundException;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::oned::MultiFormatUPCEANReader;
-    
-// VC++
-using zxing::DecodeHints;
-using zxing::BitArray;
 
-MultiFormatUPCEANReader::MultiFormatUPCEANReader(DecodeHints hints) : readers() {
-  if (hints.containsFormat(BarcodeFormat::EAN_13)) {
-    readers.push_back(Ref<UPCEANReader>(new EAN13Reader()));
-  } else if (hints.containsFormat(BarcodeFormat::UPC_A)) {
-    readers.push_back(Ref<UPCEANReader>(new UPCAReader()));
+// VC++
+using zxing::BitArray;
+using zxing::DecodeHints;
+
+MultiFormatUPCEANReader::MultiFormatUPCEANReader(DecodeHints hints) : readers()
+{
+  if (hints.containsFormat(BarcodeFormat::EAN_13))
+  {
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN13Reader()));
   }
-  if (hints.containsFormat(BarcodeFormat::EAN_8)) {
-    readers.push_back(Ref<UPCEANReader>(new EAN8Reader()));
+  else if (hints.containsFormat(BarcodeFormat::UPC_A))
+  {
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCAReader()));
   }
-  if (hints.containsFormat(BarcodeFormat::UPC_E)) {
-    readers.push_back(Ref<UPCEANReader>(new UPCEReader()));
+  if (hints.containsFormat(BarcodeFormat::EAN_8))
+  {
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN8Reader()));
   }
-  if (readers.size() == 0) {
-    readers.push_back(Ref<UPCEANReader>(new EAN13Reader()));
+  if (hints.containsFormat(BarcodeFormat::UPC_E))
+  {
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCEReader()));
+  }
+  if (readers.size() == 0)
+  {
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN13Reader()));
     // UPC-A is covered by EAN-13
-    readers.push_back(Ref<UPCEANReader>(new EAN8Reader()));
-    readers.push_back(Ref<UPCEANReader>(new UPCEReader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new EAN8Reader()));
+    readers.push_back(QSharedPointer<UPCEANReader>(new UPCEReader()));
   }
 }
 
 #include <typeinfo>
 
-Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) {
+QSharedPointer<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints)
+{
   // Compute this location once and reuse it on multiple implementations
   UPCEANReader::Range startGuardPattern = UPCEANReader::findStartGuardPattern(row);
-  for (int i = 0, e = int(readers.size()); i < e; i++) {
-    Ref<UPCEANReader> reader = readers[i];
-    Ref<Result> result;
-    try {
+  for (int i = 0, e = int(readers.size()); i < e; i++)
+  {
+    QSharedPointer<UPCEANReader> reader = readers[i];
+    QSharedPointer<Result> result;
+    try
+    {
       result = reader->decodeRow(rowNumber, row, startGuardPattern, hints);
-    } catch (ReaderException const& ignored) {
+    }
+    catch (ReaderException const &ignored)
+    {
       (void)ignored;
       continue;
     }
 
     //added this because reader->decodeRow returns null if row is null
     //TODO: investigate why the execution reaches here with empty row.
-    if(result.empty())
-        continue;
+    if (result.isNull())
+      continue;
 
     // Special case: a 12-digit code encoded in UPC-A is identical
     // to a "0" followed by those 12 digits encoded as EAN-13. Each
@@ -92,20 +103,21 @@ Ref<Result> MultiFormatUPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row,
     // here, and convert an EAN-13 result to a UPC-A result if
     // appropriate.
     bool ean13MayBeUPCA =
-      (result->getBarcodeFormat() == BarcodeFormat::UPC_A ||
-       result->getBarcodeFormat() == BarcodeFormat::EAN_13) &&
-      result->getText()->charAt(0) == '0';
+        (result->getBarcodeFormat() == BarcodeFormat::UPC_A ||
+         result->getBarcodeFormat() == BarcodeFormat::EAN_13) &&
+        result->getText()->charAt(0) == '0';
 
     // Note: doesn't match Java which uses hints
 
     bool canReturnUPCA = true;
 
-    if (ean13MayBeUPCA && canReturnUPCA) {
+    if (ean13MayBeUPCA && canReturnUPCA)
+    {
       // Transfer the metdata across
-      Ref<Result> resultUPCA (new Result(result->getText()->substring(1),
-                                         result->getRawBytes(),
-                                         result->getResultPoints(),
-                                         BarcodeFormat::UPC_A));
+      QSharedPointer<Result> resultUPCA(new Result(result->getText()->substring(1),
+                                        result->getRawBytes(),
+                                        result->getResultPoints(),
+                                        BarcodeFormat::UPC_A));
       // needs java metadata stuff
       return resultUPCA;
     }

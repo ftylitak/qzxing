@@ -27,31 +27,31 @@
 #include <zxing/NotFoundException.h>
 #include <zxing/ResultPoint.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/ResultPoint.h>
 
 namespace zxing {
 
-struct TwoInts: public Counted {
+struct TwoInts {
   int start;
   int end;
 };
 
-class MonochromeRectangleDetector : public Counted {
+class MonochromeRectangleDetector  {
  private:
   static const int MAX_MODULES = 32;
-  Ref<BitMatrix> image_;
+  QSharedPointer<BitMatrix> image_;
 
  public:
-  MonochromeRectangleDetector(Ref<BitMatrix> image) : image_(image) {  };
+  MonochromeRectangleDetector(QSharedPointer<BitMatrix> image) : image_(image) {  };
 
-  std::vector<Ref<ResultPoint> > detect();
+  std::vector<QSharedPointer<ResultPoint> > detect();
 
  private:
-  Ref<ResultPoint> findCornerFromCenter(int centerX, int deltaX, int left, int right,
+  QSharedPointer<ResultPoint> findCornerFromCenter(int centerX, int deltaX, int left, int right,
                                         int centerY, int deltaY, int top, int bottom, int maxWhiteRun);
 
-  Ref<TwoInts> blackWhiteRange(int fixedDimension, int maxWhiteRun, int minDim, int maxDim,
+  QSharedPointer<TwoInts> blackWhiteRange(int fixedDimension, int maxWhiteRun, int minDim, int maxDim,
                                bool horizontal);
 
   int max(int a, float b) { return (float) a > b ? a : (int) b;};

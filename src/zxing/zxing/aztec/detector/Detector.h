@@ -33,14 +33,14 @@
 namespace zxing {
 namespace aztec {
 
-class Point : public Counted {
+class Point  {
  private:
   const int x;
   const int y;
             
  public:
-  Ref<ResultPoint> toResultPoint() { 
-    return Ref<ResultPoint>(new ResultPoint(float(x), float(y)));
+  QSharedPointer<ResultPoint> toResultPoint() { 
+    return QSharedPointer<ResultPoint>(new ResultPoint(float(x), float(y)));
   }
             
   Point(int ax, int ay) : x(ax), y(ay) {}
@@ -49,10 +49,10 @@ class Point : public Counted {
   int getY() const { return y; }
 };
         
-class Detector : public Counted {
+class Detector  {
             
  private:
-  Ref<BitMatrix> image_;
+  QSharedPointer<BitMatrix> image_;
             
   bool compact_;
   int nbLayers_;
@@ -60,30 +60,30 @@ class Detector : public Counted {
   int nbCenterLayers_;
   int shift_;
             
-  void extractParameters(std::vector<Ref<Point> > bullEyeCornerPoints);
-  ArrayRef< Ref<ResultPoint> > getMatrixCornerPoints(std::vector<Ref<Point> > bullEyeCornerPoints);
-  static void correctParameterData(Ref<BitArray> parameterData, bool compact);
-  std::vector<Ref<Point> > getBullEyeCornerPoints(Ref<Point> pCenter);
-  Ref<Point> getMatrixCenter();
-  Ref<BitMatrix> sampleGrid(Ref<BitMatrix> image,
-                            Ref<ResultPoint> topLeft,
-                            Ref<ResultPoint> bottomLeft,
-                            Ref<ResultPoint> bottomRight,
-                            Ref<ResultPoint> topRight);
-  void getParameters(Ref<BitArray> parameterData);
-  Ref<BitArray> sampleLine(Ref<Point> p1, Ref<Point> p2, int size);
-  bool isWhiteOrBlackRectangle(Ref<Point> p1,
-                               Ref<Point> p2,
-                               Ref<Point> p3,
-                               Ref<Point> p4);
-  int getColor(Ref<Point> p1, Ref<Point> p2);
-  Ref<Point> getFirstDifferent(Ref<Point> init, bool color, int dx, int dy);
+  void extractParameters(std::vector<QSharedPointer<Point> > bullEyeCornerPoints);
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > getMatrixCornerPoints(std::vector<QSharedPointer<Point> > bullEyeCornerPoints);
+  static void correctParameterData(QSharedPointer<BitArray> parameterData, bool compact);
+  std::vector<QSharedPointer<Point> > getBullEyeCornerPoints(QSharedPointer<Point> pCenter);
+  QSharedPointer<Point> getMatrixCenter();
+  QSharedPointer<BitMatrix> sampleGrid(QSharedPointer<BitMatrix> image,
+                            QSharedPointer<ResultPoint> topLeft,
+                            QSharedPointer<ResultPoint> bottomLeft,
+                            QSharedPointer<ResultPoint> bottomRight,
+                            QSharedPointer<ResultPoint> topRight);
+  void getParameters(QSharedPointer<BitArray> parameterData);
+  QSharedPointer<BitArray> sampleLine(QSharedPointer<Point> p1, QSharedPointer<Point> p2, int size);
+  bool isWhiteOrBlackRectangle(QSharedPointer<Point> p1,
+                               QSharedPointer<Point> p2,
+                               QSharedPointer<Point> p3,
+                               QSharedPointer<Point> p4);
+  int getColor(QSharedPointer<Point> p1, QSharedPointer<Point> p2);
+  QSharedPointer<Point> getFirstDifferent(QSharedPointer<Point> init, bool color, int dx, int dy);
   bool isValid(int x, int y);
-  static float distance(Ref<Point> a, Ref<Point> b);
+  static float distance(QSharedPointer<Point> a, QSharedPointer<Point> b);
             
  public:
-  Detector(Ref<BitMatrix> image);
-  Ref<AztecDetectorResult> detect();
+  Detector(QSharedPointer<BitMatrix> image);
+  QSharedPointer<AztecDetectorResult> detect();
 };
 
 }

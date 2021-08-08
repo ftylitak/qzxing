@@ -48,7 +48,7 @@ class AI01392xDecoder : public AI01decoder
     static const int LAST_DIGIT_SIZE = 2;
 
 public:
-    AI01392xDecoder(Ref<BitArray> information);
+    AI01392xDecoder(QSharedPointer<BitArray> information);
 
     virtual String parseInformation() override;
 

@@ -26,16 +26,16 @@
 
 using zxing::GenericGF;
 using zxing::GenericGFPoly;
-using zxing::Ref;
 
-Ref<GenericGF> GenericGF::AZTEC_DATA_12(new GenericGF(0x1069, 4096, 1));
-Ref<GenericGF> GenericGF::AZTEC_DATA_10(new GenericGF(0x409, 1024, 1));
-Ref<GenericGF> GenericGF::AZTEC_DATA_6(new GenericGF(0x43, 64, 1));
-Ref<GenericGF> GenericGF::AZTEC_PARAM(new GenericGF(0x13, 16, 1));
-Ref<GenericGF> GenericGF::QR_CODE_FIELD_256(new GenericGF(0x011D, 256, 0));
-Ref<GenericGF> GenericGF::DATA_MATRIX_FIELD_256(new GenericGF(0x012D, 256, 1));
-Ref<GenericGF> GenericGF::AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
-Ref<GenericGF> GenericGF::MAXICODE_FIELD_64 = AZTEC_DATA_6;
+
+QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_12(new GenericGF(0x1069, 4096, 1));
+QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_10(new GenericGF(0x409, 1024, 1));
+QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_6(new GenericGF(0x43, 64, 1));
+QSharedPointer<GenericGF> GenericGF::AZTEC_PARAM(new GenericGF(0x13, 16, 1));
+QSharedPointer<GenericGF> GenericGF::QR_CODE_FIELD_256(new GenericGF(0x011D, 256, 0));
+QSharedPointer<GenericGF> GenericGF::DATA_MATRIX_FIELD_256(new GenericGF(0x012D, 256, 1));
+QSharedPointer<GenericGF> GenericGF::AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
+QSharedPointer<GenericGF> GenericGF::MAXICODE_FIELD_64 = AZTEC_DATA_6;
 
 namespace {
   size_t INITIALIZATION_THRESHOLD = 0;
@@ -71,14 +71,14 @@ void GenericGF::initialize() {
     logTable.at(expTable.at(i)) = i;
   }
   //logTable[0] == 0 but this should never be used
-  ArrayRef<int> coefficients_zero(1);
-  ArrayRef<int> coefficients_one(1);
+  QSharedPointer<std::vector<int>> coefficients_zero(new std::vector<int>(1));
+  QSharedPointer<std::vector<int>> coefficients_one(new std::vector<int>(1));
 
-  coefficients_zero[0] = 0;
-  coefficients_one[0] = 1;
+  (*coefficients_zero)[0] = 0;
+  (*coefficients_one)[0] = 1;
 
-  zero = Ref<GenericGFPoly>(new GenericGFPoly(this, coefficients_zero));
-  one = Ref<GenericGFPoly>(new GenericGFPoly(this, coefficients_one));
+  zero = QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients_zero));
+  one = QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients_one));
   initialized = true;
 }
 
@@ -88,17 +88,17 @@ void GenericGF::checkInit() {
   }
 }
 
-Ref<GenericGFPoly> GenericGF::getZero() {
+QSharedPointer<GenericGFPoly> GenericGF::getZero() {
   checkInit();
   return zero;
 }
 
-Ref<GenericGFPoly> GenericGF::getOne() {
+QSharedPointer<GenericGFPoly> GenericGF::getOne() {
   checkInit();
   return one;
 }
 
-Ref<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficient) {
+QSharedPointer<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficient) {
   checkInit();
 
   if (degree < 0) {
@@ -107,10 +107,10 @@ Ref<GenericGFPoly> GenericGF::buildMonomial(int degree, int coefficient) {
   if (coefficient == 0) {
     return zero;
   }
-  ArrayRef<int> coefficients(degree + 1);
-  coefficients[0] = coefficient;
+  QSharedPointer<std::vector<int>> coefficients(new std::vector<int>(degree + 1));
+  (*coefficients)[0] = coefficient;
 
-  return Ref<GenericGFPoly>(new GenericGFPoly(this, coefficients));
+  return QSharedPointer<GenericGFPoly>(new GenericGFPoly(this, coefficients));
 }
 
 int GenericGF::addOrSubtract(int a, int b) {

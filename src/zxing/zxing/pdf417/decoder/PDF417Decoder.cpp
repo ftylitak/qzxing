@@ -28,30 +28,30 @@
 
 using zxing::pdf417::decoder::Decoder;
 using zxing::pdf417::decoder::ec::ErrorCorrection;
-using zxing::Ref;
+
 using zxing::DecoderResult;
 
 // VC++
 
 using zxing::BitMatrix;
 using zxing::DecodeHints;
-using zxing::ArrayRef;
+
 
 const int Decoder::MAX_ERRORS = 3;
 const int Decoder::MAX_EC_CODEWORDS = 512;
 
-Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits, DecodeHints const& hints) {
+QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits, DecodeHints const& hints) {
   (void)hints;
   // Construct a parser to read the data codewords and error-correction level
   BitMatrixParser parser(bits);
-  ArrayRef<int> codewords(parser.readCodewords());
+  QSharedPointer<std::vector<int>> codewords(parser.readCodewords());
   if (codewords->size() == 0) {
     throw FormatException("PDF:Decoder:decode: cannot read codewords");
   }
 
   int ecLevel = parser.getECLevel();
   int numECCodewords = 1 << (ecLevel + 1);
-  ArrayRef<int> erasures = parser.getErasures();
+  QSharedPointer<std::vector<int>> erasures = parser.getErasures();
 
   correctErrors(codewords, erasures, numECCodewords);
   verifyCodewordCount(codewords, numECCodewords);
@@ -67,7 +67,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits, DecodeHints const& hints
  * @return an index to the first data codeword.
  * @throws FormatException
  */
-void Decoder::verifyCodewordCount(ArrayRef<int> codewords, int numECCodewords) {
+void Decoder::verifyCodewordCount(QSharedPointer<std::vector<int>> codewords, int numECCodewords) {
   int cwsize = codewords->size();
   if (cwsize < 4) {
     // Codeword array size should be at least 4 allowing for
@@ -77,14 +77,14 @@ void Decoder::verifyCodewordCount(ArrayRef<int> codewords, int numECCodewords) {
   // The first codeword, the Symbol Length Descriptor, shall always encode the total number of data
   // codewords in the symbol, including the Symbol Length Descriptor itself, data codewords and pad
   // codewords, but excluding the number of error correction codewords.
-  int numberOfCodewords = codewords[0];
+  int numberOfCodewords = (*codewords)[0];
   if (numberOfCodewords > cwsize) {
     throw FormatException("PDF:Decoder:verifyCodewordCount: bad codeword number descriptor!");
   }
   if (numberOfCodewords == 0) {
     // Reset to the length of the array - 8 (Allow for at least level 3 Error Correction (8 Error Codewords)
     if (numECCodewords < cwsize) {
-      codewords[0] = cwsize - numECCodewords;
+      (*codewords)[0] = cwsize - numECCodewords;
     } else {
       throw FormatException("PDF:Decoder:verifyCodewordCount: bad error correction cw number!");
     }
@@ -98,20 +98,20 @@ void Decoder::verifyCodewordCount(ArrayRef<int> codewords, int numECCodewords) {
  * @return 0.
  * @throws FormatException
  */
-void Decoder::correctErrors(ArrayRef<int> codewords,
-                            ArrayRef<int> erasures, int numECCodewords) {
+void Decoder::correctErrors(QSharedPointer<std::vector<int>> codewords,
+                            QSharedPointer<std::vector<int>> erasures, int numECCodewords) {
   if (erasures->size() > numECCodewords / 2 + MAX_ERRORS ||
       numECCodewords < 0 || numECCodewords > MAX_EC_CODEWORDS) {
     throw FormatException("PDF:Decoder:correctErrors: Too many errors or EC Codewords corrupted");
   }
 
-  Ref<ErrorCorrection> errorCorrection(new ErrorCorrection);
+  QSharedPointer<ErrorCorrection> errorCorrection(new ErrorCorrection);
   errorCorrection->decode(codewords, numECCodewords, erasures);
 
   // 2012-06-27 HFN if, despite of error correction, there are still codewords with invalid
   // value, throw an exception here:
   for (int i = 0; i < codewords->size(); i++) {
-    if (codewords[i]<0) {
+    if ((*codewords)[i]<0) {
       throw FormatException("PDF:Decoder:correctErrors: Error correction did not succeed!");
     }
   }

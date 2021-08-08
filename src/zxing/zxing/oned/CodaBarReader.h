@@ -37,12 +37,12 @@ private:
 public:
   CodaBarReader();
 
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
   
   void validatePattern(int start);
 
 private:
-  void setCounters(Ref<BitArray> row);
+  void setCounters(QSharedPointer<BitArray> row);
   void counterAppend(int e);
   int findStartPattern();
   

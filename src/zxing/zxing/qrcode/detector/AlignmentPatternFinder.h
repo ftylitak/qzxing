@@ -21,7 +21,7 @@
  */
 
 #include "AlignmentPattern.h"
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 #include <zxing/ResultPointCallback.h>
 #include <vector>
@@ -29,14 +29,14 @@
 namespace zxing {
 namespace qrcode {
 
-class AlignmentPatternFinder : public Counted {
+class AlignmentPatternFinder  {
 private:
   static int CENTER_QUORUM;
   static int MIN_SKIP;
   static int MAX_MODULES;
 
-  Ref<BitMatrix> image_;
-  std::vector<AlignmentPattern *> *possibleCenters_;
+  QSharedPointer<BitMatrix> image_;
+  std::vector<QSharedPointer<AlignmentPattern>> *possibleCenters_;
   int startX_;
   int startY_;
   int width_;
@@ -48,19 +48,19 @@ private:
 
   float crossCheckVertical(int startI, int centerJ, int maxCount, int originalStateCountTotal);
 
-  Ref<AlignmentPattern> handlePossibleCenter(std::vector<int> &stateCount, int i, int j);
+  QSharedPointer<AlignmentPattern> handlePossibleCenter(std::vector<int> &stateCount, int i, int j);
 
 public:
-  AlignmentPatternFinder(Ref<BitMatrix> image, int startX, int startY, int width, int height,
-                         float moduleSize, Ref<ResultPointCallback>const& callback);
+  AlignmentPatternFinder(QSharedPointer<BitMatrix> image, int startX, int startY, int width, int height,
+                         float moduleSize, QSharedPointer<ResultPointCallback>const& callback);
   ~AlignmentPatternFinder();
-  Ref<AlignmentPattern> find();
+  QSharedPointer<AlignmentPattern> find();
   
 private:
   AlignmentPatternFinder(const AlignmentPatternFinder&);
   AlignmentPatternFinder& operator =(const AlignmentPatternFinder&);
   
-  Ref<ResultPointCallback> callback_;
+  QSharedPointer<ResultPointCallback> callback_;
 };
 }
 }

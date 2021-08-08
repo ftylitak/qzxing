@@ -58,7 +58,7 @@ void ReedSolomonTests::corrupt(std::vector<zxing::byte> &received, int howMany, 
     }
 }
 
-void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize, int ecSize)
+void ReedSolomonTests::testEncodeDecodeRandom(QSharedPointer<GenericGF> field, int dataSize, int ecSize)
 {
     assertTrue(dataSize > 0 && dataSize <= field->getSize() - 3); /*"Invalid data size for " + field, */
     assertTrue(ecSize > 0 && ecSize + dataSize <= field->getSize()); /*"Invalid ECC size for " + field, */
@@ -82,7 +82,7 @@ void ReedSolomonTests::testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize
     }
 }
 
-void ReedSolomonTests::testEncodeDecode(Ref<GenericGF> field,
+void ReedSolomonTests::testEncodeDecode(QSharedPointer<GenericGF> field,
                       const std::vector<zxing::byte> &dataWords,
                       const std::vector<zxing::byte> &ecWords)
 {
@@ -90,7 +90,7 @@ void ReedSolomonTests::testEncodeDecode(Ref<GenericGF> field,
     testDecoder(field, dataWords, ecWords);
 }
 
-void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
+void ReedSolomonTests::testEncoder(QSharedPointer<GenericGF> field,
                                   const std::vector<zxing::byte> &dataWords,
                                   const std::vector<zxing::byte> &ecWords)
 {
@@ -106,7 +106,7 @@ void ReedSolomonTests::testEncoder(Ref<GenericGF> field,
                      messageExpected, message);
   }
 
-void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
+void ReedSolomonTests::testDecoder(QSharedPointer<GenericGF> field,
                                    const std::vector<zxing::byte> &dataWords,
                                    const std::vector<zxing::byte> &ecWords) {
     ReedSolomonDecoder decoder(field);
@@ -130,9 +130,9 @@ void ReedSolomonTests::testDecoder(Ref<GenericGF> field,
             message = referenceMessage;
             corrupt(message, i, field->getSize());
 
-            ArrayRef<int> messageArrayRef(message.size());
+            QSharedPointer<std::vector<int>> messageArrayRef(new std::vector<int>(message.size()));
             for(int i=0; i<int(message.size()); i++)
-                messageArrayRef[i] = message[i];
+                (*messageArrayRef)[i] = message[i];
 
             try {
                 decoder.decode(messageArrayRef, ecWords.size());

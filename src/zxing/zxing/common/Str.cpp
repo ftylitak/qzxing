@@ -23,7 +23,7 @@
 
 using std::string;
 using zxing::String;
-using zxing::Ref;
+
 
 String::String(const std::string &text) :
   text_(text) {
@@ -43,8 +43,8 @@ int String::size() const { return int(text_.size()); }
 
 int String::length() const { return int(text_.size()); }
 
-Ref<String> String::substring(int i, int j) const {
-  return Ref<String>(new String(text_.substr(i, j)));
+QSharedPointer<String> String::substring(int i, int j) const {
+  return QSharedPointer<String>(new String(text_.substr(i, j)));
 }
 
 void String::append(const std::string &tail) {

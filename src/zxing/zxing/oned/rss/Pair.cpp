@@ -5,7 +5,7 @@ namespace oned {
 namespace rss {
 
 Pair::Pair(int value, int checksumPortion, FinderPattern finderPattern)
-    : DataCharacter (value, checksumPortion), m_finderPattern(finderPattern)
+    : DataCharacter (value, checksumPortion), m_finderPattern(finderPattern), m_count(0)
 {
 
 }

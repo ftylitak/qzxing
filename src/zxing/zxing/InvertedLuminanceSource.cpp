@@ -18,52 +18,61 @@
 #include <zxing/ZXing.h>
 #include <zxing/InvertedLuminanceSource.h>
 
-using zxing::Ref;
-using zxing::ArrayRef;
+
 using zxing::LuminanceSource;
 
-namespace zxing {
+namespace zxing
+{
 
-InvertedLuminanceSource::InvertedLuminanceSource(Ref<LuminanceSource> const& delegate_)
-    : Super(delegate_->getWidth(), delegate_->getHeight()), delegate(delegate_) {}  
+  InvertedLuminanceSource::InvertedLuminanceSource(QSharedPointer<LuminanceSource> const &delegate_)
+      : Super(delegate_->getWidth(), delegate_->getHeight()), delegate(delegate_) {}
 
-ArrayRef<zxing::byte> InvertedLuminanceSource::getRow(int y, ArrayRef<zxing::byte> row) const {
-  row = delegate->getRow(y, row);
-  int width = getWidth();
-  for (int i = 0; i < width; i++) {
-    row[i] = 0xFF - row[i];
+  QSharedPointer<std::vector<zxing::byte>> InvertedLuminanceSource::getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const
+  {
+    row = delegate->getRow(y, row);
+    int width = getWidth();
+    for (int i = 0; i < width; i++)
+    {
+      (*row)[i] = 0xFF - (*row)[i];
+    }
+    return row;
   }
-  return row;
-}
 
-ArrayRef<zxing::byte> InvertedLuminanceSource::getMatrix() const {
-  ArrayRef<zxing::byte> matrix = delegate->getMatrix();
-  int length = getWidth() * getHeight();
-  ArrayRef<zxing::byte> invertedMatrix(length);
-  for (int i = 0; i < length; i++) {
-    invertedMatrix[i] = 0xFF - matrix[i];
+  QSharedPointer<std::vector<zxing::byte>> InvertedLuminanceSource::getMatrix() const
+  {
+    QSharedPointer<std::vector<zxing::byte>> matrix = delegate->getMatrix();
+    int length = getWidth() * getHeight();
+    QSharedPointer<std::vector<zxing::byte>> invertedMatrix(new std::vector<zxing::byte>(length));
+    for (int i = 0; i < length; i++)
+    {
+      (*invertedMatrix)[i] = 0xFF - (*matrix)[i];
+    }
+    return invertedMatrix;
   }
-  return invertedMatrix;
-}
 
-zxing::boolean InvertedLuminanceSource::isCropSupported() const {
-  return delegate->isCropSupported();
-}
+  zxing::boolean InvertedLuminanceSource::isCropSupported() const
+  {
+    return delegate->isCropSupported();
+  }
 
-Ref<LuminanceSource> InvertedLuminanceSource::crop(int left, int top, int width, int height) const {
-  return Ref<LuminanceSource>(new InvertedLuminanceSource(delegate->crop(left, top, width, height)));
-}
+  QSharedPointer<LuminanceSource> InvertedLuminanceSource::crop(int left, int top, int width, int height) const
+  {
+    return QSharedPointer<LuminanceSource>(new InvertedLuminanceSource(delegate->crop(left, top, width, height)));
+  }
 
-zxing::boolean InvertedLuminanceSource::isRotateSupported() const {
-  return delegate->isRotateSupported();
-}
+  zxing::boolean InvertedLuminanceSource::isRotateSupported() const
+  {
+    return delegate->isRotateSupported();
+  }
 
-Ref<LuminanceSource> InvertedLuminanceSource::invert() const {
-  return delegate;
-}
+  QSharedPointer<LuminanceSource> InvertedLuminanceSource::invert() const
+  {
+    return delegate;
+  }
 
-Ref<LuminanceSource> InvertedLuminanceSource::rotateCounterClockwise() const {
-  return Ref<LuminanceSource>(new InvertedLuminanceSource(delegate->rotateCounterClockwise()));
-}
+  QSharedPointer<LuminanceSource> InvertedLuminanceSource::rotateCounterClockwise() const
+  {
+    return QSharedPointer<LuminanceSource>(new InvertedLuminanceSource(delegate->rotateCounterClockwise()));
+  }
 
 }

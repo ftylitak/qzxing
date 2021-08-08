@@ -43,23 +43,23 @@ public:
 
     RSS14Reader();
 
-    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+    QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
 
     static void addOrTally(std::vector<Pair> &possiblePairs, Pair &pair);
 
     void reset();
 
-    Ref<Result> constructResult(Pair leftPair, Pair rightPair) const;
+    QSharedPointer<Result> constructResult(Pair leftPair, Pair rightPair) const;
 
     static bool checkChecksum(Pair leftPair, Pair rightPair);
 
-    Pair decodePair(Ref<BitArray> row, bool right, int rowNumber, DecodeHints hints);
+    Pair decodePair(QSharedPointer<BitArray> row, bool right, int rowNumber, DecodeHints hints);
 
-    DataCharacter decodeDataCharacter(Ref<BitArray> row, FinderPattern pattern, bool outsideChar);
+    DataCharacter decodeDataCharacter(QSharedPointer<BitArray> row, FinderPattern pattern, bool outsideChar);
 
-    std::vector<int> findFinderPattern(Ref<BitArray> row, bool rightFinderPattern);
+    std::vector<int> findFinderPattern(QSharedPointer<BitArray> row, bool rightFinderPattern);
 
-    FinderPattern parseFoundFinderPattern(Ref<BitArray> row, int rowNumber, bool right, std::vector<int> startEnd);
+    FinderPattern parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool right, std::vector<int> startEnd);
 
     void adjustOddEvenCounts(bool outsideChar, int numModules);
 

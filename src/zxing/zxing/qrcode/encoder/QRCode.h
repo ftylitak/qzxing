@@ -5,21 +5,21 @@
 #include <zxing/qrcode/Version.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
 #include "ByteMatrix.h"
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <string>
 
 namespace zxing {
 namespace qrcode {
 
-class QRCode : public Counted
+class QRCode 
 {
 private:
 
   Mode mode_;
-  Ref<ErrorCorrectionLevel> ecLevel_ptr_;
-  Ref<Version> version_ptr_;
+  QSharedPointer<ErrorCorrectionLevel> ecLevel_ptr_;
+  QSharedPointer<Version> version_ptr_;
   int maskPattern_;
-  Ref<ByteMatrix> matrix_ptr_;
+  QSharedPointer<ByteMatrix> matrix_ptr_;
 
 public:
   static const int NUM_MASK_PATTERNS = 8;
@@ -27,16 +27,16 @@ public:
   QRCode();
   ~QRCode();
   Mode getMode() const;
-  Ref<ErrorCorrectionLevel> getECLevel() const;
-  Ref<Version> getVersion() const;
+  QSharedPointer<ErrorCorrectionLevel> getECLevel() const;
+  QSharedPointer<Version> getVersion() const;
   int getMaskPattern() const;
-  Ref<ByteMatrix> getMatrix() const;
+  QSharedPointer<ByteMatrix> getMatrix() const;
   std::string toString() const;
   void setMode(const Mode &value);
-  void setECLevel(Ref<ErrorCorrectionLevel> value);
-  void setVersion(Ref<Version> version);
+  void setECLevel(QSharedPointer<ErrorCorrectionLevel> value);
+  void setVersion(QSharedPointer<Version> version);
   void setMaskPattern(int value);
-  void setMatrix(Ref<ByteMatrix> value);
+  void setMatrix(QSharedPointer<ByteMatrix> value);
 
   static bool isValidMaskPattern(int maskPattern)
   {

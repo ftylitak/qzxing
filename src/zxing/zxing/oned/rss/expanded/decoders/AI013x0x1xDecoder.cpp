@@ -5,7 +5,7 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-AI013x0x1xDecoder::AI013x0x1xDecoder(Ref<BitArray> information, String firstAIdigits, String dateCode)
+AI013x0x1xDecoder::AI013x0x1xDecoder(QSharedPointer<BitArray> information, String firstAIdigits, String dateCode)
     : AI01weightDecoder(information), m_dateCode(dateCode), m_firstAIdigits(firstAIdigits)
 {
 

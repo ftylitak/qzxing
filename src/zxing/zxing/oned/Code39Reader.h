@@ -41,11 +41,11 @@ private:
 			
   void init(bool usingCheckDigit = false, bool extendedMode = false);
 
-  static std::vector<int> findAsteriskPattern(Ref<BitArray> row,
+  static std::vector<int> findAsteriskPattern(QSharedPointer<BitArray> row,
                                               std::vector<int>& counters);
   static int toNarrowWidePattern(std::vector<int>& counters);
   static char patternToChar(int pattern);
-  static Ref<String> decodeExtended(std::string encoded);
+  static QSharedPointer<String> decodeExtended(std::string encoded);
 			
   void append(char* s, char c);
 
@@ -54,7 +54,7 @@ public:
   Code39Reader(bool usingCheckDigit_);
   Code39Reader(bool usingCheckDigit_, bool extendedMode_);
 			
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
 };
 
 }

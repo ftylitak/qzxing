@@ -28,7 +28,7 @@
  *   http://www.piramidepse.com/
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitArray.h>
 #include <zxing/common/Str.h>
 #include <zxing/IllegalStateException.h>
@@ -50,27 +50,27 @@ class GeneralAppIdDecoder
 {
 
 public:
-    GeneralAppIdDecoder(Ref<BitArray> information);
+    GeneralAppIdDecoder(QSharedPointer<BitArray> information);
 
     String decodeAllCodes(String &buff, int initialPosition);
 
     bool isStillNumeric(int pos) const;
 
-    DecodedNumeric *decodeNumeric(int pos);
+    QSharedPointer<DecodedNumeric> decodeNumeric(int pos);
 
     int extractNumericValueFromBitArray(int pos, int bits);
 
-    static int extractNumericValueFromBitArray(Ref<BitArray> information, int pos, int bits);
+    static int extractNumericValueFromBitArray(QSharedPointer<BitArray> information, int pos, int bits);
 
     DecodedInformation decodeGeneralPurposeField(int pos, String &remaining);
 
     DecodedInformation parseBlocks();
 
-    BlockParsedResult *parseNumericBlock();
+    QSharedPointer<BlockParsedResult> parseNumericBlock();
 
-    BlockParsedResult *parseIsoIec646Block();
+    QSharedPointer<BlockParsedResult> parseIsoIec646Block();
 
-    BlockParsedResult *parseAlphaBlock();
+    QSharedPointer<BlockParsedResult> parseAlphaBlock();
 
     bool isStillIsoIec646(int pos);
 
@@ -87,7 +87,7 @@ public:
     bool isNumericToAlphaNumericLatch(int pos);
 
 private:
-    Ref<BitArray> m_information;
+    QSharedPointer<BitArray> m_information;
     CurrentParsingState m_current;
     String m_buffer;
 

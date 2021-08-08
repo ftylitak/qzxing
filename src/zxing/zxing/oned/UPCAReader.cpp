@@ -22,7 +22,7 @@
 #include <zxing/ReaderException.h>
 
 using zxing::oned::UPCAReader;
-using zxing::Ref;
+
 using zxing::Result;
 
 // VC++
@@ -32,38 +32,38 @@ using zxing::DecodeHints;
 
 UPCAReader::UPCAReader() : ean13Reader() {}
 
-Ref<Result> UPCAReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
+QSharedPointer<Result> UPCAReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints) {
   return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, hints));
 }
 
-Ref<Result> UPCAReader::decodeRow(int rowNumber,
-                                  Ref<BitArray> row,
+QSharedPointer<Result> UPCAReader::decodeRow(int rowNumber,
+                                  QSharedPointer<BitArray> row,
                                   Range const& startGuardRange) {
   return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, startGuardRange));
 }
 
-Ref<Result> UPCAReader::decode(Ref<BinaryBitmap> image, DecodeHints hints) {
+QSharedPointer<Result> UPCAReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints) {
   return maybeReturnResult(ean13Reader.decode(image, hints));
 }
 
-int UPCAReader::decodeMiddle(Ref<BitArray> row,
+int UPCAReader::decodeMiddle(QSharedPointer<BitArray> row,
                              Range const& startRange,
                              std::string& resultString) {
   return ean13Reader.decodeMiddle(row, startRange, resultString);
 }
 
-Ref<Result> UPCAReader::maybeReturnResult(Ref<Result> result) {
-  if (result.empty()) {
+QSharedPointer<Result> UPCAReader::maybeReturnResult(QSharedPointer<Result> result) {
+  if (result.isNull()) {
     return result;
   }
   const std::string& text = (result->getText())->getText();
   if (text[0] == '0') {
-    Ref<String> resultString(new String(text.substr(1)));
-    Ref<Result> res(new Result(resultString, result->getRawBytes(), result->getResultPoints(),
+    QSharedPointer<String> resultString(new String(text.substr(1)));
+    QSharedPointer<Result> res(new Result(resultString, result->getRawBytes(), result->getResultPoints(),
                                BarcodeFormat::UPC_A));
     return res;
   }
-  return Ref<Result>();
+  return QSharedPointer<Result>();
 }
 
 zxing::BarcodeFormat UPCAReader::getBarcodeFormat(){

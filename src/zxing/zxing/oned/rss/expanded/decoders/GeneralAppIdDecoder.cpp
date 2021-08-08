@@ -5,7 +5,7 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-GeneralAppIdDecoder::GeneralAppIdDecoder(Ref<BitArray> information)
+GeneralAppIdDecoder::GeneralAppIdDecoder(QSharedPointer<BitArray> information)
     : m_information(information),
       m_buffer("")
 {
@@ -54,21 +54,21 @@ bool GeneralAppIdDecoder::isStillNumeric(int pos) const
     return m_information->get(pos + 3);
 }
 
-DecodedNumeric* GeneralAppIdDecoder::decodeNumeric(int pos)
+QSharedPointer<DecodedNumeric> GeneralAppIdDecoder::decodeNumeric(int pos)
 {
     if (pos + 7 > m_information->getSize()) {
         int numeric = extractNumericValueFromBitArray(pos, 4);
         if (numeric == 0) {
-            return new DecodedNumeric(m_information->getSize(), DecodedNumeric::FNC1, DecodedNumeric::FNC1);
+            return QSharedPointer<DecodedNumeric>(new DecodedNumeric(m_information->getSize(), DecodedNumeric::FNC1, DecodedNumeric::FNC1));
         }
-        return new DecodedNumeric(m_information->getSize(), numeric - 1, DecodedNumeric::FNC1);
+        return QSharedPointer<DecodedNumeric>(new DecodedNumeric(m_information->getSize(), numeric - 1, DecodedNumeric::FNC1));
     }
     int numeric = extractNumericValueFromBitArray(pos, 7);
 
     int digit1  = (numeric - 8) / 11;
     int digit2  = (numeric - 8) % 11;
 
-    return new DecodedNumeric(pos + 7, digit1, digit2);
+    return QSharedPointer<DecodedNumeric>(new DecodedNumeric(pos + 7, digit1, digit2));
 }
 
 int GeneralAppIdDecoder::extractNumericValueFromBitArray(int pos, int bits)
@@ -76,7 +76,7 @@ int GeneralAppIdDecoder::extractNumericValueFromBitArray(int pos, int bits)
     return extractNumericValueFromBitArray(m_information, pos, bits);
 }
 
-int GeneralAppIdDecoder::extractNumericValueFromBitArray(Ref<BitArray> information, int pos, int bits)
+int GeneralAppIdDecoder::extractNumericValueFromBitArray(QSharedPointer<BitArray> information, int pos, int bits)
 {
     int value = 0;
     for (int i = 0; i < bits; ++i) {
@@ -108,7 +108,7 @@ DecodedInformation GeneralAppIdDecoder::decodeGeneralPurposeField(int pos, Strin
 DecodedInformation GeneralAppIdDecoder::parseBlocks()
 {
     bool isFinished;
-    BlockParsedResult* result;
+    QSharedPointer<BlockParsedResult> result;
     do {
         int initialPosition = m_current.getPosition();
 
@@ -132,7 +132,7 @@ DecodedInformation GeneralAppIdDecoder::parseBlocks()
     return result->getDecodedInformation();
 }
 
-BlockParsedResult* GeneralAppIdDecoder::parseNumericBlock()
+QSharedPointer<BlockParsedResult> GeneralAppIdDecoder::parseNumericBlock()
 {
     while (isStillNumeric(m_current.getPosition())) {
         DecodedNumeric numeric(decodeNumeric(m_current.getPosition()));
@@ -141,16 +141,16 @@ BlockParsedResult* GeneralAppIdDecoder::parseNumericBlock()
         if (numeric.isFirstDigitFNC1()) {
             DecodedInformation information(0, String(""));
             if (numeric.isSecondDigitFNC1()) {
-                return new BlockParsedResult(DecodedInformation(m_current.getPosition(), m_buffer), true);
+                return QSharedPointer<BlockParsedResult>(new BlockParsedResult(DecodedInformation(m_current.getPosition(), m_buffer), true));
             } else {
-                return new BlockParsedResult(DecodedInformation(m_current.getPosition(), m_buffer, numeric.getSecondDigit()), true);
+                return QSharedPointer<BlockParsedResult>(new BlockParsedResult(DecodedInformation(m_current.getPosition(), m_buffer, numeric.getSecondDigit()), true));
             }
         }
         m_buffer.append(common::StringUtils::intToStr(numeric.getFirstDigit()));
 
         if (numeric.isSecondDigitFNC1()) {
             DecodedInformation information(m_current.getPosition(), m_buffer);
-            return new BlockParsedResult(information, true);
+            return QSharedPointer<BlockParsedResult>(new BlockParsedResult(information, true));
         }
         m_buffer.append(common::StringUtils::intToStr(numeric.getSecondDigit()));
     }
@@ -159,10 +159,10 @@ BlockParsedResult* GeneralAppIdDecoder::parseNumericBlock()
         m_current.setAlpha();
         m_current.incrementPosition(4);
     }
-    return new BlockParsedResult(false);
+    return QSharedPointer<BlockParsedResult>(new BlockParsedResult(false));
 }
 
-BlockParsedResult* GeneralAppIdDecoder::parseIsoIec646Block()
+QSharedPointer<BlockParsedResult> GeneralAppIdDecoder::parseIsoIec646Block()
 {
     while (isStillIsoIec646(m_current.getPosition())) {
         DecodedChar iso = decodeIsoIec646(m_current.getPosition());
@@ -170,7 +170,7 @@ BlockParsedResult* GeneralAppIdDecoder::parseIsoIec646Block()
 
         if (iso.isFNC1()) {
             DecodedInformation information(m_current.getPosition(), m_buffer);
-            return new BlockParsedResult(information, true);
+            return QSharedPointer<BlockParsedResult>(new BlockParsedResult(information, true));
         }
         m_buffer.append(iso.getValue());
     }
@@ -187,10 +187,10 @@ BlockParsedResult* GeneralAppIdDecoder::parseIsoIec646Block()
 
         m_current.setAlpha();
     }
-    return new BlockParsedResult(false);
+    return QSharedPointer<BlockParsedResult>(new BlockParsedResult(false));
 }
 
-BlockParsedResult* GeneralAppIdDecoder::parseAlphaBlock()
+QSharedPointer<BlockParsedResult> GeneralAppIdDecoder::parseAlphaBlock()
 {
     while (isStillAlpha(m_current.getPosition())) {
         DecodedChar alpha(decodeAlphanumeric(m_current.getPosition()));
@@ -198,7 +198,7 @@ BlockParsedResult* GeneralAppIdDecoder::parseAlphaBlock()
 
         if (alpha.isFNC1()) {
             DecodedInformation information(m_current.getPosition(), m_buffer);
-            return new BlockParsedResult(information, true); //end of the char block
+            return QSharedPointer<BlockParsedResult>(new BlockParsedResult(information, true)); //end of the char block
         }
 
         m_buffer.append(alpha.getValue());
@@ -216,7 +216,7 @@ BlockParsedResult* GeneralAppIdDecoder::parseAlphaBlock()
 
         m_current.setIsoIec646();
     }
-    return new BlockParsedResult(false);
+    return QSharedPointer<BlockParsedResult>(new BlockParsedResult(false));
 }
 
 bool GeneralAppIdDecoder::isStillIsoIec646(int pos)

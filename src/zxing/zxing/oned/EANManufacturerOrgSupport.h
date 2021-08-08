@@ -18,7 +18,7 @@
 * 2019-05-08 translation from Java into C++
 */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 #include <iostream>
 #include <vector>
@@ -32,7 +32,7 @@ namespace oned {
 class EANManufacturerOrgSupport
 {
 public:
-    static Ref<String> lookupCountryIdentifier(Ref<String> &productCode);
+    static QSharedPointer<String> lookupCountryIdentifier(QSharedPointer<String> &productCode);
 };
 
 }

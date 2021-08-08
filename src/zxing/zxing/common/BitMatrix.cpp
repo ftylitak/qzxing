@@ -27,8 +27,8 @@ using std::ostringstream;
 
 using zxing::BitMatrix;
 using zxing::BitArray;
-using zxing::ArrayRef;
-using zxing::Ref;
+
+
 
 void BitMatrix::init(int width, int height) {
     if (width < 1 || height < 1) {
@@ -37,7 +37,7 @@ void BitMatrix::init(int width, int height) {
     this->width = width;
     this->height = height;
     this->rowSize = (width + 31) >> 5;
-    bits = ArrayRef<int>(rowSize * height);
+    bits.reset(new std::vector<int>((size_t)rowSize * (size_t)height));
 }
 
 BitMatrix::BitMatrix(int dimension) {
@@ -52,15 +52,15 @@ BitMatrix::~BitMatrix() {}
 
 void BitMatrix::flip(int x, int y) {
     int offset = y * rowSize + (x >> 5);
-    bits[offset] ^= 1 << (x & 0x1f);
+    (*bits)[offset] ^= 1 << (x & 0x1f);
 }
 
 void BitMatrix::rotate180()
 {
     int width = getWidth();
     int height = getHeight();
-    Ref<BitArray> topRow( new BitArray(width) );
-    Ref<BitArray> bottomRow( new BitArray(width) );
+    QSharedPointer<BitArray> topRow( new BitArray(width) );
+    QSharedPointer<BitArray> bottomRow( new BitArray(width) );
     for (int i = 0; i < (height+1) / 2; i++) {
         getRow(i, topRow);
         bottomRow = getRow(height - 1 - i, bottomRow);
@@ -86,23 +86,23 @@ void BitMatrix::setRegion(int left, int top, int width, int height) {
     for (int y = top; y < bottom; y++) {
         int offset = y * rowSize;
         for (int x = left; x < right; x++) {
-            bits[offset + (x >> 5)] |= 1 << (x & 0x1f);
+            (*bits)[offset + (x >> 5)] |= 1 << (x & 0x1f);
         }
     }
 }
 
-Ref<BitArray> BitMatrix::getRow(int y, Ref<BitArray> row) {
-    if (row.empty() || row->getSize() < width) {
-        row = new BitArray(width);
+QSharedPointer<BitArray> BitMatrix::getRow(int y, QSharedPointer<BitArray> row) {
+    if (row.isNull() || row->getSize() < width) {
+        row.reset(new BitArray(width));
     }
     int offset = y * rowSize;
     for (int x = 0; x < rowSize; x++) {
-        row->setBulk(x << 5, bits[offset + x]);
+        row->setBulk(x << 5, (*bits)[offset + x]);
     }
     return row;
 }
 
-void BitMatrix::setRow(int y, Ref<zxing::BitArray> row)
+void BitMatrix::setRow(int y, QSharedPointer<zxing::BitArray> row)
 {
     if (y < 0 || y >= bits->size() ||
             row->getSize() != width)
@@ -112,7 +112,7 @@ void BitMatrix::setRow(int y, Ref<zxing::BitArray> row)
 
     //change with memcopy
     for(int i=0; i<width; i++)
-        bits[y * rowSize + i] = row->get(i);
+        (*bits)[y * rowSize + i] = row->get(i);
 }
 
 int BitMatrix::getWidth() const {
@@ -123,55 +123,55 @@ int BitMatrix::getHeight() const {
     return height;
 }
 
-ArrayRef<int> BitMatrix::getTopLeftOnBit() const {
+QSharedPointer<std::vector<int>> BitMatrix::getTopLeftOnBit() const {
     int bitsOffset = 0;
-    while (bitsOffset < bits->size() && bits[bitsOffset] == 0) {
+    while (bitsOffset < bits->size() && (*bits)[bitsOffset] == 0) {
         bitsOffset++;
     }
     if (bitsOffset == bits->size()) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
     int y = bitsOffset / rowSize;
     int x = (bitsOffset % rowSize) << 5;
 
-    int theBits = bits[bitsOffset];
+    int theBits = (*bits)[bitsOffset];
     int bit = 0;
     while ((theBits << (31-bit)) == 0) {
         bit++;
     }
     x += bit;
-    ArrayRef<int> res (2);
-    res[0]=x;
-    res[1]=y;
+    QSharedPointer<std::vector<int>> res (new std::vector<int>(2));
+    (*res)[0]=x;
+    (*res)[1]=y;
     return res;
 }
 
-ArrayRef<int> BitMatrix::getBottomRightOnBit() const {
+QSharedPointer<std::vector<int>> BitMatrix::getBottomRightOnBit() const {
     int bitsOffset = bits->size() - 1;
-    while (bitsOffset >= 0 && bits[bitsOffset] == 0) {
+    while (bitsOffset >= 0 && (*bits)[bitsOffset] == 0) {
         bitsOffset--;
     }
     if (bitsOffset < 0) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
 
     int y = bitsOffset / rowSize;
     int x = (bitsOffset % rowSize) << 5;
 
-    int theBits = bits[bitsOffset];
+    int theBits = (*bits)[bitsOffset];
     int bit = 31;
     while ((theBits >> bit) == 0) {
         bit--;
     }
     x += bit;
 
-    ArrayRef<int> res (2);
-    res[0]=x;
-    res[1]=y;
+    QSharedPointer<std::vector<int>> res (new std::vector<int>(2));
+    (*res)[0]=x;
+    (*res)[1]=y;
     return res;
 }
 
-ArrayRef<int> BitMatrix::getEnclosingRectangle() const
+QSharedPointer<std::vector<int>> BitMatrix::getEnclosingRectangle() const
 {
     int left = width;
     int top = height;
@@ -180,7 +180,7 @@ ArrayRef<int> BitMatrix::getEnclosingRectangle() const
 
     for (int y = 0; y < height; y++) {
         for (int x32 = 0; x32 < rowSize; x32++) {
-            int theBits = bits[y * rowSize + x32];
+            int theBits = (*bits)[y * rowSize + x32];
             if (theBits != 0) {
                 if (y < top) {
                     top = y;
@@ -214,14 +214,14 @@ ArrayRef<int> BitMatrix::getEnclosingRectangle() const
     int height = bottom - top;
 
     if (width < 0 || height < 0) {
-        return ArrayRef<int>();
+        return QSharedPointer<std::vector<int>>();
     }
 
-    ArrayRef<int> res(4);
-    res[0] = left;
-    res[1] = top;
-    res[2] = width;
-    res[3] = height;
+    QSharedPointer<std::vector<int>> res(new std::vector<int>(4));
+    (*res)[0] = left;
+    (*res)[1] = top;
+    (*res)[2] = width;
+    (*res)[3] = height;
 
     return res;
 }

@@ -21,13 +21,13 @@
 
 #include <map>
 #include <zxing/DecodeHints.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
 namespace common {
 
-class CharacterSetECI : public Counted {
+class CharacterSetECI  {
 private:
   static std::map<int, CharacterSetECI*> VALUE_TO_ECI;
   static std::map<std::string, CharacterSetECI*> NAME_TO_ECI;
@@ -55,4 +55,3 @@ public:
 }
 
 #endif // ZXING_CHARACTERSET_ECI
-

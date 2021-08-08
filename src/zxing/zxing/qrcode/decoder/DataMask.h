@@ -20,8 +20,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Array.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitMatrix.h>
 
 #include <vector>
@@ -29,9 +28,9 @@
 namespace zxing {
 namespace qrcode {
 
-class DataMask : public Counted {
+class DataMask  {
 private:
-  static std::vector<Ref<DataMask> > DATA_MASKS;
+  static std::vector<QSharedPointer<DataMask> > DATA_MASKS;
 
 protected:
 

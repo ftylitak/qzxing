@@ -30,13 +30,13 @@ private:
   static bool determineNumSysAndCheckDigit(std::string& resultString, int lgPatternFound);
 
 protected:
-  Range decodeEnd(Ref<BitArray> row, int endStart);
-  bool checkChecksum(Ref<String> const& s);
+  Range decodeEnd(QSharedPointer<BitArray> row, int endStart);
+  bool checkChecksum(QSharedPointer<String> const& s);
 public:
   UPCEReader();
 
-  int decodeMiddle(Ref<BitArray> row, Range const& startRange, std::string& resultString);
-  static Ref<String> convertUPCEtoUPCA(Ref<String> const& upce);
+  int decodeMiddle(QSharedPointer<BitArray> row, Range const& startRange, std::string& resultString);
+  static QSharedPointer<String> convertUPCEtoUPCA(QSharedPointer<String> const& upce);
 
   BarcodeFormat getBarcodeFormat();
 };

@@ -30,82 +30,89 @@
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 
 using zxing::DecoderResult;
-using zxing::Ref;
 
 // VC++
-using zxing::ArrayRef;
+
 using zxing::BitMatrix;
 
-namespace zxing {
-namespace qrcode {
+namespace zxing
+{
+  namespace qrcode
+  {
 
-Decoder::Decoder() :
-  rsDecoder_(GenericGF::QR_CODE_FIELD_256) {
-}
-
-void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCodewords) {
-  int numCodewords = codewordBytes->size();
-  ArrayRef<int> codewordInts(numCodewords);
-  for (int i = 0; i < numCodewords; i++) {
-    codewordInts[i] = codewordBytes[i] & 0xff;
-  }
-  int numECCodewords = numCodewords - numDataCodewords;
-
-  try {
-    rsDecoder_.decode(codewordInts, numECCodewords);
-  } catch (ReedSolomonException const& ignored) {
-    (void)ignored;
-    throw ChecksumException();
-  }
-
-  for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (zxing::byte)codewordInts[i];
-  }
-}
-
-Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
-  // Construct a parser and read version, error-correction level
-  BitMatrixParser parser(bits);
-
-  // std::cerr << *bits << std::endl;
-
-  Ref<Version>version = parser.readVersion();
-  ErrorCorrectionLevel &ecLevel = parser.readFormatInformation()->getErrorCorrectionLevel();
-
-
-  // Read codewords
-  ArrayRef<zxing::byte> codewords(parser.readCodewords());
-
-
-  // Separate into data blocks
-  std::vector<Ref<DataBlock> > dataBlocks(DataBlock::getDataBlocks(codewords, version, ecLevel));
-
-
-  // Count total number of data bytes
-  int totalBytes = 0;
-  for (size_t i = 0; i < dataBlocks.size(); i++) {
-    totalBytes += dataBlocks[i]->getNumDataCodewords();
-  }
-  ArrayRef<zxing::byte> resultBytes(totalBytes);
-  int resultOffset = 0;
-
-
-  // Error-correct and copy data blocks together into a stream of bytes
-  for (size_t j = 0; j < dataBlocks.size(); j++) {
-    Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<zxing::byte> codewordBytes = dataBlock->getCodewords();
-    int numDataCodewords = dataBlock->getNumDataCodewords();
-    correctErrors(codewordBytes, numDataCodewords);
-    for (int i = 0; i < numDataCodewords; i++) {
-      resultBytes[resultOffset++] = (zxing::byte)codewordBytes[i];
+    Decoder::Decoder() : rsDecoder_(GenericGF::QR_CODE_FIELD_256)
+    {
     }
+
+    void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordBytes, int numDataCodewords)
+    {
+      int numCodewords = codewordBytes->size();
+      QSharedPointer<std::vector<int>> codewordInts(new std::vector<int>(numCodewords));
+      for (int i = 0; i < numCodewords; i++)
+      {
+        (*codewordInts)[i] = (*codewordBytes)[i] & 0xff;
+      }
+      int numECCodewords = numCodewords - numDataCodewords;
+
+      try
+      {
+        rsDecoder_.decode(codewordInts, numECCodewords);
+      }
+      catch (ReedSolomonException const &ignored)
+      {
+        (void)ignored;
+        throw ChecksumException();
+      }
+
+      for (int i = 0; i < numDataCodewords; i++)
+      {
+        (*codewordBytes)[i] = (zxing::byte)(*codewordInts)[i];
+      }
+    }
+
+    QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits)
+    {
+      // Construct a parser and read version, error-correction level
+      BitMatrixParser parser(bits);
+
+      // std::cerr << *bits << std::endl;
+
+      QSharedPointer<Version> version = parser.readVersion();
+      ErrorCorrectionLevel &ecLevel = parser.readFormatInformation()->getErrorCorrectionLevel();
+
+      // Read codewords
+      QSharedPointer<std::vector<zxing::byte>> codewords(parser.readCodewords());
+
+      // Separate into data blocks
+      std::vector<QSharedPointer<DataBlock>> dataBlocks(DataBlock::getDataBlocks(codewords, version, ecLevel));
+
+      // Count total number of data bytes
+      int totalBytes = 0;
+      for (size_t i = 0; i < dataBlocks.size(); i++)
+      {
+        totalBytes += dataBlocks[i]->getNumDataCodewords();
+      }
+      QSharedPointer<std::vector<zxing::byte>> resultBytes(new std::vector<zxing::byte>(totalBytes));
+      int resultOffset = 0;
+
+      // Error-correct and copy data blocks together into a stream of bytes
+      for (size_t j = 0; j < dataBlocks.size(); j++)
+      {
+        QSharedPointer<DataBlock> dataBlock(dataBlocks[j]);
+        QSharedPointer<std::vector<zxing::byte>> codewordBytes = dataBlock->getCodewords();
+        int numDataCodewords = dataBlock->getNumDataCodewords();
+        correctErrors(codewordBytes, numDataCodewords);
+        for (int i = 0; i < numDataCodewords; i++)
+        {
+          (*resultBytes)[resultOffset++] = (zxing::byte)(*codewordBytes)[i];
+        }
+      }
+
+      return DecodedBitStreamParser::decode(resultBytes,
+                                            version,
+                                            ecLevel,
+                                            DecodedBitStreamParser::Hashtable());
+    }
+
   }
-
-  return DecodedBitStreamParser::decode(resultBytes,
-                                        version,
-                                        ecLevel,
-                                        DecodedBitStreamParser::Hashtable());
-}
-
-}
 }

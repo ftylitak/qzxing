@@ -23,22 +23,21 @@
 #include <zxing/ReaderException.h>
 #include <zxing/FormatException.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <stdint.h>
 
 namespace zxing {
 namespace pdf417 {
 namespace decoder {
 
-class BitMatrixParser : public Counted {
+class BitMatrixParser  {
 private:
   static const int MAX_ROWS;
   // Maximum Codewords (Data + Error)
   static const int MAX_CW_CAPACITY;
   static const int MODULES_IN_SYMBOL;
 
-  Ref<BitMatrix> bitMatrix_;
+  QSharedPointer<BitMatrix> bitMatrix_;
   int rows_; /* = 0 */
   int leftColumnECData_; /* = 0 */
   int rightColumnECData_; /* = 0 */
@@ -46,7 +45,7 @@ private:
   int aLeftColumnTriple_[3];
   int aRightColumnTriple_[3];
   int eraseCount_; /* = 0 */
-  ArrayRef<int> erasures_;
+  QSharedPointer<std::vector<int>> erasures_;
   int ecLevel_; /* = -1 */
 
 public:
@@ -55,24 +54,24 @@ public:
   static const int CODEWORD_TABLE[];
   
 public:
-  BitMatrixParser(Ref<BitMatrix> bitMatrix);
-  ArrayRef<int> getErasures() const {return erasures_;}
+  BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix);
+  QSharedPointer<std::vector<int>> getErasures() const {return erasures_;}
   int getECLevel() const {return ecLevel_;}
   int getEraseCount() const {return eraseCount_;}
-  ArrayRef<int> readCodewords(); /* throw(FormatException) */
+  QSharedPointer<std::vector<int>> readCodewords(); /* throw(FormatException) */
   static int getCodeword(int64_t symbol, int *pi = NULL);
 
 private:
   bool VerifyOuterColumns(int rownumber);
-  static ArrayRef<int> trimArray(ArrayRef<int> array, int size);
+  static QSharedPointer<std::vector<int>> trimArray(QSharedPointer<std::vector<int>> array, int size);
   static int findCodewordIndex(int64_t symbol);
 
   
   int processRow(int rowNumber,
-                ArrayRef<int> codewords, int next);
+                QSharedPointer<std::vector<int>> codewords, int next);
   
-  int processRow(ArrayRef<int> rowCounters, int rowNumber, int rowHeight,
-    ArrayRef<int> codewords, int next); /* throw(FormatException)  */ 
+  int processRow(QSharedPointer<std::vector<int>> rowCounters, int rowNumber, int rowHeight,
+    QSharedPointer<std::vector<int>> codewords, int next); /* throw(FormatException)  */ 
 protected:
   bool IsEqual(int &a, int &b, int rownumber);
 };

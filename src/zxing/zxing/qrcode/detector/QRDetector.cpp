@@ -37,7 +37,7 @@ using std::abs;
 using std::min;
 using std::max;
 using zxing::qrcode::Detector;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ResultPointCallback;
 using zxing::DetectorResult;
@@ -51,39 +51,39 @@ using zxing::qrcode::FinderPatternFinder;
 using zxing::qrcode::FinderPatternInfo;
 using zxing::ResultPoint;
 
-Detector::Detector(Ref<BitMatrix> image) :
+Detector::Detector(QSharedPointer<BitMatrix> image) :
   image_(image) {
 }
 
-Ref<BitMatrix> Detector::getImage() const {
+QSharedPointer<BitMatrix> Detector::getImage() const {
   return image_;
 }
 
-Ref<ResultPointCallback> Detector::getResultPointCallback() const {
+QSharedPointer<ResultPointCallback> Detector::getResultPointCallback() const {
   return callback_;
 }
 
-Ref<DetectorResult> Detector::detect(DecodeHints const& hints) {
+QSharedPointer<DetectorResult> Detector::detect(DecodeHints const& hints) {
   callback_ = hints.getResultPointCallback();
   FinderPatternFinder finder(image_, hints.getResultPointCallback());
-  Ref<FinderPatternInfo> info(finder.find(hints));
+  QSharedPointer<FinderPatternInfo> info(finder.find(hints));
   return processFinderPatternInfo(info);
 }
 
-Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> info){
-  Ref<FinderPattern> topLeft(info->getTopLeft());
-  Ref<FinderPattern> topRight(info->getTopRight());
-  Ref<FinderPattern> bottomLeft(info->getBottomLeft());
+QSharedPointer<DetectorResult> Detector::processFinderPatternInfo(QSharedPointer<FinderPatternInfo> info){
+  QSharedPointer<FinderPattern> topLeft(info->getTopLeft());
+  QSharedPointer<FinderPattern> topRight(info->getTopRight());
+  QSharedPointer<FinderPattern> bottomLeft(info->getBottomLeft());
 
   float moduleSize = calculateModuleSize(topLeft, topRight, bottomLeft);
   if (moduleSize < 1.0f) {
     throw zxing::ReaderException("bad module size");
   }
   int dimension = computeDimension(topLeft, topRight, bottomLeft, moduleSize);
-  Ref<Version>provisionalVersion = Version::getProvisionalVersionForDimension(dimension);
+  QSharedPointer<Version>provisionalVersion = Version::getProvisionalVersionForDimension(dimension);
   int modulesBetweenFPCenters = provisionalVersion->getDimensionForVersion() - 7;
 
-  Ref<AlignmentPattern> alignmentPattern;
+  QSharedPointer<AlignmentPattern> alignmentPattern;
   // Anything above version 1 has an alignment pattern
   if (provisionalVersion->getAlignmentPatternCenters().size() > 0) {
 
@@ -116,22 +116,22 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
 
   }
 
-  Ref<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
-  Ref<BitMatrix> bits(sampleGrid(image_, dimension, transform));
-  ArrayRef< Ref<ResultPoint> > points(new Array< Ref<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
-  points[0].reset(bottomLeft);
-  points[1].reset(topLeft);
-  points[2].reset(topRight);
+  QSharedPointer<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
+  QSharedPointer<BitMatrix> bits(sampleGrid(image_, dimension, transform));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points(new std::vector< QSharedPointer<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
+  (*points)[0] = bottomLeft;
+  (*points)[1] = topLeft;
+  (*points)[2] = topRight;
   if (alignmentPattern != 0) {
-    points[3].reset(alignmentPattern);
+    (*points)[3] = alignmentPattern;
   }
 
-  Ref<DetectorResult> result(new DetectorResult(bits, points));
+  QSharedPointer<DetectorResult> result(new DetectorResult(bits, points));
   return result;
 }
 
-Ref<PerspectiveTransform> Detector::createTransform(Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight, Ref <
-                                                    ResultPoint > bottomLeft, Ref<ResultPoint> alignmentPattern, int dimension) {
+QSharedPointer<PerspectiveTransform> Detector::createTransform(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, QSharedPointer <
+                                                    ResultPoint > bottomLeft, QSharedPointer<ResultPoint> alignmentPattern, int dimension) {
 
   float dimMinusThree = (float)dimension - 3.5f;
   float bottomRightX;
@@ -151,19 +151,19 @@ Ref<PerspectiveTransform> Detector::createTransform(Ref<ResultPoint> topLeft, Re
     sourceBottomRightY = dimMinusThree;
   }
 
-  Ref<PerspectiveTransform> transform(PerspectiveTransform::quadrilateralToQuadrilateral(3.5f, 3.5f, dimMinusThree, 3.5f, sourceBottomRightX,
+  QSharedPointer<PerspectiveTransform> transform(PerspectiveTransform::quadrilateralToQuadrilateral(3.5f, 3.5f, dimMinusThree, 3.5f, sourceBottomRightX,
                                                                                          sourceBottomRightY, 3.5f, dimMinusThree, topLeft->getX(), topLeft->getY(), topRight->getX(),
                                                                                          topRight->getY(), bottomRightX, bottomRightY, bottomLeft->getX(), bottomLeft->getY()));
 
   return transform;
 }
 
-Ref<BitMatrix> Detector::sampleGrid(Ref<BitMatrix> image, int dimension, Ref<PerspectiveTransform> transform) {
+QSharedPointer<BitMatrix> Detector::sampleGrid(QSharedPointer<BitMatrix> image, int dimension, QSharedPointer<PerspectiveTransform> transform) {
   GridSampler &sampler = GridSampler::getInstance();
   return sampler.sampleGrid(image, dimension, transform);
 }
 
-int Detector::computeDimension(Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight, Ref<ResultPoint> bottomLeft,
+int Detector::computeDimension(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, QSharedPointer<ResultPoint> bottomLeft,
                                float moduleSize) {
   int tltrCentersDimension =
     MathUtils::round(ResultPoint::distance(topLeft, topRight) / moduleSize);
@@ -186,12 +186,12 @@ int Detector::computeDimension(Ref<ResultPoint> topLeft, Ref<ResultPoint> topRig
   return dimension;
 }
 
-float Detector::calculateModuleSize(Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight, Ref<ResultPoint> bottomLeft) {
+float Detector::calculateModuleSize(QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, QSharedPointer<ResultPoint> bottomLeft) {
   // Take the average
   return (calculateModuleSizeOneWay(topLeft, topRight) + calculateModuleSizeOneWay(topLeft, bottomLeft)) / 2.0f;
 }
 
-float Detector::calculateModuleSizeOneWay(Ref<ResultPoint> pattern, Ref<ResultPoint> otherPattern) {
+float Detector::calculateModuleSizeOneWay(QSharedPointer<ResultPoint> pattern, QSharedPointer<ResultPoint> otherPattern) {
   float moduleSizeEst1 = sizeOfBlackWhiteBlackRunBothWays((int)pattern->getX(), (int)pattern->getY(),
                                                           (int)otherPattern->getX(), (int)otherPattern->getY());
   float moduleSizeEst2 = sizeOfBlackWhiteBlackRunBothWays((int)otherPattern->getX(), (int)otherPattern->getY(),
@@ -293,7 +293,7 @@ float Detector::sizeOfBlackWhiteBlackRun(int fromX, int fromY, int toX, int toY)
   return nan();
 }
 
-Ref<AlignmentPattern> Detector::findAlignmentInRegion(float overallEstModuleSize, int estAlignmentX, int estAlignmentY,
+QSharedPointer<AlignmentPattern> Detector::findAlignmentInRegion(float overallEstModuleSize, int estAlignmentX, int estAlignmentY,
                                                       float allowanceFactor) {
   // Look for an alignment pattern (3 modules in size) around where it
   // should be

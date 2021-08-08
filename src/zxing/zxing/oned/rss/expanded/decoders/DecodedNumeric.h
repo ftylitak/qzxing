@@ -46,7 +46,7 @@ public:
     static const int FNC1 = 10;
     DecodedNumeric(int newPosition, int firstDigit, int secondDigit);
 
-    DecodedNumeric(const DecodedNumeric* other = nullptr);
+    DecodedNumeric(const QSharedPointer<DecodedNumeric> other);
 
     int getFirstDigit() const;
 

@@ -25,12 +25,12 @@
 #include <algorithm>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::ResultPoint;
 using zxing::TwoInts;
 using zxing::MonochromeRectangleDetector;
 
-vector<Ref<ResultPoint> > MonochromeRectangleDetector::detect() {
+vector<QSharedPointer<ResultPoint> > MonochromeRectangleDetector::detect() {
   int height = image_->getHeight();
   int width = image_->getWidth();
   int halfHeight = height >> 1;
@@ -42,38 +42,38 @@ vector<Ref<ResultPoint> > MonochromeRectangleDetector::detect() {
   int bottom = height;
   int left = 0;
   int right = width;
-  Ref<ResultPoint> pointA(findCornerFromCenter(halfWidth, 0, left, right,
+  QSharedPointer<ResultPoint> pointA(findCornerFromCenter(halfWidth, 0, left, right,
                                                halfHeight, -deltaY, top, bottom, halfWidth >> 1));
   top = (int) pointA->getY() - 1;;
-  Ref<ResultPoint> pointB(findCornerFromCenter(halfWidth, -deltaX, left, right,
+  QSharedPointer<ResultPoint> pointB(findCornerFromCenter(halfWidth, -deltaX, left, right,
                                                halfHeight, 0, top, bottom, halfHeight >> 1));
   left = (int) pointB->getX() - 1;
-  Ref<ResultPoint> pointC(findCornerFromCenter(halfWidth, deltaX, left, right,
+  QSharedPointer<ResultPoint> pointC(findCornerFromCenter(halfWidth, deltaX, left, right,
                                                halfHeight, 0, top, bottom, halfHeight >> 1));
   right = (int) pointC->getX() + 1;
-  Ref<ResultPoint> pointD(findCornerFromCenter(halfWidth, 0, left, right,
+  QSharedPointer<ResultPoint> pointD(findCornerFromCenter(halfWidth, 0, left, right,
                                                halfHeight, deltaY, top, bottom, halfWidth >> 1));
   bottom = (int) pointD->getY() + 1;
 
   // Go try to find point A again with better information -- might have been off at first.
-  pointA.reset(findCornerFromCenter(halfWidth, 0, left, right,
-                                    halfHeight, -deltaY, top, bottom, halfWidth >> 2));
+  pointA = findCornerFromCenter(halfWidth, 0, left, right,
+                                    halfHeight, -deltaY, top, bottom, halfWidth >> 2);
 
-  vector<Ref<ResultPoint> > corners(4);
-  corners[0].reset(pointA);
-  corners[1].reset(pointB);
-  corners[2].reset(pointC);
-  corners[3].reset(pointD);
+  vector<QSharedPointer<ResultPoint> > corners(4);
+  corners[0] = pointA;
+  corners[1] = pointB;
+  corners[2] = pointC;
+  corners[3] = pointD;
   return corners;
 }
 
-Ref<ResultPoint> MonochromeRectangleDetector::findCornerFromCenter(int centerX, int deltaX, int left, int right,
+QSharedPointer<ResultPoint> MonochromeRectangleDetector::findCornerFromCenter(int centerX, int deltaX, int left, int right,
                                                                    int centerY, int deltaY, int top, int bottom, int maxWhiteRun) {
-  Ref<TwoInts> lastRange(NULL);
+  QSharedPointer<TwoInts> lastRange(NULL);
   for (int y = centerY, x = centerX;
        y < bottom && y >= top && x < right && x >= left;
        y += deltaY, x += deltaX) {
-    Ref<TwoInts> range(NULL);
+    QSharedPointer<TwoInts> range(NULL);
     if (deltaX == 0) {
       // horizontal slices, up and down
       range = blackWhiteRange(y, maxWhiteRun, left, right, true);
@@ -91,26 +91,26 @@ Ref<ResultPoint> MonochromeRectangleDetector::findCornerFromCenter(int centerX, 
           if (lastRange->start < centerX) {
             if (lastRange->end > centerX) {
               // straddle, choose one or the other based on direction
-              Ref<ResultPoint> result(new ResultPoint(deltaY > 0 ? lastRange->start : lastRange->end, lastY));
+              QSharedPointer<ResultPoint> result(new ResultPoint(deltaY > 0 ? lastRange->start : lastRange->end, lastY));
               return result;
             }
-            Ref<ResultPoint> result(new ResultPoint(lastRange->start, lastY));
+            QSharedPointer<ResultPoint> result(new ResultPoint(lastRange->start, lastY));
             return result;
           } else {
-            Ref<ResultPoint> result(new ResultPoint(lastRange->end, lastY));
+            QSharedPointer<ResultPoint> result(new ResultPoint(lastRange->end, lastY));
             return result;
           }
         } else {
           int lastX = x - deltaX;
           if (lastRange->start < centerY) {
             if (lastRange->end > centerY) {
-              Ref<ResultPoint> result(new ResultPoint(lastX, deltaX < 0 ? lastRange->start : lastRange->end));
+              QSharedPointer<ResultPoint> result(new ResultPoint(lastX, deltaX < 0 ? lastRange->start : lastRange->end));
               return result;
             }
-            Ref<ResultPoint> result(new ResultPoint(lastX, lastRange->start));
+            QSharedPointer<ResultPoint> result(new ResultPoint(lastX, lastRange->start));
             return result;
           } else {
-            Ref<ResultPoint> result(new ResultPoint(lastX, lastRange->end));
+            QSharedPointer<ResultPoint> result(new ResultPoint(lastX, lastRange->end));
             return result;
           }
         }
@@ -121,7 +121,7 @@ Ref<ResultPoint> MonochromeRectangleDetector::findCornerFromCenter(int centerX, 
   throw NotFoundException("Couldn't find corners");
 }
 
-Ref<TwoInts> MonochromeRectangleDetector::blackWhiteRange(int fixedDimension, int maxWhiteRun, int minDim, int maxDim,
+QSharedPointer<TwoInts> MonochromeRectangleDetector::blackWhiteRange(int fixedDimension, int maxWhiteRun, int minDim, int maxDim,
                                                           bool horizontal) {
     
   int center = (minDim + maxDim) >> 1;
@@ -165,9 +165,9 @@ Ref<TwoInts> MonochromeRectangleDetector::blackWhiteRange(int fixedDimension, in
     }
   }
   end--;
-  Ref<TwoInts> result(NULL);
+  QSharedPointer<TwoInts> result(NULL);
   if (end > start) {
-    result = new TwoInts;
+    result.reset(new TwoInts);
     result->start = start;
     result->end = end;
   }

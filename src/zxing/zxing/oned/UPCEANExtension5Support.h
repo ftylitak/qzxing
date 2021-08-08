@@ -17,7 +17,7 @@
 *
 * 2019-05-08 translation from Java into C++
 */
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 
@@ -29,7 +29,7 @@ namespace oned {
 class UPCEANExtension5Support
 {
 public:
-    static Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, int extStartRangeBegin, int extStartRangeEnd);
+    static QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, int extStartRangeBegin, int extStartRangeEnd);
 };
 
 }

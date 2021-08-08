@@ -23,22 +23,21 @@
 #include <zxing/Binarizer.h>
 #include <zxing/common/BitArray.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Array.h>
 
 namespace zxing {
 	
 class GlobalHistogramBinarizer : public Binarizer {
 private:
-  ArrayRef<zxing::byte> luminances;
-  ArrayRef<int> buckets;
+  QSharedPointer<std::vector<zxing::byte>> luminances;
+  QSharedPointer<std::vector<int>> buckets;
 public:
-  GlobalHistogramBinarizer(Ref<LuminanceSource> source);
+  GlobalHistogramBinarizer(QSharedPointer<LuminanceSource> source);
   virtual ~GlobalHistogramBinarizer();
 		
-  virtual Ref<BitArray> getBlackRow(int y, Ref<BitArray> row);
-  virtual Ref<BitMatrix> getBlackMatrix();
-  static int estimateBlackPoint(ArrayRef<int> const& buckets);
-  Ref<Binarizer> createBinarizer(Ref<LuminanceSource> source);
+  virtual QSharedPointer<BitArray> getBlackRow(int y, QSharedPointer<BitArray> row);
+  virtual QSharedPointer<BitMatrix> getBlackMatrix();
+  static int estimateBlackPoint(QSharedPointer<std::vector<int>> const& buckets);
+  QSharedPointer<Binarizer> createBinarizer(QSharedPointer<LuminanceSource> source);
 private:
   void initArrays(int luminanceSize);
 };

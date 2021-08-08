@@ -35,7 +35,7 @@ namespace zxing {
 			CornerPoint(float posX, float posY);
 			int getCount() const;
 			void incrementCount();
-			bool equals(Ref<CornerPoint> other) const;
+			bool equals(QSharedPointer<CornerPoint> other) const;
 		};
 	}
 }

@@ -21,12 +21,12 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
 
-class ResultPoint : public Counted {
+class ResultPoint  {
 protected:
   const float posX_;
   const float posY_;
@@ -40,14 +40,14 @@ public:
   virtual float getX() const;
   virtual float getY() const;
 
-  bool equals(const Ref<ResultPoint> &other);
+  bool equals(const QSharedPointer<ResultPoint> &other);
 
-  static void orderBestPatterns(std::vector<Ref<ResultPoint> > &patterns);
-  static float distance(Ref<ResultPoint> point1, Ref<ResultPoint> point2);
+  static void orderBestPatterns(std::vector<QSharedPointer<ResultPoint> > &patterns);
+  static float distance(QSharedPointer<ResultPoint> point1, QSharedPointer<ResultPoint> point2);
   static float distance(float x1, float x2, float y1, float y2);
 
 private:
-  static float crossProductZ(Ref<ResultPoint> pointA, Ref<ResultPoint> pointB, Ref<ResultPoint> pointC);
+  static float crossProductZ(QSharedPointer<ResultPoint> pointA, QSharedPointer<ResultPoint> pointB, QSharedPointer<ResultPoint> pointC);
 };
 
 }

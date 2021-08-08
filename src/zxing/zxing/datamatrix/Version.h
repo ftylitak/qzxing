@@ -23,7 +23,7 @@
 
 #include <zxing/ReaderException.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
@@ -51,7 +51,7 @@ public:
   ~ECBlocks();
 };
 
-class Version : public Counted {
+class Version  {
 private:
   int versionNumber_;
   int symbolSizeRows_;
@@ -64,7 +64,7 @@ private:
 		  int dataRegionSizeColumns, ECBlocks *ecBlocks);
 
 public:
-  static std::vector<Ref<Version>> VERSIONS;
+  static std::vector<QSharedPointer<Version>> VERSIONS;
   
   ~Version();
   int getVersionNumber() const;
@@ -75,7 +75,7 @@ public:
   int getTotalCodewords() const;
   ECBlocks* getECBlocks() const;
   static int  buildVersions();  
-  Ref<Version>getVersionForDimensions(int numRows, int numColumns);
+  QSharedPointer<Version>getVersionForDimensions(int numRows, int numColumns);
   
 private:
   Version(const Version&);

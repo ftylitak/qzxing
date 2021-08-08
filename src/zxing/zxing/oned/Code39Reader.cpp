@@ -17,7 +17,6 @@
 
 #include "Code39Reader.h"
 #include <zxing/oned/OneDResultPoint.h>
-#include <zxing/common/Array.h>
 #include <zxing/ReaderException.h>
 #include <zxing/NotFoundException.h>
 #include <zxing/ChecksumException.h>
@@ -26,7 +25,7 @@
 #include <algorithm>
 
 using std::vector;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::String;
 using zxing::NotFoundException;
@@ -92,7 +91,7 @@ Code39Reader::Code39Reader(bool usingCheckDigit_, bool extendedMode_) {
   init(usingCheckDigit_, extendedMode_);
 }
 
-Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+QSharedPointer<Result> Code39Reader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/) {
   std::vector<int>& theCounters (counters);
   { // Arrays.fill(counters, 0);
     int size = int(theCounters.size());
@@ -154,28 +153,26 @@ Ref<Result> Code39Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Dec
     throw NotFoundException();
   }
   
-  Ref<String> resultString;
+  QSharedPointer<String> resultString;
   if (extendedMode) {
     resultString = decodeExtended(result);
   } else {
-    resultString = Ref<String>(new String(result));
+    resultString = QSharedPointer<String>(new String(result));
   }
 
   float left = (float) (start[1] + start[0]) / 2.0f;
   float right = lastStart + lastPatternSize / 2.0f;
 
-  ArrayRef< Ref<ResultPoint> > resultPoints (2);
-  resultPoints[0] = 
-    Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] =
-    Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints (new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(left, (float) rowNumber));
+  (*resultPoints)[1].reset(new OneDResultPoint(right, (float) rowNumber));
   
-  return Ref<Result>(
-    new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, BarcodeFormat::CODE_39)
+  return QSharedPointer<Result>(
+    new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::CODE_39)
     );
 }
 
-vector<int> Code39Reader::findAsteriskPattern(Ref<BitArray> row, vector<int>& counters){
+vector<int> Code39Reader::findAsteriskPattern(QSharedPointer<BitArray> row, vector<int>& counters){
   int width = row->getSize();
   int rowOffset = row->getNextSet(0);
 
@@ -271,7 +268,7 @@ char Code39Reader::patternToChar(int pattern){
   throw ReaderException("");
 }
 
-Ref<String> Code39Reader::decodeExtended(std::string encoded){
+QSharedPointer<String> Code39Reader::decodeExtended(std::string encoded){
   int length = int(encoded.length());
   std::string tmpDecoded;
   for (int i = 0; i < length; i++) {
@@ -324,6 +321,6 @@ Ref<String> Code39Reader::decodeExtended(std::string encoded){
       tmpDecoded.append(1, c);
     }
   }
-  Ref<String> decoded(new String(tmpDecoded));
+  QSharedPointer<String> decoded(new String(tmpDecoded));
   return decoded;
 }

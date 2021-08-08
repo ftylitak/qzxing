@@ -26,11 +26,11 @@ namespace zxing {
     class MultiFormatOneDReader : public OneDReader {
 
     private:
-      std::vector<Ref<OneDReader> > readers;
+      std::vector<QSharedPointer<OneDReader> > readers;
     public:
       MultiFormatOneDReader(DecodeHints hints);
 
-      Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
+      QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
     };
   }
 }

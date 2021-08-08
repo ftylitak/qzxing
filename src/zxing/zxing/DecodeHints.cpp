@@ -23,9 +23,8 @@
 #include <qglobal.h>
 #include <iterator>
 
-using zxing::Ref;
-using zxing::ResultPointCallback;
 using zxing::DecodeHints;
+using zxing::ResultPointCallback;
 
 // VC++
 using zxing::BarcodeFormat;
@@ -52,135 +51,224 @@ const zxing::DecodeHintType DecodeHints::TRYHARDER_HINT = 1 << 31;
 const zxing::DecodeHintType DecodeHints::CHARACTER_SET = 1 << 30;
 
 const zxing::DecodeHints DecodeHints::PRODUCT_HINT(
-  DecodeHints::UPC_A_HINT |
-  DecodeHints::UPC_E_HINT |
-  DecodeHints::EAN_13_HINT |
-  DecodeHints::EAN_8_HINT |
-  DecodeHints::RSS_14_HINT
-  );
+    DecodeHints::UPC_A_HINT |
+    DecodeHints::UPC_E_HINT |
+    DecodeHints::EAN_13_HINT |
+    DecodeHints::EAN_8_HINT |
+    DecodeHints::RSS_14_HINT);
 
 const zxing::DecodeHints DecodeHints::ONED_HINT(
-  DecodeHints::CODE_39_HINT |
-  DecodeHints::CODE_93_HINT |
-  DecodeHints::CODE_128_HINT |
-  DecodeHints::ITF_HINT |
-  DecodeHints::CODABAR_HINT |
-  DecodeHints::PRODUCT_HINT
-  );
+    DecodeHints::CODE_39_HINT |
+    DecodeHints::CODE_93_HINT |
+    DecodeHints::CODE_128_HINT |
+    DecodeHints::ITF_HINT |
+    DecodeHints::CODABAR_HINT |
+    DecodeHints::PRODUCT_HINT);
 
 const zxing::DecodeHints DecodeHints::DEFAULT_HINT(
-  DecodeHints::ONED_HINT |
-  DecodeHints::QR_CODE_HINT |
-  DecodeHints::DATA_MATRIX_HINT |
-  DecodeHints::AZTEC_HINT |
-  DecodeHints::PDF_417_HINT
-  );
+    DecodeHints::ONED_HINT |
+    DecodeHints::QR_CODE_HINT |
+    DecodeHints::DATA_MATRIX_HINT |
+    DecodeHints::AZTEC_HINT |
+    DecodeHints::PDF_417_HINT);
 
-DecodeHints::DecodeHints() {
+DecodeHints::DecodeHints()
+{
   hints = 0;
   allowedEanExtensions = {};
 }
 
-DecodeHints::DecodeHints(const zxing::DecodeHintType &init) {
-    hints = init;
+DecodeHints::DecodeHints(const zxing::DecodeHintType &init)
+{
+  hints = init;
 }
 
-DecodeHints::DecodeHints(const DecodeHints &other) {
-    hints = other.hints;
-    callback = other.callback;
-    allowedEanExtensions = other.allowedEanExtensions;
+DecodeHints::DecodeHints(const DecodeHints &other)
+{
+  hints = other.hints;
+  callback = other.callback;
+  allowedEanExtensions = other.allowedEanExtensions;
 }
 
-void DecodeHints::addFormat(BarcodeFormat toadd) {
-  switch (toadd) {
-  case BarcodeFormat::AZTEC: hints |= AZTEC_HINT; break;
-  case BarcodeFormat::CODABAR: hints |= CODABAR_HINT; break;
-  case BarcodeFormat::CODE_39: hints |= CODE_39_HINT; break;
-  case BarcodeFormat::CODE_93: hints |= CODE_93_HINT; break;
-  case BarcodeFormat::CODE_128: hints |= CODE_128_HINT; break;
-  case BarcodeFormat::DATA_MATRIX: hints |= DATA_MATRIX_HINT; break;
-  case BarcodeFormat::EAN_8: hints |= EAN_8_HINT; break;
-  case BarcodeFormat::EAN_13: hints |= EAN_13_HINT; break;
-  case BarcodeFormat::ITF: hints |= ITF_HINT; break;
-  case BarcodeFormat::MAXICODE: hints |= MAXICODE_HINT; break;
-  case BarcodeFormat::PDF_417: hints |= PDF_417_HINT; break;
-  case BarcodeFormat::QR_CODE: hints |= QR_CODE_HINT; break;
-  case BarcodeFormat::RSS_14: hints |= RSS_14_HINT; break;
-  case BarcodeFormat::RSS_EXPANDED: hints |= RSS_EXPANDED_HINT; break;
-  case BarcodeFormat::UPC_A: hints |= UPC_A_HINT; break;
-  case BarcodeFormat::UPC_E: hints |= UPC_E_HINT; break;
-  case BarcodeFormat::UPC_EAN_EXTENSION: hints |= UPC_EAN_EXTENSION_HINT; break;
-  case BarcodeFormat::ASSUME_GS1: hints |= ASSUME_GS1; break;
-  default: throw IllegalArgumentException("Unrecognizd barcode format");
+void DecodeHints::addFormat(BarcodeFormat toadd)
+{
+  switch (toadd)
+  {
+  case BarcodeFormat::AZTEC:
+    hints |= AZTEC_HINT;
+    break;
+  case BarcodeFormat::CODABAR:
+    hints |= CODABAR_HINT;
+    break;
+  case BarcodeFormat::CODE_39:
+    hints |= CODE_39_HINT;
+    break;
+  case BarcodeFormat::CODE_93:
+    hints |= CODE_93_HINT;
+    break;
+  case BarcodeFormat::CODE_128:
+    hints |= CODE_128_HINT;
+    break;
+  case BarcodeFormat::DATA_MATRIX:
+    hints |= DATA_MATRIX_HINT;
+    break;
+  case BarcodeFormat::EAN_8:
+    hints |= EAN_8_HINT;
+    break;
+  case BarcodeFormat::EAN_13:
+    hints |= EAN_13_HINT;
+    break;
+  case BarcodeFormat::ITF:
+    hints |= ITF_HINT;
+    break;
+  case BarcodeFormat::MAXICODE:
+    hints |= MAXICODE_HINT;
+    break;
+  case BarcodeFormat::PDF_417:
+    hints |= PDF_417_HINT;
+    break;
+  case BarcodeFormat::QR_CODE:
+    hints |= QR_CODE_HINT;
+    break;
+  case BarcodeFormat::RSS_14:
+    hints |= RSS_14_HINT;
+    break;
+  case BarcodeFormat::RSS_EXPANDED:
+    hints |= RSS_EXPANDED_HINT;
+    break;
+  case BarcodeFormat::UPC_A:
+    hints |= UPC_A_HINT;
+    break;
+  case BarcodeFormat::UPC_E:
+    hints |= UPC_E_HINT;
+    break;
+  case BarcodeFormat::UPC_EAN_EXTENSION:
+    hints |= UPC_EAN_EXTENSION_HINT;
+    break;
+  case BarcodeFormat::ASSUME_GS1:
+    hints |= ASSUME_GS1;
+    break;
+  default:
+    throw IllegalArgumentException("Unrecognizd barcode format");
   }
 }
 
-bool DecodeHints::containsFormat(BarcodeFormat tocheck) const {
+bool DecodeHints::containsFormat(BarcodeFormat tocheck) const
+{
   DecodeHintType checkAgainst = 0;
-  switch (tocheck) {
-  case BarcodeFormat::AZTEC: checkAgainst |= AZTEC_HINT; break;
-  case BarcodeFormat::CODABAR: checkAgainst |= CODABAR_HINT; break;
-  case BarcodeFormat::CODE_39: checkAgainst |= CODE_39_HINT; break;
-  case BarcodeFormat::CODE_93: checkAgainst |= CODE_93_HINT; break;
-  case BarcodeFormat::CODE_128: checkAgainst |= CODE_128_HINT; break;
-  case BarcodeFormat::DATA_MATRIX: checkAgainst |= DATA_MATRIX_HINT; break;
-  case BarcodeFormat::EAN_8: checkAgainst |= EAN_8_HINT; break;
-  case BarcodeFormat::EAN_13: checkAgainst |= EAN_13_HINT; break;
-  case BarcodeFormat::ITF: checkAgainst |= ITF_HINT; break;
-  case BarcodeFormat::MAXICODE: checkAgainst |= MAXICODE_HINT; break;
-  case BarcodeFormat::PDF_417: checkAgainst |= PDF_417_HINT; break;
-  case BarcodeFormat::QR_CODE: checkAgainst |= QR_CODE_HINT; break;
-  case BarcodeFormat::RSS_14: checkAgainst |= RSS_14_HINT; break;
-  case BarcodeFormat::RSS_EXPANDED: checkAgainst |= RSS_EXPANDED_HINT; break;
-  case BarcodeFormat::UPC_A: checkAgainst |= UPC_A_HINT; break;
-  case BarcodeFormat::UPC_E: checkAgainst |= UPC_E_HINT; break;
-  case BarcodeFormat::UPC_EAN_EXTENSION: checkAgainst |= UPC_EAN_EXTENSION_HINT; break;
-  case BarcodeFormat::ASSUME_GS1: checkAgainst |= ASSUME_GS1; break;
-  default: throw IllegalArgumentException("Unrecognizd barcode format");
+  switch (tocheck)
+  {
+  case BarcodeFormat::AZTEC:
+    checkAgainst |= AZTEC_HINT;
+    break;
+  case BarcodeFormat::CODABAR:
+    checkAgainst |= CODABAR_HINT;
+    break;
+  case BarcodeFormat::CODE_39:
+    checkAgainst |= CODE_39_HINT;
+    break;
+  case BarcodeFormat::CODE_93:
+    checkAgainst |= CODE_93_HINT;
+    break;
+  case BarcodeFormat::CODE_128:
+    checkAgainst |= CODE_128_HINT;
+    break;
+  case BarcodeFormat::DATA_MATRIX:
+    checkAgainst |= DATA_MATRIX_HINT;
+    break;
+  case BarcodeFormat::EAN_8:
+    checkAgainst |= EAN_8_HINT;
+    break;
+  case BarcodeFormat::EAN_13:
+    checkAgainst |= EAN_13_HINT;
+    break;
+  case BarcodeFormat::ITF:
+    checkAgainst |= ITF_HINT;
+    break;
+  case BarcodeFormat::MAXICODE:
+    checkAgainst |= MAXICODE_HINT;
+    break;
+  case BarcodeFormat::PDF_417:
+    checkAgainst |= PDF_417_HINT;
+    break;
+  case BarcodeFormat::QR_CODE:
+    checkAgainst |= QR_CODE_HINT;
+    break;
+  case BarcodeFormat::RSS_14:
+    checkAgainst |= RSS_14_HINT;
+    break;
+  case BarcodeFormat::RSS_EXPANDED:
+    checkAgainst |= RSS_EXPANDED_HINT;
+    break;
+  case BarcodeFormat::UPC_A:
+    checkAgainst |= UPC_A_HINT;
+    break;
+  case BarcodeFormat::UPC_E:
+    checkAgainst |= UPC_E_HINT;
+    break;
+  case BarcodeFormat::UPC_EAN_EXTENSION:
+    checkAgainst |= UPC_EAN_EXTENSION_HINT;
+    break;
+  case BarcodeFormat::ASSUME_GS1:
+    checkAgainst |= ASSUME_GS1;
+    break;
+  default:
+    throw IllegalArgumentException("Unrecognizd barcode format");
   }
   return (hints & checkAgainst) != 0;
 }
 
-void DecodeHints::setTryHarder(bool toset) {
-  if (toset) {
+void DecodeHints::setTryHarder(bool toset)
+{
+  if (toset)
+  {
     hints |= TRYHARDER_HINT;
-  } else {
+  }
+  else
+  {
     hints &= ~TRYHARDER_HINT;
   }
 }
 
-bool DecodeHints::getTryHarder() const {
+bool DecodeHints::getTryHarder() const
+{
   return (hints & TRYHARDER_HINT) != 0;
 }
 
-void DecodeHints::setAllowedEanExtensions(std::set<int> toset) {
+void DecodeHints::setAllowedEanExtensions(std::set<int> toset)
+{
   allowedEanExtensions = toset;
 }
 
-std::set<int> DecodeHints::getAllowedEanExtensions() const {
+std::set<int> DecodeHints::getAllowedEanExtensions() const
+{
   return allowedEanExtensions;
 }
 
-void DecodeHints::setResultPointCallback(Ref<ResultPointCallback> const& _callback) {
+void DecodeHints::setResultPointCallback(QSharedPointer<ResultPointCallback> const &_callback)
+{
   callback = _callback;
 }
 
-Ref<ResultPointCallback> DecodeHints::getResultPointCallback() const {
-    return callback;
-}
-
-zxing::DecodeHints &zxing::DecodeHints::operator =(const zxing::DecodeHints &other)
+QSharedPointer<ResultPointCallback> DecodeHints::getResultPointCallback() const
 {
-    hints = other.hints;
-    callback = other.callback;
-    allowedEanExtensions = other.allowedEanExtensions;
-    return *this;
+  return callback;
 }
 
-zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r) {
-  DecodeHints result (l);
+zxing::DecodeHints &zxing::DecodeHints::operator=(const zxing::DecodeHints &other)
+{
+  hints = other.hints;
+  callback = other.callback;
+  allowedEanExtensions = other.allowedEanExtensions;
+  return *this;
+}
+
+zxing::DecodeHints zxing::operator|(DecodeHints const &l, DecodeHints const &r)
+{
+  DecodeHints result(l);
   result.hints |= r.hints;
-  if (!result.callback) {
+  if (!result.callback)
+  {
     result.callback = r.callback;
   }
 
@@ -191,10 +279,12 @@ zxing::DecodeHints zxing::operator | (DecodeHints const& l, DecodeHints const& r
   return result;
 }
 
-zxing::DecodeHints zxing::operator & (DecodeHints const& l, DecodeHints const& r) {
-  DecodeHints result (l);
+zxing::DecodeHints zxing::operator&(DecodeHints const &l, DecodeHints const &r)
+{
+  DecodeHints result(l);
   result.hints &= r.hints;
-  if (!result.callback) {
+  if (!result.callback)
+  {
     result.callback = r.callback;
   }
 

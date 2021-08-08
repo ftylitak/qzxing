@@ -20,7 +20,6 @@
  */
 
 #include <zxing/oned/OneDResultPoint.h>
-#include <zxing/common/Array.h>
 
 #include <vector>
 
@@ -45,7 +44,7 @@ public:
 
     std::vector<int> &getStartEnd();
 
-    ArrayRef<Ref<ResultPoint> > &getResultPoints();
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > &getResultPoints();
 
     bool equals(const FinderPattern& other) const;
 
@@ -56,7 +55,7 @@ public:
 private:
     int m_value;
     std::vector<int> m_startEnd;
-    ArrayRef< Ref<ResultPoint> > m_resultPoints;
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > m_resultPoints;
 
 };
 

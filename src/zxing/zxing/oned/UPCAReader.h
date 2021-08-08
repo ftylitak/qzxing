@@ -30,16 +30,16 @@ class UPCAReader : public UPCEANReader {
 
 private:
   EAN13Reader ean13Reader;
-  static Ref<Result> maybeReturnResult(Ref<Result> result);
+  static QSharedPointer<Result> maybeReturnResult(QSharedPointer<Result> result);
 
 public:
   UPCAReader();
 
-  int decodeMiddle(Ref<BitArray> row, Range const& startRange, std::string& resultString);
+  int decodeMiddle(QSharedPointer<BitArray> row, Range const& startRange, std::string& resultString);
 
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints);
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& startGuardRange);
-  Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, Range const& startGuardRange);
+  QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 
   BarcodeFormat getBarcodeFormat();
 };

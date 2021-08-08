@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/Result.h>
 #include <zxing/BinaryBitmap.h>
 #include <zxing/DecodeHints.h>
@@ -26,12 +26,12 @@
 namespace zxing {
 namespace multi {
 
-class MultipleBarcodeReader : public Counted {
+class MultipleBarcodeReader  {
   protected:
     MultipleBarcodeReader() {}
   public:
-    virtual std::vector<Ref<Result> > decodeMultiple(Ref<BinaryBitmap> image);
-    virtual std::vector<Ref<Result> > decodeMultiple(Ref<BinaryBitmap> image, DecodeHints hints) = 0;
+    virtual std::vector<QSharedPointer<Result> > decodeMultiple(QSharedPointer<BinaryBitmap> image);
+    virtual std::vector<QSharedPointer<Result> > decodeMultiple(QSharedPointer<BinaryBitmap> image, DecodeHints hints) = 0;
     virtual ~MultipleBarcodeReader();
 };
 

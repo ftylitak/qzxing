@@ -58,7 +58,7 @@ static int determineCheckDigit(int lgPatternFound)
     return -1;
 }
 
-static int decodeMiddle(Ref<BitArray> row, int rowOffset_, std::string& resultString)
+static int decodeMiddle(QSharedPointer<BitArray> row, int rowOffset_, std::string& resultString)
 {
     std::vector<int> counters(4);
     counters[0] = 0;
@@ -136,7 +136,7 @@ static std::string parseExtension5String(const std::string& raw)
     return buf.str();
 }
 
-Ref<Result> UPCEANExtension5Support::decodeRow(int rowNumber, Ref<BitArray> row, int extStartRangeBegin, int extStartRangeEnd)
+QSharedPointer<Result> UPCEANExtension5Support::decodeRow(int rowNumber, QSharedPointer<BitArray> row, int extStartRangeBegin, int extStartRangeEnd)
 {
     std::string resultString;
     int range = decodeMiddle(row, extStartRangeEnd, resultString);
@@ -147,14 +147,14 @@ Ref<Result> UPCEANExtension5Support::decodeRow(int rowNumber, Ref<BitArray> row,
         metadata.put(ResultMetadata::SUGGESTED_PRICE, value);
     }
 
-    ArrayRef< Ref<ResultPoint> > resultPoints(2);
-    resultPoints[0] = Ref<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+    (*resultPoints)[0] = QSharedPointer<OneDResultPoint>(new OneDResultPoint((extStartRangeBegin + extStartRangeEnd) / 2.0f,
                                            static_cast<float> (rowNumber)));
-    resultPoints[1] = Ref<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
+    (*resultPoints)[1] = QSharedPointer<OneDResultPoint>(new OneDResultPoint(static_cast<float> (range),
                                            static_cast<float> (rowNumber)));
 
-    return Ref<Result>(new Result(Ref<String>(new String(resultString)),
-                                  ArrayRef<zxing::byte>(),
+    return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(resultString)),
+                                  QSharedPointer<std::vector<zxing::byte>>(),
                                   resultPoints,
                                   BarcodeFormat::UPC_EAN_EXTENSION,
                                   "",

@@ -27,14 +27,14 @@
 #include <zxing/ChecksumException.h>
 #include <zxing/common/reedsolomon/ReedSolomonException.h>
 
-using zxing::Ref;
+
 using zxing::DecoderResult;
 //using zxing::datamatrix::Decoder;
 //using zxing::datamatrix::DataBlock;
 //using zxing::datamatrix::DecodedBitStreamParser;
 
 // VC++
-using zxing::ArrayRef;
+
 using zxing::BitMatrix;
 
 namespace zxing {
@@ -42,11 +42,11 @@ namespace datamatrix {
 
 Decoder::Decoder() : rsDecoder_(GenericGF::DATA_MATRIX_FIELD_256) {}
 
-void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCodewords) {
+void Decoder::correctErrors(QSharedPointer<std::vector<zxing::byte>> codewordBytes, int numDataCodewords) {
   int numCodewords = codewordBytes->size();
-  ArrayRef<int> codewordInts(numCodewords);
+  QSharedPointer<std::vector<int>> codewordInts(new std::vector<int>(numCodewords));
   for (int i = 0; i < numCodewords; i++) {
-    codewordInts[i] = codewordBytes[i] & 0xff;
+    (*codewordInts)[i] = (*codewordBytes)[i] & 0xff;
   }
   int numECCodewords = numCodewords - numDataCodewords;
   try {
@@ -58,19 +58,19 @@ void Decoder::correctErrors(ArrayRef<zxing::byte> codewordBytes, int numDataCode
   // Copy back into array of bytes -- only need to worry about the bytes that were data
   // We don't care about errors in the error-correction codewords
   for (int i = 0; i < numDataCodewords; i++) {
-    codewordBytes[i] = (zxing::byte)codewordInts[i];
+    (*codewordBytes)[i] = (zxing::byte)(*codewordInts)[i];
   }
 }
 
-Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
+QSharedPointer<DecoderResult> Decoder::decode(QSharedPointer<BitMatrix> bits) {
   // Construct a parser and read version, error-correction level
   BitMatrixParser parser(bits);
-  Ref<Version>version = parser.readVersion(bits);
+  QSharedPointer<Version>version = parser.readVersion(bits);
 
   // Read codewords
-  ArrayRef<zxing::byte> codewords(parser.readCodewords());
+  QSharedPointer<std::vector<zxing::byte>> codewords(parser.readCodewords());
   // Separate into data blocks
-  std::vector<Ref<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
+  std::vector<QSharedPointer<DataBlock> > dataBlocks = DataBlock::getDataBlocks(codewords, version);
 
   int dataBlocksCount = int(dataBlocks.size());
 
@@ -79,22 +79,22 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   for (int i = 0; i < dataBlocksCount; i++) {
     totalBytes += dataBlocks[i]->getNumDataCodewords();
   }
-  ArrayRef<zxing::byte> resultBytes(totalBytes);
+  QSharedPointer<std::vector<zxing::byte>> resultBytes(new std::vector<zxing::byte>(totalBytes));
 
   // Error-correct and copy data blocks together into a stream of bytes
   for (int j = 0; j < dataBlocksCount; j++) {
-    Ref<DataBlock> dataBlock(dataBlocks[j]);
-    ArrayRef<zxing::byte> codewordBytes = dataBlock->getCodewords();
+    QSharedPointer<DataBlock> dataBlock(dataBlocks[j]);
+    QSharedPointer<std::vector<zxing::byte>> codewordBytes = dataBlock->getCodewords();
     int numDataCodewords = dataBlock->getNumDataCodewords();
     correctErrors(codewordBytes, numDataCodewords);
     for (int i = 0; i < numDataCodewords; i++) {
       // De-interlace data blocks.
-      resultBytes[i * dataBlocksCount + j] = codewordBytes[i];
+      (*resultBytes)[i * dataBlocksCount + j] = (*codewordBytes)[i];
     }
   }
   // Decode the contents of that stream of bytes
   DecodedBitStreamParser decodedBSParser;
-  return Ref<DecoderResult> (decodedBSParser.decode(resultBytes));
+  return QSharedPointer<DecoderResult> (decodedBSParser.decode(resultBytes));
 }
 
 }

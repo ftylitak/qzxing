@@ -146,7 +146,7 @@ static Country Countries[] {
     { {958},     "MO" }
 };
 
-Ref<String> EANManufacturerOrgSupport::lookupCountryIdentifier(Ref<String>& productCode)
+QSharedPointer<String> EANManufacturerOrgSupport::lookupCountryIdentifier(QSharedPointer<String>& productCode)
 {
     int prefix = std::atoi(productCode->getText().substr(0, 3).c_str());
     int size = (sizeof(Countries) / sizeof(Countries[0]));
@@ -154,14 +154,14 @@ Ref<String> EANManufacturerOrgSupport::lookupCountryIdentifier(Ref<String>& prod
         std::vector<int> range = Countries[i].range;
         int start = range[0];
         if (prefix < start) {
-            return Ref<String>();
+            return QSharedPointer<String>();
         }
         int end = range.size() == 1 ? start : range[1];
         if (prefix <= end) {
-            return Ref<String>(new String(Countries[i].id));
+            return QSharedPointer<String>(new String(Countries[i].id));
         }
     }
-    return Ref<String>();
+    return QSharedPointer<String>();
 }
 
 }

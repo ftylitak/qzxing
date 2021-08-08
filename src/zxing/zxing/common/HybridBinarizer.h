@@ -30,36 +30,36 @@ namespace zxing {
 	
 	class HybridBinarizer : public GlobalHistogramBinarizer {
 	 private:
-    Ref<BitMatrix> matrix_;
-	  Ref<BitArray> cached_row_;
+    QSharedPointer<BitMatrix> matrix_;
+	  QSharedPointer<BitArray> cached_row_;
 
 	public:
-		HybridBinarizer(Ref<LuminanceSource> source);
+		HybridBinarizer(QSharedPointer<LuminanceSource> source);
 		virtual ~HybridBinarizer();
 		
-		virtual Ref<BitMatrix> getBlackMatrix();
-		Ref<Binarizer> createBinarizer(Ref<LuminanceSource> source);
+		virtual QSharedPointer<BitMatrix> getBlackMatrix();
+		QSharedPointer<Binarizer> createBinarizer(QSharedPointer<LuminanceSource> source);
   private:
     // We'll be using one-D arrays because C++ can't dynamically allocate 2D
     // arrays
-    ArrayRef<int> calculateBlackPoints(ArrayRef<zxing::byte> luminances,
+    QSharedPointer<std::vector<int>> calculateBlackPoints(QSharedPointer<std::vector<zxing::byte>> luminances,
                                        int subWidth,
                                        int subHeight,
                                        int width,
                                        int height);
-    void calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
+    void calculateThresholdForBlock(QSharedPointer<std::vector<zxing::byte>> luminances,
                                     int subWidth,
                                     int subHeight,
                                     int width,
                                     int height,
-                                    ArrayRef<int> blackPoints,
-                                    Ref<BitMatrix> const& matrix);
-    void thresholdBlock(ArrayRef<zxing::byte>luminances,
+                                    QSharedPointer<std::vector<int>> blackPoints,
+                                    QSharedPointer<BitMatrix> const& matrix);
+    void thresholdBlock(QSharedPointer<std::vector<zxing::byte>>luminances,
                         int xoffset,
                         int yoffset,
                         int threshold,
                         int stride,
-                        Ref<BitMatrix> const& matrix);
+                        QSharedPointer<BitMatrix> const& matrix);
 	};
 
 }

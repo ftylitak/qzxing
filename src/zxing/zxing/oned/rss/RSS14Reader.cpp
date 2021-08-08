@@ -38,7 +38,7 @@ RSS14Reader::RSS14Reader()
 
 }
 
-Ref<Result> RSS14Reader::decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints)
+QSharedPointer<Result> RSS14Reader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints)
 {
     Pair leftPair = decodePair(row, false, rowNumber, hints);
     addOrTally(m_possibleLeftPairs, leftPair);
@@ -87,7 +87,7 @@ void RSS14Reader::reset()
     m_possibleRightPairs.clear();
 }
 
-Ref<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPair) const
+QSharedPointer<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPair) const
 {
     long long symbolValue = 4537077LL * leftPair.getValue() + rightPair.getValue();
     String text(common::StringUtils::intToStr(symbolValue));
@@ -109,23 +109,23 @@ Ref<Result> RSS14Reader::constructResult(Pair leftPair, Pair rightPair) const
     }
     buffer.append(common::StringUtils::intToStr(checkDigit));
 
-    ArrayRef< Ref<ResultPoint> > leftPoints = leftPair.getFinderPattern().getResultPoints();
-    ArrayRef< Ref<ResultPoint> > rightPoints = rightPair.getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > leftPoints = leftPair.getFinderPattern().getResultPoints();
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > rightPoints = rightPair.getFinderPattern().getResultPoints();
 
-    ArrayRef< Ref<ResultPoint> > resultPoints(4);
-    resultPoints[0] = leftPoints[0];
-    resultPoints[1] = leftPoints[1];
-    resultPoints[2] = rightPoints[0];
-    resultPoints[3] = rightPoints[1];
+    QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(4));
+    (*resultPoints)[0] = (*leftPoints)[0];
+    (*resultPoints)[1] = (*leftPoints)[1];
+    (*resultPoints)[2] = (*rightPoints)[0];
+    (*resultPoints)[3] = (*rightPoints)[1];
 
-    return Ref<Result>(new Result(
-                           Ref<String>(new String(buffer)),
-                           nullptr,
+    return QSharedPointer<Result>(new Result(
+                           QSharedPointer<String>(new String(buffer)),
+                           QSharedPointer<std::vector<zxing::byte>>(),
                            resultPoints,
                            BarcodeFormat::RSS_14));
 }
 
-Pair RSS14Reader::decodePair(Ref<BitArray> row, bool right, int rowNumber, DecodeHints hints)
+Pair RSS14Reader::decodePair(QSharedPointer<BitArray> row, bool right, int rowNumber, DecodeHints hints)
 {
     try {
         std::vector<int> startEnd = findFinderPattern(row, right);
@@ -134,7 +134,7 @@ Pair RSS14Reader::decodePair(Ref<BitArray> row, bool right, int rowNumber, Decod
         }
         FinderPattern pattern = parseFoundFinderPattern(row, rowNumber, right, startEnd);
 
-        Ref<ResultPointCallback> resultPointCallback = hints.getResultPointCallback();
+        QSharedPointer<ResultPointCallback> resultPointCallback = hints.getResultPointCallback();
 
         if (resultPointCallback != nullptr) {
             startEnd = pattern.getStartEnd();
@@ -157,7 +157,7 @@ Pair RSS14Reader::decodePair(Ref<BitArray> row, bool right, int rowNumber, Decod
     }
 }
 
-DataCharacter RSS14Reader::decodeDataCharacter(Ref<BitArray> row, FinderPattern pattern, bool outsideChar)
+DataCharacter RSS14Reader::decodeDataCharacter(QSharedPointer<BitArray> row, FinderPattern pattern, bool outsideChar)
 {
 
     std::vector<int>& counters = getDataCharacterCounters();
@@ -249,7 +249,7 @@ DataCharacter RSS14Reader::decodeDataCharacter(Ref<BitArray> row, FinderPattern 
 
 }
 
-std::vector<int> RSS14Reader::findFinderPattern(Ref<BitArray> row, bool rightFinderPattern)
+std::vector<int> RSS14Reader::findFinderPattern(QSharedPointer<BitArray> row, bool rightFinderPattern)
 {
     std::vector<int>& counters = getDecodeFinderCounters();
     counters[0] = 0;
@@ -296,7 +296,7 @@ std::vector<int> RSS14Reader::findFinderPattern(Ref<BitArray> row, bool rightFin
 
 }
 
-FinderPattern RSS14Reader::parseFoundFinderPattern(Ref<BitArray> row, int rowNumber, bool right, std::vector<int> startEnd)
+FinderPattern RSS14Reader::parseFoundFinderPattern(QSharedPointer<BitArray> row, int rowNumber, bool right, std::vector<int> startEnd)
 {
     // Actually we found elements 2-5
     bool firstIsBlack = row->get(startEnd[0]);
@@ -324,7 +324,7 @@ FinderPattern RSS14Reader::parseFoundFinderPattern(Ref<BitArray> row, int rowNum
         start = row->getSize() - 1 - start;
         end = row->getSize() - 1 - end;
     }
-    return new FinderPattern(value, {firstElementStart, startEnd[1]}, start, end, rowNumber);
+    return FinderPattern(value, {firstElementStart, startEnd[1]}, start, end, rowNumber);
 }
 
 void RSS14Reader::adjustOddEvenCounts(bool outsideChar, int numModules)

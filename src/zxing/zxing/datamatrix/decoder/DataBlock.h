@@ -22,25 +22,24 @@
  */
 
 #include <vector>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/datamatrix/Version.h>
 
 namespace zxing {
 namespace datamatrix {
 
-class DataBlock : public Counted {
+class DataBlock  {
 private:
   int numDataCodewords_;
-  ArrayRef<zxing::byte> codewords_;
+  QSharedPointer<std::vector<zxing::byte>> codewords_;
 
-  DataBlock(int numDataCodewords, ArrayRef<zxing::byte> codewords);
+  DataBlock(int numDataCodewords, QSharedPointer<std::vector<zxing::byte>> codewords);
 
 public:  
-  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<zxing::byte> rawCodewords, Ref<Version>version);
+  static std::vector<QSharedPointer<DataBlock> > getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, QSharedPointer<Version>version);
 
   int getNumDataCodewords();
-  ArrayRef<zxing::byte> getCodewords();
+  QSharedPointer<std::vector<zxing::byte>> getCodewords();
 };
 
 }

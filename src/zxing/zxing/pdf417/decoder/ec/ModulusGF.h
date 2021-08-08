@@ -18,8 +18,7 @@
  * 2012-09-17 HFN translation from Java into C++
  */
 
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>
 
@@ -42,17 +41,17 @@ class ModulusGF {
 	static ModulusGF PDF417_GF;
 
   private:
-	ArrayRef<int> expTable_;
-	ArrayRef<int> logTable_;
-	Ref<ModulusPoly> zero_;
-	Ref<ModulusPoly> one_;
+	QSharedPointer<std::vector<int>> expTable_;
+	QSharedPointer<std::vector<int>> logTable_;
+	QSharedPointer<ModulusPoly> zero_;
+	QSharedPointer<ModulusPoly> one_;
 	int modulus_;
 
   public:
 	ModulusGF(int modulus, int generator);
-	Ref<ModulusPoly> getZero();
-	Ref<ModulusPoly> getOne();
-	Ref<ModulusPoly> buildMonomial(int degree, int coefficient);
+	QSharedPointer<ModulusPoly> getZero();
+	QSharedPointer<ModulusPoly> getOne();
+	QSharedPointer<ModulusPoly> buildMonomial(int degree, int coefficient);
 
 	int add(int a, int b);
 	int subtract(int a, int b);

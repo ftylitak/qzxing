@@ -33,13 +33,13 @@ class PDF417Reader : public Reader {
  private:
   decoder::Decoder decoder;
 			
-  static Ref<BitMatrix> extractPureBits(Ref<BitMatrix> image);
-  static int moduleSize(ArrayRef<int> leftTopBlack, Ref<BitMatrix> image);
-  static int findPatternStart(int x, int y, Ref<BitMatrix> image);
-  static int findPatternEnd(int x, int y, Ref<BitMatrix> image);
+  static QSharedPointer<BitMatrix> extractPureBits(QSharedPointer<BitMatrix> image);
+  static int moduleSize(QSharedPointer<std::vector<int>> leftTopBlack, QSharedPointer<BitMatrix> image);
+  static int findPatternStart(int x, int y, QSharedPointer<BitMatrix> image);
+  static int findPatternEnd(int x, int y, QSharedPointer<BitMatrix> image);
 
  public:
-  Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
   void reset();
 };
 

@@ -41,7 +41,7 @@ class AI013103decoder : public AI013x0xDecoder
 {
 
 public:
-    AI013103decoder(Ref<BitArray> information);
+    AI013103decoder(QSharedPointer<BitArray> information);
 
 protected:
     virtual void addWeightCode(String &buf, int) override;

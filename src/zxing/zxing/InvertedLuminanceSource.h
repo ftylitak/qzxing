@@ -25,22 +25,22 @@ namespace zxing {
 class InvertedLuminanceSource : public LuminanceSource {
 private:
   typedef LuminanceSource Super;
-  const Ref<LuminanceSource> delegate;
+  const QSharedPointer<LuminanceSource> delegate;
 
 public:
-  InvertedLuminanceSource(Ref<LuminanceSource> const&);
+  InvertedLuminanceSource(QSharedPointer<LuminanceSource> const&);
 
-  ArrayRef<zxing::byte> getRow(int y, ArrayRef<zxing::byte> row) const;
-  ArrayRef<zxing::byte> getMatrix() const;
+  QSharedPointer<std::vector<zxing::byte>> getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const;
+  QSharedPointer<std::vector<zxing::byte>> getMatrix() const;
 
   boolean isCropSupported() const;
-  Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
+  QSharedPointer<LuminanceSource> crop(int left, int top, int width, int height) const;
 
   boolean isRotateSupported() const;
 
-  virtual Ref<LuminanceSource> invert() const;
+  virtual QSharedPointer<LuminanceSource> invert() const;
 
-  Ref<LuminanceSource> rotateCounterClockwise() const;
+  QSharedPointer<LuminanceSource> rotateCounterClockwise() const;
 };
 
 }

@@ -23,14 +23,14 @@ protected:
 
 private:
     void corrupt(std::vector<byte> &received, int howMany, int max);
-    void testEncodeDecodeRandom(Ref<GenericGF> field, int dataSize, int ecSize);
-    void testEncodeDecode(Ref<GenericGF> field,
+    void testEncodeDecodeRandom(QSharedPointer<GenericGF> field, int dataSize, int ecSize);
+    void testEncodeDecode(QSharedPointer<GenericGF> field,
                           const std::vector<byte> &dataWords,
                           const std::vector<byte> & ecWords);
-    void testEncoder(Ref<GenericGF> field,
+    void testEncoder(QSharedPointer<GenericGF> field,
                      const std::vector<byte> &dataWords,
                      const std::vector<byte> & ecWords);
-    void testDecoder(Ref<GenericGF> field,
+    void testDecoder(QSharedPointer<GenericGF> field,
                      const std::vector<byte> &dataWords,
                      const std::vector<byte> & ecWords);
 };

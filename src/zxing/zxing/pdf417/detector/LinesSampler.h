@@ -35,66 +35,66 @@ private:
   static std::vector<float> init_ratios_table();
   static const int BARCODE_START_OFFSET = 2;
 
-  Ref<BitMatrix> linesMatrix_;
+  QSharedPointer<BitMatrix> linesMatrix_;
   int symbolsPerLine_;
   int dimension_;
   
-  static std::vector<Ref<ResultPoint> > findVertices(Ref<BitMatrix> matrix, int rowStep);
-  static std::vector<Ref<ResultPoint> > findVertices180(Ref<BitMatrix> matrix, int rowStep);
+  static std::vector<QSharedPointer<ResultPoint> > findVertices(QSharedPointer<BitMatrix> matrix, int rowStep);
+  static std::vector<QSharedPointer<ResultPoint> > findVertices180(QSharedPointer<BitMatrix> matrix, int rowStep);
 
-  static ArrayRef<int> findGuardPattern(Ref<BitMatrix> matrix,
+  static QSharedPointer<std::vector<int>> findGuardPattern(QSharedPointer<BitMatrix> matrix,
                                         int column,
                                         int row,
                                         int width,
                                         bool whiteFirst,
                                         const int pattern[],
                                         int patternSize,
-                                        ArrayRef<int> counters);
-  static int patternMatchVariance(ArrayRef<int> counters, const int pattern[],
+                                        QSharedPointer<std::vector<int>> counters);
+  static int patternMatchVariance(QSharedPointer<std::vector<int>> counters, const int pattern[],
                                   int maxIndividualVariance);
 
-  static void correctVertices(Ref<BitMatrix> matrix,
-                              std::vector<Ref<ResultPoint> > &vertices,
+  static void correctVertices(QSharedPointer<BitMatrix> matrix,
+                              std::vector<QSharedPointer<ResultPoint> > &vertices,
                               bool upsideDown);
-  static void findWideBarTopBottom(Ref<BitMatrix> matrix,
-                                   std::vector<Ref<ResultPoint> > &vertices,
+  static void findWideBarTopBottom(QSharedPointer<BitMatrix> matrix,
+                                   std::vector<QSharedPointer<ResultPoint> > &vertices,
                                    int offsetVertice,
                                    int startWideBar,
                                    int lenWideBar,
                                    int lenPattern,
                                    int nIncrement);
-  static void findCrossingPoint(std::vector<Ref<ResultPoint> > &vertices,
+  static void findCrossingPoint(std::vector<QSharedPointer<ResultPoint> > &vertices,
                                 int idxResult,
                                 int idxLineA1,int idxLineA2,
                                 int idxLineB1,int idxLineB2,
-                                Ref<BitMatrix> matrix);
-  static float computeModuleWidth(std::vector<Ref<ResultPoint> > &vertices);
-  static int computeDimension(Ref<ResultPoint> topLeft,
-                              Ref<ResultPoint> topRight,
-                              Ref<ResultPoint> bottomLeft,
-                              Ref<ResultPoint> bottomRight,
+                                QSharedPointer<BitMatrix> matrix);
+  static float computeModuleWidth(std::vector<QSharedPointer<ResultPoint> > &vertices);
+  static int computeDimension(QSharedPointer<ResultPoint> topLeft,
+                              QSharedPointer<ResultPoint> topRight,
+                              QSharedPointer<ResultPoint> bottomLeft,
+                              QSharedPointer<ResultPoint> bottomRight,
                               float moduleWidth);
-  int computeYDimension(Ref<ResultPoint> topLeft,
-                        Ref<ResultPoint> topRight,
-                        Ref<ResultPoint> bottomLeft,
-                        Ref<ResultPoint> bottomRight,
+  int computeYDimension(QSharedPointer<ResultPoint> topLeft,
+                        QSharedPointer<ResultPoint> topRight,
+                        QSharedPointer<ResultPoint> bottomLeft,
+                        QSharedPointer<ResultPoint> bottomRight,
                         float moduleWidth);
 
-   Ref<BitMatrix> sampleLines(std::vector<Ref<ResultPoint> > const &vertices,
+   QSharedPointer<BitMatrix> sampleLines(std::vector<QSharedPointer<ResultPoint> > const &vertices,
                               int dimensionY,
                               int dimension);
 
   static void codewordsToBitMatrix(std::vector<std::vector<int> > &codewords,
-                                   Ref<BitMatrix> &matrix);
+                                   QSharedPointer<BitMatrix> &matrix);
   static int calculateClusterNumber(int codeword);
-  static Ref<BitMatrix> sampleGrid(Ref<BitMatrix> image,
+  static QSharedPointer<BitMatrix> sampleGrid(QSharedPointer<BitMatrix> image,
                                    int dimension);
   static void computeSymbolWidths(std::vector<float>& symbolWidths,
-                                  const int symbolsPerLine, Ref<BitMatrix> linesMatrix);
+                                  const int symbolsPerLine, QSharedPointer<BitMatrix> linesMatrix);
   static void linesMatrixToCodewords(std::vector<std::vector<int> > &clusterNumbers,
                                      const int symbolsPerLine,
                                      const std::vector<float> &symbolWidths,
-                                     Ref<BitMatrix> linesMatrix,
+                                     QSharedPointer<BitMatrix> linesMatrix,
                                      std::vector<std::vector<int> > &codewords);
   static std::vector<std::vector<std::map<int, int> > >
       distributeVotes(const int symbolsPerLine,
@@ -111,8 +111,8 @@ private:
   static Point intersection(Line a, Line b);
 
 public:
-  LinesSampler(Ref<BitMatrix> linesMatrix, int dimension);
-  Ref<BitMatrix> sample();
+  LinesSampler(QSharedPointer<BitMatrix> linesMatrix, int dimension);
+  QSharedPointer<BitMatrix> sample();
 };
 
 }

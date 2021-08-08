@@ -38,7 +38,7 @@ namespace zxing {
 			counter_++;
 		}
 		
-		bool CornerPoint::equals(Ref<CornerPoint> other) const {
+		bool CornerPoint::equals(QSharedPointer<CornerPoint> other) const {
 			return posX_ == other->getX() && posY_ == other->getY();
 		}
 		

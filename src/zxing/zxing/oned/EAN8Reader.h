@@ -34,7 +34,7 @@ class EAN8Reader : public UPCEANReader {
  public:
   EAN8Reader();
 
-  int decodeMiddle(Ref<BitArray> row,
+  int decodeMiddle(QSharedPointer<BitArray> row,
                    Range const& startRange,
                    std::string& resultString);
 

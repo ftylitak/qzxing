@@ -21,14 +21,13 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitArray.h>
-#include <zxing/common/Array.h>
 #include <limits>
 
 namespace zxing {
 
-class BitMatrix : public Counted {
+class BitMatrix  {
 public:
   static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
@@ -36,7 +35,7 @@ private:
   int width;
   int height;
   int rowSize;
-  ArrayRef<int> bits;
+  QSharedPointer<std::vector<int>> bits;
 
 public:
   BitMatrix(int dimension);
@@ -46,12 +45,12 @@ public:
 
   bool get(int x, int y) const {
     int offset = y * rowSize + (x >> 5);
-    return ((((unsigned)bits[offset]) >> (x & 0x1f)) & 1) != 0;
+    return ((((unsigned)(*bits)[offset]) >> (x & 0x1f)) & 1) != 0;
   }
 
   void set(int x, int y) {
     int offset = y * rowSize + (x >> 5);
-    bits[offset] |= 1 << (x & 0x1f);
+    (*bits)[offset] |= 1 << (x & 0x1f);
   }
 
   void flip(int x, int y);
@@ -59,15 +58,15 @@ public:
 
   void clear();
   void setRegion(int left, int top, int width, int height);
-  Ref<BitArray> getRow(int y, Ref<BitArray> row);
-  void setRow(int y, Ref<BitArray> row);
+  QSharedPointer<BitArray> getRow(int y, QSharedPointer<BitArray> row);
+  void setRow(int y, QSharedPointer<BitArray> row);
 
   int getWidth() const;
   int getHeight() const;
 
-  ArrayRef<int> getTopLeftOnBit() const;
-  ArrayRef<int> getBottomRightOnBit() const;
-  ArrayRef<int> getEnclosingRectangle() const;
+  QSharedPointer<std::vector<int>> getTopLeftOnBit() const;
+  QSharedPointer<std::vector<int>> getBottomRightOnBit() const;
+  QSharedPointer<std::vector<int>> getEnclosingRectangle() const;
 
   friend std::ostream& operator<<(std::ostream &out, const BitMatrix &bm);
   const char *description();

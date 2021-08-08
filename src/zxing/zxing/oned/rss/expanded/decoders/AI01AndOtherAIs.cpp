@@ -5,7 +5,7 @@ namespace zxing {
 namespace oned {
 namespace rss {
 
-AI01AndOtherAIs::AI01AndOtherAIs(Ref<BitArray> information)
+AI01AndOtherAIs::AI01AndOtherAIs(QSharedPointer<BitArray> information)
     : AI01decoder(information)
 {
 

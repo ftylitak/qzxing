@@ -36,13 +36,13 @@ class UPCEANReader : public OneDReader {
   static const int MAX_AVG_VARIANCE;
   static const int MAX_INDIVIDUAL_VARIANCE;
 
-  static Range findStartGuardPattern(Ref<BitArray> row);
+  static Range findStartGuardPattern(QSharedPointer<BitArray> row);
 
-  virtual Range decodeEnd(Ref<BitArray> row, int endStart);
+  virtual Range decodeEnd(QSharedPointer<BitArray> row, int endStart);
 
-  static bool checkStandardUPCEANChecksum(Ref<String> const& s);
+  static bool checkStandardUPCEANChecksum(QSharedPointer<String> const& s);
 
-  static Range findGuardPattern(Ref<BitArray> row,
+  static Range findGuardPattern(QSharedPointer<BitArray> row,
                                 int rowOffset,
                                 bool whiteFirst,
                                 std::vector<int> const& pattern,
@@ -56,7 +56,7 @@ public:
   static const std::vector<int const*> L_PATTERNS;
   static const std::vector<int const*> L_AND_G_PATTERNS;
 
-  static Range findGuardPattern(Ref<BitArray> row,
+  static Range findGuardPattern(QSharedPointer<BitArray> row,
                                 int rowOffset,
                                 bool whiteFirst,
                                 std::vector<int> const& pattern);
@@ -64,19 +64,19 @@ public:
 public:
   UPCEANReader();
 
-  virtual int decodeMiddle(Ref<BitArray> row,
+  virtual int decodeMiddle(QSharedPointer<BitArray> row,
                            Range const& startRange,
                            std::string& resultString) = 0;
 
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints);
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, Range const& range, zxing::DecodeHints hints = DecodeHints());
+  virtual QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints);
+  virtual QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, Range const& range, zxing::DecodeHints hints = DecodeHints());
 
-  static int decodeDigit(Ref<BitArray> row,
+  static int decodeDigit(QSharedPointer<BitArray> row,
                          std::vector<int>& counters,
                          int rowOffset,
                          std::vector<int const*> const& patterns);
 
-  virtual bool checkChecksum(Ref<String> const& s);
+  virtual bool checkChecksum(QSharedPointer<String> const& s);
 
   virtual BarcodeFormat getBarcodeFormat() = 0;
   virtual ~UPCEANReader();

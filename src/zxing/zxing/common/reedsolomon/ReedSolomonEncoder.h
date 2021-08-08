@@ -3,7 +3,6 @@
 
 #include <zxing/common/reedsolomon/GenericGFPoly.h>
 #include <zxing/common/reedsolomon/GenericGF.h>
-#include <zxing/common/Array.h>
 #include <zxing/common/Types.h>
 
 namespace zxing {
@@ -11,13 +10,13 @@ namespace zxing {
 class ReedSolomonEncoder
 {
 private:
-    Ref<GenericGF> field_;
-    std::vector< Ref< GenericGFPoly > >cachedGenerators_;
+    QSharedPointer<GenericGF> field_;
+    std::vector< QSharedPointer< GenericGFPoly > >cachedGenerators_;
 
-    Ref<GenericGFPoly> buildGenerator(int degree);
+    QSharedPointer<GenericGFPoly> buildGenerator(int degree);
 
 public:
-    ReedSolomonEncoder(Ref<GenericGF> field);
+    ReedSolomonEncoder(QSharedPointer<GenericGF> field);
 
     void encode(std::vector<zxing::byte> &toEncode, int ecBytes);
 };

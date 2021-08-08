@@ -29,7 +29,7 @@ namespace oned {
 
 class OneDReader : public Reader {
 private:
-  Ref<Result> doDecode(Ref<BinaryBitmap> image, DecodeHints hints);
+  QSharedPointer<Result> doDecode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 
 protected:
   static const int INTEGER_MATH_SHIFT = 8;
@@ -62,17 +62,17 @@ public:
     }
   };
 
-  virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 
   // Implementations must not throw any exceptions. If a barcode is not found on this row,
-  // a empty ref should be returned e.g. return Ref<Result>();
-  virtual Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row, DecodeHints hints) = 0;
+  // a empty ref should be returned e.g. return QSharedPointer<Result>();
+  virtual QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints) = 0;
 
-  static void recordPattern(Ref<BitArray> row,
+  static void recordPattern(QSharedPointer<BitArray> row,
                             int start,
                             std::vector<int>& counters);
 
-  static void recordPatternInReverse(Ref<BitArray> row,
+  static void recordPatternInReverse(QSharedPointer<BitArray> row,
                                      int start,
                                      std::vector<int>& counters);
   virtual ~OneDReader();

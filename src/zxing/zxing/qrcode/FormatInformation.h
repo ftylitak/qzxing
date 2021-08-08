@@ -21,13 +21,13 @@
  */
 
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <iostream>
 
 namespace zxing {
 namespace qrcode {
 
-class FormatInformation : public Counted {
+class FormatInformation  {
 private:
   static int FORMAT_INFO_MASK_QR;
   static int FORMAT_INFO_DECODE_LOOKUP[][2];
@@ -41,8 +41,8 @@ private:
 
 public:
   static int numBitsDiffering(int a, int b);
-  static Ref<FormatInformation> decodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2);
-  static Ref<FormatInformation> doDecodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2);
+  static QSharedPointer<FormatInformation> decodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2);
+  static QSharedPointer<FormatInformation> doDecodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2);
   ErrorCorrectionLevel &getErrorCorrectionLevel();
   char getDataMask();
   friend bool operator==(const FormatInformation &a, const FormatInformation &b);

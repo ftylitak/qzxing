@@ -32,7 +32,7 @@ namespace {
   const int MINIMUM_DIMENSION = BLOCK_SIZE * 5;
 }
 
-HybridBinarizer::HybridBinarizer(Ref<LuminanceSource> source) :
+HybridBinarizer::HybridBinarizer(QSharedPointer<LuminanceSource> source) :
   GlobalHistogramBinarizer(source), matrix_(NULL), cached_row_(NULL) {
 }
 
@@ -40,9 +40,9 @@ HybridBinarizer::~HybridBinarizer() {
 }
 
 
-Ref<Binarizer>
-HybridBinarizer::createBinarizer(Ref<LuminanceSource> source) {
-  return Ref<Binarizer> (new HybridBinarizer(source));
+QSharedPointer<Binarizer>
+HybridBinarizer::createBinarizer(QSharedPointer<LuminanceSource> source) {
+  return QSharedPointer<Binarizer> (new HybridBinarizer(source));
 }
 
 
@@ -51,7 +51,7 @@ HybridBinarizer::createBinarizer(Ref<LuminanceSource> source) {
  * constructor instead, but there are some advantages to doing it lazily, such as making
  * profiling easier, and not doing heavy lifting when callers don't expect it.
  */
-Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
+QSharedPointer<BitMatrix> HybridBinarizer::getBlackMatrix() {
   if (matrix_) {
     return matrix_;
   }
@@ -59,7 +59,7 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
   int width = source.getWidth();
   int height = source.getHeight();
   if (width >= MINIMUM_DIMENSION && height >= MINIMUM_DIMENSION) {
-    ArrayRef<zxing::byte> luminances = source.getMatrix();
+    QSharedPointer<std::vector<zxing::byte>> luminances = source.getMatrix();
     int subWidth = width >> BLOCK_SIZE_POWER;
     if ((width & BLOCK_SIZE_MASK) != 0) {
       subWidth++;
@@ -68,10 +68,10 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
     if ((height & BLOCK_SIZE_MASK) != 0) {
       subHeight++;
     }
-    ArrayRef<int> blackPoints =
+    QSharedPointer<std::vector<int>> blackPoints =
       calculateBlackPoints(luminances, subWidth, subHeight, width, height);
 
-    Ref<BitMatrix> newMatrix (new BitMatrix(width, height));
+    QSharedPointer<BitMatrix> newMatrix (new BitMatrix(width, height));
     calculateThresholdForBlock(luminances,
                                subWidth,
                                subHeight,
@@ -94,13 +94,13 @@ namespace {
 }
 
 void
-HybridBinarizer::calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
+HybridBinarizer::calculateThresholdForBlock(QSharedPointer<std::vector<zxing::byte>> luminances,
                                             int subWidth,
                                             int subHeight,
                                             int width,
                                             int height,
-                                            ArrayRef<int> blackPoints,
-                                            Ref<BitMatrix> const& matrix) {
+                                            QSharedPointer<std::vector<int>> blackPoints,
+                                            QSharedPointer<BitMatrix> const& matrix) {
   for (int y = 0; y < subHeight; y++) {
     int yoffset = y << BLOCK_SIZE_POWER;
     int maxYOffset = height - BLOCK_SIZE;
@@ -117,7 +117,7 @@ HybridBinarizer::calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
       int top = cap(y, 2, subHeight - 3);
       int sum = 0;
       for (int z = -2; z <= 2; z++) {
-        int *blackRow = &blackPoints[(top + z) * subWidth];
+        int *blackRow = &(*blackPoints)[(size_t)(top + z) * (size_t)subWidth];
         sum += blackRow[left - 2];
         sum += blackRow[left - 1];
         sum += blackRow[left];
@@ -130,17 +130,17 @@ HybridBinarizer::calculateThresholdForBlock(ArrayRef<zxing::byte> luminances,
   }
 }
 
-void HybridBinarizer::thresholdBlock(ArrayRef<zxing::byte> luminances,
+void HybridBinarizer::thresholdBlock(QSharedPointer<std::vector<zxing::byte>> luminances,
                                      int xoffset,
                                      int yoffset,
                                      int threshold,
                                      int stride,
-                                     Ref<BitMatrix> const& matrix) {
+                                     QSharedPointer<BitMatrix> const& matrix) {
   for (int y = 0, offset = yoffset * stride + xoffset;
        y < BLOCK_SIZE;
        y++,  offset += stride) {
     for (int x = 0; x < BLOCK_SIZE; x++) {
-      int pixel = luminances[offset + x] & 0xff;
+      int pixel = (*luminances)[offset + x] & 0xff;
       if (pixel <= threshold) {
         matrix->set(xoffset + x, yoffset + y);
       }
@@ -149,22 +149,22 @@ void HybridBinarizer::thresholdBlock(ArrayRef<zxing::byte> luminances,
 }
 
 namespace {
-  inline int getBlackPointFromNeighbors(ArrayRef<int> blackPoints, int subWidth, int x, int y) {
-    return (blackPoints[(y-1)*subWidth+x] +
-            2*blackPoints[y*subWidth+x-1] +
-            blackPoints[(y-1)*subWidth+x-1]) >> 2;
+  inline int getBlackPointFromNeighbors(QSharedPointer<std::vector<int>> blackPoints, int subWidth, int x, int y) {
+    return ((*blackPoints)[(y-1)*subWidth+x] +
+            2*(*blackPoints)[y*subWidth+x-1] +
+            (*blackPoints)[(y-1)*subWidth+x-1]) >> 2;
   }
 }
 
 
-ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<zxing::byte> luminances,
+QSharedPointer<std::vector<int>> HybridBinarizer::calculateBlackPoints(QSharedPointer<std::vector<zxing::byte>> luminances,
                                                     int subWidth,
                                                     int subHeight,
                                                     int width,
                                                     int height) {
   const int minDynamicRange = 24;
 
-  ArrayRef<int> blackPoints (subHeight * subWidth);
+  QSharedPointer<std::vector<int>> blackPoints (new std::vector<int>((size_t)subHeight * (size_t)subWidth));
   for (int y = 0; y < subHeight; y++) {
     int yoffset = y << BLOCK_SIZE_POWER;
     int maxYOffset = height - BLOCK_SIZE;
@@ -184,7 +184,7 @@ ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<zxing::byte> lumina
            yy < BLOCK_SIZE;
            yy++, offset += width) {
         for (int xx = 0; xx < BLOCK_SIZE; xx++) {
-          int pixel = luminances[offset + xx] & 0xFF;
+          int pixel = (*luminances)[offset + xx] & 0xFF;
           sum += pixel;
           // still looking for good contrast
           if (pixel < min) {
@@ -200,8 +200,8 @@ ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<zxing::byte> lumina
           // finish the rest of the rows quickly
           for (yy++, offset += width; yy < BLOCK_SIZE; yy++, offset += width) {
             for (int xx = 0; xx < BLOCK_SIZE; xx += 2) {
-              sum += luminances[offset + xx] & 0xFF;
-              sum += luminances[offset + xx + 1] & 0xFF;
+              sum += (*luminances)[offset + xx] & 0xFF;
+              sum += (*luminances)[offset + xx + 1] & 0xFF;
             }
           }
         }
@@ -218,7 +218,7 @@ ArrayRef<int> HybridBinarizer::calculateBlackPoints(ArrayRef<zxing::byte> lumina
           }
         }
       }
-      blackPoints[y * subWidth + x] = average;
+      (*blackPoints)[y * subWidth + x] = average;
     }
   }
   return blackPoints;

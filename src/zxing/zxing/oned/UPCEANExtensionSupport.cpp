@@ -29,7 +29,7 @@ namespace oned {
 
 static const std::vector<int> EXTENSION_START_PATTERN = { 1, 1, 2 };
 
-Ref<Result> UPCEANExtensionSupport::decodeRow(int rowNumber, Ref<BitArray> row, int rowOffset)
+QSharedPointer<Result> UPCEANExtensionSupport::decodeRow(int rowNumber, QSharedPointer<BitArray> row, int rowOffset)
 {
     UPCEANReader::Range extStartRange = UPCEANReader::findGuardPattern(row, rowOffset, false, EXTENSION_START_PATTERN);
 

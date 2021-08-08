@@ -20,12 +20,12 @@ Mode QRCode::getMode() const
     return mode_;
 }
 
-Ref<ErrorCorrectionLevel> QRCode::getECLevel() const
+QSharedPointer<ErrorCorrectionLevel> QRCode::getECLevel() const
 {
     return ecLevel_ptr_;
 }
 
-Ref<Version> QRCode::getVersion() const
+QSharedPointer<Version> QRCode::getVersion() const
 {
     return version_ptr_;
 }
@@ -35,7 +35,7 @@ int QRCode::getMaskPattern() const
     return maskPattern_;
 }
 
-Ref<ByteMatrix> QRCode::getMatrix() const
+QSharedPointer<ByteMatrix> QRCode::getMatrix() const
 {
     return matrix_ptr_;
 }
@@ -49,7 +49,7 @@ std::string QRCode::toString() const
     result << mode_.getName();
 
     result << "\n ecLevel: ";
-    if(!ecLevel_ptr_.empty())
+    if(!ecLevel_ptr_.isNull())
         result << ecLevel_ptr_->name();
     else
         result << "null";
@@ -83,12 +83,12 @@ void QRCode::setMode(const Mode& value)
     mode_ = value;
 }
 
-void QRCode::setECLevel(Ref<ErrorCorrectionLevel> value)
+void QRCode::setECLevel(QSharedPointer<ErrorCorrectionLevel> value)
 {
     ecLevel_ptr_ = value;
 }
 
-void QRCode::setVersion(Ref<Version> version)
+void QRCode::setVersion(QSharedPointer<Version> version)
 {
     version_ptr_ = version;
 }
@@ -98,7 +98,7 @@ void QRCode::setMaskPattern(int value)
     maskPattern_ = value;
 }
 
-void QRCode::setMatrix(Ref<ByteMatrix> value)
+void QRCode::setMatrix(QSharedPointer<ByteMatrix> value)
 {
     matrix_ptr_ = value;
 }

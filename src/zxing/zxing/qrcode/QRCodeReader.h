@@ -39,7 +39,7 @@ class QRCodeReader : public Reader {
   QRCodeReader();
   virtual ~QRCodeReader();
 			
-  Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+  QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }

@@ -23,8 +23,7 @@
 
 #include <zxing/pdf417/decoder/ec/ErrorCorrection.h>
 #include <zxing/pdf417/decoder/ec/ModulusGF.h>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 #include <zxing/common/BitMatrix.h>
 
@@ -46,13 +45,13 @@ private:
   static const int MAX_ERRORS;
   static const int MAX_EC_CODEWORDS;
 
-  void correctErrors(ArrayRef<int> codewords,
-		ArrayRef<int> erasures, int numECCodewords);
-  static void verifyCodewordCount(ArrayRef<int> codewords, int numECCodewords);
+  void correctErrors(QSharedPointer<std::vector<int>> codewords,
+		QSharedPointer<std::vector<int>> erasures, int numECCodewords);
+  static void verifyCodewordCount(QSharedPointer<std::vector<int>> codewords, int numECCodewords);
 
 public:
 
-  Ref<DecoderResult> decode(Ref<BitMatrix> bits, DecodeHints const &hints);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<BitMatrix> bits, DecodeHints const &hints);
 };
 
 }

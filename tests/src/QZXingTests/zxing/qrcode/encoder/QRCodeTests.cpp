@@ -25,7 +25,7 @@ void QRCodeTests::test()
     // First, test simple setters and getters.
     // We use numbers of version 7-H.
     qrCode.setMode(Mode::BYTE);
-    qrCode.setECLevel(Ref<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ErrorCorrectionLevel::H)));
+    qrCode.setECLevel(QSharedPointer<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ErrorCorrectionLevel::H)));
     qrCode.setVersion(Version::getVersionForNumber(7));
     qrCode.setMaskPattern(3);
 
@@ -33,7 +33,7 @@ void QRCodeTests::test()
     assertEquals(3, qrCode.getMaskPattern());
 
     // Prepare the matrix.
-    Ref<ByteMatrix> matrix(new ByteMatrix(45, 45));
+    QSharedPointer<ByteMatrix> matrix(new ByteMatrix(45, 45));
     // Just set bogus zero/one values.
     for (int y = 0; y < 45; ++y) {
         for (int x = 0; x < 45; ++x) {
@@ -43,7 +43,7 @@ void QRCodeTests::test()
 
     // Set the matrix.
     qrCode.setMatrix(matrix);
-    assertSame(matrix, qrCode.getMatrix());
+    assertSame(matrix.data(), qrCode.getMatrix().data());
 }
 
 void QRCodeTests::testToString1() {
@@ -63,10 +63,10 @@ void QRCodeTests::testToString2()
 {
     QRCode qrCode;
     qrCode.setMode(Mode::BYTE);
-    qrCode.setECLevel(Ref<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ErrorCorrectionLevel::H)));
+    qrCode.setECLevel(QSharedPointer<ErrorCorrectionLevel>(new ErrorCorrectionLevel(ErrorCorrectionLevel::H)));
     qrCode.setVersion(Version::getVersionForNumber(1));
     qrCode.setMaskPattern(3);
-    Ref<ByteMatrix> matrix(new ByteMatrix(21, 21));
+    QSharedPointer<ByteMatrix> matrix(new ByteMatrix(21, 21));
     for (int y = 0; y < 21; ++y) {
         for (int x = 0; x < 21; ++x) {
             matrix->set(x, y, (byte)((y + x) % 2));

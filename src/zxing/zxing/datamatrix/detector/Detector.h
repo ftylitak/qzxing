@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/DetectorResult.h>
 #include <zxing/common/BitMatrix.h>
 #include <zxing/common/PerspectiveTransform.h>
@@ -31,38 +31,38 @@
 namespace zxing {
 namespace datamatrix {
 
-class ResultPointsAndTransitions: public Counted {
+class ResultPointsAndTransitions {
   private:
-    Ref<ResultPoint> to_;
-    Ref<ResultPoint> from_;
+    QSharedPointer<ResultPoint> to_;
+    QSharedPointer<ResultPoint> from_;
     int transitions_;
 
   public:
     ResultPointsAndTransitions();
-    ResultPointsAndTransitions(Ref<ResultPoint> from, Ref<ResultPoint> to, int transitions);
-    Ref<ResultPoint> getFrom();
-    Ref<ResultPoint> getTo();
+    ResultPointsAndTransitions(QSharedPointer<ResultPoint> from, QSharedPointer<ResultPoint> to, int transitions);
+    QSharedPointer<ResultPoint> getFrom();
+    QSharedPointer<ResultPoint> getTo();
     int getTransitions();
 };
 
-class Detector: public Counted {
+class Detector {
   private:
-    Ref<BitMatrix> image_;
+    QSharedPointer<BitMatrix> image_;
 
   protected:
-    Ref<BitMatrix> sampleGrid(Ref<BitMatrix> image, int dimensionX, int dimensionY,
-        Ref<PerspectiveTransform> transform);
+    QSharedPointer<BitMatrix> sampleGrid(QSharedPointer<BitMatrix> image, int dimensionX, int dimensionY,
+        QSharedPointer<PerspectiveTransform> transform);
 
-    void insertionSort(std::vector<Ref<ResultPointsAndTransitions> >& vector);
+    void insertionSort(std::vector<QSharedPointer<ResultPointsAndTransitions> >& vector);
 
-    Ref<ResultPoint> correctTopRightRectangular(Ref<ResultPoint> bottomLeft,
-        Ref<ResultPoint> bottomRight, Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight,
+    QSharedPointer<ResultPoint> correctTopRightRectangular(QSharedPointer<ResultPoint> bottomLeft,
+        QSharedPointer<ResultPoint> bottomRight, QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight,
         int dimensionTop, int dimensionRight);
-    Ref<ResultPoint> correctTopRight(Ref<ResultPoint> bottomLeft, Ref<ResultPoint> bottomRight,
-        Ref<ResultPoint> topLeft, Ref<ResultPoint> topRight, int dimension);
-    bool isValid(Ref<ResultPoint> p);
-    int distance(Ref<ResultPoint> a, Ref<ResultPoint> b);
-    Ref<ResultPointsAndTransitions> transitionsBetween(Ref<ResultPoint> from, Ref<ResultPoint> to);
+    QSharedPointer<ResultPoint> correctTopRight(QSharedPointer<ResultPoint> bottomLeft, QSharedPointer<ResultPoint> bottomRight,
+        QSharedPointer<ResultPoint> topLeft, QSharedPointer<ResultPoint> topRight, int dimension);
+    bool isValid(QSharedPointer<ResultPoint> p);
+    int distance(QSharedPointer<ResultPoint> a, QSharedPointer<ResultPoint> b);
+    QSharedPointer<ResultPointsAndTransitions> transitionsBetween(QSharedPointer<ResultPoint> from, QSharedPointer<ResultPoint> to);
     int min(int a, int b) {
       return a > b ? b : a;
     }
@@ -75,17 +75,17 @@ class Detector: public Counted {
     }
 
   public:
-    Ref<BitMatrix> getImage();
-    Detector(Ref<BitMatrix> image);
+    QSharedPointer<BitMatrix> getImage();
+    Detector(QSharedPointer<BitMatrix> image);
 
-    virtual Ref<PerspectiveTransform> createTransform(Ref<ResultPoint> topLeft,
-        Ref<ResultPoint> topRight, Ref<ResultPoint> bottomLeft, Ref<ResultPoint> bottomRight,
+    virtual QSharedPointer<PerspectiveTransform> createTransform(QSharedPointer<ResultPoint> topLeft,
+        QSharedPointer<ResultPoint> topRight, QSharedPointer<ResultPoint> bottomLeft, QSharedPointer<ResultPoint> bottomRight,
         int dimensionX, int dimensionY);
 
-    Ref<DetectorResult> detect();
+    QSharedPointer<DetectorResult> detect();
 
   private:
-    int compare(Ref<ResultPointsAndTransitions> a, Ref<ResultPointsAndTransitions> b);
+    int compare(QSharedPointer<ResultPointsAndTransitions> a, QSharedPointer<ResultPointsAndTransitions> b);
 };
 
 }

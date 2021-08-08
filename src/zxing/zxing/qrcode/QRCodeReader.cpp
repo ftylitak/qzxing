@@ -32,12 +32,12 @@ namespace zxing {
         QRCodeReader::QRCodeReader() :decoder_() {
         }
         //TODO : see if any of the other files in the qrcode tree need tryHarder
-        Ref<Result> QRCodeReader::decode(Ref<BinaryBitmap> image, DecodeHints hints) {
+        QSharedPointer<Result> QRCodeReader::decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints) {
             Detector detector(image->getBlackMatrix());
-            Ref<DetectorResult> detectorResult(detector.detect(hints));
-            ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());
-            Ref<DecoderResult> decoderResult(decoder_.decode(detectorResult->getBits()));
-            Ref<Result> result(
+            QSharedPointer<DetectorResult> detectorResult(detector.detect(hints));
+            QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > points (detectorResult->getPoints());
+            QSharedPointer<DecoderResult> decoderResult(decoder_.decode(detectorResult->getBits()));
+            QSharedPointer<Result> result(
                                new Result(decoderResult->getText(), decoderResult->getRawBytes(), points, BarcodeFormat::QR_CODE, decoderResult->charSet()));
             return result;
         }

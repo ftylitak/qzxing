@@ -24,12 +24,11 @@
 #include <zxing/ReaderException.h>
 #include <sstream>
 
-using zxing::qrcode::Mode;
 using std::ostringstream;
+using zxing::qrcode::Mode;
 
 // VC++
 using zxing::qrcode::Version;
-using zxing::Ref;
 
 Mode Mode::TERMINATOR(0, 0, 0, 0x00, "TERMINATOR");
 Mode Mode::NUMERIC(10, 12, 14, 0x01, "NUMERIC");
@@ -42,17 +41,16 @@ Mode Mode::FNC1_FIRST_POSITION(0, 0, 0, 0x05, "FNC1_FIRST_POSITION");
 Mode Mode::FNC1_SECOND_POSITION(0, 0, 0, 0x09, "FNC1_SECOND_POSITION");
 Mode Mode::HANZI(8, 10, 12, 0x0D, "HANZI");
 
-Mode::Mode() :
-    characterCountBitsForVersions0To9_(0),
-    characterCountBitsForVersions10To26_(0),
-    characterCountBitsForVersions27AndHigher_(0),
-    bits_(0),
-    name_("")
-{}
+Mode::Mode() : characterCountBitsForVersions0To9_(0),
+               characterCountBitsForVersions10To26_(0),
+               characterCountBitsForVersions27AndHigher_(0),
+               bits_(0),
+               name_("")
+{
+}
 
-Mode::Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, const std::string &name) :
-    characterCountBitsForVersions0To9_(cbv0_9), characterCountBitsForVersions10To26_(cbv10_26),
-    characterCountBitsForVersions27AndHigher_(cbv27), bits_(bits), name_(name)
+Mode::Mode(int cbv0_9, int cbv10_26, int cbv27, int bits, const std::string &name) : characterCountBitsForVersions0To9_(cbv0_9), characterCountBitsForVersions10To26_(cbv10_26),
+                                                                                     characterCountBitsForVersions27AndHigher_(cbv27), bits_(bits), name_(name)
 {
 }
 
@@ -65,8 +63,10 @@ Mode::Mode(const zxing::qrcode::Mode &mode)
     name_ = mode.name_;
 }
 
-Mode& Mode::forBits(int bits) {
-    switch (bits) {
+Mode &Mode::forBits(int bits)
+{
+    switch (bits)
+    {
     case 0x0:
         return TERMINATOR;
     case 0x1:
@@ -95,19 +95,24 @@ Mode& Mode::forBits(int bits) {
     }
 }
 
-int Mode::getCharacterCountBits(Ref<Version> version) const
+int Mode::getCharacterCountBits(QSharedPointer<Version> version) const
 {
     int number = version->getVersionNumber();
-    if (number <= 9) {
+    if (number <= 9)
+    {
         return characterCountBitsForVersions0To9_;
-    } else if (number <= 26) {
+    }
+    else if (number <= 26)
+    {
         return characterCountBitsForVersions10To26_;
-    } else {
+    }
+    else
+    {
         return characterCountBitsForVersions27AndHigher_;
     }
 }
 
-Mode& Mode::operator=(const Mode& other)
+Mode &Mode::operator=(const Mode &other)
 {
     characterCountBitsForVersions0To9_ = other.characterCountBitsForVersions0To9_;
     characterCountBitsForVersions10To26_ = other.characterCountBitsForVersions10To26_;
@@ -118,13 +123,9 @@ Mode& Mode::operator=(const Mode& other)
     return *this;
 }
 
-bool Mode::operator==(const Mode& other)
+bool Mode::operator==(const Mode &other)
 {
-    return ( characterCountBitsForVersions0To9_ == other.characterCountBitsForVersions0To9_
-            && characterCountBitsForVersions10To26_ == other.characterCountBitsForVersions10To26_
-            && characterCountBitsForVersions27AndHigher_ == other.characterCountBitsForVersions27AndHigher_
-            && name_ == other.name_
-             && bits_ == other.bits_ );
+    return (characterCountBitsForVersions0To9_ == other.characterCountBitsForVersions0To9_ && characterCountBitsForVersions10To26_ == other.characterCountBitsForVersions10To26_ && characterCountBitsForVersions27AndHigher_ == other.characterCountBitsForVersions27AndHigher_ && name_ == other.name_ && bits_ == other.bits_);
 }
 
 bool Mode::operator!=(const zxing::qrcode::Mode &other)

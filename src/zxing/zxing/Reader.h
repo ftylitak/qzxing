@@ -26,12 +26,12 @@
 
 namespace zxing {
 
- class Reader : public Counted {
+ class Reader  {
   protected:
    Reader() {}
   public:
-   virtual Ref<Result> decode(Ref<BinaryBitmap> image);
-   virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints) = 0;
+   virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image);
+   virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints) = 0;
    virtual ~Reader();
 };
 

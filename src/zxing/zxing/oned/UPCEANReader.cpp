@@ -26,23 +26,23 @@
 #include <zxing/FormatException.h>
 #include <zxing/ChecksumException.h>
 
-using std::vector;
 using std::string;
+using std::vector;
 
-using zxing::Ref;
-using zxing::Result;
-using zxing::NotFoundException;
-using zxing::FormatException;
 using zxing::ChecksumException;
+using zxing::FormatException;
+using zxing::NotFoundException;
+using zxing::Result;
 using zxing::oned::UPCEANReader;
 
 // VC++
 using zxing::BitArray;
 using zxing::String;
 
-#define LEN(v) ((int)(sizeof(v)/sizeof(v[0])))
+#define LEN(v) ((int)(sizeof(v) / sizeof(v[0])))
 
-namespace {
+namespace
+{
 
   /**
    * Start/end guard pattern.
@@ -58,71 +58,73 @@ namespace {
    * "Odd", or "L" patterns used to encode UPC/EAN digits.
    */
   const int L_PATTERNS_[][4] = {
-    {3, 2, 1, 1}, // 0
-    {2, 2, 2, 1}, // 1
-    {2, 1, 2, 2}, // 2
-    {1, 4, 1, 1}, // 3
-    {1, 1, 3, 2}, // 4
-    {1, 2, 3, 1}, // 5
-    {1, 1, 1, 4}, // 6
-    {1, 3, 1, 2}, // 7
-    {1, 2, 1, 3}, // 8
-    {3, 1, 1, 2}  // 9
+      {3, 2, 1, 1}, // 0
+      {2, 2, 2, 1}, // 1
+      {2, 1, 2, 2}, // 2
+      {1, 4, 1, 1}, // 3
+      {1, 1, 3, 2}, // 4
+      {1, 2, 3, 1}, // 5
+      {1, 1, 1, 4}, // 6
+      {1, 3, 1, 2}, // 7
+      {1, 2, 1, 3}, // 8
+      {3, 1, 1, 2}  // 9
   };
 
   /**
    * As above but also including the "even", or "G" patterns used to encode UPC/EAN digits.
    */
   const int L_AND_G_PATTERNS_[][4] = {
-    {3, 2, 1, 1}, // 0
-    {2, 2, 2, 1}, // 1
-    {2, 1, 2, 2}, // 2
-    {1, 4, 1, 1}, // 3
-    {1, 1, 3, 2}, // 4
-    {1, 2, 3, 1}, // 5
-    {1, 1, 1, 4}, // 6
-    {1, 3, 1, 2}, // 7
-    {1, 2, 1, 3}, // 8
-    {3, 1, 1, 2}, // 9
-    {1, 1, 2, 3}, // 10 reversed 0
-    {1, 2, 2, 2}, // 11 reversed 1
-    {2, 2, 1, 2}, // 12 reversed 2
-    {1, 1, 4, 1}, // 13 reversed 3
-    {2, 3, 1, 1}, // 14 reversed 4
-    {1, 3, 2, 1}, // 15 reversed 5
-    {4, 1, 1, 1}, // 16 reversed 6
-    {2, 1, 3, 1}, // 17 reversed 7
-    {3, 1, 2, 1}, // 18 reversed 8
-    {2, 1, 1, 3}  // 19 reversed 9
+      {3, 2, 1, 1}, // 0
+      {2, 2, 2, 1}, // 1
+      {2, 1, 2, 2}, // 2
+      {1, 4, 1, 1}, // 3
+      {1, 1, 3, 2}, // 4
+      {1, 2, 3, 1}, // 5
+      {1, 1, 1, 4}, // 6
+      {1, 3, 1, 2}, // 7
+      {1, 2, 1, 3}, // 8
+      {3, 1, 1, 2}, // 9
+      {1, 1, 2, 3}, // 10 reversed 0
+      {1, 2, 2, 2}, // 11 reversed 1
+      {2, 2, 1, 2}, // 12 reversed 2
+      {1, 1, 4, 1}, // 13 reversed 3
+      {2, 3, 1, 1}, // 14 reversed 4
+      {1, 3, 2, 1}, // 15 reversed 5
+      {4, 1, 1, 1}, // 16 reversed 6
+      {2, 1, 3, 1}, // 17 reversed 7
+      {3, 1, 2, 1}, // 18 reversed 8
+      {2, 1, 1, 3}  // 19 reversed 9
   };
 }
 
 const int UPCEANReader::MAX_AVG_VARIANCE = (int)(PATTERN_MATCH_RESULT_SCALE_FACTOR * 0.48f);
 const int UPCEANReader::MAX_INDIVIDUAL_VARIANCE = (int)(PATTERN_MATCH_RESULT_SCALE_FACTOR * 0.7f);
 
-#define VECTOR_INIT(v) v, v + sizeof(v)/sizeof(v[0])
+#define VECTOR_INIT(v) v, v + sizeof(v) / sizeof(v[0])
 
 const vector<int>
-UPCEANReader::START_END_PATTERN (VECTOR_INIT(START_END_PATTERN_));
+    UPCEANReader::START_END_PATTERN(VECTOR_INIT(START_END_PATTERN_));
 
 const vector<int>
-UPCEANReader::MIDDLE_PATTERN (VECTOR_INIT(MIDDLE_PATTERN_));
-const vector<int const*>
-UPCEANReader::L_PATTERNS (VECTOR_INIT(L_PATTERNS_));
-const vector<int const*>
-UPCEANReader::L_AND_G_PATTERNS (VECTOR_INIT(L_AND_G_PATTERNS_));
+    UPCEANReader::MIDDLE_PATTERN(VECTOR_INIT(MIDDLE_PATTERN_));
+const vector<int const *>
+    UPCEANReader::L_PATTERNS(VECTOR_INIT(L_PATTERNS_));
+const vector<int const *>
+    UPCEANReader::L_AND_G_PATTERNS(VECTOR_INIT(L_AND_G_PATTERNS_));
 
 UPCEANReader::UPCEANReader() {}
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
+QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints)
+{
   return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
 }
 
-Ref<Result> UPCEANReader::decodeRow(int rowNumber,
-                                    Ref<BitArray> row,
-                                    Range const& startGuardRange,
-                                    zxing::DecodeHints hints) {
-  string& result = decodeRowStringBuffer;
+QSharedPointer<Result> UPCEANReader::decodeRow(int rowNumber,
+                                    QSharedPointer<BitArray> row,
+                                    Range const &startGuardRange,
+                                    zxing::DecodeHints hints)
+{
+  string &result = decodeRowStringBuffer;
   result.clear();
   int endStart = decodeMiddle(row, startGuardRange, result);
 
@@ -133,63 +135,77 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
 
   int end = endRange[1];
   int quietEnd = end + (end - endRange[0]);
-  if (quietEnd >= row->getSize() || !row->isRange(end, quietEnd, false)) {
+  if (quietEnd >= row->getSize() || !row->isRange(end, quietEnd, false))
+  {
     throw NotFoundException();
   }
 
   // UPC/EAN should never be less than 8 chars anyway
-  if (result.length() < 8) {
+  if (result.length() < 8)
+  {
     throw FormatException();
   }
 
-  Ref<String> resultString (new String(result));
-  if (!checkChecksum(resultString)) {
+  QSharedPointer<String> resultString(new String(result));
+  if (!checkChecksum(resultString))
+  {
     throw ChecksumException();
   }
-  
-  float left = (float) (startGuardRange[1] + startGuardRange[0]) / 2.0f;
-  float right = (float) (endRange[1] + endRange[0]) / 2.0f;
+
+  float left = (float)(startGuardRange[1] + startGuardRange[0]) / 2.0f;
+  float right = (float)(endRange[1] + endRange[0]) / 2.0f;
   BarcodeFormat format = getBarcodeFormat();
 
-  ArrayRef< Ref<ResultPoint> > resultPoints(2);
-  resultPoints[0] = Ref<ResultPoint>(new OneDResultPoint(left, static_cast<float> (rowNumber)));
-  resultPoints[1] = Ref<ResultPoint>(new OneDResultPoint(right, static_cast<float> (rowNumber)));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0] = QSharedPointer<ResultPoint>(new OneDResultPoint(left, static_cast<float>(rowNumber)));
+  (*resultPoints)[1] = QSharedPointer<ResultPoint>(new OneDResultPoint(right, static_cast<float>(rowNumber)));
 
-  Ref<Result> decodeResult (new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, format));
+  QSharedPointer<Result> decodeResult(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, format));
   int extensionLength = 0;
 
-  try {
-    Ref<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
-    if (extensionResult) {
+  try
+  {
+    QSharedPointer<Result> extensionResult = extensionReader.decodeRow(rowNumber, row, endRange[1]);
+    if (extensionResult)
+    {
       decodeResult->getMetadata().put(ResultMetadata::UPC_EAN_EXTENSION, extensionResult->getText()->getText());
       decodeResult->getMetadata().putAll(extensionResult->getMetadata());
       extensionLength = extensionResult->getText()->length();
 
-      for (const Ref<ResultPoint>& resultPoint: extensionResult->getResultPoints()->values()) {
+      for (const QSharedPointer<ResultPoint> &resultPoint : (*extensionResult->getResultPoints()))
+      {
         decodeResult->getResultPoints()->push_back(resultPoint);
       }
     }
-  } catch (NotFoundException const& /*nfe*/) {
-      // continue
+  }
+  catch (NotFoundException const & /*nfe*/)
+  {
+    // continue
   }
 
   std::set<int> allowedExtensions = hints.getAllowedEanExtensions();
-  if (allowedExtensions.size() > 0) {
+  if (allowedExtensions.size() > 0)
+  {
     bool valid = false;
-    for (int length: allowedExtensions) {
-      if (extensionLength == length) {
+    for (int length : allowedExtensions)
+    {
+      if (extensionLength == length)
+      {
         valid = true;
         break;
       }
     }
-    if (!valid) {
+    if (!valid)
+    {
       throw NotFoundException();
     }
   }
 
-  if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A) {
-    Ref<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
-    if (countryID) {
+  if (format == BarcodeFormat::EAN_13 || format == BarcodeFormat::UPC_A)
+  {
+    QSharedPointer<String> countryID = eanManSupport.lookupCountryIdentifier(resultString);
+    if (countryID)
+    {
       decodeResult->getMetadata().put(ResultMetadata::POSSIBLE_COUNTRY, countryID->getText());
     }
   }
@@ -197,14 +213,17 @@ Ref<Result> UPCEANReader::decodeRow(int rowNumber,
   return decodeResult;
 }
 
-UPCEANReader::Range UPCEANReader::findStartGuardPattern(Ref<BitArray> row) {
+UPCEANReader::Range UPCEANReader::findStartGuardPattern(QSharedPointer<BitArray> row)
+{
   bool foundStart = false;
   Range startRange;
   int nextStart = 0;
   vector<int> counters(START_END_PATTERN.size(), 0);
   // std::cerr << "fsgp " << *row << std::endl;
-  while (!foundStart) {
-    for(int i=0; i < (int)START_END_PATTERN.size(); ++i) {
+  while (!foundStart)
+  {
+    for (int i = 0; i < (int)START_END_PATTERN.size(); ++i)
+    {
       counters[i] = 0;
     }
     startRange = findGuardPattern(row, nextStart, false, START_END_PATTERN, counters);
@@ -215,29 +234,34 @@ UPCEANReader::Range UPCEANReader::findStartGuardPattern(Ref<BitArray> row) {
     // If this check would run off the left edge of the image, do not accept this barcode,
     // as it is very likely to be a false positive.
     int quietStart = start - (nextStart - start);
-    if (quietStart >= 0) {
+    if (quietStart >= 0)
+    {
       foundStart = row->isRange(quietStart, start, false);
     }
   }
   return startRange;
 }
 
-UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
+UPCEANReader::Range UPCEANReader::findGuardPattern(QSharedPointer<BitArray> row,
                                                    int rowOffset,
                                                    bool whiteFirst,
-                                                   vector<int> const& pattern) {
-  vector<int> counters (pattern.size(), 0);
+                                                   vector<int> const &pattern)
+{
+  vector<int> counters(pattern.size(), 0);
   return findGuardPattern(row, rowOffset, whiteFirst, pattern, counters);
 }
 
-UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
+UPCEANReader::Range UPCEANReader::findGuardPattern(QSharedPointer<BitArray> row,
                                                    int rowOffset,
                                                    bool whiteFirst,
-                                                   vector<int> const& pattern,
-                                                   vector<int>& counters) {
+                                                   vector<int> const &pattern,
+                                                   vector<int> &counters)
+{
   // cerr << "fGP " << rowOffset  << " " << whiteFirst << endl;
-  if (false) {
-    for(int i=0; i < (int)pattern.size(); ++i) {
+  if (false)
+  {
+    for (int i = 0; i < (int)pattern.size(); ++i)
+    {
       std::cerr << pattern[i];
     }
     std::cerr << std::endl;
@@ -248,23 +272,32 @@ UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
   rowOffset = whiteFirst ? row->getNextUnset(rowOffset) : row->getNextSet(rowOffset);
   int counterPosition = 0;
   int patternStart = rowOffset;
-  for (int x = rowOffset; x < width; x++) {
+  for (int x = rowOffset; x < width; x++)
+  {
     // std::cerr << "rg " << x << " " << row->get(x) << std::endl;
-    if (row->get(x) ^ isWhite) {
+    if (row->get(x) ^ isWhite)
+    {
       counters[counterPosition]++;
-    } else {
-      if (counterPosition == patternLength - 1) {
-        if (patternMatchVariance(counters, pattern, MAX_INDIVIDUAL_VARIANCE) < MAX_AVG_VARIANCE) {
+    }
+    else
+    {
+      if (counterPosition == patternLength - 1)
+      {
+        if (patternMatchVariance(counters, pattern, MAX_INDIVIDUAL_VARIANCE) < MAX_AVG_VARIANCE)
+        {
           return Range(patternStart, x);
         }
         patternStart += counters[0] + counters[1];
-        for (int y = 2; y < patternLength; y++) {
+        for (int y = 2; y < patternLength; y++)
+        {
           counters[y - 2] = counters[y];
         }
         counters[patternLength - 2] = 0;
         counters[patternLength - 1] = 0;
         counterPosition--;
-      } else {
+      }
+      else
+      {
         counterPosition++;
       }
       counters[counterPosition] = 1;
@@ -274,29 +307,36 @@ UPCEANReader::Range UPCEANReader::findGuardPattern(Ref<BitArray> row,
   throw NotFoundException();
 }
 
-UPCEANReader::Range UPCEANReader::decodeEnd(Ref<BitArray> row, int endStart) {
+UPCEANReader::Range UPCEANReader::decodeEnd(QSharedPointer<BitArray> row, int endStart)
+{
   return findGuardPattern(row, endStart, false, START_END_PATTERN);
 }
 
-int UPCEANReader::decodeDigit(Ref<BitArray> row,
-                              vector<int> & counters,
+int UPCEANReader::decodeDigit(QSharedPointer<BitArray> row,
+                              vector<int> &counters,
                               int rowOffset,
-                              vector<int const*> const& patterns) {
+                              vector<int const *> const &patterns)
+{
   recordPattern(row, rowOffset, counters);
   int bestVariance = MAX_AVG_VARIANCE; // worst variance we'll accept
   int bestMatch = -1;
   int max = int(patterns.size());
-  for (int i = 0; i < max; i++) {
-    int const* pattern (patterns[i]);
+  for (int i = 0; i < max; i++)
+  {
+    int const *pattern(patterns[i]);
     int variance = patternMatchVariance(counters, pattern, MAX_INDIVIDUAL_VARIANCE);
-    if (variance < bestVariance) {
+    if (variance < bestVariance)
+    {
       bestVariance = variance;
       bestMatch = i;
     }
   }
-  if (bestMatch >= 0) {
+  if (bestMatch >= 0)
+  {
     return bestMatch;
-  } else {
+  }
+  else
+  {
     throw NotFoundException();
   }
 }
@@ -304,7 +344,8 @@ int UPCEANReader::decodeDigit(Ref<BitArray> row,
 /**
  * @return {@link #checkStandardUPCEANChecksum(String)}
  */
-bool UPCEANReader::checkChecksum(Ref<String> const& s) {
+bool UPCEANReader::checkChecksum(QSharedPointer<String> const &s)
+{
   return checkStandardUPCEANChecksum(s);
 }
 
@@ -315,25 +356,31 @@ bool UPCEANReader::checkChecksum(Ref<String> const& s) {
  * @param s string of digits to check
  * @return true iff string of digits passes the UPC/EAN checksum algorithm
  */
-bool UPCEANReader::checkStandardUPCEANChecksum(Ref<String> const& s_) {
-  std::string const& s (s_->getText());
+bool UPCEANReader::checkStandardUPCEANChecksum(QSharedPointer<String> const &s_)
+{
+  std::string const &s(s_->getText());
   int length = int(s.length());
-  if (length == 0) {
+  if (length == 0)
+  {
     return false;
   }
 
   int sum = 0;
-  for (int i = length - 2; i >= 0; i -= 2) {
-    int digit = (int) s[i] - (int) '0';
-    if (digit < 0 || digit > 9) {
+  for (int i = length - 2; i >= 0; i -= 2)
+  {
+    int digit = (int)s[i] - (int)'0';
+    if (digit < 0 || digit > 9)
+    {
       return false;
     }
     sum += digit;
   }
   sum *= 3;
-  for (int i = length - 1; i >= 0; i -= 2) {
-    int digit = (int) s[i] - (int) '0';
-    if (digit < 0 || digit > 9) {
+  for (int i = length - 1; i >= 0; i -= 2)
+  {
+    int digit = (int)s[i] - (int)'0';
+    if (digit < 0 || digit > 9)
+    {
       return false;
     }
     sum += digit;
@@ -341,5 +388,6 @@ bool UPCEANReader::checkStandardUPCEANChecksum(Ref<String> const& s_) {
   return sum % 10 == 0;
 }
 
-UPCEANReader::~UPCEANReader() {
+UPCEANReader::~UPCEANReader()
+{
 }

@@ -45,7 +45,7 @@ class ExpandedPair
 public:
     ExpandedPair(DataCharacter leftChar,
                  DataCharacter rightChar,
-                 FinderPattern finderPattern);
+                 QSharedPointer<FinderPattern> finderPattern);
 
     ExpandedPair(const ExpandedPair* other = nullptr);
 
@@ -53,7 +53,7 @@ public:
 
     DataCharacter &getRightChar();
 
-    FinderPattern &getFinderPattern();
+    QSharedPointer<FinderPattern> getFinderPattern();
 
     bool mustBeLast() const;
 
@@ -66,7 +66,7 @@ public:
 private:
     DataCharacter m_leftChar;
     DataCharacter m_rightChar;
-    FinderPattern m_finderPattern;
+    QSharedPointer<FinderPattern> m_finderPattern;
 
 };
 

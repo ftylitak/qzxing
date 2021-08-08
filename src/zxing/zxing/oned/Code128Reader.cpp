@@ -18,7 +18,6 @@
 #include <zxing/ZXing.h>
 #include <zxing/oned/Code128Reader.h>
 #include <zxing/oned/OneDResultPoint.h>
-#include <zxing/common/Array.h>
 #include <zxing/ReaderException.h>
 #include <zxing/NotFoundException.h>
 #include <zxing/FormatException.h>
@@ -35,7 +34,7 @@ using std::string;
 using zxing::NotFoundException;
 using zxing::FormatException;
 using zxing::ChecksumException;
-using zxing::Ref;
+
 using zxing::Result;
 using zxing::oned::Code128Reader;
 
@@ -179,7 +178,7 @@ const int CODE_PATTERNS[CODE_PATTERNS_LENGTH][6] = {
 
 Code128Reader::Code128Reader(){}
 
-vector<int> Code128Reader::findStartPattern(Ref<BitArray> row){
+vector<int> Code128Reader::findStartPattern(QSharedPointer<BitArray> row){
   int width = row->getSize();
   int rowOffset = row->getNextSet(0);
 
@@ -229,7 +228,7 @@ vector<int> Code128Reader::findStartPattern(Ref<BitArray> row){
   throw NotFoundException();
 }
 
-int Code128Reader::decodeCode(Ref<BitArray> row, vector<int>& counters, int rowOffset) {
+int Code128Reader::decodeCode(QSharedPointer<BitArray> row, vector<int>& counters, int rowOffset) {
   recordPattern(row, rowOffset, counters);
   int bestVariance = MAX_AVG_VARIANCE; // worst variance we'll accept
   int bestMatch = -1;
@@ -249,7 +248,7 @@ int Code128Reader::decodeCode(Ref<BitArray> row, vector<int>& counters, int rowO
   }
 }
 
-Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints hints) {
+QSharedPointer<Result> Code128Reader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints hints) {
   bool convertFNC1 = hints.containsFormat(zxing::BarcodeFormat(zxing::BarcodeFormat::Value::ASSUME_GS1));
 
   vector<int> startPatternInfo (findStartPattern(row));
@@ -532,18 +531,16 @@ Ref<Result> Code128Reader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::De
   float right = lastStart + lastPatternSize / 2.0f;
 
   int rawCodesSize = rawCodes.size();
-  ArrayRef<zxing::byte> rawBytes (rawCodesSize);
+  QSharedPointer<std::vector<zxing::byte>> rawBytes (new std::vector<zxing::byte>(rawCodesSize));
   for (int i = 0; i < rawCodesSize; i++) {
-    rawBytes[i] = rawCodes[i];
+    (*rawBytes)[i] = rawCodes[i];
   }
 
-  ArrayRef< Ref<ResultPoint> > resultPoints(2);
-  resultPoints[0] =
-      Ref<OneDResultPoint>(new OneDResultPoint(left, (float) rowNumber));
-  resultPoints[1] =
-      Ref<OneDResultPoint>(new OneDResultPoint(right, (float) rowNumber));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(left, (float) rowNumber));
+  (*resultPoints)[1].reset(new OneDResultPoint(right, (float) rowNumber));
 
-  return Ref<Result>(new Result(Ref<String>(new String(result)), rawBytes, resultPoints,
+  return QSharedPointer<Result>(new Result(QSharedPointer<String>(new String(result)), rawBytes, resultPoints,
                                 BarcodeFormat::CODE_128));
 }
 

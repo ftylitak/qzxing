@@ -18,70 +18,69 @@
 #include <zxing/ZXing.h>
 #include <zxing/oned/ITFReader.h>
 #include <zxing/oned/OneDResultPoint.h>
-#include <zxing/common/Array.h>
 #include <zxing/ReaderException.h>
 #include <zxing/FormatException.h>
 #include <zxing/NotFoundException.h>
 #include <math.h>
 
 using std::vector;
-using zxing::Ref;
-using zxing::ArrayRef;
-using zxing::Array;
-using zxing::Result;
+
 using zxing::FormatException;
 using zxing::NotFoundException;
+using zxing::Result;
 using zxing::oned::ITFReader;
 
 // VC++
 using zxing::BitArray;
 
-#define VECTOR_INIT(v) v, v + sizeof(v)/sizeof(v[0])
+#define VECTOR_INIT(v) v, v + sizeof(v) / sizeof(v[0])
 
-namespace {
+namespace
+{
 
-const int W = 3; // Pixel width of a wide line
-const int N = 1; // Pixed width of a narrow line
+  const int W = 3; // Pixel width of a wide line
+  const int N = 1; // Pixed width of a narrow line
 
-const int DEFAULT_ALLOWED_LENGTHS_[] =
-{ 48, 44, 24, 20, 18, 16, 14, 12, 10, 8, 6 };
-const ArrayRef<int> DEFAULT_ALLOWED_LENGTHS (new Array<int>(VECTOR_INIT(DEFAULT_ALLOWED_LENGTHS_)));
+  const int DEFAULT_ALLOWED_LENGTHS_[] =
+      {48, 44, 24, 20, 18, 16, 14, 12, 10, 8, 6};
+  const QSharedPointer<std::vector<int>> DEFAULT_ALLOWED_LENGTHS(new std::vector<int>(VECTOR_INIT(DEFAULT_ALLOWED_LENGTHS_)));
 
-/**
+  /**
  * Start/end guard pattern.
  *
  * Note: The end pattern is reversed because the row is reversed before
  * searching for the END_PATTERN
  */
-const int START_PATTERN_[] = {N, N, N, N};
-const vector<int> START_PATTERN (VECTOR_INIT(START_PATTERN_));
+  const int START_PATTERN_[] = {N, N, N, N};
+  const vector<int> START_PATTERN(VECTOR_INIT(START_PATTERN_));
 
-const int END_PATTERN_REVERSED_[] = {N, N, W};
-const vector<int> END_PATTERN_REVERSED (VECTOR_INIT(END_PATTERN_REVERSED_));
+  const int END_PATTERN_REVERSED_[] = {N, N, W};
+  const vector<int> END_PATTERN_REVERSED(VECTOR_INIT(END_PATTERN_REVERSED_));
 
-/**
+  /**
  * Patterns of Wide / Narrow lines to indicate each digit
  */
-const int PATTERNS[][5] = {
-  {N, N, W, W, N}, // 0
-  {W, N, N, N, W}, // 1
-  {N, W, N, N, W}, // 2
-  {W, W, N, N, N}, // 3
-  {N, N, W, N, W}, // 4
-  {W, N, W, N, N}, // 5
-  {N, W, W, N, N}, // 6
-  {N, N, N, W, W}, // 7
-  {W, N, N, W, N}, // 8
-  {N, W, N, W, N}  // 9
-};
+  const int PATTERNS[][5] = {
+      {N, N, W, W, N}, // 0
+      {W, N, N, N, W}, // 1
+      {N, W, N, N, W}, // 2
+      {W, W, N, N, N}, // 3
+      {N, N, W, N, W}, // 4
+      {W, N, W, N, N}, // 5
+      {N, W, W, N, N}, // 6
+      {N, N, N, W, W}, // 7
+      {W, N, N, W, N}, // 8
+      {N, W, N, W, N}  // 9
+  };
 
 }
 
-ITFReader::ITFReader() : narrowLineWidth(-1) {
+ITFReader::ITFReader() : narrowLineWidth(-1)
+{
 }
 
-
-Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::DecodeHints /*hints*/) {
+QSharedPointer<Result> ITFReader::decodeRow(int rowNumber, QSharedPointer<BitArray> row, zxing::DecodeHints /*hints*/)
+{
   // Find out where the Middle section (payload) starts & ends
 
   Range startRange = decodeStart(row);
@@ -89,11 +88,12 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
 
   std::string result;
   decodeMiddle(row, startRange[1], endRange[0], result);
-  Ref<String> resultString(new String(result));
+  QSharedPointer<String> resultString(new String(result));
 
-  ArrayRef<int> allowedLengths;
+  QSharedPointer<std::vector<int>> allowedLengths;
   // Java hints stuff missing
-  if (!allowedLengths) {
+  if (!allowedLengths)
+  {
     allowedLengths = DEFAULT_ALLOWED_LENGTHS;
   }
 
@@ -101,23 +101,24 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
   // an assumption that the decoded string must be 6, 10 or 14 digits.
   int length = resultString->size();
   bool lengthOK = false;
-  for (int i = 0, e = allowedLengths->size(); i < e; i++) {
-    if (length == allowedLengths[i]) {
+  for (int i = 0, e = allowedLengths->size(); i < e; i++)
+  {
+    if (length == (*allowedLengths)[i])
+    {
       lengthOK = true;
       break;
     }
   }
 
-  if (!lengthOK) {
+  if (!lengthOK)
+  {
     throw FormatException();
   }
 
-  ArrayRef< Ref<ResultPoint> > resultPoints(2);
-  resultPoints[0] =
-      Ref<OneDResultPoint>(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
-  resultPoints[1] =
-      Ref<OneDResultPoint>(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
-  return Ref<Result>(new Result(resultString, ArrayRef<zxing::byte>(), resultPoints, BarcodeFormat::ITF));
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>>> resultPoints(new std::vector<QSharedPointer<ResultPoint>>(2));
+  (*resultPoints)[0].reset(new OneDResultPoint(float(startRange[1]), float(rowNumber)));
+  (*resultPoints)[1].reset(new OneDResultPoint(float(endRange[0]), float(rowNumber)));
+  return QSharedPointer<Result>(new Result(resultString, QSharedPointer<std::vector<zxing::byte>>(), resultPoints, BarcodeFormat::ITF));
 }
 
 /**
@@ -126,10 +127,11 @@ Ref<Result> ITFReader::decodeRow(int rowNumber, Ref<BitArray> row, zxing::Decode
  * @param resultString {@link StringBuffer} to append decoded chars to
  * @throws ReaderException if decoding could not complete successfully
  */
-void ITFReader::decodeMiddle(Ref<BitArray> row,
+void ITFReader::decodeMiddle(QSharedPointer<BitArray> row,
                              int payloadStart,
                              int payloadEnd,
-                             std::string& resultString) {
+                             std::string &resultString)
+{
   // Digits are interleaved in pairs - 5 black lines for one digit, and the
   // 5
   // interleaved white lines for the second digit.
@@ -139,23 +141,26 @@ void ITFReader::decodeMiddle(Ref<BitArray> row,
   vector<int> counterBlack(5, 0);
   vector<int> counterWhite(5, 0);
 
-  while (payloadStart < payloadEnd) {
+  while (payloadStart < payloadEnd)
+  {
 
     // Get 10 runs of black/white.
     recordPattern(row, payloadStart, counterDigitPair);
     // Split them into each array
-    for (int k = 0; k < 5; k++) {
+    for (int k = 0; k < 5; k++)
+    {
       int twoK = k << 1;
       counterBlack[k] = counterDigitPair[twoK];
       counterWhite[k] = counterDigitPair[twoK + 1];
     }
 
     int bestMatch = decodeDigit(counterBlack);
-    resultString.append(1, (zxing::byte) ('0' + bestMatch));
+    resultString.append(1, (zxing::byte)('0' + bestMatch));
     bestMatch = decodeDigit(counterWhite);
-    resultString.append(1, (zxing::byte) ('0' + bestMatch));
+    resultString.append(1, (zxing::byte)('0' + bestMatch));
 
-    for (int i = 0, e = int(counterDigitPair.size()); i < e; i++) {
+    for (int i = 0, e = int(counterDigitPair.size()); i < e; i++)
+    {
       payloadStart += counterDigitPair[i];
     }
   }
@@ -169,7 +174,8 @@ void ITFReader::decodeMiddle(Ref<BitArray> row,
  *         'start block'
  * @throws ReaderException
  */
-ITFReader::Range ITFReader::decodeStart(Ref<BitArray> row) {
+ITFReader::Range ITFReader::decodeStart(QSharedPointer<BitArray> row)
+{
   int endStart = skipWhiteSpace(row);
   Range startPattern = findGuardPattern(row, endStart, START_PATTERN);
 
@@ -191,10 +197,11 @@ ITFReader::Range ITFReader::decodeStart(Ref<BitArray> row) {
  * @throws ReaderException
  */
 
-ITFReader::Range ITFReader::decodeEnd(Ref<BitArray> row) {
+ITFReader::Range ITFReader::decodeEnd(QSharedPointer<BitArray> row)
+{
   // For convenience, reverse the row and then
   // search from 'the start' for the end block
-  BitArray::Reverse r (row);
+  BitArray::Reverse r(row);
 
   int endStart = skipWhiteSpace(row);
   Range endPattern = findGuardPattern(row, endStart, END_PATTERN_REVERSED);
@@ -210,7 +217,7 @@ ITFReader::Range ITFReader::decodeEnd(Ref<BitArray> row) {
   int temp = endPattern[0];
   endPattern[0] = row->getSize() - endPattern[1];
   endPattern[1] = row->getSize() - temp;
-  
+
   return endPattern;
 }
 
@@ -229,16 +236,20 @@ ITFReader::Range ITFReader::decodeEnd(Ref<BitArray> row) {
  * @param startPattern index into row of the start or end pattern.
  * @throws ReaderException if the quiet zone cannot be found, a ReaderException is thrown.
  */
-void ITFReader::validateQuietZone(Ref<BitArray> row, int startPattern) {
-  int quietCount = this->narrowLineWidth * 10;  // expect to find this many pixels of quiet zone
+void ITFReader::validateQuietZone(QSharedPointer<BitArray> row, int startPattern)
+{
+  int quietCount = this->narrowLineWidth * 10; // expect to find this many pixels of quiet zone
 
-  for (int i = startPattern - 1; quietCount > 0 && i >= 0; i--) {
-    if (row->get(i)) {
+  for (int i = startPattern - 1; quietCount > 0 && i >= 0; i--)
+  {
+    if (row->get(i))
+    {
       break;
     }
     quietCount--;
   }
-  if (quietCount != 0) {
+  if (quietCount != 0)
+  {
     // Unable to find the necessary number of quiet zone pixels.
     throw NotFoundException();
   }
@@ -251,10 +262,12 @@ void ITFReader::validateQuietZone(Ref<BitArray> row, int startPattern) {
  * @return index of the first black line.
  * @throws ReaderException Throws exception if no black lines are found in the row
  */
-int ITFReader::skipWhiteSpace(Ref<BitArray> row) {
+int ITFReader::skipWhiteSpace(QSharedPointer<BitArray> row)
+{
   int width = row->getSize();
   int endStart = row->getNextSet(0);
-  if (endStart == width) {
+  if (endStart == width)
+  {
     throw NotFoundException();
   }
   return endStart;
@@ -269,9 +282,10 @@ int ITFReader::skipWhiteSpace(Ref<BitArray> row) {
  *         ints
  * @throws ReaderException if pattern is not found
  */
-ITFReader::Range ITFReader::findGuardPattern(Ref<BitArray> row,
+ITFReader::Range ITFReader::findGuardPattern(QSharedPointer<BitArray> row,
                                              int rowOffset,
-                                             vector<int> const& pattern) {
+                                             vector<int> const &pattern)
+{
   // TODO: This is very similar to implementation in UPCEANReader. Consider if they can be
   // merged to a single method.
   int patternLength = int(pattern.size());
@@ -281,22 +295,31 @@ ITFReader::Range ITFReader::findGuardPattern(Ref<BitArray> row,
 
   int counterPosition = 0;
   int patternStart = rowOffset;
-  for (int x = rowOffset; x < width; x++) {
-    if (row->get(x) ^ isWhite) {
+  for (int x = rowOffset; x < width; x++)
+  {
+    if (row->get(x) ^ isWhite)
+    {
       counters[counterPosition]++;
-    } else {
-      if (counterPosition == patternLength - 1) {
-        if (patternMatchVariance(counters, &pattern[0], MAX_INDIVIDUAL_VARIANCE) < MAX_AVG_VARIANCE) {
+    }
+    else
+    {
+      if (counterPosition == patternLength - 1)
+      {
+        if (patternMatchVariance(counters, &pattern[0], MAX_INDIVIDUAL_VARIANCE) < MAX_AVG_VARIANCE)
+        {
           return Range(patternStart, x);
         }
         patternStart += counters[0] + counters[1];
-        for (int y = 2; y < patternLength; y++) {
+        for (int y = 2; y < patternLength; y++)
+        {
           counters[y - 2] = counters[y];
         }
         counters[patternLength - 2] = 0;
         counters[patternLength - 1] = 0;
         counterPosition--;
-      } else {
+      }
+      else
+      {
         counterPosition++;
       }
       counters[counterPosition] = 1;
@@ -314,24 +337,30 @@ ITFReader::Range ITFReader::findGuardPattern(Ref<BitArray> row,
  * @return The decoded digit
  * @throws ReaderException if digit cannot be decoded
  */
-int ITFReader::decodeDigit(vector<int>& counters){
+int ITFReader::decodeDigit(vector<int> &counters)
+{
 
   int bestVariance = MAX_AVG_VARIANCE; // worst variance we'll accept
   int bestMatch = -1;
-  int max = sizeof(PATTERNS)/sizeof(PATTERNS[0]);
-  for (int i = 0; i < max; i++) {
-    int const* pattern = PATTERNS[i];
+  int max = sizeof(PATTERNS) / sizeof(PATTERNS[0]);
+  for (int i = 0; i < max; i++)
+  {
+    int const *pattern = PATTERNS[i];
     int variance = patternMatchVariance(counters, pattern, MAX_INDIVIDUAL_VARIANCE);
-    if (variance < bestVariance) {
+    if (variance < bestVariance)
+    {
       bestVariance = variance;
       bestMatch = i;
     }
   }
-  if (bestMatch >= 0) {
+  if (bestMatch >= 0)
+  {
     return bestMatch;
-  } else {
+  }
+  else
+  {
     throw NotFoundException();
   }
 }
 
-ITFReader::~ITFReader(){}
+ITFReader::~ITFReader() {}

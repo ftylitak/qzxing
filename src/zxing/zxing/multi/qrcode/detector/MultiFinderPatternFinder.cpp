@@ -25,7 +25,7 @@ using std::abs;
 using std::min;
 using std::sort;
 using std::vector;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::ReaderException;
 using zxing::qrcode::FinderPattern;
@@ -45,24 +45,24 @@ const float MultiFinderPatternFinder::DIFF_MODSIZE_CUTOFF = 0.5f;
 
 namespace {
 
-bool compareModuleSize(Ref<FinderPattern> a, Ref<FinderPattern> b){
+bool compareModuleSize(QSharedPointer<FinderPattern> a, QSharedPointer<FinderPattern> b){
   float value = a->getEstimatedModuleSize() - b->getEstimatedModuleSize();
   return value < 0.0;
 }
 
 }
 
-MultiFinderPatternFinder::MultiFinderPatternFinder(Ref<BitMatrix> image, 
-                                                   Ref<ResultPointCallback> resultPointCallback)
+MultiFinderPatternFinder::MultiFinderPatternFinder(QSharedPointer<BitMatrix> image, 
+                                                   QSharedPointer<ResultPointCallback> resultPointCallback)
     : FinderPatternFinder(image, resultPointCallback)
 {
 }
 
 MultiFinderPatternFinder::~MultiFinderPatternFinder(){}
 
-vector<Ref<FinderPatternInfo> > MultiFinderPatternFinder::findMulti(DecodeHints const& hints){
+vector<QSharedPointer<FinderPatternInfo> > MultiFinderPatternFinder::findMulti(DecodeHints const& hints){
   bool tryHarder = hints.getTryHarder();
-  Ref<BitMatrix> image = image_; // Protected member
+  QSharedPointer<BitMatrix> image = image_; // Protected member
   int maxI = image->getHeight();
   int maxJ = image->getWidth();
   // We are looking for black/white/black/white/black modules in
@@ -125,18 +125,18 @@ vector<Ref<FinderPatternInfo> > MultiFinderPatternFinder::findMulti(DecodeHints 
       handlePossibleCenter(stateCount, i, maxJ);
     } // end if foundPatternCross
   } // for i=iSkip-1 ...
-  vector<vector<Ref<FinderPattern> > > patternInfo = selectBestPatterns();
-  vector<Ref<FinderPatternInfo> > result;
+  vector<vector<QSharedPointer<FinderPattern> > > patternInfo = selectBestPatterns();
+  vector<QSharedPointer<FinderPatternInfo> > result;
   for (unsigned int i = 0; i < patternInfo.size(); i++) {
-    vector<Ref<FinderPattern> > pattern = patternInfo[i];
+    vector<QSharedPointer<FinderPattern> > pattern = patternInfo[i];
     pattern = FinderPatternFinder::orderBestPatterns(pattern);
-    result.push_back(Ref<FinderPatternInfo>(new FinderPatternInfo(pattern)));
+    result.push_back(QSharedPointer<FinderPatternInfo>(new FinderPatternInfo(pattern)));
   }
   return result;
 }
 
-vector<vector<Ref<FinderPattern> > > MultiFinderPatternFinder::selectBestPatterns(){
-  vector<Ref<FinderPattern> > possibleCenters = possibleCenters_;
+vector<vector<QSharedPointer<FinderPattern> > > MultiFinderPatternFinder::selectBestPatterns(){
+  vector<QSharedPointer<FinderPattern> > possibleCenters = possibleCenters_;
   
   int size = int(possibleCenters.size());
 
@@ -145,7 +145,7 @@ vector<vector<Ref<FinderPattern> > > MultiFinderPatternFinder::selectBestPattern
     throw ReaderException("No code detected");
   }
   
-  vector<vector<Ref<FinderPattern> > > results;
+  vector<vector<QSharedPointer<FinderPattern> > > results;
 
   /*
    * Begin HE modifications to safely detect multiple codes of equal size
@@ -175,9 +175,9 @@ vector<vector<Ref<FinderPattern> > > MultiFinderPatternFinder::selectBestPattern
    */
 
   for (int i1 = 0; i1 < (size - 2); i1++) {
-    Ref<FinderPattern> p1 = possibleCenters[i1];
+    QSharedPointer<FinderPattern> p1 = possibleCenters[i1];
     for (int i2 = i1 + 1; i2 < (size - 1); i2++) {
-      Ref<FinderPattern> p2 = possibleCenters[i2];
+      QSharedPointer<FinderPattern> p2 = possibleCenters[i2];
       // Compare the expected module sizes; if they are really off, skip
       float vModSize12 = (p1->getEstimatedModuleSize() - p2->getEstimatedModuleSize()) / min(p1->getEstimatedModuleSize(), p2->getEstimatedModuleSize());
       float vModSize12A = abs(p1->getEstimatedModuleSize() - p2->getEstimatedModuleSize());
@@ -187,7 +187,7 @@ vector<vector<Ref<FinderPattern> > > MultiFinderPatternFinder::selectBestPattern
         break;
       }
       for (int i3 = i2 + 1; i3 < size; i3++) {
-        Ref<FinderPattern> p3 = possibleCenters[i3];
+        QSharedPointer<FinderPattern> p3 = possibleCenters[i3];
         // Compare the expected module sizes; if they are really off, skip
         float vModSize23 = (p2->getEstimatedModuleSize() - p3->getEstimatedModuleSize()) / min(p2->getEstimatedModuleSize(), p3->getEstimatedModuleSize());
         float vModSize23A = abs(p2->getEstimatedModuleSize() - p3->getEstimatedModuleSize());
@@ -196,13 +196,13 @@ vector<vector<Ref<FinderPattern> > > MultiFinderPatternFinder::selectBestPattern
           // any more interesting elements for the given p1.
           break;
         }
-        vector<Ref<FinderPattern> > test;
+        vector<QSharedPointer<FinderPattern> > test;
         test.push_back(p1);
         test.push_back(p2);
         test.push_back(p3);
         test = FinderPatternFinder::orderBestPatterns(test);
         // Calculate the distances: a = topleft-bottomleft, b=topleft-topright, c = diagonal
-        Ref<FinderPatternInfo> info = Ref<FinderPatternInfo>(new FinderPatternInfo(test));
+        QSharedPointer<FinderPatternInfo> info = QSharedPointer<FinderPatternInfo>(new FinderPatternInfo(test));
         float dA = FinderPatternFinder::distance(info->getTopLeft(), info->getBottomLeft());
         float dC = FinderPatternFinder::distance(info->getTopRight(), info->getBottomLeft());
         float dB = FinderPatternFinder::distance(info->getTopLeft(), info->getTopRight());

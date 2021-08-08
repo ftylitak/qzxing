@@ -51,8 +51,8 @@ const char DecodedBitStreamParser::TEXT_SHIFT3_SET_CHARS[] = {
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', (zxing::byte) 127
 };
 
-Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes) {
-  Ref<BitSource> bits(new BitSource(bytes));
+QSharedPointer<DecoderResult> DecodedBitStreamParser::decode(QSharedPointer<std::vector<zxing::byte>> bytes) {
+  QSharedPointer<BitSource> bits(new BitSource(bytes));
   ostringstream result;
   ostringstream resultTrailer;
   vector<zxing::byte> byteSegments;
@@ -87,12 +87,12 @@ Ref<DecoderResult> DecodedBitStreamParser::decode(ArrayRef<zxing::byte> bytes) {
   if (resultTrailer.str().size() > 0) {
     result << resultTrailer.str();
   }
-  ArrayRef<zxing::byte> rawBytes(bytes);
-  Ref<String> text(new String(result.str()));
-  return Ref<DecoderResult>(new DecoderResult(rawBytes, text));
+  QSharedPointer<std::vector<zxing::byte>> rawBytes(bytes);
+  QSharedPointer<String> text(new String(result.str()));
+  return QSharedPointer<DecoderResult>(new DecoderResult(rawBytes, text));
 }
 
-int DecodedBitStreamParser::decodeAsciiSegment(Ref<BitSource> bits, ostringstream & result,
+int DecodedBitStreamParser::decodeAsciiSegment(QSharedPointer<BitSource> bits, ostringstream & result,
   ostringstream & resultTrailer) {
   bool upperShift = false;
   do {
@@ -150,7 +150,7 @@ int DecodedBitStreamParser::decodeAsciiSegment(Ref<BitSource> bits, ostringstrea
   return ASCII_ENCODE;
 }
 
-void DecodedBitStreamParser::decodeC40Segment(Ref<BitSource> bits, ostringstream & result) {
+void DecodedBitStreamParser::decodeC40Segment(QSharedPointer<BitSource> bits, ostringstream & result) {
   // Three C40 values are encoded in a 16-bit value as
   // (1600 * C1) + (40 * C2) + C3 + 1
   // TODO(bbrown): The Upper Shift with C40 doesn't work in the 4 value scenario all the time
@@ -227,7 +227,7 @@ void DecodedBitStreamParser::decodeC40Segment(Ref<BitSource> bits, ostringstream
   } while (bits->available() > 0);
 }
 
-void DecodedBitStreamParser::decodeTextSegment(Ref<BitSource> bits, ostringstream & result) {
+void DecodedBitStreamParser::decodeTextSegment(QSharedPointer<BitSource> bits, ostringstream & result) {
   // Three Text values are encoded in a 16-bit value as
   // (1600 * C1) + (40 * C2) + C3 + 1
   // TODO(bbrown): The Upper Shift with Text doesn't work in the 4 value scenario all the time
@@ -305,7 +305,7 @@ void DecodedBitStreamParser::decodeTextSegment(Ref<BitSource> bits, ostringstrea
   } while (bits->available() > 0);
 }
 
-void DecodedBitStreamParser::decodeAnsiX12Segment(Ref<BitSource> bits, ostringstream & result) {
+void DecodedBitStreamParser::decodeAnsiX12Segment(QSharedPointer<BitSource> bits, ostringstream & result) {
   // Three ANSI X12 values are encoded in a 16-bit value as
   // (1600 * C1) + (40 * C2) + C3 + 1
 
@@ -353,7 +353,7 @@ void DecodedBitStreamParser::parseTwoBytes(int firstByte, int secondByte, int* r
   result[2] = fullBitValue - temp * 40;
 }
   
-void DecodedBitStreamParser::decodeEdifactSegment(Ref<BitSource> bits, ostringstream & result) {
+void DecodedBitStreamParser::decodeEdifactSegment(QSharedPointer<BitSource> bits, ostringstream & result) {
   do {
     // If there is only two or less bytes left then it will be encoded as ASCII
     if (bits->available() <= 16) {
@@ -381,7 +381,7 @@ void DecodedBitStreamParser::decodeEdifactSegment(Ref<BitSource> bits, ostringst
   } while (bits->available() > 0);
 }
   
-void DecodedBitStreamParser::decodeBase256Segment(Ref<BitSource> bits, ostringstream& result, vector<zxing::byte> byteSegments) {
+void DecodedBitStreamParser::decodeBase256Segment(QSharedPointer<BitSource> bits, ostringstream& result, vector<zxing::byte> byteSegments) {
   // Figure out how long the Base 256 Segment is.
   int codewordPosition = 1 + bits->getByteOffset(); // position is 1-indexed
   int d1 = unrandomize255State(bits->readBits(8), codewordPosition++);

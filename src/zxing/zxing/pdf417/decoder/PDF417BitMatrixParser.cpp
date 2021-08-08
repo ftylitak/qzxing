@@ -26,11 +26,11 @@
 #include <zxing/pdf417/decoder/BitMatrixParser.h>
 
 using zxing::pdf417::decoder::BitMatrixParser;
-using zxing::ArrayRef;
+
 
 // VC++
 
-using zxing::Ref;
+
 using zxing::BitMatrix;
 
 const int BitMatrixParser::MAX_ROWS = 90;
@@ -38,7 +38,7 @@ const int BitMatrixParser::MAX_ROWS = 90;
 const int BitMatrixParser::MAX_CW_CAPACITY = 929;
 const int BitMatrixParser::MODULES_IN_SYMBOL = 17;
 
-BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix)
+BitMatrixParser::BitMatrixParser(QSharedPointer<BitMatrix> bitMatrix)
   : bitMatrix_(bitMatrix)
 {
   rows_ = 0;
@@ -67,14 +67,14 @@ BitMatrixParser::BitMatrixParser(Ref<BitMatrix> bitMatrix)
   * @throw FormatException for example if number of rows is too big or something
   * with row processing is bad
   */
-ArrayRef<int> BitMatrixParser::readCodewords()
+QSharedPointer<std::vector<int>> BitMatrixParser::readCodewords()
 {
   //int width = bitMatrix_->getWidth();
   int height = bitMatrix_->getHeight();
 
-  erasures_ = new Array<int>(MAX_CW_CAPACITY);
+  erasures_.reset(new std::vector<int>(MAX_CW_CAPACITY));
 
-  ArrayRef<int> codewords (new Array<int>(MAX_CW_CAPACITY));
+  QSharedPointer<std::vector<int>> codewords (new std::vector<int>(MAX_CW_CAPACITY));
   int next = 0;
   int rowNumber = 0;
   for (int i = 0; i < height; i++) {
@@ -103,7 +103,7 @@ ArrayRef<int> BitMatrixParser::readCodewords()
  * @return the next available index into the codeword array after processing
  *         this row.
  */
-int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next) {
+int BitMatrixParser::processRow(int rowNumber, QSharedPointer<std::vector<int>> codewords, int next) {
   int width = bitMatrix_->getWidth();
   int columnNumber = 0;
   int cwClusterNumber = -1;
@@ -129,14 +129,14 @@ int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next
         if (eraseCount_ >= (int)erasures_->size()) {
           throw FormatException("BitMatrixParser::processRow(PDF417): eraseCount too big!");
         }
-        erasures_[eraseCount_] = next;
+        (*erasures_)[eraseCount_] = next;
         next++;
         eraseCount_++;
       } else {
         if (next >= codewords->size()) {
           throw FormatException("BitMatrixParser::processRow(PDF417): codewords index out of bound.");
         }
-        codewords[next++] = cw;
+        (*codewords)[next++] = cw;
       }
     } else {
       // Left row indicator column
@@ -154,10 +154,10 @@ int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next
     // Right row indicator column is in codeword[next]
     // Overwrite the last codeword i.e. Right Row Indicator
     --next;
-    aRightColumnTriple_[rowNumber % 3] = codewords[next]; /* added 2012-06-22 hfn */
+    aRightColumnTriple_[rowNumber % 3] = (*codewords)[next]; /* added 2012-06-22 hfn */
     if (rowNumber % 3 == 2) {
       if (ecLevel_ < 0) {
-        rightColumnECData_ = codewords[next];
+        rightColumnECData_ = (*codewords)[next];
         if (rightColumnECData_ == leftColumnECData_ && (int)leftColumnECData_ > 0) {  /* leftColumnECData_ != 0 */
           ecLevel_ = ((rightColumnECData_ % 30) - rows_ % 3) / 3;
         }
@@ -167,7 +167,7 @@ int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next
         throw FormatException("BitMatrixParser::processRow(PDF417): outer columns corrupted!");
       }
     }
-    codewords[next] = 0;
+    (*codewords)[next] = 0;
   }
   return next;
 }
@@ -181,15 +181,15 @@ int BitMatrixParser::processRow(int rowNumber, ArrayRef<int> codewords, int next
   * @param size  the size to trim it to
   * @return the new trimmed array
   */
-ArrayRef<int> BitMatrixParser::trimArray(ArrayRef<int> array, int size)
+QSharedPointer<std::vector<int>> BitMatrixParser::trimArray(QSharedPointer<std::vector<int>> array, int size)
 {
   if (size < 0) {
     throw IllegalArgumentException("BitMatrixParser::trimArray: negative size!");
   }
   // 2012-10-12 hfn don't throw "NoErrorException" when size == 0
-  ArrayRef<int> a = new Array<int>(size);
+  QSharedPointer<std::vector<int>> a(new std::vector<int>(size));
   for (int i = 0; i < size; i++) {
-    a[i] = array[i];
+    (*a)[i] = (*array)[i];
   }
   return a;
 }
