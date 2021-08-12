@@ -85,6 +85,7 @@ ApplicationWindow
     QZXingFilter
     {
         id: zxingFilter
+        orientation: videoOutput.orientation
         captureRect: {
             // setup bindings
             videoOutput.contentRect;
