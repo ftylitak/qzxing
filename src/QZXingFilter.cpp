@@ -393,12 +393,11 @@ void QZXingFilterRunnable::processVideoFrameProbed(SimpleVideoFrame & videoFrame
     if (!orientation) {
         decode(*image_ptr);
     } else {
-        QImage translatedImage = image_ptr->transformed([](QPoint center, int orientation) {
-                QMatrix matrix;
-                matrix.translate(center.x(), center.y());
-                matrix.rotate(-orientation);
-                return matrix;
-        } (image_ptr->rect().center(), orientation));
+        QTransform transformation;
+        transformation.translate(image_ptr->rect().center().x(), image_ptr->rect().center().y());
+        transformation.rotate(-orientation);
+
+        QImage translatedImage = image_ptr->transformed(transformation);
 
         decode(translatedImage);
     }
