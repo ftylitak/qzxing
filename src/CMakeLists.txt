@@ -113,7 +113,7 @@ FOREACH(_COMPONENT ${QT_COMPONENTS})
 ENDFOREACH()
 get_filename_component(QT_INSTALL_DIR "${Qt5_DIR}/../../.." ABSOLUTE)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${QT_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBRARIES})
 
 option(QZXING_ENABLE_ENCODER "Enable encoder" ${QZXING_ENABLE_ENCODER})
 if(QZXING_ENABLE_ENCODER)
