@@ -100,7 +100,6 @@ if(QZXING_QML)
     target_sources(${PROJECT_NAME} PRIVATE QZXingImageProvider.cpp QZXingImageProvider.h)
     LIST(APPEND EXPORT_DEFINES QZXING_QML)
     LIST(APPEND QT_COMPONENTS Quick)
-    SET(QZXING_ENABLE_ENCODER ON)
 endif(QZXING_QML)
 
 find_package(Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -115,7 +114,8 @@ get_filename_component(QT_INSTALL_DIR "${Qt5_DIR}/../../.." ABSOLUTE)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBRARIES})
 
-option(QZXING_ENABLE_ENCODER "Enable encoder" ${QZXING_ENABLE_ENCODER})
+cmake_dependent_option(QZXING_ENABLE_ENCODER "Enable encoder" ON
+                       QZXING_MULTIMEDIA OFF)
 if(QZXING_ENABLE_ENCODER)
     LIST(APPEND EXPORT_DEFINES ENABLE_ENCODER_GENERIC)
 endif()
