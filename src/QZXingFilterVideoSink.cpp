@@ -49,14 +49,18 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
     decoding = true;
 
 #ifdef Q_OS_ANDROID
-        m_videoSink->setRhi(nullptr); // https://bugreports.qt.io/browse/QTBUG-97789
-        QVideoFrame f(frame);
-        f.map(QVideoFrame::ReadOnly);
+    m_videoSink->setRhi(nullptr); // https://bugreports.qt.io/browse/QTBUG-97789
+    QVideoFrame f(frame);
+    f.map(QVideoFrame::ReadOnly);
 #else
-        const QVideoFrame &f = frame;
+    const QVideoFrame &f = frame;
 #endif // Q_OS_ANDROID
 
     QImage image = f.toImage();
+
+#ifdef Q_OS_ANDROID
+    f.unmap();
+#endif
     processThread = QtConcurrent::run([=](){
         if(image.isNull())
         {
@@ -72,11 +76,11 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
             frameToProcess = image.copy(rect);
         }
 
-        static int i=0;
-        qDebug() << "image.size()" << frameToProcess.size();
-        qDebug() << "image.format()" << frameToProcess.format();
-        const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i++ % 100) + ".png";
-        qDebug() << "saving image" << i << "at:" << path << frameToProcess.save(path);
+//        static int i=0;
+//        qDebug() << "image.size()" << frameToProcess.size();
+//        qDebug() << "image.format()" << frameToProcess.format();
+//        const QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/qrtest/test_" + QString::number(i++ % 100) + ".png";
+//        qDebug() << "saving image" << i << "at:" << path << frameToProcess.save(path);
 
         decoder.decodeImage(frameToProcess, frameToProcess.width(), frameToProcess.height());
     });
