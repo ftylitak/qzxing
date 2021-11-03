@@ -4,41 +4,41 @@ Qt/QML wrapper library for the [ZXing](https://github.com/zxing/zxing) barcode i
 
 Supports barcode decoding for the following types:
 
-- UPC-A
-- UPC-E
-- EAN-8
-- EAN-13
-- ITF
-- Code 39
-- Code 93
-- Code 128 (GS1)
-- Codabar
-- QR Code
-- Data Matrix
-- Aztec (beta)
-- PDF 417
+-   UPC-A
+-   UPC-E
+-   EAN-8
+-   EAN-13
+-   ITF
+-   Code 39
+-   Code 93
+-   Code 128 (GS1)
+-   Codabar
+-   QR Code
+-   Data Matrix
+-   Aztec (beta)
+-   PDF 417
 
 Supports barcode encoding for the following types:
 
-- QR Code
+-   QR Code
 
 # Table of contents
 
 1. [How to include](#howToInclude)
-   1. [Embed the source code](#embedInSourceCode)
-   1. [Compile the project as an external library](#externalLibrary)
-   1. [Control dependencies](#controlDependencies)
-      1. [QZXing (core)](#controlDependenciesCore)
-      1. [QZXing (core + QML)](#controlDependenciesCoreQML)
-      1. [QZXing + QZXingFilter](#controlDependenciesCoreQMLQZXingFilter)
+    1. [Embed the source code](#embedInSourceCode)
+    1. [Compile the project as an external library](#externalLibrary)
+    1. [Control dependencies](#controlDependencies)
+        1. [QZXing (core)](#controlDependenciesCore)
+        1. [QZXing (core + QML)](#controlDependenciesCoreQML)
+        1. [QZXing + QZXingFilter](#controlDependenciesCoreQMLQZXingFilter)
 1. [How to use](#howTo)
-   1. [Decoding operation](#howToDecoding)
-      1. [C++/Qt](#howToDecodingCPP)
-      1. [Qt Quick](#howToDecodingQtQuick)
-   1. [Encoding operation](#howToEncoding)
-      1. [C++/Qt](#howToEncodingCPP)
-      1. [Qt Quick](#howToEncodingQtQuick)
-   1. [Encoded text format Information](#howToEncodingFormatExamples)
+    1. [Decoding operation](#howToDecoding)
+        1. [C++/Qt](#howToDecodingCPP)
+        1. [Qt Quick](#howToDecodingQtQuick)
+    1. [Encoding operation](#howToEncoding)
+        1. [C++/Qt](#howToEncodingCPP)
+        1. [Qt Quick](#howToEncodingQtQuick)
+    1. [Encoded text format Information](#howToEncodingFormatExamples)
 1. [Unit test dependency](#unitTestDependency)
 1. [Qt 6 limitations](#qt6limitations)
 1. [Contact](#contact)
@@ -98,18 +98,22 @@ CONFIG += qzxing_qml
 
 ### QZXing + QZXingFilter
 
-QZXing includes QZXingFilter, a QAbstractVideoFilter implementation to provide a mean of providing live feed to the decoding library. It automatically includes QML implementation as well.
-This option requires "multimedia" Qt module this is why it is considered as a separate configuration. It can be used by adding the folloing line to the .pro file of a project:
+QZXing includes QZXingFilter, an implementation to provide live feed to the decoding library. It automatically includes QML implementation as well.
+This option requires "multimedia" Qt module this is why it is considered as a separate configuration. It can be used by adding the following line to the .pro file of a project:
 
 ```qmake
 CONFIG += qzxing_multimedia
 ```
 
+For examples on how to use QZXingFilter, it is advised to see [QZXingLive](https://github.com/ftylitak/qzxing/tree/master/examples/QZXingLive) example project. For Qt 5.x versions check [main.qml](https://github.com/ftylitak/qzxing/tree/master/examples/QZXingLive/main.qml) file, whereas for Qt 6.2 (or newer) check [main_qt6_2.qml](https://github.com/ftylitak/qzxing/tree/master/examples/QZXingLive/main_qt6_2.qml).
+
+(Pending task: a wiki page should be written to better explain the usage of the QZXingFilter component)
+
 <a name="howTo"></a>
 
 # How to use
 
-Follows simple code snippets that brefly show the use of the library. For more details advise the examples included in the repository and the [wiki](https://github.com/ftylitak/qzxing/wiki).
+Follows simple code snippets that briefly show the use of the library. For more details advise the examples included in the repository and the [wiki](https://github.com/ftylitak/qzxing/wiki).
 
 <a name="howToDecoding"></a>
 
@@ -210,9 +214,9 @@ The encoding function has been written as static as it does not have any depende
 
 Use the encoding function with its default settings:
 
-- Format: QR Code
-- Size: 240x240
-- Error Correction Level: Low (L)
+-   Format: QR Code
+-   Size: 240x240
+-   Error Correction Level: Low (L)
 
 ```cpp
 #include "QZXing.h"
@@ -265,13 +269,13 @@ Image{
 
 Or use the encoding function with the optional custom settings that are passed like URL query parameters:
 
-| attribute name  | value       | description                                               |
-| --------------- | ----------- | --------------------------------------------------------- |
-| border          | true, false | image has border (white 1px)                              |
-| correctionLevel | L, M, Q, H  | the error correction level                                |
-| format          | qrcode      | the encode formatter. Currently only QR Code.             |
-| transparent     | true, false | whether the black pixels are transparent                  |
-| explicitSize    | int         | if provided, it will be the size of the Qr rectangle      |
+| attribute name  | value       | description                                          |
+| --------------- | ----------- | ---------------------------------------------------- |
+| border          | true, false | image has border (white 1px)                         |
+| correctionLevel | L, M, Q, H  | the error correction level                           |
+| format          | qrcode      | the encode formatter. Currently only QR Code.        |
+| transparent     | true, false | whether the black pixels are transparent             |
+| explicitSize    | int         | if provided, it will be the size of the Qr rectangle |
 
 the size of the image can be adjusted by using the Image.sourceWidth and Image.sourceHeight properties of Image QML element.
 
@@ -323,13 +327,6 @@ QZXing used [QTextCodec](https://doc.qt.io/qt-6/qtextcodec.html) to re-interpret
 After testing, it seems that QTextCodec, if used through core5compat in Qt 6, it does not support many of the encoding that it did in Qt 5 (for instance, Shift-JIS encoding).
 To avoid the dependency of an extra module (that also does not work as supposed to), QTextCodec has been replaced by [QStringDecoder](https://doc.qt.io/qt-6/qstringdecoder.html) only when building for Qt 6.
 If QZXing if build for Qt 5, QTextCodec is used as it was.
-
-## Multimedia (Video / Camera)
-
-Qt Multimedia modules that includes the Camera item for QML and Video related operations for frame manipulation and live decoding are not supported in Qt 6 for the moment.
-To my knowledge, there is no specific replacement for this absent modules and I hope they get re-supported for Qt 6.
-
-Thus, if building for Qt 5, everything works fine. If trying to used **qzxing_multimedia** configuration in your **pro** file, the project will fail (example: [QZXingLive](https://github.com/ftylitak/qzxing/tree/master/examples/QZXingLive) project).
 
 <a name="contact"></a>
 
