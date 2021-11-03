@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QZXing 3.2
+import QZXing 3.3
 
 Rectangle {
     width: 360

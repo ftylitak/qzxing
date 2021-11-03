@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtMultimedia
 
-import QZXing 3.2
+import QZXing 3.3
 
 ApplicationWindow
 {
