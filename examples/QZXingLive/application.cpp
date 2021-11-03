@@ -23,7 +23,11 @@ Application::Application()
 
 void Application::initializeQML()
 {
+#if QT_VERSION < 0x060200
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+#else
+    engine.load(QUrl(QStringLiteral("qrc:/main_qt6_2.qml")));
+#endif // QT_VERSION < 0x060200
 }
 
 void Application::checkPermissions()
