@@ -47,7 +47,16 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
     if(isDecoding() || !processThread.isFinished()) return;
 
     decoding = true;
-    QImage image = frame.toImage();
+
+#ifdef Q_OS_ANDROID
+        m_videoSink->setRhi(nullptr); // https://bugreports.qt.io/browse/QTBUG-97789
+        QVideoFrame f(frame);
+        f.map(QVideoFrame::ReadOnly);
+#else
+        const QVideoFrame &f = frame;
+#endif // Q_OS_ANDROID
+
+    QImage image = f.toImage();
     processThread = QtConcurrent::run([=](){
         if(image.isNull())
         {
