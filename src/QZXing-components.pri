@@ -409,11 +409,20 @@ qzxing_multimedia {
     DEFINES += QZXING_MULTIMEDIA
 	PRL_EXPORT_DEFINES += QZXING_MULTIMEDIA
 
-    HEADERS += \
-        $$PWD/QZXingFilter.h
+   lessThan(QT_VERSION, 6.2) {
+        HEADERS += \
+            $$PWD/QZXingFilter.h
 
+        SOURCES += \
+          $$PWD/QZXingFilter.cpp
+  }
+  greaterThan(QT_VERSION, 6.1) {
+    QT += concurrent
+    HEADERS += \
+        $$PWD/QZXingFilterVideoSink.h
     SOURCES += \
-        $$PWD/QZXingFilter.cpp
+        $$PWD/QZXingFilterVideoSink.cpp
+  }
 }
 
 qzxing_qml {
