@@ -61,7 +61,10 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
 #ifdef Q_OS_ANDROID
     f.unmap();
 #endif
+
+#ifndef Q_OS_ANDROID
     processThread = QtConcurrent::run([=](){
+#endif
         if(image.isNull())
         {
             qDebug() << "QZXingFilter error: Cant create image file to process.";
@@ -83,5 +86,8 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
 //        qDebug() << "saving image" << i << "at:" << path << frameToProcess.save(path);
 
         decoder.decodeImage(frameToProcess, frameToProcess.width(), frameToProcess.height());
+#ifndef Q_OS_ANDROID
     });
+#endif
+
 }
