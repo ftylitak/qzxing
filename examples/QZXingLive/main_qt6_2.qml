@@ -63,7 +63,7 @@ ApplicationWindow
         anchors.bottom: text2.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fillMode: VideoOutput.Stretch
+       // fillMode: VideoOutput.Stretch
 
         property double captureRectStartFactorX: 0.25
         property double captureRectStartFactorY: 0.25
@@ -87,6 +87,8 @@ ApplicationWindow
             x: parent.width * parent.captureRectStartFactorX
             y: parent.height * parent.captureRectStartFactorY
         }
+
+         Component.onCompleted: { camera.active = false; camera.active = true; }
     }
 
     QZXingFilter
