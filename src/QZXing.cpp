@@ -102,10 +102,10 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
 #if QT_VERSION >= 0x040700
 void QZXing::registerQMLTypes()
 {
-    qmlRegisterType<QZXing>("QZXing", 3, 2, "QZXing");
+    qmlRegisterType<QZXing>("QZXing", 3, 3, "QZXing");
 
 #ifdef QZXING_MULTIMEDIA
-    qmlRegisterType<QZXingFilter>("QZXing", 3, 2, "QZXingFilter");
+    qmlRegisterType<QZXingFilter>("QZXing", 3, 3, "QZXingFilter");
 #endif //QZXING_MULTIMEDIA
 
 }
@@ -423,8 +423,8 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
 
     if(image.isNull())
     {
-        emit decodingFinished(false);
         processingTime = t.elapsed();
+        emit decodingFinished(false);
         //qDebug() << "End decoding 1";
         return "";
     }
@@ -555,15 +555,14 @@ QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bo
                 emit tagFoundAdvanced(string, decodedFormat, charSet_, rect);
             }catch(zxing::Exception &/*e*/){}
         }
+        processingTime = t.elapsed();
         emit decodingFinished(true);
-        //qDebug() << "End decoding 2";
         return string;
     }
 
+    processingTime = t.elapsed();
     emit error(errorMessage);
     emit decodingFinished(false);
-    processingTime = t.elapsed();
-    //qDebug() << "End decoding 3";
     return "";
 }
 
