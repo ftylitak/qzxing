@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
-import QtMultimedia 5.5
+import QtMultimedia
 
 import QZXing 3.3
 
@@ -47,52 +47,62 @@ ApplicationWindow
     Camera
     {
         id:camera
-        focus {
-            focusMode: CameraFocus.FocusContinuous
-            focusPointMode: CameraFocus.FocusPointAuto
-        }
+        active: true
+        focusMode: Camera.FocusModeAutoNear
+    }
+
+    CaptureSession {
+        camera: camera
+        videoOutput: videoOutput
     }
 
     VideoOutput
     {
         id: videoOutput
-        source: camera
         anchors.top: text1.bottom
         anchors.bottom: text2.top
         anchors.left: parent.left
         anchors.right: parent.right
-        autoOrientation: true
-        fillMode: VideoOutput.Stretch
-        filters: [ zxingFilter ]
+       // fillMode: VideoOutput.Stretch
+
+        property double captureRectStartFactorX: 0.25
+        property double captureRectStartFactorY: 0.25
+        property double captureRectFactorWidth: 0.5
+        property double captureRectFactorHeight: 0.5
+
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                camera.focus.customFocusPoint = Qt.point(mouse.x / width,  mouse.y / height);
-                camera.focus.focusMode = CameraFocus.FocusMacro;
-                camera.focus.focusPointMode = CameraFocus.FocusPointCustom;
+                camera.customFocusPoint = Qt.point(mouseX / width,  mouseY / height);
+                camera.focusMode = Camera.FocusModeManual;
             }
         }
+
         Rectangle {
             id: captureZone
             color: "red"
             opacity: 0.2
-            width: parent.width / 2
-            height: parent.height / 2
-            anchors.centerIn: parent
+            width: parent.width * parent.captureRectFactorWidth
+            height: parent.height * parent.captureRectFactorHeight
+            x: parent.width * parent.captureRectStartFactorX
+            y: parent.height * parent.captureRectStartFactorY
         }
+
+         Component.onCompleted: { camera.active = false; camera.active = true; }
     }
 
     QZXingFilter
     {
         id: zxingFilter
+        videoSink: videoOutput.videoSink
         orientation: videoOutput.orientation
+
         captureRect: {
-            // setup bindings
-            videoOutput.contentRect;
             videoOutput.sourceRect;
-            return videoOutput.mapRectToSource(videoOutput.mapNormalizedRectToItem(Qt.rect(
-                0.25, 0.25, 0.5, 0.5
-            )));
+            return Qt.rect(videoOutput.sourceRect.width * videoOutput.captureRectStartFactorX,
+                           videoOutput.sourceRect.height * videoOutput.captureRectStartFactorY,
+                           videoOutput.sourceRect.width * videoOutput.captureRectFactorWidth,
+                           videoOutput.sourceRect.height * videoOutput.captureRectFactorHeight)
         }
 
         decoder {
@@ -137,18 +147,17 @@ ApplicationWindow
     }
     Switch {
         text: "Autofocus"
-        checked: camera.focus.focusMode === CameraFocus.FocusContinuous
+        checked: camera.focusMode === Camera.FocusModeAutoNear
         anchors {
             right: parent.right
             bottom: parent.bottom
         }
         onCheckedChanged: {
             if (checked) {
-                camera.focus.focusMode = CameraFocus.FocusContinuous
-                camera.focus.focusPointMode = CameraFocus.FocusPointAuto
+                camera.focusMode = Camera.FocusModeAutoNear
             } else {
-                camera.focus.focusPointMode = CameraFocus.FocusPointCustom
-                camera.focus.customFocusPoint = Qt.point(0.5,  0.5)
+                camera.focusMode = Camera.FocusModeManual
+                camera.customFocusPoint = Qt.point(0.5,  0.5)
             }
         }
         font.family: Qt.platform.os === 'android' ? 'Droid Sans Mono' : 'Monospace'

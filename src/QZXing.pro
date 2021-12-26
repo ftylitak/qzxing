@@ -25,7 +25,7 @@ CONFIG += \
           #qzxing_qml \
           #qzxing_multimedia \
 
-VERSION = 3.2
+VERSION = 3.3
 
 TARGET = QZXing
 TEMPLATE = lib
