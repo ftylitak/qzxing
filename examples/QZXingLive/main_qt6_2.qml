@@ -95,6 +95,7 @@ ApplicationWindow
     {
         id: zxingFilter
         videoSink: videoOutput.videoSink
+        orientation: videoOutput.orientation
 
         captureRect: {
             videoOutput.sourceRect;
