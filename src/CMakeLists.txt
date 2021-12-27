@@ -71,7 +71,9 @@ add_subdirectory(zxing/zxing)
 
 target_link_libraries(qzxing Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui)
 
-if(QZXING_MULTIMEDIA)
+if(QZXING_MULTIMEDIA)    
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Multimedia REQUIRED)
+
     target_link_libraries(qzxing Qt${QT_VERSION_MAJOR}::Multimedia)
     target_compile_definitions(qzxing PUBLIC -DQZXING_MULTIMEDIA)
 endif(QZXING_MULTIMEDIA)
