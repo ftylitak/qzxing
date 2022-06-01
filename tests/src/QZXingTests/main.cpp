@@ -2,7 +2,8 @@
 #include <QCommandLineParser>
 #include <EncodeValidator.h>
 
-#include "DecodeValidator.h"
+//#include "DecodeValidator.h"
+#include "DecodeTestExecutor.h"
 #include "EncoderStressTest.h"
 
 int main(int argc, char **argv)
@@ -31,8 +32,8 @@ int main(int argc, char **argv)
     }
     else
     {
-        DecodeValidator decodeValidator;
-        decodeValidator.executeTests("../../resources/resources/");
+        DecodeTestExecutor decoderTest("../../resources/resources/");
+        decoderTest.executeTest();
 
         zxing::tests::EncodeValidator encodeValidator;
         encodeValidator.execute();
