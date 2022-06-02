@@ -8,6 +8,7 @@ int DecodeTestExecutor::fileCount = 0;
 DecodeTestExecutor::DecodeTestExecutor(QString dirPath, QObject* parent) : QObject(parent){
     m_datasetPath = dirPath;
 
+    initializeDecoderCorrelation();
     decoder.setTryHarder(true);
 
     connect(&decoder, SIGNAL(tagFoundAdvanced(const QString&, const QString&, const QString&)),
@@ -20,7 +21,7 @@ DecodeTestExecutor::DecodeTestExecutor(QString dirPath, QObject* parent) : QObje
 void DecodeTestExecutor::executeTest() {
     QFileInfo dirInfo(m_datasetPath);
     if (!dirInfo.isDir()) {
-        qDebug() << m_datasetPath << "Doesnt seem to be valid directory";
+        qDebug() << m_datasetPath << "Doesn't seem to be valid directory";
         return;
     }
 
@@ -55,9 +56,16 @@ void DecodeTestExecutor::startDecoding() {
     if (!allFiles.isEmpty()) {
         QString file = allFiles.dequeue();
         QString exp = file.left(file.lastIndexOf('.')).append(".txt");
-        QFile expected(exp);
-        if (expected.open(QFile::ReadOnly)) {
-            m_curentExpectedData = expected.readAll();
+        QString expFormat = file.left(file.lastIndexOf('.')).append(".fmt");
+        QFile expectedDataFile(exp);
+        QFile expectedFormatFile(expFormat);
+        m_expectedFormat = QZXing::DecoderFormat::DecoderFormat_None;
+        if (expectedDataFile.open(QFile::ReadOnly)) {
+            m_curentExpectedData = expectedDataFile.readAll();
+        }
+        if (expectedFormatFile.open(QFile::ReadOnly)) {
+            m_expectedFormat =
+                m_decoderCorrelationMap[expectedFormatFile.readAll()];
         }
         m_currentFile = file;
         decoder.decodeImageFromFile(file);
@@ -75,13 +83,38 @@ void DecodeTestExecutor::printResults() {
     qDebug() << "-----------------------------";
 }
 
+
+void DecodeTestExecutor::initializeDecoderCorrelation()
+{
+    m_decoderCorrelationMap["AZTEC"] = QZXing::DecoderFormat_Aztec;
+    m_decoderCorrelationMap["CODABAR"] = QZXing::DecoderFormat_CODABAR;
+    m_decoderCorrelationMap["CODE_39"] = QZXing::DecoderFormat_CODE_39;
+    m_decoderCorrelationMap["CODE_93"] = QZXing::DecoderFormat_CODE_93;
+    m_decoderCorrelationMap["CODE_128"] = QZXing::DecoderFormat_CODE_128;
+    m_decoderCorrelationMap["DATA_MATRIX"] = QZXing::DecoderFormat_DATA_MATRIX;
+    m_decoderCorrelationMap["EAN_8"] = QZXing::DecoderFormat_EAN_8;
+    m_decoderCorrelationMap["EAN_13"] = QZXing::DecoderFormat_EAN_13;
+    m_decoderCorrelationMap["ITF"] = QZXing::DecoderFormat_ITF;
+    m_decoderCorrelationMap["PDF_417"] = QZXing::DecoderFormat_PDF_417;
+    m_decoderCorrelationMap["QR_CODE"] = QZXing::DecoderFormat_QR_CODE;
+    m_decoderCorrelationMap["RSS_14"] = QZXing::DecoderFormat_RSS_14;
+    m_decoderCorrelationMap["RSS_EXPANDED"] = QZXing::DecoderFormat_RSS_EXPANDED;
+    m_decoderCorrelationMap["UPC_A"] = QZXing::DecoderFormat_UPC_A;
+    m_decoderCorrelationMap["UPC_E"] = QZXing::DecoderFormat_UPC_E;
+    m_decoderCorrelationMap["UPC_EAN_EXTENSION"] = QZXing::DecoderFormat_UPC_EAN_EXTENSION;
+    m_decoderCorrelationMap["CODE_128_GS1"] = QZXing::DecoderFormat_CODE_128_GS1;
+}
+
 void DecodeTestExecutor::tagFound(const QString& tag, const QString& format,
                             const QString& charSet) {
     Q_UNUSED(charSet);
 
-    if (m_curentExpectedData == tag || format != "") {
+    if (m_curentExpectedData == tag || m_expectedFormat == m_decoderCorrelationMap[format]) {
         qDebug() << m_currentFile << " Format : "<< format << "Decode Success";
         m_successResults.append(TestResult(m_currentFile, format, true));
+    }
+    else{
+        m_failedResults.append(TestResult(m_currentFile,QString(""),false));
     }
 }
 

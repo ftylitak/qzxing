@@ -33,10 +33,14 @@ class DecodeTestExecutor : public QObject {
     void fetchFilesToDecode(QString path);
     void startDecoding();
     void printResults();
+    void initializeDecoderCorrelation();
 
     QString m_datasetPath = "";
     QZXing decoder;
     QString m_curentExpectedData, m_currentFile;
+    QZXing::DecoderFormat m_expectedFormat{
+        QZXing::DecoderFormat::DecoderFormat_None};
+    QMap<QString, QZXing::DecoderFormat> m_decoderCorrelationMap;
     QQueue<QString> allFiles;
     QList<TestResult> m_successResults;
     QList<TestResult> m_failedResults;
