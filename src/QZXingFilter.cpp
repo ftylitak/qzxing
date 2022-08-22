@@ -196,7 +196,7 @@ static QImage* rgbDataToGrayscale(const uchar* data, const CaptureRect& captureR
     for (int y = 1; y <= captureRect.targetHeight; ++y) {
 
     //Quick fix for iOS & macOS devices. Will be handled better in the future
-#if defined(Q_OS_IOS) || defined (Q_OS_MAC) || defined(Q_OS_SAILFISH)
+#if defined(Q_OS_IOS) || defined (Q_OS_MAC) || defined(Q_OS_SAILFISH) || defined(Q_OS_UBUNTUTOUCH)
         uchar* pixel = pixelInit + (y - 1) * captureRect.targetWidth;
 #else
         uchar* pixel = pixelInit + (captureRect.targetHeight - y) * captureRect.targetWidth;
