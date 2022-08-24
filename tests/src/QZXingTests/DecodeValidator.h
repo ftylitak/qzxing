@@ -7,13 +7,16 @@
 #include <vector>
 #include <map>
 #include <QMap>
+#include <QObject>
 
-class DecodeValidator
+class DecodeValidator: public QObject
 {
+    Q_OBJECT
 private:
     QZXing decoder;
     std::map<QString,QZXing::DecoderFormat> decoderCorrelationMap;
     std::map<QZXing::DecoderFormat, std::vector<std::shared_ptr<ValidationStats>>> testResults;
+    std::map<QString, std::shared_ptr<ValidationStats>> results;
 
     void initializeDecoderCorrelation();
 
@@ -38,6 +41,12 @@ public:
                                               const QString &folderPath);
 
     void executeTests(const QString &folderPath);
+
+
+    std::shared_ptr<ValidationStats> current_stats;
+public slots:
+  void tagFound(const QString& tag, const QString& format, const QString& charSet);
+  void decodingFinished(bool);
 };
 
 #endif // DECODEVALIDATOR_H

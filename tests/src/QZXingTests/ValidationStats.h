@@ -9,6 +9,8 @@ class ValidationStats
 private:
     QString imagePath;
     QString expectedOutput;
+    QString decodedFormat;
+    QString expectedFormat;
     bool operationSuccess;
     bool resultMatch;
     QString errorMessage;
@@ -22,6 +24,8 @@ public:
     int64_t getElaspedTime() const;
     QString getExpectedOutput() const;
     QString getImagePath() const;
+    QString getDecodedFormat() const;
+    QString getExpectedFormat() const;
 
     void setOperationSuccess(bool value);
     void setResultMatch(bool value);
@@ -29,6 +33,8 @@ public:
     void setElaspedTime(const int64_t &value);
     void setExpectedOutput(const QString &value);
     void setImagePath(const QString &value);
+    void setExpectedFormat(QString &fmt);
+    void setDecodedFormat(QString decFmt);
 };
 
 #endif // VALIDATIONSTATS_H
