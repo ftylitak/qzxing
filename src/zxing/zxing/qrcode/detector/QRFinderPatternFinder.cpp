@@ -87,11 +87,24 @@ bool FinderPatternFinder::foundPatternCross(int *stateCount)
   int moduleSize = (totalModuleSize << 8) / 7;
   int maxVariance = moduleSize / 2;
   // Allow less than 50% variance from 1-1-3-1-1 proportions
-  return ::abs(moduleSize - (stateCount[0] << 8)) < maxVariance &&
+  if (   ::abs(moduleSize - (stateCount[0] << 8)) < maxVariance &&
          ::abs(moduleSize - (stateCount[1] << 8)) < maxVariance &&
          ::abs(3.0f * moduleSize - (stateCount[2] << 8)) < 3 * maxVariance &&
          ::abs(moduleSize - (stateCount[3] << 8)) < maxVariance &&
-         ::abs(moduleSize - (stateCount[4] << 8)) < maxVariance;
+         ::abs(moduleSize - (stateCount[4] << 8)) < maxVariance
+     ) {
+      return true;
+  }
+
+  // Proportions are not matched by the pattern. However, a bad print or a blurred frame
+  // may lead to a false negative. Try to check whether there is a valid center and the
+  // two extremities are of similar size, with blacks and whites having matching widths.
+
+  return ::abs(3.0f * moduleSize - (stateCount[2] << 8))                   < 3 * maxVariance &&  // center is 3/7 +- variance
+         ::abs(2.0f * moduleSize - ((stateCount[0] + stateCount[1]) << 8)) < 2 * maxVariance &&  // left/top is 2/7 +- variance
+         ::abs(2.0f * moduleSize - ((stateCount[3] + stateCount[4]) << 8)) < 2 * maxVariance &&  // right/bottom is 2/7 +- variance
+         (::abs(stateCount[0] - stateCount[4]) << 8) < maxVariance &&  // difference between first and last black is < variance
+         (::abs(stateCount[1] - stateCount[3]) << 8) < maxVariance;    // difference between whites is < variance
 }
 
 float FinderPatternFinder::crossCheckVertical(size_t startI, size_t centerJ, int maxCount, int originalStateCountTotal)
