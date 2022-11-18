@@ -1,10 +1,15 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.2)
 project(QZXing)
 
-find_package(Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt5 COMPONENTS Gui REQUIRED)
-find_package(Qt5 COMPONENTS Multimedia )
-find_package(Qt5 REQUIRED Svg Quick QuickControls2)
+set(QT_COMPONENTS
+    Core Gui
+)
+
+# @see https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
+if (NOT DEFINED QT_VERSION_MAJOR)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
+endif()
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
 
 SET(BIGINT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/zxing/bigint)
 SET(WIN32_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/win32/zxing)
@@ -25,8 +30,13 @@ set(SOURCES
     )
 
 if(QZXING_MULTIMEDIA)
-
-    LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Multimedia REQUIRED)
+    list(APPEND QT_COMPONENTS Multimedia)
+    if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
+        list(APPEND SOURCES QZXingFilterVideoSink.cpp QZXingFilterVideoSink.h)
+    else()
+        list(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    endif()
     add_definitions(-DQZXING_MULTIMEDIA)
 
     SET(QZXING_USE_QML ON)
@@ -34,7 +44,9 @@ if(QZXING_MULTIMEDIA)
 endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
-    LIST(APPEND SOURCES QZXingImageProvider.cpp QZXingImageProvider.h)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg Quick QuickControls2 REQUIRED)
+    list(APPEND QT_COMPONENTS Svg Quick QuickControls2)
+    list(APPEND SOURCES QZXingImageProvider.cpp QZXingImageProvider.h)
     add_definitions(-DQZXING_QML)
 endif(QZXING_USE_QML)
 
@@ -65,18 +77,15 @@ add_subdirectory(zxing/bigint)
 
 add_subdirectory(zxing/zxing)
 
-target_link_libraries(qzxing Qt5::Core Qt5::Gui)
+set(QT_LINK_LIBS ${QT_COMPONENTS})
+list(TRANSFORM QT_LINK_LIBS PREPEND Qt${QT_VERSION_MAJOR}::)
+target_link_libraries(qzxing ${QT_LINK_LIBS})
 
 if(QZXING_MULTIMEDIA)
-    target_link_libraries(qzxing Qt5::Multimedia)
     target_compile_definitions(qzxing PUBLIC -DQZXING_MULTIMEDIA)
 endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
-    target_link_libraries(qzxing
-        Qt5::Svg
-        Qt5::Quick
-        Qt5::QuickControls2)
     target_compile_definitions(qzxing PUBLIC -DQZXING_QML)
 endif(QZXING_USE_QML)
 
@@ -102,10 +111,6 @@ endif()
 
 if(QZXING_USE_DECODER_PDF17)
     target_compile_definitions(qzxing PRIVATE -DENABLE_DECODER_PDF17)
-endif()
-
-if(QZXING_USE_DECODER_1D_BARCODES)
-    target_compile_definitions(qzxing PRIVATE -DENABLE_DECODER_1D_BARCODES)
 endif()
 
 
