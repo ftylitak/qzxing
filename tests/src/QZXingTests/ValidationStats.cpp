@@ -55,9 +55,26 @@ QString ValidationStats::getImagePath() const
     return imagePath;
 }
 
+QString ValidationStats::getDecodedFormat() const {
+    return decodedFormat;
+}
+
+QString ValidationStats::getExpectedFormat() const {
+    return expectedFormat;
+}
+
 void ValidationStats::setImagePath(const QString &value)
 {
     imagePath = value;
+}
+
+void ValidationStats::setExpectedFormat(QString &fmt)
+{
+    expectedFormat = fmt;
+}
+
+void ValidationStats::setDecodedFormat(QString decFmt) {
+    decodedFormat = decFmt;
 }
 
 ValidationStats::ValidationStats():

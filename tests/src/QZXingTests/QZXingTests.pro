@@ -8,6 +8,7 @@ TEMPLATE = app
 
 HEADERS += \
     DecodeValidator.h \
+    DecodeTestExecutor.h \
     ValidationStats.h \
     EncodeValidator.h \
     TestCase.h \
@@ -23,6 +24,7 @@ HEADERS += \
 
 SOURCES += main.cpp \
     DecodeValidator.cpp \
+    DecodeTestExecutor.cpp \
     ValidationStats.cpp \
     EncodeValidator.cpp \
     TestCase.cpp \

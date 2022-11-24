@@ -16,6 +16,12 @@ DecodeValidator::DecodeValidator() : decoder(), decoderCorrelationMap(), testRes
 {
     initializeDecoderCorrelation();
     decoder.setTryHarder(true);
+    connect(&decoder, SIGNAL(tagFoundAdvanced(const QString&, const QString&, const QString&)),
+            this, SLOT(tagFound(const QString&, const QString&, const QString&)));
+
+    connect(&decoder, SIGNAL(decodingFinished(bool)),
+            this, SLOT(decodingFinished(bool)));
+
 }
 
 void DecodeValidator::initializeDecoderCorrelation()
@@ -51,23 +57,23 @@ QString DecodeValidator::getDataFromTextFile(const QString &filePath)
 
 std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(QZXing::DecoderFormat enabledDecoder, const QImage &imageToDecode, const QString &expectedOutput)
 {
-    std::shared_ptr<ValidationStats> stats_ = std::make_shared<ValidationStats>();
+    std::shared_ptr<ValidationStats> stats = std::make_shared<ValidationStats>();
 
-    decoder.setDecoder(enabledDecoder);
+//    decoder.setDecoder(enabledDecoder);
 
     QString result = decoder.decodeImage(imageToDecode);
     result.replace("\r\n","\n");
 
-    stats_->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
-    stats_->setOperationSuccess(result != "");
-    stats_->setResultMatch(expectedOutput != "" && result == expectedOutput);
+    stats->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
+    stats->setOperationSuccess(result != "");
+    stats->setResultMatch(expectedOutput != "" && result == expectedOutput);
 
-    if(!stats_->getResultMatch() && stats_->getOperationSuccess()) {
+    if(!stats->getResultMatch() && stats->getOperationSuccess()) {
         qDebug() << "Expected: " << expectedOutput;
         qDebug() << "Decoded:  " << result;
     }
 
-    return stats_;
+    return stats;
 }
 
 QZXing::DecoderFormat DecodeValidator::getDecoderForFolder(const QString &folderName)
@@ -87,79 +93,50 @@ QZXing::DecoderFormat DecodeValidator::getDecoderForFolder(const QString &folder
 
 void DecodeValidator::printResults()
 {
-    std::map<QZXing::DecoderFormat, std::vector<std::shared_ptr<ValidationStats>>>::iterator it;
-
-    qDebug() << LOG_SECTOR_TITLE ("#  Test Results");
-
     size_t finalSuccessful = 0;
     size_t finalFailed = 0;
     size_t finalInconsistent = 0;
 
-    for(it=testResults.begin(); it != testResults.end(); it++) {
-        QString decoderStr = QZXing::decoderFormatToString(it->first);
-        std::vector<std::shared_ptr<ValidationStats>> &resPerDecoder = it->second;
+     std::map<QString, std::shared_ptr<ValidationStats>>::iterator it;
+      for(it=results.begin(); it != results.end(); it++) {
+          std::shared_ptr<ValidationStats> &results = it->second;
 
-        size_t successfulTestCount = 0;
-        QVector<QString> failedResultLogs;
-        QVector<QString> inconsistentResultLogs;
+          QFileInfo file(it->first);
+          qDebug().noquote()<< file.dir().dirName() << "/"  << file.fileName() << " | "
+                   << (results->getOperationSuccess() ? "Decode Success" : "Decode Failed") << " | "
+                   << results->getDecodedFormat();
 
-        for(size_t i=0; i<resPerDecoder.size(); i++) {
-            if(resPerDecoder[i]->getOperationSuccess())
-                successfulTestCount++;
-            else
-                failedResultLogs.push_back(resPerDecoder[i]->getImagePath());
+          if(results->getOperationSuccess())
+              finalSuccessful++;
+          else
+              finalFailed++;
 
-            if(resPerDecoder[i]->getOperationSuccess() && !resPerDecoder[i]->getResultMatch())
-                inconsistentResultLogs.push_back(resPerDecoder[i]->getImagePath());
-        }
-
-        qDebug() << "Decoder: [" << decoderStr << "]"
-                 << ", successful: [" << successfulTestCount << "]"
-                 << ", failed: [" << failedResultLogs.size() << "]"
-                 << ", inconsistencies: [" << inconsistentResultLogs.size() << "]";
-
-        finalSuccessful += successfulTestCount;
-        finalFailed += failedResultLogs.size();
-        finalInconsistent += inconsistentResultLogs.size();
-
-        if(failedResultLogs.size())
-            qDebug() << "  failed image files:";
-
-        for(int i=0; i<failedResultLogs.size(); i++)
-            qDebug() << '\t' << failedResultLogs[i];
-
-        if(inconsistentResultLogs.size())
-            qDebug() << "  inconsistent image files:";
-
-        for(int i=0; i<inconsistentResultLogs.size(); i++)
-            qDebug() << '\t' << inconsistentResultLogs[i];
-    }
-
-    qDebug() << LOG_SECTOR_TITLE ("#  Total Results");
-    qDebug() << "Total: [" << (finalSuccessful + finalFailed + finalInconsistent) << "]"
-             << ", successful: [" << finalSuccessful << "]"
-             << ", failed: [" << finalFailed << "]"
-             << ", inconsistencies: [" << finalInconsistent << "]";
+          if(!results->getResultMatch())
+              finalInconsistent++;
+      }
+      qDebug() << "Total: [" << (results.size()) << "]"
+               << ", successful: [" << finalSuccessful << "]"
+               << ", failed: [" << finalFailed << "]"
+               << ", inconsistencies: [" << finalInconsistent << "]";
 }
 
 std::shared_ptr<ValidationStats> DecodeValidator::testDecodeWithExpectedOutput(QZXing::DecoderFormat enabledDecoder, const QString &imageToDecodePath, const QString &expectedOutputFilePath)
 {
     QImage tmpImage = QImage(imageToDecodePath);
     QString expectedOutput = getDataFromTextFile(expectedOutputFilePath);
+    QString fmtFile = expectedOutputFilePath.left(expectedOutputFilePath.lastIndexOf('.')).append(".fmt");
+    QString expectedFormat = getDataFromTextFile(fmtFile).trimmed();
+    current_stats = std::make_shared<ValidationStats>();
+    current_stats->setImagePath(imageToDecodePath);
+    current_stats->setExpectedOutput(expectedOutput);
+    current_stats->setExpectedFormat(expectedFormat);
 
-    std::shared_ptr<ValidationStats> stats_ = testDecodeWithExpectedOutput(enabledDecoder, tmpImage, expectedOutput);
+    QString result = decoder.decodeImage(tmpImage);
+    result.replace("\r\n","\n");
 
-    stats_->setImagePath(imageToDecodePath);
-    stats_->setExpectedOutput(expectedOutput);
+    current_stats->setElaspedTime(decoder.getProcessTimeOfLastDecoding());
 
-    qDebug() << "Operation success: " << stats_->getOperationSuccess()
-             << "\t, Result Match: " << stats_->getResultMatch()
-             << "\t, Path: " << stats_->getImagePath();
-
-    if(!stats_->getOperationSuccess() && stats_->getResultMatch())
-        qDebug() << "\t[Warning]...";
-
-    return stats_;
+    return current_stats;
 }
 
 void DecodeValidator::decodeAllImagesInForderWithValidator(QZXing::DecoderFormat enabledDecoder, const QString &folderPath)
@@ -169,11 +146,12 @@ void DecodeValidator::decodeAllImagesInForderWithValidator(QZXing::DecoderFormat
     while (dirIt.hasNext()) {
         dirIt.next();
         QFileInfo fileInfo(dirIt.filePath());
-        if (fileInfo.isFile() && fileInfo.suffix() != "txt") {
+        if (fileInfo.isFile() && fileInfo.suffix() != "txt" && fileInfo.suffix() != "fmt") {
             QString imagePath = dirIt.filePath();
+            qDebug()<<"Decoding : "<<imagePath;
             QString expectedOutputTextFile = fileInfo.absoluteDir().absolutePath() + "/" + fileInfo.baseName() + ".txt";
 
-            testResults[enabledDecoder].push_back(testDecodeWithExpectedOutput(enabledDecoder, imagePath, expectedOutputTextFile));
+            testDecodeWithExpectedOutput(enabledDecoder, imagePath, expectedOutputTextFile);
         }
     }
 }
@@ -199,5 +177,20 @@ void DecodeValidator::executeTests(const QString &folderPath)
 
     printResults();
 }
+
+void DecodeValidator::tagFound(const QString &tag, const QString &format, const QString &charSet)
+{
+    current_stats->setDecodedFormat(format);
+    current_stats->setResultMatch(tag == current_stats->getExpectedOutput() &&
+                                  format == current_stats->getExpectedFormat() );
+
+}
+
+void DecodeValidator::decodingFinished(bool result)
+{
+    current_stats->setOperationSuccess(result);
+    results[current_stats->getImagePath()] = current_stats;
+}
+
 
 
