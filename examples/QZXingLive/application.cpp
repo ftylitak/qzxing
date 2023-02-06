@@ -28,7 +28,7 @@ Application::Application()
     connect(this, &Application::onPermissionsDenied,
             this, &Application::initializeQML);
 
-#if QT_VERSION < 0x060000
+#if defined(Q_OS_ANDROID) && QT_VERSION < 0x060000
   NativeHelpers::registerApplicationInstance(this);
 #endif
 }
