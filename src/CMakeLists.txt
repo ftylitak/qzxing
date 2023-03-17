@@ -49,13 +49,9 @@ if(WIN32)
     if(MSVC)
         add_definitions(-D__STDC_LIMIT_MACROS)
     endif(MSVC)
-
+else()
     add_definitions(-DNO_ICONV)
 endif(WIN32)
-
-if(ANDROID)
-    add_definitions(-DNO_ICONV)
-endif()
 
 if(VS_WINRT_COMPONENT)
     add_definitions(-DNO_ICONV)
