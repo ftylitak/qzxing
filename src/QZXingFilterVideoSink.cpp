@@ -59,7 +59,7 @@ void QZXingFilter::setVideoSink(QObject *videoSink){
 }
 
 void QZXingFilter::processFrame(const QVideoFrame &frame) {
-#ifdef Q_OS_ANDROID
+#if defined Q_OS_ANDROID && QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     m_videoSink->setRhi(nullptr); // https://bugreports.qt.io/browse/QTBUG-97789
     QVideoFrame f(frame);
     f.map(QVideoFrame::ReadOnly);
@@ -108,7 +108,7 @@ void QZXingFilter::processFrame(const QVideoFrame &frame) {
         });
     }
 
-#ifdef Q_OS_ANDROID
+#if defined Q_OS_ANDROID && QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     f.unmap();
 #endif
 }
