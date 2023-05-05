@@ -55,7 +55,7 @@ int QZXingFilter::orientation() const
 void QZXingFilter::setVideoSink(QObject *videoSink){
     m_videoSink = qobject_cast<QVideoSink*>(videoSink);
 
-    connect(m_videoSink, &QVideoSink::videoFrameChanged, this, &QZXingFilter::processFrame);
+    connect(m_videoSink, &QVideoSink::videoFrameChanged, this, &QZXingFilter::processFrame, Qt::QueuedConnection);
 }
 
 void QZXingFilter::processFrame(const QVideoFrame &frame) {
