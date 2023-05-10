@@ -59,6 +59,10 @@ void QZXingFilter::setVideoSink(QObject *videoSink){
 }
 
 void QZXingFilter::processFrame(const QVideoFrame &frame) {
+    if (!frame.isReadable()) {
+        return;
+    }
+
 #ifdef Q_OS_ANDROID
     m_videoSink->setRhi(nullptr); // https://bugreports.qt.io/browse/QTBUG-97789
     QVideoFrame f(frame);
