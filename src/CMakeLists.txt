@@ -28,7 +28,11 @@ set(SOURCES
 
 if(QZXING_MULTIMEDIA)
 
-    LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    if(${QT_VERSION_MAJOR} EQUAL 6)
+        LIST(APPEND SOURCES QZXingFilterVideoSink.cpp QZXingFilterVideoSink.h)
+    else()
+        LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    endif()
     add_definitions(-DQZXING_MULTIMEDIA)
 
     SET(QZXING_USE_QML ON)
