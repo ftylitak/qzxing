@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.3)
 project(QZXing)
 
-find_package(Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt5 COMPONENTS Gui REQUIRED)
-find_package(Qt5 COMPONENTS Multimedia )
-find_package(Qt5 REQUIRED Svg Quick QuickControls2)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS
+    Core Gui Svg Quick QuickControls2)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Gui REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED Svg Quick QuickControls2)
 
 SET(BIGINT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/zxing/bigint)
 SET(WIN32_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/zxing/win32/zxing)
@@ -26,7 +28,11 @@ set(SOURCES
 
 if(QZXING_MULTIMEDIA)
 
-    LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    if(${QT_VERSION_MAJOR} EQUAL 6)
+        LIST(APPEND SOURCES QZXingFilterVideoSink.cpp QZXingFilterVideoSink.h)
+    else()
+        LIST(APPEND SOURCES QZXingFilter.cpp QZXingFilter.h)
+    endif()
     add_definitions(-DQZXING_MULTIMEDIA)
 
     SET(QZXING_USE_QML ON)
@@ -65,18 +71,18 @@ add_subdirectory(zxing/bigint)
 
 add_subdirectory(zxing/zxing)
 
-target_link_libraries(qzxing Qt5::Core Qt5::Gui)
+target_link_libraries(qzxing Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui)
 
 if(QZXING_MULTIMEDIA)
-    target_link_libraries(qzxing Qt5::Multimedia)
+    target_link_libraries(qzxing Qt${QT_VERSION_MAJOR}::Multimedia)
     target_compile_definitions(qzxing PUBLIC -DQZXING_MULTIMEDIA)
 endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
     target_link_libraries(qzxing
-        Qt5::Svg
-        Qt5::Quick
-        Qt5::QuickControls2)
+        Qt${QT_VERSION_MAJOR}::Svg
+        Qt${QT_VERSION_MAJOR}::Quick
+        Qt${QT_VERSION_MAJOR}::QuickControls2)
     target_compile_definitions(qzxing PUBLIC -DQZXING_QML)
 endif(QZXING_USE_QML)
 
