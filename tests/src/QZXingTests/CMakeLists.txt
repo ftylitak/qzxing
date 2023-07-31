@@ -6,21 +6,22 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 
+set(QZXING_USE_ENCODER ON)
 set(QZXING_USE_DECODER_QR_CODE ON)
 set(QZXING_USE_DECODER_1D_BARCODES ON)
 set(QZXING_USE_DECODER_DATA_MATRIX ON)
 set(QZXING_USE_DECODER_AZTEC ON)
 set(QZXING_USE_DECODER_PDF17 ON)
 set(QZXING_USE_DECODER_1D_BARCODES ON)
+set(QZXING_MULTIMEDIA ON)
 
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS
-    Core Gui Quick Concurrent
+    Core Gui Quick Concurrent Multimedia
 )
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS
-    Core Gui Quick Concurrent REQUIRED
+    Core Gui Quick Concurrent Multimedia REQUIRED
 )
 
-add_compile_definitions(QZXING_MULTIMEDIA ENABLE_ENCODER_GENERIC ENABLE_ENCODER_QR_CODE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../src qzxing)
 include_directories(BEFORE SYSTEM
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -65,5 +66,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Quick
     Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt${QT_VERSION_MAJOR}::Multimedia
     qzxing
 )
