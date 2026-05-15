@@ -24,7 +24,8 @@
 using zxing::Result;
 using std::ostream;
 
-ostream& zxing::operator<<(ostream &out, Result& result) {
+namespace zxing {
+ostream& operator<<(ostream &out, Result& result) {
   if (result.text_ != 0) {
     out << result.text_->getText();
   } else {
@@ -32,3 +33,4 @@ ostream& zxing::operator<<(ostream &out, Result& result) {
   }
   return out;
 }
+} // namespace zxing

@@ -31,7 +31,7 @@ class QZXingFilter : public QObject
     Q_PROPERTY(bool decoding READ isDecoding NOTIFY isDecodingChanged)
     Q_PROPERTY(QZXing* decoder READ getDecoder)
     Q_PROPERTY(QRectF captureRect MEMBER captureRect NOTIFY captureRectChanged)
-    Q_PROPERTY(QObject* videoSink WRITE setVideoSink)
+    Q_PROPERTY(QObject* videoSink READ getVideoSink WRITE setVideoSink)
     Q_PROPERTY(int orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
 
     signals:
@@ -64,6 +64,9 @@ class QZXingFilter : public QObject
 
         bool isDecoding() {return decoding; }
         QZXing* getDecoder() { return &decoder; }
+
+    private: /// Methods
+        QVideoSink* getVideoSink() { return m_videoSink; }
 };
 
 #endif // QZXingFilter_H
